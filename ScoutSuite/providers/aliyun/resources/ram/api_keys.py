@@ -4,7 +4,7 @@ from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 class ApiKeys(AliyunResources):
     def __init__(self, facade: AliyunFacade, user):
-        super(ApiKeys, self).__init__(facade)
+        super().__init__(facade)
         self.user = user
 
     async def fetch_all(self):

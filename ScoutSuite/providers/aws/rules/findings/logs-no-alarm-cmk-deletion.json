@@ -1,0 +1,32 @@
+{
+    "description": "No CloudWatch Alarm for \"Disabled or Deleted Master Keys\"",
+    "rationale": "There was no CloudWatch alarm to alert about disabled or deleted master keys. Monitoring for disabled or deleted master keys can prevent permanent loss of data encrypted with such keys.",
+    "remediation": "Enable a CloudWatch alarm to detect recently disabled or deleted master keys.",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "3.7"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "3.7"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "3.7"
+        }
+    ],
+    "dashboard_name": "Alarms",
+    "path": "cloudwatch.regions.id.metric_filters.id",
+    "conditions": [
+        "or",
+        [
+            "cloudwatch.regions.id.metric_filters_pattern_checks.cmk_deletion",
+            "false",
+            ""
+        ]
+    ]
+}

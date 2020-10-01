@@ -5,7 +5,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class ApiKeys(OracleResources):
     def __init__(self, facade: OracleFacade, user):
-        super(ApiKeys, self).__init__(facade)
+        super().__init__(facade)
         self.user = user
 
     async def fetch_all(self):

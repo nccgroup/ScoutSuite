@@ -1,12 +1,13 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 
 class NetworkInterfaces(AzureResources):
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(NetworkInterfaces, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
@@ -22,7 +23,11 @@ class NetworkInterfaces(AzureResources):
             get_non_provider_id(raw_network_interface.virtual_machine.id.lower()) if \
                 raw_network_interface.virtual_machine else None
         network_interface_dict['name'] = raw_network_interface.name
-        network_interface_dict['tags'] = raw_network_interface.tags
+        if raw_network_interface.tags is not None:
+            network_interface_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_network_interface.tags.items()]
+        else:
+            network_interface_dict['tags'] = []
+        network_interface_dict['resource_group_name'] = get_resource_group_name(raw_network_interface.id)
         network_interface_dict['interface_endpoint'] = raw_network_interface.interface_endpoint if \
             hasattr(raw_network_interface, 'interface_endpoint') else None
         network_interface_dict['primary'] = raw_network_interface.primary

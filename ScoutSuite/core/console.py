@@ -1,10 +1,10 @@
 import logging
+import platform
 import os
 import sys
 import traceback
 
 import coloredlogs
-from six.moves import input
 
 from ScoutSuite import ERRORS_LIST
 
@@ -32,8 +32,18 @@ def set_logger_configuration(is_debug=False, quiet=False, output_file_path=None)
         coloredlogs.install(level='DEBUG' if is_debug else 'INFO', logger=logger)
 
     if output_file_path:
+        # For some reason, hostname information is not passed to the FileHandler
+        # Add it using a filter
+        class HostnameFilter(logging.Filter):
+            hostname = platform.node()
+
+            def filter(self, record):
+                record.hostname = HostnameFilter.hostname
+                return True
         # create file handler which logs messages
         fh = logging.FileHandler(output_file_path, 'w+')
+        # Add filter to add hostname information
+        fh.addFilter(HostnameFilter())
         # create formatter and add it to the handlers
         formatter = logging.Formatter(fmt='%(asctime)s %(hostname)s %(name)s[%(process)d] %(levelname)s %(message)s',
                                       datefmt='%Y-%m-%d %H:%M:%S')
@@ -66,18 +76,18 @@ def print_exception(exception, additional_details=None):
             file_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             line_number = exc_tb.tb_lineno
             traceback_exc = traceback.format_exc()
-            str = '{} L{}: {}'.format(file_name, line_number, exception)
+            str = f'{file_name} L{line_number}: {exception}'
         else:
             file_name = None
             line_number = None
             traceback_exc = None
-            str = '{}'.format(exception)
+            str = f'{exception}'
             exc = False  # if there isn't an actual exception then it's pointless
     except Exception as e:
         file_name = None
         line_number = None
         traceback_exc = None
-        str = '{}'.format(exception)
+        str = f'{exception}'
 
     if verbose_exceptions and exc:
         logger.exception(str)
@@ -86,8 +96,8 @@ def print_exception(exception, additional_details=None):
 
     ERRORS_LIST.append({'file': file_name,
                         'line': line_number,
-                        'exception': '{}'.format(exception),
-                        'traceback': '{}'.format(traceback_exc),
+                        'exception': f'{exception}',
+                        'traceback': f'{traceback_exc}',
                         'additional_details': additional_details})
 
 
@@ -131,7 +141,7 @@ def prompt_overwrite(filename, force_write, test_input=None):
     """
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename),
+    return prompt_yes_no(f'File \'{filename}\' already exists. Do you want to overwrite it',
                          test_input=test_input)
 
 

@@ -1,6 +1,6 @@
 {
     "description": "Short Backup Retention Period",
-    "rationale": "The backup retention period is a period of time between 0 and 35 days for which you can perform a point-in-time restore. Setting the backup retention period to 0 disables automated backups.<br><br>It is recommended that the retention period is set to at least 30 days. Having a short retention period will impact how fact back in time the database can be restored to, and may affect integrity and availability of data.",
+    "rationale": "The backup retention period is a period of time between 0 and 35 days for which you can perform a point-in-time restore. Setting the backup retention period to 0 disables automated backups.<br><br>It is recommended that the retention period is set to at least 30 days. Having a short retention period will impact how far back in time the database can be restored to, and may affect integrity and availability of data.",
     "references": [
         "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html"
     ],

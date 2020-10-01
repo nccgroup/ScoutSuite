@@ -1,4 +1,5 @@
 from __future__ import print_function
+from ScoutSuite import __version__
 
 formatted_provider_name = {
     'aliyun': 'Aliyun',
@@ -24,6 +25,7 @@ formatted_service_name = {
     'elbv2': 'ELBv2',
     'eks': 'EKS',
     'elasticache': 'ElastiCache',
+    'guardduty': 'GuardDuty',
     'lambda': 'Lambda',
     'awslambda': 'Lambda',
     'redshift': 'RedShift',
@@ -93,3 +95,7 @@ def format_service_name(service):
     :return:
     """
     return formatted_service_name[service] if service in formatted_service_name else service.upper()
+
+
+def get_user_agent():
+    return 'Scout Suite/{} (https://github.com/nccgroup/ScoutSuite)'.format(__version__)

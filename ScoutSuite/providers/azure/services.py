@@ -34,7 +34,7 @@ class AzureServicesConfig(BaseServicesConfig):
                  programmatic_execution=None,
                  **kwargs):
 
-        super(AzureServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
         facade = AzureFacade(credentials,
                              subscription_ids, all_subscriptions,
@@ -68,7 +68,7 @@ class AzureServicesConfig(BaseServicesConfig):
         return provider_name == 'azure'
 
     async def fetch(self, services: list, regions: list, excluded_regions: list):
-        await super(AzureServicesConfig, self).fetch(services, regions, excluded_regions)
+        await super().fetch(services, regions, excluded_regions)
 
         # This is a unique case where we'll want to fetch additional resources (in the AAD service) in the
         # event the RBAC service was included. There's no existing cross-service fetching logic (only cross-service

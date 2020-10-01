@@ -1,7 +1,7 @@
 <!-- public_access_block_configuration partial -->
 <script id="services.s3.public_access_block_configuration.partial" type="text/x-handlebars-template">
     <div class="list-group-item">
-        <h4 class="list-group-item-heading">Public Access Block Configuration</h4>
+        <h4 class="list-group-item-heading"><span id="s3.buckets.{{@key}}.public_access_block_configuration.public_access_block">Public Access Block Configuration</span></h4>
         <div class="list-group-item-text item-margin">Ignore Public ACLs:
             {{convert_bool_to_enabled public_access_block_configuration.IgnorePublicAcls}}
         </div>

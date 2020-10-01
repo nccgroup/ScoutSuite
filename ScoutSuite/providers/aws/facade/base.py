@@ -8,6 +8,7 @@ from ScoutSuite.providers.aws.facade.cloudtrail import CloudTrailFacade
 from ScoutSuite.providers.aws.facade.cloudwatch import CloudWatch
 from ScoutSuite.providers.aws.facade.config import ConfigFacade
 from ScoutSuite.providers.aws.facade.directconnect import DirectConnectFacade
+from ScoutSuite.providers.aws.facade.dynamodb import DynamoDBFacade
 from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
 from ScoutSuite.providers.aws.facade.efs import EFSFacade
 from ScoutSuite.providers.aws.facade.elasticache import ElastiCacheFacade
@@ -39,10 +40,6 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
-except ImportError:
-    pass
-try:
     from ScoutSuite.providers.aws.facade.ecs_private import ECSFacade
 except ImportError:
     pass
@@ -54,11 +51,15 @@ try:
     from ScoutSuite.providers.aws.facade.eks_private import EKSFacade
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.aws.facade.guardduty_private import GuardDutyFacade
+except ImportError:
+    pass
 
 
 class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials=None):
-        super(AWSFacade, self).__init__()
+        super().__init__()
         self.owner_id = get_aws_account_id(credentials.session)
         self.session = credentials.session
         self._instantiate_facades()
@@ -246,6 +247,7 @@ class AWSFacade(AWSBaseFacade):
         self.cloudwatch = CloudWatch(self.session)
         self.config = ConfigFacade(self.session)
         self.directconnect = DirectConnectFacade(self.session)
+        self.dynamodb = DynamoDBFacade(self.session)
         self.efs = EFSFacade(self.session)
         self.elasticache = ElastiCacheFacade(self.session)
         self.emr = EMRFacade(self.session)
@@ -272,10 +274,6 @@ class AWSFacade(AWSBaseFacade):
         except NameError:
             pass
         try:
-            self.dynamodb = DynamoDBFacade(self.session)
-        except NameError:
-            pass
-        try:
             self.ecs = ECSFacade(self.session)
         except NameError:
             pass
@@ -285,5 +283,9 @@ class AWSFacade(AWSBaseFacade):
             pass
         try:
             self.eks = EKSFacade(self.session)
+        except NameError:
+            pass
+        try:
+            self.guardduty = GuardDutyFacade(self.session)
         except NameError:
             pass

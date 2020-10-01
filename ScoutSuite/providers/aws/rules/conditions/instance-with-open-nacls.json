@@ -1,4 +1,15 @@
 {
-    "conditions":
-        [ "vpc.regions.id.vpcs.id.network_acls._GET_VALUE_AT_(vpc.regions.id.vpcs.id.subnets._GET_VALUE_AT_(ec2.regions.id.vpcs.id.instances.id.network_interfaces.id.SubnetId).network_acl).allow_all_ingress_traffic", "notEqual", "0" ]
+    "conditions": [
+        "and",
+        [
+            "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id",
+            "withKey",
+            "SubnetId"
+        ],
+        [
+            "vpc.regions.id.vpcs.id.network_acls._GET_VALUE_AT_(vpc.regions.id.vpcs.id.subnets._GET_VALUE_AT_(ec2.regions.id.vpcs.id.instances.id.network_interfaces.id.SubnetId).network_acl).allow_all_ingress_traffic",
+            "notEqual",
+            "0"
+        ]
+    ]
 }

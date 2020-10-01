@@ -6,7 +6,7 @@ from ScoutSuite.core.console import print_exception
 
 class Buckets(Resources):
     def __init__(self, facade: GCPFacade, project_id: str):
-        super(Buckets, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
@@ -41,26 +41,27 @@ class Buckets(Resources):
             try:
                 bucket_dict['acls'] = list(raw_bucket.acl)
             except Exception as e:
-                print_exception('Failed to retrieve storage bucket ACLs: {}'.format(e))
+                print_exception(f'Failed to retrieve storage bucket ACLs: {e}')
                 bucket_dict['acls'] = []
             try:
                 bucket_dict['default_object_acl'] = list(raw_bucket.default_object_acl)
             except Exception as e:
-                print_exception('Failed to retrieve storage bucket object ACLs: {}'.format(e))
+                print_exception(f'Failed to retrieve storage bucket object ACLs: {e}')
                 bucket_dict['default_object_acl'] = []
 
-        bucket_dict['acl_configuration'] = self._get_cloudstorage_bucket_acl(raw_bucket)  # FIXME this should be "IAM"
+        bucket_dict['member_bindings'] = self._get_cloudstorage_bucket_iam_member_bindings(raw_bucket)
+
         return bucket_dict['id'], bucket_dict
 
-    def _get_cloudstorage_bucket_acl(self, raw_bucket):
-        bucket_acls = raw_bucket.iam_policy
-        acl_config = {}
-        if bucket_acls:
-            for role in bucket_acls._bindings:
-                if 'legacy' not in role:
-                    for member in bucket_acls[role]:
-                        if member not in acl_config:
-                            acl_config[member] = [role]
+    def _get_cloudstorage_bucket_iam_member_bindings(self, raw_bucket):
+        bucket_iam_policy = raw_bucket.iam_policy
+        member_bindings = {}
+        if bucket_iam_policy:
+            for binding in bucket_iam_policy._bindings:
+                if 'legacy' not in binding['role']:
+                    for member in binding['members']:
+                        if member not in member_bindings:
+                            member_bindings[member] = [binding['role']]
                         else:
-                            acl_config[member].append(role)
-        return acl_config
+                            member_bindings[member].append(binding['role'])
+        return member_bindings

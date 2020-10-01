@@ -19,7 +19,7 @@ class RAM(AliyunCompositeResources):
     ]
 
     def __init__(self, facade: AliyunFacade):
-        super(RAM, self).__init__(facade)
+        super().__init__(facade)
         self.service = 'ram'
 
     async def fetch_all(self, **kwargs):

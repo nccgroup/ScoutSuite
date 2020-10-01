@@ -204,7 +204,7 @@ async def _run(provider,
         if not credentials:
             return 101
     except Exception as e:
-        print_exception('Authentication failure: {}'.format(e))
+        print_exception(f'Authentication failure: {e}')
         return 101
 
     # Create a cloud provider object
@@ -228,7 +228,7 @@ async def _run(provider,
                                       programmatic_execution=programmatic_execution,
                                       credentials=credentials)
     except Exception as e:
-        print_exception('Initialization failure: {}'.format(e))
+        print_exception(f'Initialization failure: {e}')
         return 102
 
     # Create a new report
@@ -336,7 +336,7 @@ async def _run(provider,
             exceptions.process(cloud_provider)
             exceptions = exceptions.exceptions
         except Exception as e:
-            print_exception('Failed to load exceptions: {}'.format(e))
+            print_exception(f'Failed to load exceptions: {e}')
             exceptions = {}
     else:
         exceptions = {}

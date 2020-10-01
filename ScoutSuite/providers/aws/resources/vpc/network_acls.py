@@ -11,7 +11,7 @@ class NetworkACLs(AWSResources):
         self.region = region
         self.vpc = vpc
 
-        super(NetworkACLs, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         raw_network_acls = await self.facade.ec2.get_network_acls(self.region, self.vpc)

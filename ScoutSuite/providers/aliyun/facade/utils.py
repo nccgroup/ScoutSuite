@@ -32,7 +32,7 @@ async def get_response(client, request):
         else:
             raise
     except Exception as e:
-        print_exception('Unhandled exception {} for request {}'.format(e, request))
+        print_exception(f'Unhandled exception {e} for request {request}')
 
 
 async def merge_responses(response_1, response_2):

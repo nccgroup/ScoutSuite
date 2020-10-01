@@ -6,7 +6,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 class Snapshots(AzureResources):
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(Snapshots, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
@@ -35,12 +35,18 @@ class Snapshots(AzureResources):
         snapshot_dict['incremental'] = raw_snapshot.incremental
         snapshot_dict['additional_properties'] = raw_snapshot.additional_properties
 
-        snapshot_dict['encryption'] = raw_snapshot.encryption
-        snapshot_dict['encryption_settings_collection'] = raw_snapshot.encryption_settings_collection
-        if raw_snapshot.encryption_settings_collection and raw_snapshot.encryption_settings_collection.enabled:
-            snapshot_dict['encryption_enabled'] = True
+        # TODO this can be removed
+        # snapshot_dict['encryption'] = raw_snapshot.encryption
+        # snapshot_dict['encryption_settings_collection'] = raw_snapshot.encryption_settings_collection
+        # if raw_snapshot.encryption_settings_collection and raw_snapshot.encryption_settings_collection.enabled:
+        #     snapshot_dict['encryption_enabled'] = True
+        # else:
+        #     snapshot_dict['encryption_enabled'] = False
+
+        if raw_snapshot.encryption and raw_snapshot.encryption.type:
+            snapshot_dict['encryption_type'] = raw_snapshot.encryption.type
         else:
-            snapshot_dict['encryption_enabled'] = False
+            snapshot_dict['encryption_type'] = None
 
         return snapshot_dict['id'], snapshot_dict
 

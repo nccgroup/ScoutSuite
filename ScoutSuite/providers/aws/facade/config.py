@@ -10,7 +10,7 @@ class ConfigFacade(AWSBaseFacade):
         try:
             return await AWSFacadeUtils.get_all_pages('config', region, self.session, 'describe_config_rules', 'ConfigRules')
         except Exception as e:
-            print_exception('Failed to get Config ruless: {}'.format(e))
+            print_exception(f'Failed to get Config ruless: {e}')
             return []
 
     async def get_recorders(self, region: str):
@@ -19,14 +19,14 @@ class ConfigFacade(AWSBaseFacade):
         try:
             recorders = (await run_concurrently(client.describe_configuration_recorders))['ConfigurationRecorders']
         except Exception as e:
-            print_exception('Failed to get Config recorders: {}'.format(e))
+            print_exception(f'Failed to get Config recorders: {e}')
             recorders = []
 
         try:
             recorder_statuses_list = \
                 (await run_concurrently(client.describe_configuration_recorder_status))['ConfigurationRecordersStatus']
         except Exception as e:
-            print_exception('Failed to get Config recorder statuses: {}'.format(e))
+            print_exception(f'Failed to get Config recorder statuses: {e}')
         else:
             # To accelerate the mapping of the statuses, we preprocess the data by creating a
             # <recorder_name: recorder_status> map. This prevents having to iterate over the list of statuses for each

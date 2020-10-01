@@ -147,7 +147,6 @@ var loadAccountId = function () {
 function loadConfig(scriptId, cols, force) {
     if (!force && !scriptId.endsWith('.external_attack_surface')) {
         console.log('Script ID: ' + scriptId);
-        // console.log(loadedConfigArray);
         // Abort if data was previously loaded
         if (loadedConfigArray.indexOf(scriptId) > -1 ) {
             // When the path does not contain .id.
@@ -241,6 +240,9 @@ function processTemplate(id1, containerId, list, replace) {
  */
 function hideAll() {
     $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide()
+    // Add special case excluded by above selector
+    $("[id*='metric_filters.list']").hide()
+
     $("[id*='.details']").hide()
     var element = document.getElementById('scout_display_account_id_on_all_pages')
     if ((element !== undefined) && (element.checked === true)) {
@@ -350,10 +352,10 @@ function showRowWithItems(path) {
  */
 function showFilters(resourcePath) {
     hideFilters()
-    let service = resourcePath.split('.')[1]
     // Show service filters
     $('[id="' + resourcePath + '.id.filters"]').show()
     // show region filters
+    let service = resourcePath.split('.')[1]
     $('[id*="regionfilters.' + service + '.regions"]').show()
 }
 
@@ -919,7 +921,29 @@ function showLastRunDetails() {
 function showResourcesDetails() {
     $('#modal-container').html(resources_details_template(runResults));
     $('#modal-container').modal()
+
+    $('#resources_details_download_csv_button').click(function(){
+            var anchor = window.location.hash.substr(1)
+            var path = decodeURIComponent(anchor.replace('#', ""))
+            var item_indexes = getValueAt(path)
+            var items = []
+            var index = 0
+            items[index] = ["Service", "Resource", "#"]
+            var serviceName = ""
+            Object.entries(item_indexes.services).forEach((service) => {
+                serviceName = service[0]
+                Object.entries(service[1]).forEach((attr) => {
+                        if ((attr[0].split("_")[1] == "count" || attr[0].split("_")[2] == "count") && attr[1] != 0 && attr[0].split("_")[0] != "regions"){
+                                index++;
+                                items[index] = [serviceName, attr[0].split("_")[0], attr[1].toString()];
+                            }
+                })
+            })
+            downloadAsCsv('findings_summary.csv', items)
+        }
+    )
 }
+
 
 /**
  * Show main dashboard
@@ -1206,6 +1230,8 @@ function makeTitle(title) {
         return 'DocumentDB'
     } else if (title === 'dynamodb') {
         return 'DynamoDB'
+    } else if (title === 'guardduty') {
+        return 'GuardDuty'
     } else if (title === 'secretsmanager') {
         return 'Secrets Manager'
     } else if (title === 'elasticache') {

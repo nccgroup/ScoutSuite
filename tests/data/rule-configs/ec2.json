@@ -26,6 +26,7 @@
                                     "id": "sg-ap111111",
                                     "name": "default",
                                     "owner_id": "123456789012",
+                                    "is_default_configuration": true,
                                     "rules": {
                                         "egress": {
                                             "count": 0,
@@ -77,6 +78,7 @@
                                     "id": "sg-ap222222",
                                     "name": "default",
                                     "owner_id": "123456789012",
+                                    "is_default_configuration": true,
                                     "rules": {
                                         "egress": {
                                             "count": 0,
@@ -125,6 +127,7 @@
                                     "id": "sg-eu111111",
                                     "name": "default",
                                     "owner_id": "123456789012",
+                                    "is_default_configuration": true,
                                     "rules": {
                                         "egress": {
                                             "count": 0,
@@ -154,6 +157,7 @@
                                     "id": "sg-eu111111",
                                     "name": "default",
                                     "owner_id": "123456789012",
+                                    "is_default_configuration": true,
                                     "rules": {
                                         "egress": {
                                             "count": 0,
@@ -175,6 +179,7 @@
                                     "id": "sg-eu222222",
                                     "name": "test-sg-222222",
                                     "owner_id": "123456789012",
+                                    "is_default_configuration": true,
                                     "rules": {
                                         "egress": {
                                             "count": 1,
@@ -262,6 +267,7 @@
                                     "id": "sg-sa111111",
                                     "name": "default",
                                     "owner_id": "123456789012",
+                                    "is_default_configuration": true,
                                     "rules": {
                                         "egress": {
                                             "count": 0,
@@ -278,6 +284,7 @@
                                     "id": "sg-sa111111",
                                     "name": "testsg",
                                     "owner_id": "123456789012",
+                                    "is_default_configuration": true,
                                     "rules": {
                                         "egress": {
                                             "count": 0,
@@ -308,6 +315,7 @@
                                     "id": "sg-sa33333333",
                                     "name": "testsg",
                                     "owner_id": "123456789012",
+                                    "is_default_configuration": true,
                                     "rules": {
                                         "egress": {
                                             "count": 0,
