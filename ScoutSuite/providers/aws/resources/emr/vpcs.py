@@ -12,7 +12,7 @@ class EMRVpcs(AWSCompositeResources):
     def __init__(self, facade: AWSFacade, region: str):
         self.region = region
 
-        super(EMRVpcs, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         # EMR won't disclose its VPC, so we put everything in a VPC named "EMR-UNKNOWN-VPC", and we

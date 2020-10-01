@@ -9,6 +9,7 @@
   </div>
   <div class="list-group-item">
     <h4 class="list-group-item-heading">Information</h4>
+    <div class="list-group-item-text item-margin">ARN: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.arn"><samp>{{arn}}</samp></span></div>
     <div class="list-group-item-text item-margin">Region: {{region}}</div>
     <div class="list-group-item-text item-margin">Created on: {{CreationTime}}</div>
     <div class="list-group-item-text item-margin" id="">Role:
@@ -22,6 +23,17 @@
     <div class="list-group-item-text item-margin">Termination protection enabled: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_no_termination_protection">{{EnableTerminationProtection}}</span></div>
     <div class="list-group-item-text item-margin">Configuration has drifted: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_drifted">{{drifted}}</span></div>
     <div class="list-group-item-text item-margin">Deletion policy: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_no_deletion_policy">{{deletion_policy}}</span></div>
+    <div class="list-group-item-text item-margin">Notification ARNs:
+      <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_lacks_notifications">
+        <ul>
+        {{#each notificationARNs}}
+            <li class="list-group-item-text"><samp>{{this}}</samp></li>
+        {{else}}
+            <li class="list-group-item-text"><samp>None</samp></li>
+        {{/each}}
+        </ul>
+      </span>
+    </div>
   </div>
   <div class="list-group-item">
     <h4 class="list-group-item-heading">Capabilities {{> count_badge count=Capabilities.length}}</h4>

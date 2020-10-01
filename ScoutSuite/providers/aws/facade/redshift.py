@@ -18,7 +18,7 @@ class RedshiftFacade(AWSBaseFacade):
             await self.cache_clusters(region)
             return [cluster for cluster in self.clusters_cache[region] if cluster['VpcId'] == vpc]
         except Exception as e:
-            print_exception('Failed to get Redshift clusters: {}'.format(e))
+            print_exception(f'Failed to get Redshift clusters: {e}')
             return []
 
     async def cache_clusters(self, region):
@@ -38,7 +38,7 @@ class RedshiftFacade(AWSBaseFacade):
             return await AWSFacadeUtils.get_all_pages(
                 'redshift', region, self.session, 'describe_cluster_parameter_groups', 'ParameterGroups')
         except Exception as e:
-            print_exception('Failed to get Redshift parameter groups: {}'.format(e))
+            print_exception(f'Failed to get Redshift parameter groups: {e}')
             return []
 
     async def get_cluster_security_groups(self, region: str):
@@ -48,7 +48,7 @@ class RedshiftFacade(AWSBaseFacade):
                 'redshift', region, self.session, 'describe_cluster_security_groups', 'ClusterSecurityGroups')
         except ClientError as e:
             if e.response['Error']['Code'] != 'InvalidParameterValue':
-                print_exception('Failed to describe cluster security groups: {}'.format(e))
+                print_exception(f'Failed to describe cluster security groups: {e}')
             return []
 
     async def get_cluster_parameters(self, region: str, parameter_group: str):

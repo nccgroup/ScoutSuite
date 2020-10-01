@@ -16,5 +16,6 @@ class Users(AWSResources):
         raw_user['id'] = raw_user.pop('UserId')
         raw_user['name'] = raw_user.pop('UserName')
         raw_user['arn'] = raw_user.pop('Arn')
-
+        if (len(raw_user['tags']['Tags']) > 0):
+            raw_user['Tags'] = raw_user['tags']['Tags']
         return raw_user['id'], raw_user

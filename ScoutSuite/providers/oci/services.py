@@ -8,7 +8,7 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 
 class OracleServicesConfig(BaseServicesConfig):
     def __init__(self, credentials: OracleCredentials = None, **kwargs):
-        super(OracleServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
         facade = OracleFacade(credentials)
 

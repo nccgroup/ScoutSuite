@@ -1,0 +1,52 @@
+{
+    "description": "Root Account without Hardware MFA",
+    "rationale": "The root account is the most privileged user in an account. MFA adds an extra layer of protection on top of a user name and password. With MFA enabled, when a user signs in to an AWS website, they're prompted for their user name and password and for an authentication code from their AWS MFA device.",
+    "remediation": "Enable MFA for the root account",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "1.13"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "1.14"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "1.14"
+        }
+    ],
+    "references": [
+        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-cis-controls-1.13"
+    ],
+    "dashboard_name": "Accounts",
+    "path": "iam.credential_reports.id",
+    "conditions": [
+        "and",
+        [
+            "iam.credential_reports.id.name",
+            "equal",
+            "<root_account>"
+        ],
+        [
+            "or",
+            [
+                "iam.credential_reports.id.mfa_active",
+                "notTrue",
+                ""
+            ],
+            [
+                "iam.credential_reports.id.mfa_active_hardware",
+                "false",
+                ""
+            ]
+        ]
+    ],
+    "keys": [
+        "this"
+    ],
+    "id_suffix": "mfa_active_hardware"
+}

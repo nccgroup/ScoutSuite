@@ -1,11 +1,12 @@
 import json
 import logging
+import requests
 from getpass import getpass
 from datetime import datetime, timedelta
 
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
 from msrestazure.azure_active_directory import MSIAuthentication
-from ScoutSuite.core.console import print_info, print_debug
+from ScoutSuite.core.console import print_info, print_debug, print_exception
 from msrestazure.azure_active_directory import AADTokenCredentials
 import adal
 
@@ -32,8 +33,18 @@ class AzureCredentials:
     def get_tenant_id(self):
         if self.tenant_id:
             return self.tenant_id
-        else:
+        elif 'tenant_id' in self.aad_graph_credentials.token:
             return self.aad_graph_credentials.token['tenant_id']
+        else:
+            # This is a last resort, e.g. for MSI authentication
+            try:
+                h = {'Authorization': 'Bearer {}'.format(self.arm_credentials.token['access_token'])}
+                r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
+                r2 = r.json()
+                return r2.get('value')[0].get('tenantId')
+            except Exception as e:
+                print_exception('Unable to infer tenant ID: {}'.format(e))
+                return None
 
     def get_credentials(self, resource):
         if resource == 'arm':
@@ -92,6 +103,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             # Set logging level to error for libraries as otherwise generates a lot of warnings
             logging.getLogger('adal-python').setLevel(logging.ERROR)
             logging.getLogger('msrest').setLevel(logging.ERROR)
+            logging.getLogger('msrestazure.azure_active_directory').setLevel(logging.ERROR)
             logging.getLogger('urllib3').setLevel(logging.ERROR)
             logging.getLogger('cli.azure.cli.core').setLevel(logging.ERROR)
 

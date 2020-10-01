@@ -10,7 +10,7 @@ class LambdaFacade(AWSBaseFacade):
         try:
             return await AWSFacadeUtils.get_all_pages('lambda', region, self.session, 'list_functions', 'Functions')
         except Exception as e:
-            print_exception('Failed to get Lambda functions: {}'.format(e))
+            print_exception(f'Failed to get Lambda functions: {e}')
             return []
 
     async def get_access_policy(self, function_name, region):
@@ -19,8 +19,10 @@ class LambdaFacade(AWSBaseFacade):
             policy = client.get_policy(FunctionName=function_name)
             if policy is not None and 'Policy' in policy:
                 return json.loads(policy['Policy'])
-        except Exception:
-            # Policy not found for this function
+        except Exception as e:
+            # If there's no policy, it will return this exception. Hence why we ignore.
+            if "ResourceNotFoundException" not in str(e):
+                print_exception('Failed to get Lambda access policy: {}'.format(e))
             return None
 
     async def get_role_with_managed_policies(self, role_name):
@@ -37,7 +39,17 @@ class LambdaFacade(AWSBaseFacade):
                         policy['Document'] = document['PolicyVersion']['Document']
             role['policies'] = managed_policies
             return role
-        except Exception:
+        except Exception as e:
+            print_exception('Failed to get role from managed policies: {}'.format(e))
             return None
 
+    async def get_env_variables(self, function_name, region):
+        client = AWSFacadeUtils.get_client('lambda', self.session, region)
+        try:
+            function_configuration = client.get_function_configuration(FunctionName=function_name)
+            if "Environment" in function_configuration and "Variables" in function_configuration["Environment"]:
+                return function_configuration["Environment"]["Variables"]
+        except Exception as e:
+            print_exception('Failed to get Lambda function configuration: {}'.format(e))
+        return []
 

@@ -4,7 +4,7 @@ from ScoutSuite.providers.gcp.facade.base import GCPFacade
 
 class Users(Resources):
     def __init__(self, facade: GCPFacade, project_id: str, instance_name: str):
-        super(Users, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
         self.instance_name = instance_name
 

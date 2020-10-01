@@ -6,6 +6,7 @@ from ScoutSuite.providers.aws.resources.cloudtrail.base import CloudTrail
 from ScoutSuite.providers.aws.resources.cloudwatch.base import CloudWatch
 from ScoutSuite.providers.aws.resources.config.base import Config
 from ScoutSuite.providers.aws.resources.directconnect.base import DirectConnect
+from ScoutSuite.providers.aws.resources.dynamodb.base import DynamoDB
 from ScoutSuite.providers.aws.resources.ec2.base import EC2
 from ScoutSuite.providers.aws.resources.efs.base import EFS
 from ScoutSuite.providers.aws.resources.elasticache.base import ElastiCache
@@ -35,10 +36,6 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
-except ImportError:
-    pass
-try:
     from ScoutSuite.providers.aws.resources.private_ecr.base import ECR
 except ImportError:
     pass
@@ -50,6 +47,10 @@ try:
     from ScoutSuite.providers.aws.resources.private_eks.base import EKS
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.aws.resources.private_guardduty.base import GuardDuty
+except ImportError:
+    pass
 
 
 class AWSServicesConfig(BaseServicesConfig):
@@ -59,24 +60,25 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar cloudtrail:                   CloudTrail configuration
     :ivar cloudwatch:                   CloudWatch configuration:
     :ivar config:                       Config configuration
-    :ivar dynamodb:                     DynomaDB configuration
+    :ivar dynamodb:                     DynamoDB configuration
     :ivar ec2:                          EC2 configuration
     :ivar ecs:                          ECS configuration
     :ivar ecr:                          ECR configuration
     :ivar eks:                          EKS configuration
+    :ivar guarduty:                     GuardDuty configuration
     :ivar iam:                          IAM configuration
     :ivar kms:                          KMS configuration
     :ivar rds:                          RDS configuration
     :ivar redshift:                     Redshift configuration
     :ivar s3:                           S3 configuration
     :ivar ses:                          SES configuration:
-    "ivar sns:                          SNS configuration
+    :ivar sns:                          SNS configuration
     :ivar sqs:                          SQS configuration
     """
 
     def __init__(self, credentials=None, **kwargs):
 
-        super(AWSServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
         facade = AWSFacade(credentials)
 
@@ -87,6 +89,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.cloudwatch = CloudWatch(facade)
         self.config = Config(facade)
         self.directconnect = DirectConnect(facade)
+        self.dynamodb = DynamoDB(facade)
         self.ec2 = EC2(facade)
         self.efs = EFS(facade)
         self.elasticache = ElastiCache(facade)
@@ -115,10 +118,6 @@ class AWSServicesConfig(BaseServicesConfig):
         except NameError as _:
             pass
         try:
-            self.dynamodb = DynamoDB(facade)
-        except NameError as _:
-            pass
-        try:
             self.ecr = ECR(facade)
         except NameError as _:
             pass
@@ -128,6 +127,10 @@ class AWSServicesConfig(BaseServicesConfig):
             pass
         try:
             self.eks = EKS(facade)
+        except NameError as _:
+            pass
+        try:
+            self.guardduty = GuardDuty(facade)
         except NameError as _:
             pass
 

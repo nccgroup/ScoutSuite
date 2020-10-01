@@ -61,7 +61,7 @@ class AWSFacadeUtils:
                                                'AccessDeniedException',
                                                'UnauthorizedOperation',
                                                'AuthorizationError']:
-                print_exception('Failed to get all pages from paginator for the {} service: {}'.format(service, e))
+                print_exception(f'Failed to get all pages from paginator for the {service} service: {e}')
                 return []
             else:
                 raise
@@ -94,5 +94,5 @@ class AWSFacadeUtils:
                 (service, region),
                 session.client(service, region_name=region) if region else session.client(service))
         except Exception as e:
-            print_exception('Failed to create client for the {} service: {}'.format(service, e))
+            print_exception(f'Failed to create client for the {service} service: {e}')
             return None

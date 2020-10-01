@@ -1,6 +1,6 @@
 {
     "description": "Inline _ARG_0_ Policy Allows \"_ARG_1_:_ARG_2_\" For All Resources",
-    "rationale": "Granting IAM permissions for all resources doesn't follow the principle of least privilege and increases the impact of account compromise.",
+    "rationale": "Using \"*\" for the resource field might grant permissions to more resources than necessary, potentially introducing privilege escalation scenarios.",
     "references": [
         "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
     ],
@@ -44,16 +44,12 @@
             "_ARG_1_:_ARG_2_"
         ],
         [
-            "and",
+            "_INCLUDE_(conditions/policy-statement-any-resource.json)",
             [
-                "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.",
-                "withKey",
-                "Resource"
+                "_STATEMENT_"
             ],
             [
-                "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.Resource",
-                "containAtLeastOneMatching",
-                ".*[*].*"
+                "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id"
             ]
         ]
     ],

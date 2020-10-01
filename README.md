@@ -4,12 +4,12 @@
 
 #
 
-[![Travis](https://travis-ci.org/nccgroup/ScoutSuite.svg?branch=master)](https://travis-ci.org/nccgroup/ScoutSuite)
-[![Coverage Status](https://coveralls.io/repos/github/nccgroup/ScoutSuite/badge.svg?branch=master)](https://coveralls.io/github/nccgroup/ScoutSuite?branch=master)
+[![Workflow](https://github.com/nccgroup/ScoutSuite/workflows/CI%20Workflow/badge.svg)](https://github.com/nccgroup/ScoutSuite/actions)
 [![CodeCov](https://codecov.io/gh/nccgroup/ScoutSuite/branch/master/graph/badge.svg)](https://codecov.io/gh/nccgroup/ScoutSuite)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/nccgroup/ScoutSuite.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/nccgroup/ScoutSuite/alerts/)
 [![PyPI version](https://badge.fury.io/py/ScoutSuite.svg)](https://badge.fury.io/py/ScoutSuite)
 [![PyPI downloads](https://img.shields.io/pypi/dm/scoutsuite)](https://img.shields.io/pypi/dm/scoutsuite)
+[![Docker Hub](https://img.shields.io/badge/Docker%20Hub-rossja%2Fncc--scoutsuite-blue)](https://hub.docker.com/r/rossja/ncc-scoutsuite/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/rossja/ncc-scoutsuite.svg?style=flat-square)](https://hub.docker.com/r/rossja/ncc-scoutsuite/)
 
 ## Description
 

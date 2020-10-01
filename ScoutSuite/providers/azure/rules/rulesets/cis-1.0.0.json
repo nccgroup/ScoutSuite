@@ -1,5 +1,5 @@
 {
-    "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
+    "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.0.0.",
     "rules": {
         "network-security-groups-rule-inbound-service.json": [
             {
@@ -22,7 +22,7 @@
             },
             {
                 "args": [
-                    "SQL",
+                    "MsSQL",
                     "1433",
                     "6.3"
                 ],

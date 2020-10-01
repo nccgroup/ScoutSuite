@@ -29,4 +29,5 @@ class Buckets(AWSResources):
 
         # If requested, get key properties
         raw_bucket['id'] = get_non_provider_id(raw_bucket['name'])
+        raw_bucket['arn'] = 'arn:aws:s3:::{}/*'.format(raw_bucket['name'])
         return raw_bucket['id'], raw_bucket

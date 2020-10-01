@@ -4,7 +4,7 @@ from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 class SecurityPolicy(AliyunResources):
     def __init__(self, facade: AliyunFacade):
-        super(SecurityPolicy, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         raw_security_policy = await self.facade.ram.get_security_policy()

@@ -210,6 +210,29 @@ def pass_condition(b, test, a):
     elif test == 'notInSubnets':
         result = (not pass_condition(b, 'inSubnets', a))
 
+    # Port/port ranges tests
+    elif test == 'portsInPortList':
+        result = False
+        if not type(b) == list:
+            b = [b]
+        if not type(a) == list:
+            a = [a]
+        for port_range in b:
+            if '-' in port_range:
+                bottom_limit_port = int(port_range.split('-')[0])
+                upper_limit_port = int(port_range.split('-')[1])
+                for port in a:
+                    if type(port) != int:
+                        port = int(port)
+                    if bottom_limit_port <= port <= upper_limit_port:
+                        result = True
+                        break
+            else: #A single port
+                for port in a:
+                    if port == port_range:
+                        result = True
+                        break
+
     # Policy statement tests
     elif test == 'containAction':
         result = False

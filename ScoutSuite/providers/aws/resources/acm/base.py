@@ -10,4 +10,4 @@ class Certificates(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(Certificates, self).__init__('acm', facade)
+        super().__init__('acm', facade)

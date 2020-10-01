@@ -51,7 +51,7 @@ class ElastiCacheFacade(AWSBaseFacade):
             # describe_cache_security_groups will throw an InvalidParameterValueException exception.
             pass
         except Exception as e:
-            print_exception('Failed to get ElastiCache security groups: {}'.format(e))
+            print_exception(f'Failed to get ElastiCache security groups: {e}')
 
         return []
 
@@ -80,5 +80,5 @@ class ElastiCacheFacade(AWSBaseFacade):
                 'elasticache', region, self.session, 'describe_cache_parameter_groups', 'CacheParameterGroups')
         except ClientError as e:
             if e.response['Error']['Code'] != 'InvalidParameterValue':
-                print_exception('Failed to describe cache parameter groups: {}'.format(e))
+                print_exception(f'Failed to describe cache parameter groups: {e}')
             return []

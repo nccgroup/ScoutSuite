@@ -18,7 +18,7 @@ def get_oss_client(credentials, region=None):
     try:
         auth = oss2.Auth(credentials.credentials.access_key_id, credentials.credentials.access_key_secret)
         client = oss2.Service(auth,
-                              endpoint='oss-{}.aliyuncs.com'.format(region) if region
+                              endpoint=f'oss-{region}.aliyuncs.com' if region
                               else 'oss-cn-hangzhou.aliyuncs.com')
         return client
 

@@ -3,6 +3,7 @@ from azure.mgmt.web import WebSiteManagementClient
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
+from ScoutSuite.utils import get_user_agent
 
 
 class AppServiceFacade:
@@ -11,8 +12,10 @@ class AppServiceFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return WebSiteManagementClient(self.credentials.get_credentials('arm'),
+        client = WebSiteManagementClient(self.credentials.get_credentials('arm'),
                                        subscription_id=subscription_id)
+        client._client.config.add_user_agent(get_user_agent())
+        return client
 
     async def get_web_apps(self, subscription_id: str):
         try:
@@ -21,7 +24,7 @@ class AppServiceFacade:
                 lambda: list(client.web_apps.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve web apps: {}'.format(e))
+            print_exception(f'Failed to retrieve web apps: {e}')
             return []
         else:
             await get_and_set_concurrently([self._get_and_set_web_app_configuration], web_apps, api_client=client)
@@ -35,7 +38,7 @@ class AppServiceFacade:
                 lambda: api_client.web_apps.get_configuration(resource_group_name, web_app.name)
             )
         except Exception as e:
-            print_exception('Failed to retrieve web app configuration: {}'.format(e))
+            print_exception(f'Failed to retrieve web app configuration: {e}')
             setattr(web_app, 'config', None)
         else:
             setattr(web_app, 'config', web_app_config)
@@ -48,7 +51,7 @@ class AppServiceFacade:
                                                               name=web_app.name)
             )
         except Exception as e:
-            print_exception('Failed to retrieve web app auth settings: {}'.format(e))
+            print_exception(f'Failed to retrieve web app auth settings: {e}')
             setattr(web_app, 'auth_settings', None)
         else:
             setattr(web_app, 'auth_settings', web_app_auth_settings)

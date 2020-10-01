@@ -1,0 +1,49 @@
+{
+    "description": "Users with Access Keys Created during Initial Setup and Not Used",
+    "rationale": "Not creating access keys during initial user setup will avoid unnecessary management work and give more control over keys used somewhere in the organization.",
+    "remediation": "Do not setup access keys during initial user setup. Instead, require users to create the keys themselves or put in a support ticket to have them created",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "1.23"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "1.21"
+        }
+    ],
+    "dashboard_name": "Users",
+    "path": "iam.credential_reports.id",
+    "conditions": [
+        "or",
+        [
+            "and",
+            [
+                "iam.credential_reports.id.access_key_1_active",
+                "true",
+                ""
+            ],
+            [
+                "iam.credential_reports.id.access_key_1_last_used_date",
+                "equal",
+                "None"
+            ]
+        ],
+        [
+            "and",
+            [
+                "iam.credential_reports.id.access_key_2_active",
+                "true",
+                ""
+            ],
+            [
+                "iam.credential_reports.id.access_key_2_last_used_date",
+                "equal",
+                "None"
+            ]
+        ]
+    ],
+    "class_suffix": "unused_access_keys"
+}

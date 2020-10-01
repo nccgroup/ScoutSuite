@@ -17,7 +17,7 @@ class EC2Facade(AWSBaseFacade):
     def __init__(self, session: boto3.session.Session, owner_id: str):
         self.owner_id = owner_id
 
-        super(EC2Facade, self).__init__(session)
+        super().__init__(session)
 
     async def get_instance_user_data(self, region: str, instance_id: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
@@ -26,7 +26,7 @@ class EC2Facade(AWSBaseFacade):
                 lambda: ec2_client.describe_instance_attribute(Attribute='userData', InstanceId=instance_id))
         except Exception as e:
             print_exception(
-                'Failed to describe EC2 instance attributes: {}'.format(e))
+                f'Failed to describe EC2 instance attributes: {e}')
             return None
         else:
             if 'Value' not in user_data_response['UserData'].keys():
@@ -37,7 +37,7 @@ class EC2Facade(AWSBaseFacade):
                 except base64.binascii.Error as e:
                     return await self._decode_user_data(base64.b64decode(user_data_response['UserData']['Value'] + "==="))
                 except Exception as e:
-                    print_exception('Unable to decode EC2 instance user data: {}'.format(e))
+                    print_exception(f'Unable to decode EC2 instance user data: {e}')
 
     async def _decode_user_data(self, user_data):
         value = base64.b64decode(user_data)
@@ -57,11 +57,12 @@ class EC2Facade(AWSBaseFacade):
             for reservation in reservations:
                 for instance in reservation['Instances']:
                     instance['ReservationId'] = reservation['ReservationId']
+                    instance['OwnerId'] = reservation['OwnerId']
                     instances.append(instance)
 
             return instances
         except Exception as e:
-            print_exception('Failed to describe EC2 instances: {}'.format(e))
+            print_exception(f'Failed to describe EC2 instances: {e}')
             return []
 
     async def get_security_groups(self, region: str, vpc: str):
@@ -70,7 +71,7 @@ class EC2Facade(AWSBaseFacade):
             return await AWSFacadeUtils.get_all_pages(
                 'ec2', region, self.session, 'describe_security_groups', 'SecurityGroups', Filters=filters)
         except Exception as e:
-            print_exception('Failed to describe EC2 security groups: {}'.format(e))
+            print_exception(f'Failed to describe EC2 security groups: {e}')
             return []
 
     async def get_vpcs(self, region: str):
@@ -78,7 +79,7 @@ class EC2Facade(AWSBaseFacade):
         try:
             return await run_concurrently(lambda: ec2_client.describe_vpcs()['Vpcs'])
         except Exception as e:
-            print_exception('Failed to describe EC2 VPC: {}'.format(e))
+            print_exception(f'Failed to describe EC2 VPC: {e}')
             return []
 
     async def get_images(self, region: str):
@@ -87,7 +88,7 @@ class EC2Facade(AWSBaseFacade):
         try:
             return await run_concurrently(lambda: client.describe_images(Filters=filters)['Images'])
         except Exception as e:
-            print_exception('Failed to get EC2 images: {}'.format(e))
+            print_exception(f'Failed to get EC2 images: {e}')
             return []
 
     async def get_network_interfaces(self, region: str, vpc: str):
@@ -96,7 +97,7 @@ class EC2Facade(AWSBaseFacade):
             return await AWSFacadeUtils.get_all_pages(
                 'ec2', region, self.session, 'describe_network_interfaces', 'NetworkInterfaces', Filters=filters)
         except Exception as e:
-            print_exception('Failed to get EC2 network interfaces: {}'.format(e))
+            print_exception(f'Failed to get EC2 network interfaces: {e}')
             return []
 
     async def get_volumes(self, region: str):
@@ -105,7 +106,7 @@ class EC2Facade(AWSBaseFacade):
             await get_and_set_concurrently([self._get_and_set_key_manager], volumes, region=region)
             return volumes
         except Exception as e:
-            print_exception('Failed to get EC2 volumes: {}'.format(e))
+            print_exception(f'Failed to get EC2 volumes: {e}')
             return []
 
     async def _get_and_set_key_manager(self, volume: {}, region: str):
@@ -116,7 +117,7 @@ class EC2Facade(AWSBaseFacade):
                 volume['KeyManager'] = await run_concurrently(
                     lambda: kms_client.describe_key(KeyId=key_id)['KeyMetadata']['KeyManager'])
             except Exception as e:
-                print_exception('Failed to describe KMS key: {}'.format(e))
+                print_exception(f'Failed to describe KMS key: {e}')
                 volume['KeyManager'] = None
         else:
             volume['KeyManager'] = None
@@ -128,7 +129,7 @@ class EC2Facade(AWSBaseFacade):
             snapshots = await AWSFacadeUtils.get_all_pages(
                 'ec2', region, self.session, 'describe_snapshots', 'Snapshots', Filters=filters)
         except Exception as e:
-            print_exception('Failed to get snapshots: {}'.format(e))
+            print_exception(f'Failed to get snapshots: {e}')
             snapshots = []
         else:
             await get_and_set_concurrently([self._get_and_set_snapshot_attributes], snapshots, region=region)
@@ -143,7 +144,7 @@ class EC2Facade(AWSBaseFacade):
                 SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
         except Exception as e:
             print_exception(
-                'Failed to describe EC2 snapshot attributes: {}'.format(e))
+                f'Failed to describe EC2 snapshot attributes: {e}')
 
     async def get_network_acls(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
@@ -151,7 +152,7 @@ class EC2Facade(AWSBaseFacade):
             return await AWSFacadeUtils.get_all_pages(
                 'ec2', region, self.session, 'describe_network_acls', 'NetworkAcls', Filters=filters)
         except Exception as e:
-            print_exception('Failed to get EC2 network ACLs: {}'.format(e))
+            print_exception(f'Failed to get EC2 network ACLs: {e}')
             return []
 
     async def get_flow_logs(self, region: str):
@@ -159,7 +160,7 @@ class EC2Facade(AWSBaseFacade):
             await self.cache_flow_logs(region)
             return self.flow_logs_cache[region]
         except Exception as e:
-            print_exception('Failed to get EC2 flow logs: {}'.format(e))
+            print_exception(f'Failed to get EC2 flow logs: {e}')
             return []
 
     async def cache_flow_logs(self, region: str):
@@ -176,7 +177,7 @@ class EC2Facade(AWSBaseFacade):
         try:
             subnets = await run_concurrently(lambda: ec2_client.describe_subnets(Filters=filters)['Subnets'])
         except Exception as e:
-            print_exception('Failed to describe EC2 subnets: {}'.format(e))
+            print_exception(f'Failed to describe EC2 subnets: {e}')
             return None
         else:
             await get_and_set_concurrently([self._get_and_set_subnet_flow_logs], subnets, region=region)
@@ -193,5 +194,13 @@ class EC2Facade(AWSBaseFacade):
             peering_connections = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_vpc_peering_connections', 'VpcPeeringConnections')
             return peering_connections
         except Exception as e:
-            print_exception('Failed to get peering connections: {}'.format(e))
+            print_exception(f'Failed to get peering connections: {e}')
+            return []
+
+    async def get_route_tables(self, region):
+        try:
+            route_tables = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_route_tables', 'RouteTables')
+            return route_tables
+        except Exception as e:
+            print_exception('Failed to get route tables: {}'.format(e))
             return []
