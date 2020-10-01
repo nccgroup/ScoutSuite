@@ -5,6 +5,7 @@ from azure.mgmt.storage import StorageManagementClient
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
+from ScoutSuite.utils import get_user_agent
 
 
 class StorageAccountsFacade:
@@ -13,8 +14,10 @@ class StorageAccountsFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return StorageManagementClient(self.credentials.get_credentials('arm'),
+        client = StorageManagementClient(self.credentials.get_credentials('arm'),
                                        subscription_id=subscription_id)
+        client._client.config.add_user_agent(get_user_agent())
+        return client
 
     async def get_storage_accounts(self, subscription_id: str):
         try:
@@ -23,7 +26,7 @@ class StorageAccountsFacade:
                 lambda: list(client.storage_accounts.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve storage accounts: {}'.format(e))
+            print_exception(f'Failed to retrieve storage accounts: {e}')
             return []
         else:
             await get_and_set_concurrently([self._get_and_set_activity_logs], storage_accounts,
@@ -37,13 +40,14 @@ class StorageAccountsFacade:
                 lambda: list(client.blob_containers.list(resource_group_name, storage_account_name))
             )
         except Exception as e:
-            print_exception('Failed to retrieve blob containers: {}'.format(e))
+            print_exception(f'Failed to retrieve blob containers: {e}')
             return []
         else:
             return containers
 
     async def _get_and_set_activity_logs(self, storage_account, subscription_id: str):
         client = MonitorManagementClient(self.credentials.arm_credentials, subscription_id)
+        client._client.config.add_user_agent(get_user_agent())
 
         # Time format used by Azure API:
         time_format = "%Y-%m-%dT%H:%M:%S.%f"
@@ -56,14 +60,14 @@ class StorageAccountsFacade:
         logs_filter = " and ".join([
             "eventTimestamp ge {}".format((utc_now - timespan).strftime(time_format)),
             "eventTimestamp le {}".format(utc_now.strftime(time_format)),
-            "resourceId eq {}".format(storage_account.id),
+            f"resourceId eq {storage_account.id}",
         ])
         try:
             activity_logs = await run_concurrently(
                 lambda: list(client.activity_logs.list(filter=logs_filter, select="eventTimestamp, operationName"))
             )
         except Exception as e:
-            print_exception('Failed to retrieve activity logs: {}'.format(e))
+            print_exception(f'Failed to retrieve activity logs: {e}')
             setattr(storage_account, 'activity_logs', [])
         else:
             setattr(storage_account, 'activity_logs', activity_logs)

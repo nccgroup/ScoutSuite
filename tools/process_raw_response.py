@@ -83,7 +83,7 @@ if __name__ == "__main__":
     parsed_html = ''
 
     parsed_string = ''
-    parsed_string += '{}_dict = {{}}\n'.format(args.name)
+    parsed_string += f'{args.name}_dict = {{}}\n'
 
     for k in object_value_dict.keys():
         object_format_value = object_format.format(args.name, k)
@@ -93,19 +93,19 @@ if __name__ == "__main__":
             '.{}.{{{{{}}}}}'.format(args.additional_path, args.additional_path[:-1]) if args.additional_path else '',
             args.name, camel_to_snake(k), camel_to_snake(k))
 
-    parsed_string += 'return {}_dict[\'id\'], {}_dict'.format(args.name, args.name)
+    parsed_string += f'return {args.name}_dict[\'id\'], {args.name}_dict'
 
     print(parsed_string)
     print('\n')
     print(html_boilerplate.format(
         args.service, args.name,
-        args.service, '.{}.id'.format(args.additional_path) if args.additional_path else '', args.name,
+        args.service, f'.{args.additional_path}.id' if args.additional_path else '', args.name,
         parsed_html,
-        args.service, '.{}.id'.format(args.additional_path) if args.additional_path else '', args.name,
-        args.service, '\\\\.{}\\\\.id'.format(args.additional_path) if args.additional_path else '', args.name,
+        args.service, f'.{args.additional_path}.id' if args.additional_path else '', args.name,
+        args.service, f'\\\\.{args.additional_path}\\\\.id' if args.additional_path else '', args.name,
         args.service, args.name,
         args.service, args.name,
-        args.service, '.{}.id'.format(args.additional_path) if args.additional_path else '', args.name,
+        args.service, f'.{args.additional_path}.id' if args.additional_path else '', args.name,
         args.service, args.name,
         args.service, args.name
     ))

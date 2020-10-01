@@ -24,8 +24,8 @@
                 [ "and",
                     [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "AWS:SourceArn" ],
                     [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "AWS:SourceOwner" ],
-                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "kms:ViaService" ],
-                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "kms:CallerAccount" ]
+                    [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "kms:ViaService" ],
+                    [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "kms:CallerAccount" ]
                 ]
             ]
         ]

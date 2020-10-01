@@ -1,4 +1,13 @@
 from __future__ import print_function
+from ScoutSuite import __version__
+
+formatted_provider_name = {
+    'aliyun': 'Aliyun',
+    'aws': 'AWS',
+    'azure': 'Azure',
+    'gcp': 'GCP',
+    'oci': 'OCI'
+}
 
 formatted_service_name = {
     # AWS
@@ -16,6 +25,7 @@ formatted_service_name = {
     'elbv2': 'ELBv2',
     'eks': 'EKS',
     'elasticache': 'ElastiCache',
+    'guardduty': 'GuardDuty',
     'lambda': 'Lambda',
     'awslambda': 'Lambda',
     'redshift': 'RedShift',
@@ -71,10 +81,21 @@ def manage_dictionary(dictionary, key, init, callback=None):
     return dictionary
 
 
+def format_provider_code(provider_code):
+    """
+    :param provider_code:
+    :return:
+    """
+    return formatted_provider_name[provider_code] if provider_code in formatted_provider_name else provider_code.upper()
+
+
 def format_service_name(service):
     """
-
     :param service:
     :return:
     """
     return formatted_service_name[service] if service in formatted_service_name else service.upper()
+
+
+def get_user_agent():
+    return 'Scout Suite/{} (https://github.com/nccgroup/ScoutSuite)'.format(__version__)

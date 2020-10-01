@@ -10,7 +10,7 @@ class SQSFacade(AWSBaseFacade):
         try:
             raw_queues = await run_concurrently(sqs_client.list_queues)
         except Exception as e:
-            print_exception('Failed to list SQS queues: {}'.format(e))
+            print_exception(f'Failed to list SQS queues: {e}')
             return []
         else:
             if 'QueueUrls' not in raw_queues:
@@ -28,7 +28,7 @@ class SQSFacade(AWSBaseFacade):
                     'Attributes']
             )
         except Exception as e:
-            print_exception('Failed to get SQS queue attributes: {}'.format(e))
+            print_exception(f'Failed to get SQS queue attributes: {e}')
             raise
 
         return queue_url, queue_attributes

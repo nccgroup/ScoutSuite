@@ -4,7 +4,7 @@ from ScoutSuite.providers.gcp.facade.base import GCPFacade
 
 class Sinks(Resources):
     def __init__(self, facade: GCPFacade, project_id: str):
-        super(Sinks, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):

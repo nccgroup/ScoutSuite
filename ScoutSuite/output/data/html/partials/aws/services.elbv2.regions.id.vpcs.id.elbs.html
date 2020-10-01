@@ -1,0 +1,82 @@
+
+    <!-- ELBv2 LB partial -->
+    <script id="services.elbv2.regions.id.vpcs.id.lbs.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4>Information</h4>
+            <ul>
+                <li class="list-group-item-text">ARN: <samp>{{arn}}</samp></li>
+                <li class="list-group-item-text">VPC: {{getValueAt 'services.elbv2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
+                <li class="list-group-item-text">DNS: {{DNSName}}</li>
+                <li class="list-group-item-text"><span id="elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.load_balancer_scheme">Scheme: {{Scheme}}</span></li>
+                <li class="list-group-item-text">Type: {{Type}}</li>
+                <li class="list-group-item-text">Availability zones:</li>
+                <ul>
+                    {{#each AvailabilityZones}}
+                        <li class="list-group-item-text">{{ZoneName}} ({{SubnetId}})</li>
+                    {{/each}}
+                </ul>
+            </ul>
+        </div>
+        <div class="list-group-item">
+            <h4>Listeners</h4>
+            <ul>
+                {{#each listeners}}
+                    <li class="list-group-item-text">
+                        {{@key}} ({{Protocol}}{{#if SslPolicy}}, {{SslPolicy}}{{/if}})
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+        <div class="list-group-item">
+            <h4>Attributes</h4>
+            <ul>
+                {{#each attributes}}
+                    <li class="list-group-item-text">{{Key}}: <span id="elbv2.regions.{{../region}}.vpcs.{{../vpc}}.lbs.{{@../key}}.attributes.{{@key}}">{{Value}}</span></li>
+                {{/each}}
+            </ul>
+        </div>
+        {{#unless isNetwork}}
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+            <div class="accordion">
+                <h4 class="list-group-item-heading accordion-heading">Security Groups
+                  {{> count_badge count=security_groups.length target=(concat '#services.elbv2.regions' region 'vpcs' vpc 'lbs' @key 'security_groups')}}
+                </h4>
+                <div id="services.elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.security_groups" class="accordion-body">
+                    <div class="accordion-inner">
+                        <ul class="no-bullet">
+                            {{#each security_groups}}
+                                <li><a href="javascript:showObject('services.ec2.regions.{{../region}}.vpcs.{{../vpc}}.security_groups.{{GroupId}}')">{{GroupId}}</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/unless}}
+        {{#if tags}}
+            <div class="list-group-item">
+                <h4>Tags</h4>
+                <ul>
+                    {{#each tags}}
+                    <li class="list-group-item-text"><samp>{{@key}}</samp>: <samp>{{this}}</samp></li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+
+    </script>
+    <script>
+      Handlebars.registerPartial("services.elbv2.regions.id.vpcs.id.lbs", $("#services\\.elbv2\\.regions\\.id\\.vpcs\\.id\\.lbs\\.partial").html());
+    </script>
+
+    <!-- Single instance template -->
+    <script id="single_elbv2_lb-template" type="text/x-handlebars-template">
+        {{> modal-template template='services.elbv2.regions.id.vpcs.id.lbs'}}
+    </script>
+
+    <script>
+        var single_elbv2_lb_template = Handlebars.compile($("#single_elbv2_lb-template").html());
+    </script>

@@ -7,12 +7,7 @@ from ScoutSuite.providers.gcp.resources.iam.base import IAM
 from ScoutSuite.providers.gcp.resources.kms.base import KMS
 from ScoutSuite.providers.gcp.resources.stackdriverlogging.base import StackdriverLogging
 from ScoutSuite.providers.gcp.resources.stackdrivermonitoring.base import StackdriverMonitoring
-
-# Try to import proprietary services
-try:
-    from ScoutSuite.providers.gcp.resources.private_gke.base import KubernetesEngine
-except ImportError:
-    pass
+from ScoutSuite.providers.gcp.resources.gke.base import KubernetesEngine
 
 
 class GCPServicesConfig(BaseServicesConfig):
@@ -21,7 +16,7 @@ class GCPServicesConfig(BaseServicesConfig):
                  project_id=None, folder_id=None, organization_id=None, all_projects=None,
                  **kwargs):
 
-        super(GCPServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
         facade = GCPFacade(default_project_id, project_id, folder_id, organization_id, all_projects)
 
@@ -32,12 +27,7 @@ class GCPServicesConfig(BaseServicesConfig):
         self.kms = KMS(facade)
         self.stackdriverlogging = StackdriverLogging(facade)
         self.stackdrivermonitoring = StackdriverMonitoring(facade)
-
-        # Instantiate proprietary services
-        try:
-            self.kubernetesengine = KubernetesEngine(facade)
-        except NameError as _:
-            pass
+        self.kubernetesengine = KubernetesEngine(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'gcp'

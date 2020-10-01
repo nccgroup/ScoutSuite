@@ -1,0 +1,28 @@
+{
+    "description": "Routing Table with VPC Peering",
+    "rationale": "Being highly selective in peering routing tables minimizes the impact of breach as resources outside of these routes are inaccessible to the peered VPC.",
+    "remediation": "Ensure route tables contain the least number of subnets or hosts as is required to accomplish the purpose for peering",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "4.5"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "4.4"
+        }
+    ],
+    "dashboard_name": "Rulesets",
+    "path": "vpc.regions.id.peering_connections.id",
+    "conditions": [
+        "and",
+        [
+            "vpc.regions.id.peering_connections.id.VpcPeeringConnectionId",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "default_with_rules"
+}

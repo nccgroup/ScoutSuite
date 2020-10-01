@@ -1,5 +1,6 @@
 import os
 
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.services import GCPServicesConfig
 
@@ -35,15 +36,15 @@ class GCPProvider(BaseProvider):
 
         self.result_format = result_format
 
-        super(GCPProvider, self).__init__(report_dir, timestamp,
-                                          services, skipped_services, result_format)
+        super().__init__(report_dir, timestamp,
+                         services, skipped_services, result_format)
 
     def get_report_name(self):
         """
         Returns the name of the report using the provider's configuration
         """
         if self.account_id:
-            return 'gcp-{}'.format(self.account_id)
+            return f'gcp-{self.account_id}'
         else:
             return 'gcp'
 
@@ -79,10 +80,13 @@ class GCPProvider(BaseProvider):
         :param ip_ranges_name_key:
         :return: None
         """
+
         self._match_instances_and_snapshots()
         self._match_networks_and_instances()
+        self._match_networks_and_firewalls()
+        self._match_subnetworks_and_instances()
 
-        super(GCPProvider, self).preprocessing()
+        super().preprocessing()
 
     def _match_instances_and_snapshots(self):
         """
@@ -91,19 +95,23 @@ class GCPProvider(BaseProvider):
         :return:
         """
 
-        if 'computeengine' in self.service_list:
-            for project in self.services['computeengine']['projects'].values():
-                for zone in project['zones'].values():
-                    for instance in zone['instances'].values():
-                        for instance_disk in instance['disks'].values():
-                            instance_disk['snapshots'] = []
-                            for disk in project['snapshots'].values():
-                                if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
-                                    instance_disk['snapshots'].append(disk)
+        try:
+            if 'computeengine' in self.service_list:
+                for project in self.services['computeengine']['projects'].values():
+                    for zone in project['zones'].values():
+                        for instance in zone['instances'].values():
+                            for instance_disk in instance['disks'].values():
+                                instance_disk['snapshots'] = []
+                                for disk in project['snapshots'].values():
+                                    if disk['status'] == 'READY' and \
+                                            disk['source_disk_url'] == instance_disk['source_url']:
+                                        instance_disk['snapshots'].append(disk)
 
-                            instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
-                                                                   key=lambda x: x['creation_timestamp']) \
-                                if instance_disk['snapshots'] else None
+                                instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
+                                                                       key=lambda x: x['creation_timestamp']) \
+                                    if instance_disk['snapshots'] else None
+        except Exception as e:
+            print_exception('Unable to match instances and snapshots: {}'.format(e))
 
     def _match_networks_and_instances(self):
         """
@@ -112,15 +120,69 @@ class GCPProvider(BaseProvider):
         :return:
         """
 
-        if 'computeengine' in self.service_list:
-            for project in self.services['computeengine']['projects'].values():
-                for network in project['networks'].values():
-                    network['instances'] = []
-                    for zone in project['zones'].values():
-                        # Skip the counts contained in the zones dictionary
-                        if zone is int:
-                            continue
-                        for instance in zone['instances'].values():
-                            for network_interface in instance['network_interfaces']:
-                                if network_interface['network'] == network['network_url']:
-                                    network['instances'].append(instance['id'])
+        try:
+            if 'computeengine' in self.service_list:
+                for project in self.services['computeengine']['projects'].values():
+                    for network in project['networks'].values():
+                        network['instances'] = []
+                        for zone in project['zones'].values():
+                            # Skip the counts contained in the zones dictionary
+                            if zone is int:
+                                continue
+                            for instance in zone['instances'].values():
+                                instance['network_id'] = None
+                                for network_interface in instance['network_interfaces']:
+                                    if network_interface['network'] == network['network_url']:
+                                        network['instances'].append({'instance_id': instance['id'],
+                                                                     'instance_zone': instance['zone']})
+                                        network_interface['network_id'] = network['id']
+        except Exception as e:
+            print_exception('Unable to match instances and networks: {}'.format(e))
+
+    def _match_networks_and_firewalls(self):
+        """
+        For each network, math firewall rules in that network
+
+        :return:
+        """
+
+        try:
+            if 'computeengine' in self.service_list:
+                for project in self.services['computeengine']['projects'].values():
+                    for network in project['networks'].values():
+                        network['firewalls'] = []
+                        for firewall in project['firewalls'].values():
+                            firewall['network_id'] = None
+                            if firewall['network_url'] == network['network_url']:
+                                network['firewalls'].append(firewall['id'])
+                                firewall['network_id'] = network['id']
+        except Exception as e:
+            print_exception('Unable to match firewalls and networks: {}'.format(e))
+
+    def _match_subnetworks_and_instances(self):
+        """
+        For each subnetwork, math instances in that subnetwork
+
+        :return:
+        """
+
+        try:
+            if 'computeengine' in self.service_list:
+                for project in self.services['computeengine']['projects'].values():
+                    for region in project['regions'].values():
+                        for subnetwork in region['subnetworks'].values():
+                            subnetwork['instances'] = []
+                            for zone in project['zones'].values():
+                                # Skip the counts contained in the zones dictionary
+                                if zone is int:
+                                    continue
+                                for instance in zone['instances'].values():
+                                    instance['subnetwork_id'] = None
+                                    for network_interface in instance['network_interfaces']:
+                                        if network_interface['subnetwork'] == subnetwork['subnetwork_url']:
+                                            subnetwork['instances'].append({'instance_id': instance['id'],
+                                                                         'instance_zone': instance['zone']})
+                                            network_interface['subnetwork_id'] = subnetwork['id']
+                                            network_interface['subnetwork_region'] = subnetwork['region']
+        except Exception as e:
+            print_exception('Unable to match instances and subnetworks: {}'.format(e))

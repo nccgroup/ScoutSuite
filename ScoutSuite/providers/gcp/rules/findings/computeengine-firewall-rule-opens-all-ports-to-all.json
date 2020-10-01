@@ -31,5 +31,6 @@
             "containAtLeastOneOf",
             "0.0.0.0/0"
         ]
-    ]
+    ],
+    "id_suffix": "permissive_ports"
 }

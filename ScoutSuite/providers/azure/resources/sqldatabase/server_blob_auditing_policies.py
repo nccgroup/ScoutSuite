@@ -5,7 +5,7 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 class ServerBlobAuditingPolicies(AzureResources):
 
     def __init__(self, facade: AzureFacade, resource_group_name: str, server_name: str, subscription_id: str):
-        super(ServerBlobAuditingPolicies, self).__init__(facade)
+        super().__init__(facade)
         self.resource_group_name = resource_group_name
         self.server_name = server_name
         self.subscription_id = subscription_id

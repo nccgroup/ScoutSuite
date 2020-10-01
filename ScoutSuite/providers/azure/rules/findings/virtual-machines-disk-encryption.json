@@ -38,10 +38,10 @@
     "conditions": [
         "and",
         [
-            "virtualmachines.subscriptions.id.disks.id.encryption_enabled",
-            "false",
+            "virtualmachines.subscriptions.id.disks.id.encryption_type",
+            "null",
             ""
         ]
     ],
-    "id_suffix": "encryption_enabled"
+    "id_suffix": "encryption_type"
 }

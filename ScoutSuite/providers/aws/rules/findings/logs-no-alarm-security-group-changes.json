@@ -1,0 +1,32 @@
+{
+    "description": "No CloudWatch Alarm for \"Security Group Changes\"",
+    "rationale": "There was no CloudWatch alarm to monitor changes to security groups. Monitoring for security group changes will help ensure that no service or resource is unintentionally exposed.",
+    "remediation": "Enable a CloudWatch alarm to monitor security group changes.",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "3.10"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "3.10"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "3.10"
+        }
+    ],
+    "dashboard_name": "Alarms",
+    "path": "cloudwatch.regions.id.metric_filters.id",
+    "conditions": [
+        "or",
+        [
+            "cloudwatch.regions.id.metric_filters_pattern_checks.security_group_changes",
+            "false",
+            ""
+        ]
+    ]
+}

@@ -7,7 +7,7 @@ import re
 count_re = re.compile(r".*_count$")
 
 
-class Server(object):
+class Server:
     """
     Boots a server that serves the result of the report for the user. This is still a proof of concept,
     but will eventually be used to serve data when it exceeds 400mb.

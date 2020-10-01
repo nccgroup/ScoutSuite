@@ -14,8 +14,9 @@ class Users(AzureResources):
         """
         for user in user_list:
             raw_user = await self.facade.aad.get_user(user)
-            id, user = await self._parse_user(raw_user)
-            self[id] = user
+            if raw_user:
+                id, user = await self._parse_user(raw_user)
+                self[id] = user
 
     async def _parse_user(self, raw_user):
         user_dict = {}
