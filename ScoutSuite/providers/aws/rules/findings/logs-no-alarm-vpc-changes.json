@@ -1,0 +1,32 @@
+{
+    "description": "No CloudWatch Alarm for \"VPC Changes\"",
+    "rationale": "There was no CloudWatch alarm to monitor VPC changes. Monitoring for VPC changes will help ensure authentication and authorization controls remain intact.",
+    "remediation": "Enable a CloudWatch alarm to detect VPC changes.",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "3.14"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "3.14"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "3.14"
+        }
+    ],
+    "dashboard_name": "Alarms",
+    "path": "cloudwatch.regions.id.metric_filters.id",
+    "conditions": [
+        "or",
+        [
+            "cloudwatch.regions.id.metric_filters_pattern_checks.vpc_changes",
+            "false",
+            ""
+        ]
+    ]
+}

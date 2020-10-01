@@ -1,12 +1,26 @@
 {
     "description": "Subnet without a Flow Log",
     "rationale": "Flow logs enable the investigation of incidents involving unauthorized network traffic, such as an attacker exfiltrating data or pivoting to other hosts.",
+    "remediation": "Create a flow log for each subnet.",
     "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "4.3"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "4.3"
+        },
         {
             "name": "CIS Amazon Web Services Foundations",
             "version": "1.2.0",
             "reference": "2.9"
         }
+    ],
+    "references": [
+        "https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"
     ],
     "dashboard_name": "Subnets",
     "path": "vpc.regions.id.vpcs.id.subnets.id",
@@ -23,5 +37,5 @@
             ""
         ]
     ],
-    "id_suffix": "NoFlowLog"
+    "id_suffix": "no_flowlog"
 }

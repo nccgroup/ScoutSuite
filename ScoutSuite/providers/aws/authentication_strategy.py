@@ -1,6 +1,7 @@
 import boto3
 import logging
 
+from ScoutSuite import __version__
 from ScoutSuite.providers.aws.utils import get_caller_identity
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
@@ -47,6 +48,11 @@ class AWSAuthenticationStrategy(AuthenticationStrategy):
 
             # Test querying for current user
             get_caller_identity(session)
+
+            # Set custom user agent
+            session._session.user_agent_name = 'Scout Suite'
+            session._session.user_agent_extra = 'Scout Suite/{} (https://github.com/nccgroup/ScoutSuite)'.format(__version__)
+            session._session.user_agent_version = __version__
 
             return AWSCredentials(session=session)
 

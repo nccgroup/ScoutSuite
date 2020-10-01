@@ -6,7 +6,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class Stacks(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        super(Stacks, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):
@@ -21,7 +21,8 @@ class Stacks(AWSResources):
         raw_stack['drifted'] = raw_stack.pop('DriftInformation')[
                                    'StackDriftStatus'] == 'DRIFTED'
         raw_stack['termination_protection'] = raw_stack['EnableTerminationProtection']
-
+        raw_stack['arn'] = raw_stack['id']
+        raw_stack['notificationARNs'] = raw_stack['NotificationARNs']
         template = raw_stack.pop('template')
         raw_stack['deletion_policy'] = self.has_deletion_policy(template)
 

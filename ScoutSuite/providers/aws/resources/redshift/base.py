@@ -14,4 +14,4 @@ class Redshift(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(Redshift, self).__init__('redshift', facade)
+        super().__init__('redshift', facade)

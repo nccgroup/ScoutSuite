@@ -13,7 +13,7 @@ class SESFacade(AWSBaseFacade):
 
             return await map_concurrently(self._get_identity_dkim_attributes, identity_names, region=region)
         except Exception as e:
-            print_exception('Failed to get SES identities: {}'.format(e))
+            print_exception(f'Failed to get SES identities: {e}')
             return []
 
     async def _get_identity_dkim_attributes(self, identity_name: str, region: str):
@@ -24,7 +24,7 @@ class SESFacade(AWSBaseFacade):
                     identity_name]
             )
         except Exception as e:
-            print_exception('Failed to get SES DKIM attributes: {}'.format(e))
+            print_exception(f'Failed to get SES DKIM attributes: {e}')
             raise
         return identity_name, dkim_attributes
 
@@ -35,7 +35,7 @@ class SESFacade(AWSBaseFacade):
                 lambda: ses_client.list_identity_policies(Identity=identity_name)['PolicyNames']
             )
         except Exception as e:
-            print_exception('Failed to list SES policies: {}'.format(e))
+            print_exception(f'Failed to list SES policies: {e}')
             policy_names = []
 
         if len(policy_names) == 0:
@@ -46,5 +46,5 @@ class SESFacade(AWSBaseFacade):
                 lambda: ses_client.get_identity_policies(Identity=identity_name, PolicyNames=policy_names)['Policies']
             )
         except Exception as e:
-            print_exception('Failed to get SES policies: {}'.format(e))
+            print_exception(f'Failed to get SES policies: {e}')
             return None

@@ -6,6 +6,7 @@
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">ARN: <samp>{{arn}}</samp></div>
           <div class="list-group-item-text item-margin">Region: {{region}}</div>
           <div class="list-group-item-text item-margin">Creation date: {{CreationDate}}</div>
           <div class="list-group-item-text item-margin">Logging: <span id="s3.buckets.{{@key}}.logging">{{has_logging? logging}}</span></div>
@@ -15,6 +16,7 @@
           <div class="list-group-item-text item-margin">Secure transport: <span id="s3.buckets.{{@key}}.secure_transport_enabled">{{convert_bool_to_enabled secure_transport_enabled}}</span></div>
           <div class="list-group-item-text item-margin">Static website hosting: <span id="s3.buckets.{{@key}}.web_hosting_enabled">{{convert_bool_to_enabled web_hosting_enabled}}</span></div>
         </div>
+        {{> services.s3.public_access_block_configuration resource_type = 'bucket' resource_path = (concat 's3.buckets' @key)}}
         <div class="list-group-item">
             {{#if policy}}
                 {{> accordion_policy name = 'Bucket Policy' document = policy policy_path = (concat 's3.buckets' @key 'policy')}}

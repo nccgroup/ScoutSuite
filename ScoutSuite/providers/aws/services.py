@@ -36,10 +36,6 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
-except ImportError:
-    pass
-try:
     from ScoutSuite.providers.aws.resources.private_ecr.base import ECR
 except ImportError:
     pass
@@ -49,6 +45,10 @@ except ImportError:
     pass
 try:
     from ScoutSuite.providers.aws.resources.private_eks.base import EKS
+except ImportError:
+    pass
+try:
+    from ScoutSuite.providers.aws.resources.private_guardduty.base import GuardDuty
 except ImportError:
     pass
 
@@ -65,6 +65,7 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar ecs:                          ECS configuration
     :ivar ecr:                          ECR configuration
     :ivar eks:                          EKS configuration
+    :ivar guarduty:                     GuardDuty configuration
     :ivar iam:                          IAM configuration
     :ivar kms:                          KMS configuration
     :ivar rds:                          RDS configuration
@@ -77,7 +78,7 @@ class AWSServicesConfig(BaseServicesConfig):
 
     def __init__(self, credentials=None, **kwargs):
 
-        super(AWSServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
         facade = AWSFacade(credentials)
 
@@ -117,10 +118,6 @@ class AWSServicesConfig(BaseServicesConfig):
         except NameError as _:
             pass
         try:
-            self.dynamodb = DynamoDB(facade)
-        except NameError as _:
-            pass
-        try:
             self.ecr = ECR(facade)
         except NameError as _:
             pass
@@ -130,6 +127,10 @@ class AWSServicesConfig(BaseServicesConfig):
             pass
         try:
             self.eks = EKS(facade)
+        except NameError as _:
+            pass
+        try:
+            self.guardduty = GuardDuty(facade)
         except NameError as _:
             pass
 

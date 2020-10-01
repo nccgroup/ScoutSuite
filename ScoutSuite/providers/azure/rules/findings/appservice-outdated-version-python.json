@@ -1,0 +1,36 @@
+{
+    "description": "Web App Running an Outdated Python Version",
+    "rationale": "Periodically, newer versions are released for Python software either due to security flaws or to include additional functionality. Using the latest Python version for web apps is recommended in order to take advantage of security fixes, if any, and/or additional functionalities of the newer version.",
+    "remediation": "Set <samp>Python version</samp> to latest version available under <samp>General settings</samp> of the management console",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "9.8"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [
+        "and",
+        [
+            "appservice.subscriptions.id.web_apps.id.programming_language",
+            "equal",
+            "python"
+        ],
+        [
+            "appservice.subscriptions.id.web_apps.id.programming_language_version",
+            "containNoneOf",
+            [
+                "3.6",
+                "3.7",
+                "3.8",
+                "3.9"
+            ]
+        ]
+    ],
+    "id_suffix": "programming_language_version"
+}

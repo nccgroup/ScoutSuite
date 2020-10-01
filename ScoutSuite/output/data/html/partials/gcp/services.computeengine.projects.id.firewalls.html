@@ -9,18 +9,29 @@
         <div class="list-group-item-text item-margin">Firewall name: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.name">{{name}}</span></div>
         <div class="list-group-item-text item-margin">Project ID: <span id="computeengine.projects.{{@../key}}.instances.{{@key}}.project_id"><samp>{{project_id}}</samp></span></div>
         <div class="list-group-item-text item-margin">Description: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.description"><samp>{{description}}</samp></span></div>
-        <div class="list-group-item-text item-margin">VPC network: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.network"><samp>{{network}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Network: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.network"><a href="javascript:showObject('services.computeengine.projects.{{@../key}}.networks.{{network_id}}')">{{getValueAt 'services.computeengine.projects' @../key 'networks' network_id 'name'}}</a></span></div>
         <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.creation_timestamp">{{format_date creation_timestamp}}</span></div>
         <div class="list-group-item-text item-margin">Priority: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.priority"><samp>{{priority}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Status: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.disabled">{{convert_bool_to_enabled disabled}}</span></div>
+        <div class="list-group-item-text item-margin">Disabled: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.disabled"><samp>{{disabled}}</samp></span></div>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Configuration</h4>
-        <div class="list-group-item-text item-margin">Direction: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.direction">{{direction}}</span></div>
+        <div class="list-group-item-text item-margin">Direction: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.direction"><samp>{{direction}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Action: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.action"><samp>{{action}}</samp></span></div>
         {{#if source_ranges}}
-        <div class="list-group-item-text item-margin">Source Ranges:</div>
+        <div class="list-group-item-text item-margin"><span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.source_ranges">Source Ranges:</span></div>
         <ul>
             {{#each source_ranges}}
+            <li><samp>{{this}}</samp></li>
+            {{else}}
+            <li><samp>None</samp></li>
+            {{/each}}
+        </ul>
+        {{/if}}
+        {{#if destination_ranges}}
+        <div class="list-group-item-text item-margin"><span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.destination_ranges">Destination Ranges:</span></div>
+        <ul>
+            {{#each destination_ranges}}
             <li><samp>{{this}}</samp></li>
             {{else}}
             <li><samp>None</samp></li>
@@ -50,13 +61,13 @@
     </div>
     <div class="list-group-item">
         {{#ifEqual action "allowed"}}
-            <h4 class="list-group-item-heading">Allowed Traffic</h4>
+            <h4 class="list-group-item-heading"><span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.allowed_traffic">Allowed Traffic</span></h4>
             <ul>
                 {{#each allowed_traffic}}
                     <li><samp>{{@key}}</samp></li>
                     <ul>
                     {{#each this}}
-                        <li><samp>{{this}}</samp></li>
+                        <li><span id="computeengine.projects.{{@../../../key}}.firewalls.{{@../../key}}.allowed_traffic.{{@../key}}.{{@key}}.permissive_ports"><samp>{{this}}</samp></span></li>
                     {{else}}
                         <li><samp>None</samp></li>
                     {{/each}}
@@ -66,22 +77,21 @@
                 {{/each}}
             </ul>
         {{else}}
-            <h4 class="list-group-item-heading">Denied Traffic</h4>
+            <h4 class="list-group-item-heading"><span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.denied_traffic">Denied Traffic</span></h4>
             <ul>
                 {{#each denied_traffic}}
-                <li><samp>{{@key}}</samp></li>
-                <ul>
-                    {{#each this}}
-                    <li><samp>{{this}}</samp></li>
-                    {{else}}
-                    <li><samp>None</samp></li>
-                    {{/each}}
-                </ul>
+                    <li><samp>{{@key}}</samp></li>
+                    <ul>
+                        {{#each this}}
+                            <li><span id="computeengine.projects.{{@../../../key}}.firewalls.{{@../../key}}.allowed_traffic.{{@../key}}.{{@key}}.permissive_ports"><samp>{{this}}</samp></span></li>
+                        {{else}}
+                            <li><samp>None</samp></li>
+                        {{/each}}
+                    </ul>
                 {{else}}
-                <li><samp>None</samp></li>
+                    <li><samp>None</samp></li>
                 {{/each}}
-            </ul>
-        {{/ifEqual}}
+            </ul> {{/ifEqual}}
     </div>
 </script>
 

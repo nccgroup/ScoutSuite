@@ -7,13 +7,14 @@
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
         <ul>
-            <li class="list-group-item-text">Id: {{id}}</li>
+            <li class="list-group-item-text">ID: {{id}}</li>
+            <li class="list-group-item-text">ARN: {{arn}}</li>
             <li class="list-group-item-text">Date:  <span id="ec2.regions.{{region}}.snapshots.{{id}}.old_snapshot">{{StartTime}}</span></li>
             <li class="list-group-item-text">Description:{{Description}}</li>
             <li class="list-group-item-text">State: <span id="ec2.regions.{{region}}.snapshots.{{id}}.snapshot_errored">{{State}}</span></li>
             <li class="list-group-item-text">Encrypted: {{Encrypted}}</li>
-            <li class="list-group-item-text">Volume:  {{> resource_link resource_path = (concat 'services.ec2.regions' region 'volumes' VolumeId )}}</li>
-            <li class="list-group-item-text">Is public: <span id="ec2.regions.{{region}}.snapshots.{{id}}.ebs_snapshot_public">{{getValueAt 'services.ec2.regions' region 'snapshots' id 'public'}}</span></li>
+            <li class="list-group-item-text">Volume: {{> resource_link resource_path = (concat 'services.ec2.regions' region 'volumes' VolumeId )}}</li>
+            <li class="list-group-item-text">Is Public: <span id="ec2.regions.{{region}}.snapshots.{{id}}.ebs_snapshot_public">{{getValueAt 'services.ec2.regions' region 'snapshots' id 'public'}}</span></li>
         </ul>
     </div>
 </script>

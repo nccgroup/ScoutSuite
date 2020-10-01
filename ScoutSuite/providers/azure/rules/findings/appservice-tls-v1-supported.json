@@ -1,5 +1,5 @@
 {
-    "description": "Unsafe TLS Version Supported",
+    "description": "Insecure TLS Version Supported",
     "rationale": "The TLS (Transport Layer Security) protocol secures transmission of data over the internet using standard encryption technology. Encryption should be set with the latest version of TLS. App Service allows TLS 1.2 by default, which is the recommended TLS level by industry standards, such as PCI DSS.",
     "remediation": "App service currently allows the web app to set TLS versions 1.0, 1.1 and 1.2. It is highly recommended to use the latest TLS 1.2 version for web app secure connections.",
     "compliance": [

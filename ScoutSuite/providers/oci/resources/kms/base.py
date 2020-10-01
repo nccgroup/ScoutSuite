@@ -9,7 +9,7 @@ class KMS(OracleCompositeResources):
     ]
 
     def __init__(self, facade: OracleFacade):
-        super(KMS, self).__init__(facade)
+        super().__init__(facade)
         self.service = 'kms'
 
     async def fetch_all(self, **kwargs):

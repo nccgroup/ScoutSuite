@@ -10,4 +10,4 @@ class DirectConnect(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(DirectConnect, self).__init__('directconnect', facade)
+        super().__init__('directconnect', facade)

@@ -5,6 +5,7 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ARN: <span id="awslambda.regions{{region}}.functions.{{@key}}.arn"><samp>{{value_or_none arn}}</samp></span></div>
         <div class="list-group-item-text item-margin">Description: <span id="awslambda.regions.{{region}}.functions.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
         <div class="list-group-item-text item-margin">Last Modified: <span id="awslambda.regions.{{region}}.functions.{{@key}}.last_modified"><samp>{{format_date last_modified}}</samp></span></div>
         <div class="list-group-item-text item-margin">Runtime: <span id="awslambda.regions.{{region}}.functions.{{@key}}.runtime"><samp>{{value_or_none runtime}}</samp></span></div>
@@ -19,6 +20,11 @@
     {{#if access_policy}}
     <div class="list-group-item">
         {{> accordion_policy name = 'Resource-Based Policy' policy_path = (concat 'awslambda.regions' region 'functions' @key 'access_policy') document = access_policy}}
+    </div>
+    {{/if}}
+    {{#if env_variables}}
+    <div class="list-group-item">
+        {{> accordion_policy name = 'Environment Variables' policy_path = (concat 'awslambda.regions' region 'functions' @key 'env_variables') document = env_variables}}
     </div>
     {{/if}}
 </script>
