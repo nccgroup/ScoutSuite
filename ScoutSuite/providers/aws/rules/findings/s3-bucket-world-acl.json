@@ -1,6 +1,6 @@
 {
     "description": "_ARG_2_",
-    "rationale": "An S3 bucket has bee found that was accessible for _ARG_0_. If sensitive information is stored in this bucket, it could be at risk of being accessed by potential attackers.",
+    "rationale": "An S3 bucket has been found that was accessible for _ARG_0_. If sensitive information is stored in this bucket, it could be at risk of being accessed by potential attackers.",
     "dashboard_name": "Bucket ACLs",
     "display_path": "s3.buckets.id",
     "path": "s3.buckets.id.grantees.id",
