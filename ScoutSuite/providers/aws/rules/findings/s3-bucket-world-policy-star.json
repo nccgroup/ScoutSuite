@@ -1,6 +1,6 @@
 {
     "description": "All Actions Authorized to All Principals",
-    "rationale": "Allowing IAM actions to all principals is contrary to the principle of least privilege and presents and opportunity for abuse. This policy should be reviewed to ensure it is secure and in line with the resource's intended use.",
+    "rationale": "Allowing IAM actions to all principals is contrary to the principle of least privilege and presents an opportunity for abuse. This policy should be reviewed to ensure it is secure and in line with the resource's intended use.",
     "remediation": "Remove any Statement having an Effect set to Allow and a Principal set to \"*\" or {\"AWS\":\"*\"} in the affected bucket policy",
     "compliance": [
         {
