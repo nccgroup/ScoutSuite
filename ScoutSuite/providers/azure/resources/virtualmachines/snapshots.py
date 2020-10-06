@@ -29,21 +29,16 @@ class Snapshots(AzureResources):
         snapshot_dict['hyper_vgeneration'] = raw_snapshot.hyper_vgeneration
         snapshot_dict['creation_data'] = raw_snapshot.creation_data
         snapshot_dict['disk_size_gb'] = raw_snapshot.disk_size_gb
-        snapshot_dict['disk_size_bytes'] = raw_snapshot.disk_size_bytes
-        snapshot_dict['unique_id'] = raw_snapshot.unique_id
+        snapshot_dict['disk_size_bytes'] = raw_snapshot.disk_size_bytes if \
+            hasattr(raw_snapshot, 'disk_size_bytes') else None
+        snapshot_dict['unique_id'] = raw_snapshot.unique_id if \
+            hasattr(raw_snapshot, 'unique_id') else None
         snapshot_dict['provisioning_state'] = raw_snapshot.provisioning_state
-        snapshot_dict['incremental'] = raw_snapshot.incremental
+        snapshot_dict['incremental'] = raw_snapshot.incremental if \
+            hasattr(raw_snapshot, 'incremental') else None
         snapshot_dict['additional_properties'] = raw_snapshot.additional_properties
 
-        # TODO this can be removed
-        # snapshot_dict['encryption'] = raw_snapshot.encryption
-        # snapshot_dict['encryption_settings_collection'] = raw_snapshot.encryption_settings_collection
-        # if raw_snapshot.encryption_settings_collection and raw_snapshot.encryption_settings_collection.enabled:
-        #     snapshot_dict['encryption_enabled'] = True
-        # else:
-        #     snapshot_dict['encryption_enabled'] = False
-
-        if raw_snapshot.encryption and raw_snapshot.encryption.type:
+        if hasattr(raw_snapshot, 'encryption') and hasattr(raw_snapshot.encryption, 'type'):
             snapshot_dict['encryption_type'] = raw_snapshot.encryption.type
         else:
             snapshot_dict['encryption_type'] = None
