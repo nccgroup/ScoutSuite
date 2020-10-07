@@ -34,6 +34,12 @@
                 "level": "warning"
             }
         ],
+        "cloudtrail-partial-data-logging.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudtrail-no-data-logging.json": [
             {
                 "enabled": true,
