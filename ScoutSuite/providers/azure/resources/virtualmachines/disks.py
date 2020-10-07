@@ -38,8 +38,8 @@ class Disks(AzureResources):
         disk_dict['disk_state'] = raw_disk.disk_state
         disk_dict['additional_properties'] = raw_disk.additional_properties
 
-        if hasattr(raw_disk, 'encryption') and hasattr(raw_disk.encryption, 'type'):
-            disk_dict['encryption_type'] = raw_disk.encryption.type
+        if hasattr(raw_disk, 'encryption'):
+            disk_dict['encryption_type'] = getattr(raw_disk.encryption, 'type', None)
         else:
             disk_dict['encryption_type'] = None
 

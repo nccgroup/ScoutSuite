@@ -35,8 +35,8 @@ class Snapshots(AzureResources):
         snapshot_dict['incremental'] = getattr(raw_snapshot, 'incremental', None)
         snapshot_dict['additional_properties'] = raw_snapshot.additional_properties
 
-        if hasattr(raw_snapshot, 'encryption') and hasattr(raw_snapshot.encryption, 'type'):
-            snapshot_dict['encryption_type'] = raw_snapshot.encryption.type
+        if hasattr(raw_snapshot, 'encryption'):
+            snapshot_dict['encryption_type'] = getattr(raw_snapshot.encryption, 'type', None)
         else:
             snapshot_dict['encryption_type'] = None
 
