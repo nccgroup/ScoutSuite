@@ -18,6 +18,7 @@ class Snapshots(AzureResources):
         snapshot_dict = {}
 
         snapshot_dict['id'] = get_non_provider_id(raw_snapshot.id)
+        snapshot_dict['unique_id'] = getattr(raw_snapshot, 'unique_id', None)
         snapshot_dict['name'] = raw_snapshot.name
         snapshot_dict['type'] = raw_snapshot.type
         snapshot_dict['location'] = raw_snapshot.location
@@ -29,13 +30,9 @@ class Snapshots(AzureResources):
         snapshot_dict['hyper_vgeneration'] = raw_snapshot.hyper_vgeneration
         snapshot_dict['creation_data'] = raw_snapshot.creation_data
         snapshot_dict['disk_size_gb'] = raw_snapshot.disk_size_gb
-        snapshot_dict['disk_size_bytes'] = raw_snapshot.disk_size_bytes if \
-            hasattr(raw_snapshot, 'disk_size_bytes') else None
-        snapshot_dict['unique_id'] = raw_snapshot.unique_id if \
-            hasattr(raw_snapshot, 'unique_id') else None
+        snapshot_dict['disk_size_bytes'] = getattr(raw_snapshot, 'disk_size_bytes', None)
         snapshot_dict['provisioning_state'] = raw_snapshot.provisioning_state
-        snapshot_dict['incremental'] = raw_snapshot.incremental if \
-            hasattr(raw_snapshot, 'incremental') else None
+        snapshot_dict['incremental'] = getattr(raw_snapshot, 'incremental', None)
         snapshot_dict['additional_properties'] = raw_snapshot.additional_properties
 
         if hasattr(raw_snapshot, 'encryption') and hasattr(raw_snapshot.encryption, 'type'):
