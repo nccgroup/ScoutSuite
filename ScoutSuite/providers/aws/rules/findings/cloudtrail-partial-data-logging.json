@@ -4,7 +4,7 @@
     "references": [
         "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-data-events-with-cloudtrail.html"
     ],
-    "dashboard_name": "Trail Regions",
+    "dashboard_name": "Configurations",
     "display_path": "cloudtrail.regions.id.trails.id",
     "path": "cloudtrail.regions.id.trails.id",
     "conditions": [
