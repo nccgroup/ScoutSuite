@@ -870,9 +870,8 @@ function loadMetadata() {
 function exportSummary() {
     var anchor = window.location.hash.substr(1)
     // Strip the # sign
-    var path = decodeURIComponent(anchor.replace('#', ''))
     // Get resource path based on browsed-to path
-    var item_indexes = getValueAt(path);
+    var item_indexes = getValueAt("");
 
     // create array with item values
         var items = [];
@@ -924,8 +923,7 @@ function showResourcesDetails() {
 
     $('#resources_details_download_csv_button').click(function(){
             var anchor = window.location.hash.substr(1)
-            var path = decodeURIComponent(anchor.replace('#', ""))
-            var item_indexes = getValueAt(path)
+            var item_indexes = getValueAt("")
             var items = []
             var index = 0
             items[index] = ["Service", "Resource", "#"]
