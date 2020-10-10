@@ -68,3 +68,5 @@ report-*
 # Private folders
 /private*/
 /**/private*/
+
+!docker/bin
