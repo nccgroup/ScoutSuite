@@ -1,6 +1,6 @@
 {
     "description": "Domain Transfer Not Locked",
-    "rationale": "A domain lock prevents someone from transfering your domain to another registrar without your permission.",
+    "rationale": "A domain lock prevents someone from transferring your domain to another registrar without your permission.",
     "references": [
         "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-lock.html"
     ],
