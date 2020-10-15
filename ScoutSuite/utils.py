@@ -14,6 +14,7 @@ formatted_service_name = {
     'cloudformation': 'CloudFormation',
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
+    'cloudfront': 'CloudFront',
     'credentials': 'Credentials',
     'cognito': 'Cognito',
     'config': 'Config',

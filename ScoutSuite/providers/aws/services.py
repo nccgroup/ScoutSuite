@@ -4,6 +4,7 @@ from ScoutSuite.providers.aws.resources.awslambda.base import Lambdas
 from ScoutSuite.providers.aws.resources.cloudformation.base import CloudFormation
 from ScoutSuite.providers.aws.resources.cloudtrail.base import CloudTrail
 from ScoutSuite.providers.aws.resources.cloudwatch.base import CloudWatch
+from ScoutSuite.providers.aws.resources.cloudfront.base import CloudFront
 from ScoutSuite.providers.aws.resources.config.base import Config
 from ScoutSuite.providers.aws.resources.directconnect.base import DirectConnect
 from ScoutSuite.providers.aws.resources.ec2.base import EC2
@@ -58,6 +59,7 @@ class AWSServicesConfig(BaseServicesConfig):
 
     :ivar cloudtrail:                   CloudTrail configuration
     :ivar cloudwatch:                   CloudWatch configuration:
+    :ivar cloudfront:                   CloudFront configuration
     :ivar config:                       Config configuration
     :ivar dynamodb:                     DynomaDB configuration
     :ivar ec2:                          EC2 configuration
@@ -85,6 +87,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.cloudformation = CloudFormation(facade)
         self.cloudtrail = CloudTrail(facade)
         self.cloudwatch = CloudWatch(facade)
+        self.cloudfront = CloudFront(facade)
         self.config = Config(facade)
         self.directconnect = DirectConnect(facade)
         self.ec2 = EC2(facade)

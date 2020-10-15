@@ -6,6 +6,7 @@ from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation
 from ScoutSuite.providers.aws.facade.cloudtrail import CloudTrailFacade
 from ScoutSuite.providers.aws.facade.cloudwatch import CloudWatch
+from ScoutSuite.providers.aws.facade.cloudfront import CloudFront
 from ScoutSuite.providers.aws.facade.config import ConfigFacade
 from ScoutSuite.providers.aws.facade.directconnect import DirectConnectFacade
 from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
@@ -248,8 +249,8 @@ class AWSFacade(AWSBaseFacade):
         self.directconnect = DirectConnectFacade(self.session)
         self.efs = EFSFacade(self.session)
         self.elasticache = ElastiCacheFacade(self.session)
-        self.emr = EMRFacade(self.session)
         self.route53 = Route53Facade(self.session)
+        self.cloudfront = CloudFront(self.session)
         self.elb = ELBFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.iam = IAMFacade(self.session)
@@ -261,6 +262,7 @@ class AWSFacade(AWSBaseFacade):
         self.sns = SNSFacade(self.session)
         self.sqs = SQSFacade(self.session)
         self.secretsmanager = SecretsManagerFacade(self.session)
+        self.emr = EMRFacade(self.session)
 
         # Instantiate facades for proprietary services
         try:

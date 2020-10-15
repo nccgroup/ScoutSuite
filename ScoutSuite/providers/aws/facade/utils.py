@@ -18,7 +18,7 @@ class AWSFacadeUtils:
         :param region:str: Region
         :param session:boto3.session.Session: Boto3 session used to authenticate the client
         :param paginator_name:str: Name of the paginator
-        :param entity:str: Key used to retreive the entities in the paginator's response 
+        :param entity:str: Key used to retreive the entities in the paginator's response
         :param **paginator_args: Arguments passed to the paginator
 
         :return: A list of the fetched entities.
@@ -26,7 +26,6 @@ class AWSFacadeUtils:
 
         results = await AWSFacadeUtils.get_multiple_entities_from_all_pages(
             service, region, session, paginator_name, [entity], **paginator_args)
-
         if len(results) > 0:
             return results[entity]
         else:
@@ -41,7 +40,7 @@ class AWSFacadeUtils:
             :param region:str: Region
             :param session:boto3.session.Session: Boto3 session used to authenticate the client
             :param paginator_name:str: Name of the paginator
-            :param entities:list: Keys used to retreive the entities in the paginator's response 
+            :param entities:list: Keys used to retreive the entities in the paginator's response
             :param **paginator_args: Arguments passed to the paginator
 
             :return: A dictionary with the entity keys as keys, and the fetched entities lists as values.

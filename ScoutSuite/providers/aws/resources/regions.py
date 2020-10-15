@@ -32,5 +32,4 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
             # counting them would make the report confusing.
             if key == 'vpcs':
                 continue
-                
             self[key + '_count'] = sum([region[key + '_count'] for region in self['regions'].values()])
