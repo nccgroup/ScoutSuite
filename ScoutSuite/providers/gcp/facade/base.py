@@ -132,8 +132,13 @@ class GCPFacade(GCPBaseFacade):
 
         serviceusage_client = self._build_arbitrary_client('serviceusage', 'v1', force_new=True)
         services = serviceusage_client.services()
-        request = services.list(parent=f'projects/{project_id}')
-        services_response = await GCPFacadeUtils.get_all('services', request, services)
+        try:
+            request = services.list(parent=f'projects/{project_id}')
+            services_response = await GCPFacadeUtils.get_all('services', request, services)
+        except Exception as e:
+            print_exception(f'Could not fetch the state of services for project \"{project_id}\", '
+                            f'including {format_service_name(service.lower())} in the execution', {'exception': e})
+            return True
 
         # These are hardcoded endpoint correspondences as there's no easy way to do this.
         if service == 'IAM':
@@ -153,8 +158,8 @@ class GCPFacade(GCPBaseFacade):
         elif service == 'StackdriverMonitoring':
             endpoint = 'monitoring'
         else:
-            print_debug('Could not validate the state of the {} API for project \"{}\", including it in the execution'.format(
-                format_service_name(service.lower()), project_id))
+            print_debug('Could not validate the state of the {} API for project \"{}\", '
+                        'including it in the execution'.format(format_service_name(service.lower()), project_id))
             return True
 
         for s in services_response:
@@ -166,6 +171,6 @@ class GCPFacade(GCPBaseFacade):
                                                                                         project_id))
                     return False
 
-        print_error('Could not validate the state of the {} API for project \"{}\", including it in the execution'.format(
-            format_service_name(service.lower()), project_id))
+        print_error(f'Could not validate the state of the {format_service_name(service.lower())} API '
+                    f'for project \"{project_id}\", including it in the execution')
         return True
