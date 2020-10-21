@@ -3,6 +3,7 @@ import time
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Trails(AWSResources):
@@ -13,8 +14,11 @@ class Trails(AWSResources):
     async def fetch_all(self):
         raw_trails = await self.facade.cloudtrail.get_trails(self.region)
         for raw_trail in raw_trails:
-            name, resource = self._parse_trail(raw_trail)
-            self[name] = resource
+            try:
+                name, resource = self._parse_trail(raw_trail)
+                self[name] = resource
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_trail(self, raw_trail):
         trail = {'name': raw_trail.pop('Name')}

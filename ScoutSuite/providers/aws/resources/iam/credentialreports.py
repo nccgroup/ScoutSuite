@@ -1,14 +1,18 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
 from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception
 
 
 class CredentialReports(AWSResources):
     async def fetch_all(self):
         raw_credential_reports = await self.facade.iam.get_credential_reports()
         for raw_credential_report in raw_credential_reports:
-            name, resource = await self._parse_credential_reports(raw_credential_report)
-            self[name] = resource
+            try:
+                name, resource = await self._parse_credential_reports(raw_credential_report)
+                self[name] = resource
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_credential_reports(self, raw_credential_report):
         raw_credential_report['id'] = get_non_provider_id(raw_credential_report['user'])

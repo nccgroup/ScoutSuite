@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class MetricFilters(AWSResources):
@@ -10,8 +11,11 @@ class MetricFilters(AWSResources):
 
     async def fetch_all(self):
         for raw_metric_filter in await self.facade.cloudwatch.get_metric_filters(self.region):
-            name, resource = self._parse_metric_filter(raw_metric_filter)
-            self[name] = resource
+            try:
+                name, resource = self._parse_metric_filter(raw_metric_filter)
+                self[name] = resource
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_metric_filter(self, raw_metric_filter):
         metric_filter_dict = {}

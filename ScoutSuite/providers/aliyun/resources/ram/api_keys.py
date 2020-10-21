@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
 from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
+from ScoutSuite.core.console import print_exception
 
 
 class ApiKeys(AliyunResources):
@@ -9,8 +10,11 @@ class ApiKeys(AliyunResources):
 
     async def fetch_all(self):
         for raw_user_api_key in await self.facade.ram.get_user_api_keys(username=self.user['name']):
-            id, api_key = await self._parse_api_key(raw_user_api_key)
-            self[id] = api_key
+            try:
+                id, api_key = await self._parse_api_key(raw_user_api_key)
+                self[id] = api_key
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_api_key(self, raw_api_key):
         api_key = {}

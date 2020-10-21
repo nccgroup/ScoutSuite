@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class Listeners(AWSResources):
@@ -11,8 +12,11 @@ class Listeners(AWSResources):
     async def fetch_all(self):
         listeners = await self.facade.elbv2.get_listeners(self.region, self.load_balancer_arn)
         for raw_listener in listeners:
-            id, listener = self._parse_listener(raw_listener)
-            self[id] = listener
+            try:
+                id, listener = self._parse_listener(raw_listener)
+                self[id] = listener
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_listener(self, raw_listener):
             raw_listener.pop('ListenerArn')

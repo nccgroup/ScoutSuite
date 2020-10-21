@@ -2,6 +2,7 @@ import re
 
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class Stacks(AWSResources):
@@ -12,8 +13,11 @@ class Stacks(AWSResources):
     async def fetch_all(self):
         raw_stacks = await self.facade.cloudformation.get_stacks(self.region)
         for raw_stack in raw_stacks:
-            name, stack = self._parse_stack(raw_stack)
-            self[name] = stack
+            try:
+                name, stack = self._parse_stack(raw_stack)
+                self[name] = stack
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_stack(self, raw_stack):
         raw_stack['id'] = raw_stack.pop('StackId')

@@ -1,6 +1,7 @@
 from ScoutSuite.providers.oci.facade.base import OracleFacade
 from ScoutSuite.providers.oci.resources.base import OracleResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Policies(OracleResources):
@@ -9,8 +10,11 @@ class Policies(OracleResources):
 
     async def fetch_all(self):
         for raw_policy in await self.facade.identity.get_policies():
-            id, policy = await self._parse_policy(raw_policy)
-            self[id] = policy
+            try:
+                id, policy = await self._parse_policy(raw_policy)
+                self[id] = policy
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_policy(self, raw_policy):
         policy = {}

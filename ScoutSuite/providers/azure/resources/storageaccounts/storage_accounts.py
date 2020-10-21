@@ -2,6 +2,7 @@ from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 from .blob_containers import BlobContainers
 # from .queues import Queues
@@ -19,8 +20,11 @@ class StorageAccounts(AzureCompositeResources):
 
     async def fetch_all(self):
         for raw_storage_account in await self.facade.storageaccounts.get_storage_accounts(self.subscription_id):
-            id, storage_account = self._parse_storage_account(raw_storage_account)
-            self[id] = storage_account
+            try:
+                id, storage_account = self._parse_storage_account(raw_storage_account)
+                self[id] = storage_account
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
         await self._fetch_children_of_all_resources(
             resources=self,

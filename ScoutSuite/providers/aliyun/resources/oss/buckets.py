@@ -1,11 +1,15 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
+from ScoutSuite.core.console import print_exception
 
 
 class Buckets(AliyunResources):
     async def fetch_all(self):
         for raw_bucket in await self.facade.oss.get_buckets():
-            id, bucket = self._parse_bucket(raw_bucket)
-            self[id] = bucket
+            try:
+                id, bucket = self._parse_bucket(raw_bucket)
+                self[id] = bucket
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_bucket(self, raw_bucket):
         bucket_dict = {}

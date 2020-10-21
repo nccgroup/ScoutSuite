@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Images(AzureResources):
@@ -11,8 +12,11 @@ class Images(AzureResources):
 
     async def fetch_all(self):
         for raw_image in await self.facade.virtualmachines.get_images(self.subscription_id):
-            id, image = self._parse_image(raw_image)
-            self[id] = image
+            try:
+                id, image = self._parse_image(raw_image)
+                self[id] = image
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_image(self, raw_image):
         image_dict = {}

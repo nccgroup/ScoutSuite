@@ -1,7 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 
-
 class DatabaseBlobAuditingPolicies(AzureResources):
 
     def __init__(self, facade: AzureFacade, resource_group_name: str, server_name: str, database_name: str,

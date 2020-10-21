@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
 from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Instances(AliyunResources):
@@ -9,8 +10,11 @@ class Instances(AliyunResources):
 
     async def fetch_all(self):
         for raw_instance in await self.facade.ecs.get_instances(region=self.region):
-            id, instance = await self._parse_instance(raw_instance)
-            self[id] = instance
+            try:
+                id, instance = await self._parse_instance(raw_instance)
+                self[id] = instance
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_instance(self, raw_instance):
         instance_dict = {}

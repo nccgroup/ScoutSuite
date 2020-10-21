@@ -2,6 +2,7 @@ from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 from ScoutSuite.providers.azure.utils import get_resource_group_name
+from ScoutSuite.core.console import print_exception
 
 
 class Vaults(AzureResources):
@@ -12,8 +13,11 @@ class Vaults(AzureResources):
 
     async def fetch_all(self):
         for raw_vault in await self.facade.keyvault.get_key_vaults(self.subscription_id):
-            id, vault = self._parse_key_vault(raw_vault)
-            self[id] = vault
+            try:
+                id, vault = self._parse_key_vault(raw_vault)
+                self[id] = vault
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_key_vault(self, raw_vault):
         vault = {}

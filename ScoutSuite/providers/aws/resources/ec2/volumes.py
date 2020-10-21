@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.utils import get_name
+from ScoutSuite.core.console import print_exception
 
 
 class Volumes(AWSResources):
@@ -11,8 +12,11 @@ class Volumes(AWSResources):
     async def fetch_all(self):
         raw_volumes = await self.facade.ec2.get_volumes(self.region)
         for raw_volume in raw_volumes:
-            name, resource = self._parse_volume(raw_volume)
-            self[name] = resource
+            try:
+                name, resource = self._parse_volume(raw_volume)
+                self[name] = resource
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_volume(self, raw_volume):
         raw_volume['id'] = raw_volume.pop('VolumeId')

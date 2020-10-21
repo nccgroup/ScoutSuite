@@ -19,8 +19,11 @@ class DatabaseInstances(GCPCompositeResources):
     async def fetch_all(self):
         raw_instances = await self.facade.cloudsql.get_database_instances(self.project_id)
         for raw_instance in raw_instances:
-            instance_id, instance = self._parse_instance(raw_instance)
-            self[instance_id] = instance
+            try:
+                instance_id, instance = self._parse_instance(raw_instance)
+                self[instance_id] = instance
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
         await self._fetch_children_of_all_resources(
             resources=self,
             scopes={instance_id: {'project_id': self.project_id, 'instance_name': instance['name']}

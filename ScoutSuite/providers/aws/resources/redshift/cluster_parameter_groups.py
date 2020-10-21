@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 from .cluster_parameters import ClusterParameters
 
@@ -17,8 +18,11 @@ class ClusterParameterGroups(AWSCompositeResources):
     async def fetch_all(self):
         raw_parameter_groups = await self.facade.redshift.get_cluster_parameter_groups(self.region)
         for raw_parameter_group in raw_parameter_groups:
-            id, parameter_group = self._parse_parameter_group(raw_parameter_group)
-            self[id] = parameter_group
+            try:
+                id, parameter_group = self._parse_parameter_group(raw_parameter_group)
+                self[id] = parameter_group
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
         await self._fetch_children_of_all_resources(
             resources=self,

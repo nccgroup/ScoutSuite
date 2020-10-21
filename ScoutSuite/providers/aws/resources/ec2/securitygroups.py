@@ -2,6 +2,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.utils import manage_dictionary
 from ScoutSuite.core.fs import load_data
+from ScoutSuite.core.console import print_exception
 
 
 class SecurityGroups(AWSResources):
@@ -15,8 +16,11 @@ class SecurityGroups(AWSResources):
     async def fetch_all(self):
         raw_security_groups = await self.facade.ec2.get_security_groups(self.region, self.vpc)
         for raw_security_groups in raw_security_groups:
-            name, resource = self._parse_security_group(raw_security_groups)
-            self[name] = resource
+            try:
+                name, resource = self._parse_security_group(raw_security_groups)
+                self[name] = resource
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_security_group(self, raw_security_group):
         security_group = {}

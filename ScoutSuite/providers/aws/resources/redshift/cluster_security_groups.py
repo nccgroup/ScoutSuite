@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class ClusterSecurityGroups(AWSResources):
@@ -10,8 +11,11 @@ class ClusterSecurityGroups(AWSResources):
     async def fetch_all(self):
         raw_security_groups = await self.facade.redshift.get_cluster_security_groups(self.region)
         for raw_security_group in raw_security_groups:
-            id, security_group = self._parse_security_group(raw_security_group)
-            self[id] = security_group
+            try:
+                id, security_group = self._parse_security_group(raw_security_group)
+                self[id] = security_group
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_security_group(self, raw_security_group):
         name = raw_security_group.pop('ClusterSecurityGroupName')

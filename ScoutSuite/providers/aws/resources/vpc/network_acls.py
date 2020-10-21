@@ -2,6 +2,7 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.utils import get_name
 from ScoutSuite.core.fs import load_data
+from ScoutSuite.core.console import print_exception
 
 protocols_dict = load_data('protocols.json', 'protocols')
 
@@ -16,8 +17,11 @@ class NetworkACLs(AWSResources):
     async def fetch_all(self):
         raw_network_acls = await self.facade.ec2.get_network_acls(self.region, self.vpc)
         for raw_network_acl in raw_network_acls:
-            id, network_acl = self._parse_network_acl(raw_network_acl)
-            self[id] = network_acl
+            try:
+                id, network_acl = self._parse_network_acl(raw_network_acl)
+                self[id] = network_acl
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_network_acl(self, raw_network_acl):
         raw_network_acl['id'] = raw_network_acl.pop('NetworkAclId')

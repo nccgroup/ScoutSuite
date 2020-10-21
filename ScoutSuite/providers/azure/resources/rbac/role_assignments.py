@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.core.console import print_exception
 
 
 class RoleAssignments(AzureResources):
@@ -10,8 +11,11 @@ class RoleAssignments(AzureResources):
 
     async def fetch_all(self):
         for raw_role_assignment in await self.facade.rbac.get_role_assignments(self.subscription_id):
-            id, role_assignment = self._parse_role_assignment(raw_role_assignment)
-            self[id] = role_assignment
+            try:
+                id, role_assignment = self._parse_role_assignment(raw_role_assignment)
+                self[id] = role_assignment
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_role_assignment(self, raw_role_assignment):
         role_assignment_dict = {}

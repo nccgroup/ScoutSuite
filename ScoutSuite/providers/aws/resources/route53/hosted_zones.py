@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.core.console import print_exception
 
 
 class HostedZones(AWSResources):
@@ -10,8 +11,11 @@ class HostedZones(AWSResources):
     async def fetch_all(self):
         raw_hosted_zones = await self.facade.route53.get_hosted_zones()
         for raw_hosted_zone in raw_hosted_zones:
-            hosted_zone_id, hosted_zone = await self._parse_hosted_zone(raw_hosted_zone)
-            self[hosted_zone_id] = hosted_zone
+            try:
+                hosted_zone_id, hosted_zone = await self._parse_hosted_zone(raw_hosted_zone)
+                self[hosted_zone_id] = hosted_zone
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_hosted_zone(self, raw_hosted_zone):
         hosted_zone_dict = {}

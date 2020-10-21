@@ -2,6 +2,7 @@ from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 from ScoutSuite.providers.azure.utils import get_resource_group_name
+from ScoutSuite.core.console import print_exception
 
 
 class SecurityGroups(AzureResources):
@@ -12,8 +13,11 @@ class SecurityGroups(AzureResources):
 
     async def fetch_all(self):
         for raw_group in await self.facade.network.get_network_security_groups(self.subscription_id):
-            id, network_security_group = self._parse_network_security_group(raw_group)
-            self[id] = network_security_group
+            try:
+                id, network_security_group = self._parse_network_security_group(raw_group)
+                self[id] = network_security_group
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_network_security_group(self, network_security_group):
         network_security_group_dict = {}

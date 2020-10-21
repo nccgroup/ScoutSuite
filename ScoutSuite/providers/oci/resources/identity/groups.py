@@ -1,6 +1,7 @@
 from ScoutSuite.providers.oci.resources.base import OracleResources
 from ScoutSuite.providers.oci.facade.base import OracleFacade
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Groups(OracleResources):
@@ -9,8 +10,11 @@ class Groups(OracleResources):
 
     async def fetch_all(self):
         for raw_group in await self.facade.identity.get_groups():
-            id, group = await self._parse_group(raw_group)
-            self[id] = group
+            try:
+                id, group = await self._parse_group(raw_group)
+                self[id] = group
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_group(self, raw_group):
         group_dict = {}

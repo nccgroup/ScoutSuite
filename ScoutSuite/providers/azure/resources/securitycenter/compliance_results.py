@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class ComplianceResults(AzureResources):
@@ -11,8 +12,11 @@ class ComplianceResults(AzureResources):
 
     async def fetch_all(self):
         for raw_compliance_result in await self.facade.securitycenter.get_compliance_results(self.subscription_id):
-            id, compliance_result = self._parse_compliance_result(raw_compliance_result)
-            self[id] = compliance_result
+            try:
+                id, compliance_result = self._parse_compliance_result(raw_compliance_result)
+                self[id] = compliance_result
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_compliance_result(self, raw_compliance_result):
         compliance_result_dict = {}

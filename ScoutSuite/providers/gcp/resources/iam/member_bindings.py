@@ -2,6 +2,7 @@ from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Bindings(Resources):
@@ -12,8 +13,11 @@ class Bindings(Resources):
     async def fetch_all(self):
         raw_bindings = await self.facade.cloudresourcemanager.get_member_bindings(self.project_id)
         for raw_binding in raw_bindings:
-            binding_id, binding = await self._parse_binding(raw_binding)
-            self[binding_id] = binding
+            try:
+                binding_id, binding = await self._parse_binding(raw_binding)
+                self[binding_id] = binding
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_binding(self, raw_binding):
         binding_dict = {}

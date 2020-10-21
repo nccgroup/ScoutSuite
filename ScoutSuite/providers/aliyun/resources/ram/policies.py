@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
 from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
+from ScoutSuite.core.console import print_exception
 import json
 
 
@@ -9,9 +10,12 @@ class Policies(AliyunResources):
 
     async def fetch_all(self):
         for raw_policy in await self.facade.ram.get_policies():
-            id, policy = await self._parse_policy(raw_policy)
-            if id:
-                self[id] = policy
+            try:
+                id, policy = await self._parse_policy(raw_policy)
+                if id:
+                    self[id] = policy
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_policy(self, raw_policy):
         """

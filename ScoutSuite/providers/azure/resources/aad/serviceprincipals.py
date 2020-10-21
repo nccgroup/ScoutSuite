@@ -1,13 +1,17 @@
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.core.console import print_exception
 
 
 class ServicePrincipals(AzureResources):
     async def fetch_all(self):
         for raw_service_principal in await self.facade.aad.get_service_principals():
-            id, service_principal = await self._parse_service_principal(raw_service_principal)
-            # exclude built-in service principals
-            if service_principal['publisher_name'] != 'Microsoft Services':
-                self[id] = service_principal
+            try:
+                id, service_principal = await self._parse_service_principal(raw_service_principal)
+                # exclude built-in service principals
+                if service_principal['publisher_name'] != 'Microsoft Services':
+                    self[id] = service_principal
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_service_principal(self, raw_service_principal):
         service_principal_dict = {}

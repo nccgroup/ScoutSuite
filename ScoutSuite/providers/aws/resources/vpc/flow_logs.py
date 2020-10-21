@@ -1,6 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.aws.utils import get_name
+from ScoutSuite.core.console import print_exception
 
 
 class FlowLogs(AWSResources):
@@ -13,8 +13,11 @@ class FlowLogs(AWSResources):
         raw_logs = await self.facade.ec2.get_flow_logs(self.region)
 
         for raw_log in raw_logs:
-            id, log = self._parse_log(raw_log)
-            self[id] = log
+            try:
+                id, log = self._parse_log(raw_log)
+                self[id] = log
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_log(self, raw_flow_log):
         flow_log_dict = {}

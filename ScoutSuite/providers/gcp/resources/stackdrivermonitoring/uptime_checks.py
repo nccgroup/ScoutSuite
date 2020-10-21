@@ -1,6 +1,7 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class UptimeChecks(Resources):
@@ -11,8 +12,11 @@ class UptimeChecks(Resources):
     async def fetch_all(self):
         raw_uptime_checks = await self.facade.stackdrivermonitoring.get_uptime_checks(self.project_id)
         for raw_uptime_check in raw_uptime_checks:
-            uptime_check_name, uptime_check = self._parse_uptime_check(raw_uptime_check)
-            self[uptime_check_name] = uptime_check
+            try:
+                uptime_check_name, uptime_check = self._parse_uptime_check(raw_uptime_check)
+                self[uptime_check_name] = uptime_check
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_uptime_check(self, raw_uptime_check):
         uptime_check_dict = {}

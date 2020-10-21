@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class Secrets(AWSResources):
@@ -9,8 +10,11 @@ class Secrets(AWSResources):
 
     async def fetch_all(self):
         for raw_secret in await self.facade.secretsmanager.get_secrets(self.region):
-            id, secret = self._parse_secret(raw_secret)
-            self[id] = secret
+            try:
+                id, secret = self._parse_secret(raw_secret)
+                self[id] = secret
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_secret(self, raw_secret):
         secret_dict = {}

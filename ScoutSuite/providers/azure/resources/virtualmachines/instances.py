@@ -1,7 +1,7 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
-from ScoutSuite.providers.azure.utils import get_resource_group_name
+from ScoutSuite.core.console import print_exception
 
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 
@@ -13,8 +13,11 @@ class Instances(AzureResources):
 
     async def fetch_all(self):
         for raw_instance in await self.facade.virtualmachines.get_instances(self.subscription_id):
-            id, instance = await self._parse_instance(raw_instance)
-            self[id] = instance
+            try:
+                id, instance = await self._parse_instance(raw_instance)
+                self[id] = instance
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_instance(self, raw_instance):
         instance_dict = {}

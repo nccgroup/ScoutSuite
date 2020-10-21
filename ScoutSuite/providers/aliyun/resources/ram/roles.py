@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
 from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Roles(AliyunResources):
@@ -8,8 +9,11 @@ class Roles(AliyunResources):
 
     async def fetch_all(self):
         for raw_role in await self.facade.ram.get_roles():
-            id, role = await self._parse_role(raw_role)
-            self[id] = role
+            try:
+                id, role = await self._parse_role(raw_role)
+                self[id] = role
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_role(self, raw_role):
         role_dict = {}

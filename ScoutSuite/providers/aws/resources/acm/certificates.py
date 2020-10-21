@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 from ScoutSuite.providers.utils import get_non_provider_id
 
@@ -12,8 +13,11 @@ class Certificates(AWSResources):
     async def fetch_all(self):
         raw_certificates = await self.facade.acm.get_certificates(self.region)
         for raw_certificate in raw_certificates:
-            name, resource = self._parse_certificate(raw_certificate)
-            self[name] = resource
+            try:
+                name, resource = self._parse_certificate(raw_certificate)
+                self[name] = resource
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_certificate(self, raw_certificate):
         raw_certificate['name'] = raw_certificate.get('DomainName')

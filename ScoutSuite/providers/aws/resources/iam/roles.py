@@ -1,12 +1,17 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 
+from ScoutSuite.core.console import print_exception
+
 
 class Roles(AWSResources):
     async def fetch_all(self):
         raw_roles = await self.facade.iam.get_roles()
         for raw_role in raw_roles:
-            name, resource = self._parse_role(raw_role)
-            self[name] = resource
+            try:
+                name, resource = self._parse_role(raw_role)
+                self[name] = resource
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_role(self, raw_role):
         role_dict = {}

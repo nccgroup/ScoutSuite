@@ -1,16 +1,20 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class Users(AWSResources):
     async def fetch_all(self):
         raw_users = await self.facade.iam.get_users()
         for raw_user in raw_users:
-            name, resource = self._parse_user(raw_user)
-              
-            if name in self:
-                continue
+            try:
+                name, resource = self._parse_user(raw_user)
 
-            self[name] = resource
+                if name in self:
+                    continue
+
+                self[name] = resource
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_user(self, raw_user):
         raw_user['id'] = raw_user.pop('UserId')

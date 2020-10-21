@@ -2,6 +2,7 @@ from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 from ScoutSuite.providers.azure.utils import get_resource_group_name
+from ScoutSuite.core.console import print_exception
 
 
 class WebApplication(AzureResources):
@@ -12,8 +13,11 @@ class WebApplication(AzureResources):
 
     async def fetch_all(self):
         for raw_web_app in await self.facade.appservice.get_web_apps(self.subscription_id):
-            id, web_app = self._parse_web_app(raw_web_app)
-            self[id] = web_app
+            try:
+                id, web_app = self._parse_web_app(raw_web_app)
+                self[id] = web_app
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_web_app(self, raw_web_app):
 

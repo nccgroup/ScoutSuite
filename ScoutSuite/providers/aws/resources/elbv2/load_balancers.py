@@ -2,6 +2,7 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 from ScoutSuite.providers.utils import get_non_provider_id
 from .listeners import Listeners
+from ScoutSuite.core.console import print_exception
 
 
 class LoadBalancers(AWSCompositeResources):
@@ -17,8 +18,11 @@ class LoadBalancers(AWSCompositeResources):
     async def fetch_all(self):
         raw_load_balancers = await self.facade.elbv2.get_load_balancers(self.region, self.vpc)
         for raw_load_balancer in raw_load_balancers:
-            id, load_balancer = self._parse_load_balancer(raw_load_balancer)
-            self[id] = load_balancer
+            try:
+                id, load_balancer = self._parse_load_balancer(raw_load_balancer)
+                self[id] = load_balancer
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
         await self._fetch_children_of_all_resources(
             resources=self,

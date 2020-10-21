@@ -2,6 +2,7 @@ from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 from .databases import Databases
 from .server_azure_ad_administrators import ServerAzureAdAdministrators
@@ -23,8 +24,11 @@ class Servers(AzureCompositeResources):
 
     async def fetch_all(self):
         for raw_server in await self.facade.sqldatabase.get_servers(self.subscription_id):
-            id, server = self._parse_server(raw_server)
-            self[id] = server
+            try:
+                id, server = self._parse_server(raw_server)
+                self[id] = server
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
         await self._fetch_children_of_all_resources(
             resources=self,

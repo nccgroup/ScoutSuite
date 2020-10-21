@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class Grants(AWSResources):
@@ -11,8 +12,11 @@ class Grants(AWSResources):
     async def fetch_all(self):
         raw_grants = await self.facade.kms.get_grants(self.region, self.key_id)
         for raw_grant in raw_grants:
-            id, grant = self._parse_grant(raw_grant)
-            self[id] = grant
+            try:
+                id, grant = self._parse_grant(raw_grant)
+                self[id] = grant
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_grant(self, raw_grant):
         grant_dict = {

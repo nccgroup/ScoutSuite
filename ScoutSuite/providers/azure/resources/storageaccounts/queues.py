@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.core.console import print_exception
 
 
 class Queues(AzureResources):
@@ -15,8 +16,11 @@ class Queues(AzureResources):
                                                                   self.storage_account_name,
                                                                   self.subscription_id)
         for raw_queue in raw_queues:
-            id, queue = self._parse_queue(raw_queue)
-            self[id] = queue
+            try:
+                id, queue = self._parse_queue(raw_queue)
+                self[id] = queue
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_queue(self, raw_queue):
         pass

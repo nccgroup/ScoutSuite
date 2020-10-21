@@ -1,11 +1,15 @@
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.core.console import print_exception
 
 
 class Groups(AzureResources):
     async def fetch_all(self):
         for raw_group in await self.facade.aad.get_groups():
-            id, group = await self._parse_group(raw_group)
-            self[id] = group
+            try:
+                id, group = await self._parse_group(raw_group)
+                self[id] = group
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_group(self, raw_group):
 

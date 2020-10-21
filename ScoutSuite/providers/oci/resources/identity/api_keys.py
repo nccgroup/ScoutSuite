@@ -1,6 +1,7 @@
 from ScoutSuite.providers.oci.facade.base import OracleFacade
 from ScoutSuite.providers.oci.resources.base import OracleResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class ApiKeys(OracleResources):
@@ -10,8 +11,11 @@ class ApiKeys(OracleResources):
 
     async def fetch_all(self):
         for raw_user_api_key in await self.facade.identity.get_user_api_keys(user_id=self.user['identifier']):
-            id, api_key = await self._parse_api_key(raw_user_api_key)
-            self[id] = api_key
+            try:
+                id, api_key = await self._parse_api_key(raw_user_api_key)
+                self[id] = api_key
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_api_key(self, raw_api_key):
         api_key = {}

@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class FileSystems(AWSResources):
@@ -10,8 +11,11 @@ class FileSystems(AWSResources):
     async def fetch_all(self):
         raw_file_systems = await self.facade.efs.get_file_systems(self.region)
         for raw_file_system in raw_file_systems:
-            name, resource = self._parse_file_system(raw_file_system)
-            self[name] = resource
+            try:
+                name, resource = self._parse_file_system(raw_file_system)
+                self[name] = resource
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_file_system(self, raw_file_system):
         fs_id = raw_file_system.pop('FileSystemId')

@@ -2,6 +2,7 @@ from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.gcp.resources.gke.node_pools import NodePools
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Clusters(Resources):
@@ -13,9 +14,12 @@ class Clusters(Resources):
     async def fetch_all(self):
         raw_clusters = await self.facade.gke.get_clusters(self.project_id, self.zone)
         for raw_cluster in raw_clusters:
-            cluster_id, cluster = await self._parse_cluster(raw_cluster)
-            self[cluster_id] = cluster
-            self[cluster_id]['node_pools'].fetch_all()
+            try:
+                cluster_id, cluster = await self._parse_cluster(raw_cluster)
+                self[cluster_id] = cluster
+                self[cluster_id]['node_pools'].fetch_all()
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_cluster(self, raw_cluster):
         cluster_dict = {}

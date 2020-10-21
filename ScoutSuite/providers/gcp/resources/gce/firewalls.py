@@ -1,5 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Firewalls(Resources):
@@ -10,8 +11,11 @@ class Firewalls(Resources):
     async def fetch_all(self):
         raw_firewalls = await self.facade.gce.get_firewalls(self.project_id)
         for raw_firewall in raw_firewalls:
-            firewall_id, firewall = self._parse_firewall(raw_firewall)
-            self[firewall_id] = firewall
+            try:
+                firewall_id, firewall = self._parse_firewall(raw_firewall)
+                self[firewall_id] = firewall
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_firewall(self, raw_firewall):
         firewall_dict = {}

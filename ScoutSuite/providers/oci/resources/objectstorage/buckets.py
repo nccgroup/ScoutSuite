@@ -1,5 +1,6 @@
 from ScoutSuite.providers.oci.resources.base import OracleResources
 from ScoutSuite.providers.oci.facade.base import OracleFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Buckets(OracleResources):
@@ -11,8 +12,11 @@ class Buckets(OracleResources):
         namespace = await self.facade.objectstorage.get_namespace()
 
         for raw_bucket in await self.facade.objectstorage.get_buckets(namespace):
-            id, bucket = await self._parse_bucket(raw_bucket)
-            self[id] = bucket
+            try:
+                id, bucket = await self._parse_bucket(raw_bucket)
+                self[id] = bucket
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def _parse_bucket(self, raw_bucket):
         bucket_dict = {}

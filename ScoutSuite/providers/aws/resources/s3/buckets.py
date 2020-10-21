@@ -1,4 +1,5 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 from ScoutSuite.providers.utils import get_non_provider_id
 
@@ -7,8 +8,11 @@ class Buckets(AWSResources):
     async def fetch_all(self):
         raw_buckets = await self.facade.s3.get_buckets()
         for raw_bucket in raw_buckets:
-            name, resource = self._parse_bucket(raw_bucket)
-            self[name] = resource
+            try:
+                name, resource = self._parse_bucket(raw_bucket)
+                self[name] = resource
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_bucket(self, raw_bucket):
         """

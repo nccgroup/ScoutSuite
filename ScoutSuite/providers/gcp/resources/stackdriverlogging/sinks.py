@@ -1,5 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Sinks(Resources):
@@ -10,8 +11,11 @@ class Sinks(Resources):
     async def fetch_all(self):
         raw_sinks = await self.facade.stackdriverlogging.get_sinks(self.project_id)
         for raw_sink in raw_sinks:
-            sink_name, sink = self._parse_sink(raw_sink)
-            self[sink_name] = sink
+            try:
+                sink_name, sink = self._parse_sink(raw_sink)
+                self[sink_name] = sink
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_sink(self, raw_sink):
         sink_dict = {}

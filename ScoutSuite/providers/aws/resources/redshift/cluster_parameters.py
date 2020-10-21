@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class ClusterParameters(AWSResources):
@@ -12,8 +13,11 @@ class ClusterParameters(AWSResources):
         raw_parameters = await self.facade.redshift.get_cluster_parameters(
             self.region, self.parameter_group_name)
         for raw_parameter in raw_parameters:
-            id, parameter = self._parse_parameter(raw_parameter)
-            self[id] = parameter
+            try:
+                id, parameter = self._parse_parameter(raw_parameter)
+                self[id] = parameter
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_parameter(self, raw_parameter):
         parameter = {'value': raw_parameter['ParameterValue'],

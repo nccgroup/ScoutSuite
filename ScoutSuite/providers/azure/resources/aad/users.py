@@ -1,11 +1,15 @@
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.core.console import print_exception
 
 
 class Users(AzureResources):
     async def fetch_all(self):
         for raw_user in await self.facade.aad.get_users():
-            id, user = await self._parse_user(raw_user)
-            self[id] = user
+            try:
+                id, user = await self._parse_user(raw_user)
+                self[id] = user
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     async def fetch_additional_users(self, user_list):
         """

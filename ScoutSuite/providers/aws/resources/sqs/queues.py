@@ -2,6 +2,7 @@ import json
 
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class Queues(AWSResources):
@@ -13,8 +14,11 @@ class Queues(AWSResources):
         queues = await self.facade.sqs.get_queues(self.region,
                                                   ['CreatedTimestamp', 'Policy', 'QueueArn', 'KmsMasterKeyId'])
         for queue_url, queue_attributes in queues:
-            id, queue = self._parse_queue(queue_url, queue_attributes)
-            self[id] = queue
+            try:
+                id, queue = self._parse_queue(queue_url, queue_attributes)
+                self[id] = queue
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_queue(self, queue_url, queue_attributes):
         queue = {}

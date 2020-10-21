@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.core.console import print_exception
 
 
 class Pricings(AzureResources):
@@ -10,8 +11,11 @@ class Pricings(AzureResources):
 
     async def fetch_all(self):
         for raw_pricing in await self.facade.securitycenter.get_pricings(self.subscription_id):
-            id, pricing = self._parse_pricing(raw_pricing)
-            self[id] = pricing
+            try:
+                id, pricing = self._parse_pricing(raw_pricing)
+                self[id] = pricing
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_pricing(self, pricing):
         pricing_dict = {}

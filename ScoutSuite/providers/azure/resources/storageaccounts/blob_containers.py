@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.core.console import print_exception
 
 
 class BlobContainers(AzureResources):
@@ -15,8 +16,11 @@ class BlobContainers(AzureResources):
                                                                                     self.storage_account_name,
                                                                                     self.subscription_id)
         for raw_blob_container in raw_blob_containers:
-            id, blob_container = self._parse_blob_container(raw_blob_container)
-            self[id] = blob_container
+            try:
+                id, blob_container = self._parse_blob_container(raw_blob_container)
+                self[id] = blob_container
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_blob_container(self, raw_blob_container):
         blob_container = {}

@@ -1,4 +1,5 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class PasswordPolicy(AWSResources):

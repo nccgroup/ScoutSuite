@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Disks(AzureResources):
@@ -11,8 +12,11 @@ class Disks(AzureResources):
 
     async def fetch_all(self):
         for raw_disk in await self.facade.virtualmachines.get_disks(self.subscription_id):
-            id, disk = self._parse_disk(raw_disk)
-            self[id] = disk
+            try:
+                id, disk = self._parse_disk(raw_disk)
+                self[id] = disk
+            except Exception as e:
+                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
 
     def _parse_disk(self, raw_disk):
         disk_dict = {}
