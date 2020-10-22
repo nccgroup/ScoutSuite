@@ -37,8 +37,12 @@
             ],
             [
                 "iam.policies.id.PolicyDocument.Statement.id.Action",
-                "containString",
-                "*:*"
+                "containAtLeastOneOf",
+                [
+                    "*",
+                    "*:*"
+
+                ]
             ]
         ],
         [
