@@ -1,6 +1,6 @@
 {
-    "description": "Managed Policy Allows Full Administrative Privileges",
-    "rationale": "Providing full administrative privileges instead of restricting to the minimum set of permissions that the user is required to do exposes the resources to potentially unwanted actions.",
+    "description": "Managed Policy Allows All Actions",
+    "rationale": "Providing full privileges instead of restricting to the minimum set of permissions that the principal requires exposes the resources to potentially unwanted actions.",
     "remediation": "Ensure no managed policies are configured with <samp>Effect: Allow</samp>, <samp>Action: *</samp> and <samp>Resource: *</samp>",
     "references": [
         "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
