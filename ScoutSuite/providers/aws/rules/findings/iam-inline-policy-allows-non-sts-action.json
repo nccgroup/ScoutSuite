@@ -4,7 +4,7 @@
     "references": [
         "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
     ],
-    "dashboard_name": "Policies",
+    "dashboard_name": "Statements",
     "display_path": "iam._ARG_0_s.id",
     "path": "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id",
     "conditions": [

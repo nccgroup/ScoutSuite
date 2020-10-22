@@ -14,7 +14,7 @@
             "reference": "1.22"
         }
     ],
-    "dashboard_name": "Policies",
+    "dashboard_name": "Statements",
     "display_path": "iam.policies.id",
     "path": "iam.policies.id.PolicyDocument.Statement.id",
     "conditions": [
