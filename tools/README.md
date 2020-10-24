@@ -2,7 +2,7 @@
 
 This folder holds a number of useful tools for development and advanced usage of Scout Suite.
 
-## [aws_security_hub_export.py](https://github.com/nccgroup/ScoutSuite/blob/master/tools/aws_securtiy_hub_export.py)
+## [aws_security_hub_export.py](https://github.com/nccgroup/ScoutSuite/blob/master/tools/aws_security_hub_export.py)
 
 Allows exporting results from at report to AWS Security Hub.
 

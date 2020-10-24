@@ -18,6 +18,7 @@ class Instances(AzureResources):
 
     async def _parse_instance(self, raw_instance):
         instance_dict = {}
+
         instance_dict['id'] = get_non_provider_id(raw_instance.id.lower())
         instance_dict['name'] = raw_instance.name
         instance_dict['vm_id'] = raw_instance.vm_id

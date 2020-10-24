@@ -1,6 +1,6 @@
 {
     "description": "Cluster Publicly Accessible",
-    "rationale": "Redshift clusters should never be public, as this increases the risk of exposing sensitive data. Public acessibility means that other AWS users can access your cluster and the data stored in it.",
+    "rationale": "Redshift clusters should never be public, as this increases the risk of exposing sensitive data. Public accessibility means that other AWS users can access your cluster and the data stored in it.",
     "references": [
         "https://docs.aws.amazon.com/redshift/latest/gsg/getting-started.html"
     ],

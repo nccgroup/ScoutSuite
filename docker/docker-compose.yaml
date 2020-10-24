@@ -7,7 +7,7 @@ services:
     env_file:
       - config/build.env
     build:
-      context: src
+      context: .
       dockerfile: src/Dockerfile
       args:
         - VCS_REF
