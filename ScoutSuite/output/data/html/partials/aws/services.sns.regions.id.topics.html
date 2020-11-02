@@ -9,7 +9,7 @@
           <div class="list-group-item-text item-margin">Region: {{region}}</div>
           <div class="list-group-item-text item-margin">ARN: {{arn}}</div>
           <div class="list-group-item-text item-margin">Display name: {{DisplayName}}</div>
-          <div class="list-group-item-text item-margin">Encrypted: {{#if KmsMasterKeyId}} True {{else}} False {{/if}}</div>
+          <div class="list-group-item-text item-margin" id="sns.regions.{{region}}.topics.{{@key}}.encrypted">Encrypted: {{#if KmsMasterKeyId}} True {{else}} False {{/if}}</div>
         </div>
         {{#if Policy}}
           <div class="list-group-item">
