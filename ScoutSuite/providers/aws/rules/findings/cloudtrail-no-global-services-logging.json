@@ -4,7 +4,7 @@
     "references": [
         "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-concepts.html#cloudtrail-concepts-global-service-events"
     ],
-    "dashboard_name": "Trails",
+    "dashboard_name": "Configurations",
     "path": "cloudtrail.regions.id.trails.id",
     "conditions": [
         "and",

@@ -6,7 +6,8 @@
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
-          <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
+            <div class="list-group-item-text item-margin">Arn: <span id="iam.groups.{{@key}}.arn"><samp>{{value_or_none arn}}</samp></span></div>
+            <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
             <h4 class="list-group-item-heading">Members

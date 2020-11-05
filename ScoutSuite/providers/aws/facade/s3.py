@@ -12,27 +12,24 @@ class S3Facade(AWSBaseFacade):
     async def get_buckets(self):
         try:
             # If there are regions specified, try for each of them until one works.
+            # Otherwise, try all the available regions until one works.
             # This is required in case there's an IAM policy that denies access to APIs on a regional basis,
             # as per https://github.com/nccgroup/ScoutSuite/issues/727
-            region = None
-            if self.regions:
-                buckets = []
-                exception = ''
-                for region in self.regions:
-                    try:
-                        client = AWSFacadeUtils.get_client('s3', self.session, region)
-                        buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
-                    except Exception as e:
-                        exception = e
-                    else:
-                        break
-                if not buckets:
-                    if exception:
-                        print_exception(f'Failed to list buckets: {exception}')
-                    return []
-            else:
-                client = AWSFacadeUtils.get_client('s3', self.session)
-                buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
+            buckets = []
+            exception = ''
+            region_list = self.regions if self.regions else await run_concurrently(lambda: self.session.get_available_regions('s3'))
+            for region in region_list:
+                try:
+                    client = AWSFacadeUtils.get_client('s3', self.session, region)
+                    buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
+                except Exception as e:
+                    exception = e
+                else:
+                    break
+            if not buckets:
+                if exception:
+                    print_exception(f'Failed to list buckets: {exception}')
+                return []
         except Exception as e:
             print_exception(f'Failed to list buckets: {e}')
             return []

@@ -25,7 +25,7 @@ class StackdriverMonitoringFacade:
             name = client.project_path(project_id)
             return await run_concurrently(lambda: [r for r in client.list_uptime_check_configs(name)])
         except Exception as e:
-            if 'is not a workspace' not in e.message and '404' not in str(e):
+            if 'is not a workspace' not in getattr(e, 'message', '') and '404' not in str(e):
                 print_exception(f'Failed to retrieve uptime checks: {e}')
             return []
 
@@ -35,6 +35,6 @@ class StackdriverMonitoringFacade:
             name = client.project_path(project_id)
             return await run_concurrently(lambda: [r for r in client.list_alert_policies(name)])
         except Exception as e:
-            if 'is not a workspace' not in e.message and '404' not in str(e):
+            if 'is not a workspace' not in getattr(e, 'message', '') and '404' not in str(e):
                 print_exception(f'Failed to retrieve alert policies: {e}')
             return []

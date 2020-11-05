@@ -1,6 +1,6 @@
 {
     "description": "Version Upgrade Disabled",
-    "rationale": "Version upgrade is necessary to ensure major verson upgrades will be applied automatically to the cluster within the maintenance window.",
+    "rationale": "Version upgrade is necessary to ensure major version upgrades will be applied automatically to the cluster within the maintenance window.",
     "references": [
         "https://docs.aws.amazon.com/redshift/latest/APIReference/API_ModifyCluster.html"
     ],

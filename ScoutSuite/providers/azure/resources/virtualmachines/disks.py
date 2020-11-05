@@ -16,8 +16,9 @@ class Disks(AzureResources):
 
     def _parse_disk(self, raw_disk):
         disk_dict = {}
+
         disk_dict['id'] = get_non_provider_id(raw_disk.id)
-        disk_dict['unique_id'] = raw_disk.unique_id
+        disk_dict['unique_id'] = getattr(raw_disk, 'unique_id', None)
         disk_dict['name'] = raw_disk.name
         disk_dict['type'] = raw_disk.type
         disk_dict['location'] = raw_disk.location
@@ -30,15 +31,15 @@ class Disks(AzureResources):
         disk_dict['hyper_vgeneration'] = raw_disk.hyper_vgeneration
         disk_dict['creation_data'] = raw_disk.creation_data
         disk_dict['disk_size_gb'] = raw_disk.disk_size_gb
-        disk_dict['disk_size_bytes'] = raw_disk.disk_size_bytes
+        disk_dict['disk_size_bytes'] = getattr(raw_disk, 'disk_size_bytes', None)
         disk_dict['provisioning_state'] = raw_disk.provisioning_state
         disk_dict['disk_iops_read_write'] = raw_disk.disk_iops_read_write
         disk_dict['disk_mbps_read_write'] = raw_disk.disk_mbps_read_write
         disk_dict['disk_state'] = raw_disk.disk_state
         disk_dict['additional_properties'] = raw_disk.additional_properties
 
-        if raw_disk.encryption and raw_disk.encryption.type:
-            disk_dict['encryption_type'] = raw_disk.encryption.type
+        if hasattr(raw_disk, 'encryption'):
+            disk_dict['encryption_type'] = getattr(raw_disk.encryption, 'type', None)
         else:
             disk_dict['encryption_type'] = None
 

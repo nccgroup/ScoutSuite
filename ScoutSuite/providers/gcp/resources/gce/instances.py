@@ -40,8 +40,12 @@ class Instances(GCPCompositeResources):
         instance_dict['serial_port_enabled'] = self._is_serial_port_enabled(raw_instance)
         instance_dict['disks'] = InstanceDisks(self.facade, raw_instance)
 
-        instance_dict['service_account'] = raw_instance.get('serviceAccounts', [])[0].get('email')
-        instance_dict['access_scopes'] = raw_instance.get('serviceAccounts', [])[0].get('scopes')
+        if 'serviceAccounts' in raw_instance and raw_instance.get('serviceAccounts'):
+            instance_dict['service_account'] = raw_instance.get('serviceAccounts')[0].get('email')
+            instance_dict['access_scopes'] = raw_instance.get('serviceAccounts')[0].get('scopes')
+        else:
+            instance_dict['service_account'] = None
+            instance_dict['access_scopes'] = None
 
         return instance_dict['id'], instance_dict
 
