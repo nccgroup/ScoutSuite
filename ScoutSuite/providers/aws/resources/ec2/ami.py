@@ -19,6 +19,6 @@ class AmazonMachineImages(AWSResources):
         raw_image['arn'] = 'arn:aws:ec2:{}:{}:ami/{}'.format(self.region,
                                                             raw_image.get('OwnerId'),
                                                             raw_image.get('ImageId'))
-	if 'Tags' in raw_image:
-        raw_image['tags'] = {x["Key"]: x["Value"] for x in raw_image["Tags"]}
-        return raw_image['id'], raw_image
+        if 'Tags' in raw_image:
+            raw_image['tags'] = {x["Key"]: x["Value"] for x in raw_image["Tags"]}
+            return raw_image['id'], raw_image
