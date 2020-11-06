@@ -1,3 +1,5 @@
+import json
+
 from ScoutSuite.core.console import print_exception, print_info, print_debug, print_error
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
@@ -120,7 +122,12 @@ class GCPFacade(GCPBaseFacade):
                                 'You may have specified a non-existing organization/folder/project?')
 
         except Exception as e:
-            print_exception(f'Unable to list accessible Projects: {e}')
+            try:
+                content = e.content.decode("utf-8")
+                content_dict = json.loads(content)
+                print_exception(f'Unable to list accessible Projects: {content_dict.get("error").get("message")}')
+            except Exception as e:
+                print_exception(f'Unable to list accessible Projects: {e}')
 
         finally:
             return projects
