@@ -463,6 +463,29 @@ Handlebars.registerHelper('format_breaklines', function(value) {
     return value;
 })
 
+/**
+ * Format Openstack User Options
+ */
+Handlebars.registerHelper('format_options', function(opt_obj) {
+    //if (opt_obj === undefined || opt_obj === null || opt_obj === '' || opt_obj === [] || opt_obj === {}) return 'None'
+    //if (Object.keys(opt_obj).length === 0 && opt_obj.constructor === Object) return 'None'
+    let return_none = true;
+    let formatted_json = '<br><ul>';
+    for (let key in opt_obj){
+        if (opt_obj.hasOwnProperty(key) && typeof opt_obj[key] === "boolean") {
+            formatted_json = formatted_json + '<li>' +
+                Handlebars.Utils.escapeExpression(key + ": " + opt_obj[key])
+                + '</li>';
+            return_none = false
+        }
+    }
+    if (return_none) return 'None'
+
+    formatted_json = formatted_json + '</ul>'
+    formatted_json = new Handlebars.SafeString(formatted_json);
+    return formatted_json;
+})
+
 /*********************
  * Ruleset generator *
  *********************/

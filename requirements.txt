@@ -37,7 +37,7 @@ azure-graphrbac>=0.61.1
 adal>=0.4.7
 ## for resources
 azure-mgmt-storage>=7.1.0
-azure-mgmt-monitor>=0.5.2
+azure-mgmt-monitor==0.5.2
 azure-mgmt-sql>=0.11.0
 azure-mgmt-security>=0.1.0
 azure-mgmt-keyvault>=1.1.0

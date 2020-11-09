@@ -1,0 +1,17 @@
+{
+    "description": "Account lockout threshold is ignored",
+    "rationale": "PCI DSS 8.1.6: Repeated access attempts should be limited by locking out user ID.<br>The usage of 'ignore_lockout_failure_attempts' user option could be dangerous and should be avoided.",
+    "references": [
+        "https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf",
+        "https://docs.openstack.org/keystone/victoria/admin/configuration.html#setting-an-account-lockout-threshold"
+    ],
+    "dashboard_name": "Users ignoring lockout threshold",
+    "path": "keystone.users.id",
+    "conditions": ["and",
+        [
+            "keystone.users.id.options.ignore_lockout_failure_attempts",
+            "true",
+            ""
+        ]
+    ]
+}

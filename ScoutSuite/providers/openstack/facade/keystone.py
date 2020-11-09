@@ -1,5 +1,5 @@
 from ScoutSuite.providers.openstack.authentication_strategy import OpenstackCredentials
-
+from munch import Munch
 
 # TODO: These methods contain blocking/non-awaitable calls
 class KeystoneFacade:
@@ -27,8 +27,18 @@ class KeystoneFacade:
         return raw_regions
 
     async def get_users(self):
+        raw_users_with_options = []
         raw_users = self._credentials.session.identity.users()
-        return raw_users
+        for raw_user in raw_users:
+            raw_user = Munch(raw_user)
+            options = await self.get_user_options(raw_user.id)
+            raw_user.update({'options': options})
+            raw_users_with_options.append(raw_user)
+        return raw_users_with_options
+
+    async def get_user_options(self, user_id):
+        user = self._credentials.session.get_user_by_id(user_id, normalize=False)
+        return user.options
 
     async def is_fernet(self):
         token = self._credentials.session.auth_token

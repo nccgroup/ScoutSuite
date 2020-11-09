@@ -1,7 +1,49 @@
 {
   "about": "Default ruleset for Openstack.",
   "rules": {
+    "keystone-change-password-upon-first-use-ignored.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "keystone-locked-password.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "keystone-lockout-failure-attempts-ignored.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "keystone-multi-factor-auth-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "keystone-password-expiration-not-set.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "keystone-password-expiration-ignored.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
     "keystone-type-of-used-token.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "keystone-user-inactivity-ignored.json": [
       {
         "enabled": true,
         "level": "warning"
