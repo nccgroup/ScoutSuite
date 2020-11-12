@@ -156,8 +156,14 @@ class AWSProvider(BaseProvider):
 
     def _check_ec2_zone_distribution(self):
         regions = self.services['ec2']['regions'].values()
-        self.services['ec2']['number_of_regions_with_instances'] = sum(
-            r['instances_count'] > 0 for r in regions)
+        self.services['ec2']['number_of_regions_with_instances'] = sum(r['instances_count'] > 0 for r in regions)
+
+        for regions in self.services['ec2']['regions'].values():
+            instances_availability_zones = set()
+            for vpcs in regions['vpcs'].values():
+                for instance in vpcs['instances'].values():
+                    instances_availability_zones.add(instance.get('availability_zone'))
+            regions['instances_availability_zones'] = len(instances_availability_zones)
 
     def _add_last_snapshot_date_to_ec2_volumes(self):
         for region in self.services['ec2']['regions'].values():

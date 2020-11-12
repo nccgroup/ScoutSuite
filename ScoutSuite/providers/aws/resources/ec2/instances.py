@@ -22,9 +22,10 @@ class EC2Instances(AWSResources):
         id = raw_instance['InstanceId']
         instance['id'] = id
         instance['arn'] = 'arn:aws:ec2:{}.{}.instance/{}'.format(self.region,
-                                                                raw_instance['OwnerId'],
-                                                                raw_instance['InstanceId'])
+                                                                 raw_instance['OwnerId'],
+                                                                 raw_instance['InstanceId'])
         instance['reservation_id'] = raw_instance['ReservationId']
+        instance['availability_zone'] = raw_instance.get('Placement', {}).get('AvailabilityZone')
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
         instance['user_data'] = await self.facade.ec2.get_instance_user_data(self.region, id)
         instance['user_data_secrets'] = self._identify_user_data_secrets(instance['user_data'])
