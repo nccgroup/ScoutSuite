@@ -26,24 +26,33 @@
     "display_path": "cloudtrail.regions.id.trails.id",
     "path": "cloudtrail.regions.id.trails.id",
     "conditions": [
-        "or",
+        "and",
         [
             "cloudtrail.regions.id.trails.id.",
             "withoutKey",
-            "KmsKeyId"
+            "scout_link"
         ],
         [
-            "and",
+            "or",
             [
                 "cloudtrail.regions.id.trails.id.",
-                "withKey",
+                "withoutKey",
                 "KmsKeyId"
             ],
             [
-                "cloudtrail.regions.id.trails.id.KmsKeyId",
-                "null",
-                ""
+                "and",
+                [
+                    "cloudtrail.regions.id.trails.id.",
+                    "withKey",
+                    "KmsKeyId"
+                ],
+                [
+                    "cloudtrail.regions.id.trails.id.KmsKeyId",
+                    "null",
+                    ""
+                ]
             ]
+
         ]
     ],
     "id_suffix": "cloudtrail-kms-key-unused"
