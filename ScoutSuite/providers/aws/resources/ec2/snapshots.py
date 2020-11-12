@@ -30,7 +30,7 @@ class Snapshots(AWSResources):
         snapshot_dict['volume_size'] = raw_snapshot.get('VolumeSize')
         snapshot_dict['create_volume_permissions'] = raw_snapshot.get('CreateVolumePermissions')
 
-        snapshot_dict['arn'] = 'arn:aws:ec2:{}:{}:snapshot/{}'.format(self.get('region'),
+        snapshot_dict['arn'] = 'arn:aws:ec2:{}:{}:snapshot/{}'.format(self.region,
                                                                       raw_snapshot.get('OwnerId'),
                                                                       raw_snapshot.get('name'))
 
