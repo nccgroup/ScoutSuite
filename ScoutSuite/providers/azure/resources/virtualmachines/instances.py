@@ -1,13 +1,14 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 class Instances(AzureResources):
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(Instances, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
@@ -17,6 +18,7 @@ class Instances(AzureResources):
 
     async def _parse_instance(self, raw_instance):
         instance_dict = {}
+
         instance_dict['id'] = get_non_provider_id(raw_instance.id.lower())
         instance_dict['name'] = raw_instance.name
         instance_dict['vm_id'] = raw_instance.vm_id
@@ -28,7 +30,11 @@ class Instances(AzureResources):
         instance_dict['location'] = raw_instance.location
         instance_dict['type'] = raw_instance.type
         instance_dict['resources'] = raw_instance.resources
-        instance_dict['tags'] = raw_instance.tags
+        if raw_instance.tags is not None:
+            instance_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_instance.tags.items()]
+        else:
+            instance_dict['tags'] = []
+        instance_dict['resource_group_name'] = get_resource_group_name(raw_instance.id)
         instance_dict['provisioning_state'] = raw_instance.provisioning_state
         instance_dict['plan'] = raw_instance.plan
         instance_dict['identity'] = raw_instance.identity

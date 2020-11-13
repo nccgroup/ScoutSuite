@@ -16,7 +16,7 @@ class ELBv2Facade(AWSBaseFacade):
             await self.cache_load_balancers(region)
             return [load_balancer for load_balancer in self.load_balancers_cache[region] if load_balancer['VpcId'] == vpc]
         except Exception as e:
-            print_exception('Failed to get ELBv2 load balancers: {}'.format(e))
+            print_exception(f'Failed to get ELBv2 load balancers: {e}')
             return []
 
     async def cache_load_balancers(self, region):
@@ -46,7 +46,7 @@ class ELBv2Facade(AWSBaseFacade):
                     LoadBalancerArn=load_balancer['LoadBalancerArn'])['Attributes']
             )
         except Exception as e:
-            print_exception('Failed to describe ELBv2 attributes: {}'.format(e))
+            print_exception(f'Failed to describe ELBv2 attributes: {e}')
 
     async def _get_and_set_load_balancer_tags(self, load_balancer: dict, region: str):
         elbv2_client = AWSFacadeUtils.get_client('elbv2', self.session, region)
@@ -56,7 +56,7 @@ class ELBv2Facade(AWSBaseFacade):
                     ResourceArns=[load_balancer['LoadBalancerArn']])['TagDescriptions'][0]['Tags']
             )
         except Exception as e:
-            print_exception('Failed to describe ELBv2 tags: {}'.format(e))
+            print_exception(f'Failed to describe ELBv2 tags: {e}')
 
     async def get_listeners(self, region: str, load_balancer_arn: str):
         return await AWSFacadeUtils.get_all_pages(

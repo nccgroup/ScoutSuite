@@ -23,7 +23,7 @@ class RDSFacade(AWSBaseFacade):
             await self._cache_instances(region)
             return [instance for instance in self._instances_cache[region] if instance['VpcId'] == vpc]
         except Exception as e:
-            print_exception('Failed to get RDS instances: {}'.format(e))
+            print_exception(f'Failed to get RDS instances: {e}')
             return []
 
     async def _cache_instances(self, region: str):
@@ -53,9 +53,9 @@ class RDSFacade(AWSBaseFacade):
             instance['Tags'] = {x['Key']: x['Value'] for x in instance_tagset['TagList']}
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchTagSet':
-                print_exception('Failed to get db instance tags for %s: %s' % (instance['DBInstanceIdentifier'], e))
+                print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
         except Exception as e:
-            print_exception('Failed to get db instance tags for %s: %s' % (instance['DBInstanceIdentifier'], e))
+            print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
             instance['Tags'] = {}
 
     async def _get_and_set_instance_clusters(self, instance: {}, region: str):
@@ -68,14 +68,14 @@ class RDSFacade(AWSBaseFacade):
                 cluster = clusters['DBClusters'][0]
                 instance['MultiAZ'] = cluster['MultiAZ']
             except Exception as e:
-                print_exception('Failed to describe RDS clusters: {}'.format(e))
+                print_exception(f'Failed to describe RDS clusters: {e}')
 
     async def get_snapshots(self, region: str, vpc: str):
         try:
             await self._cache_snapshots(region)
             return [snapshot for snapshot in self._snapshots_cache[region] if snapshot['VpcId'] == vpc]
         except Exception as e:
-            print_exception('Failed to get RDS snapshots: {}'.format(e))
+            print_exception(f'Failed to get RDS snapshots: {e}')
             return []
 
     async def _cache_snapshots(self, region: str):
@@ -114,7 +114,7 @@ class RDSFacade(AWSBaseFacade):
             snapshot['Attributes'] =\
                 attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
         except Exception as e:
-            print_exception('Failed to describe RDS snapshot attributes: {}'.format(e))
+            print_exception(f'Failed to describe RDS snapshot attributes: {e}')
             snapshot['Attributes'] = {}
 
     async def _get_and_set_cluster_snapshot_attributes(self, snapshot: {}, region: str):
@@ -126,7 +126,7 @@ class RDSFacade(AWSBaseFacade):
             snapshot['Attributes'] =\
                 attributes['DBClusterSnapshotAttributes'] if 'DBClusterSnapshotAttributes' in attributes else {}
         except Exception as e:
-            print_exception('Failed to describe RDS cluster snapshot attributes: {}'.format(e))
+            print_exception(f'Failed to describe RDS cluster snapshot attributes: {e}')
             snapshot['Attributes'] = {}
 
     async def get_subnet_groups(self, region: str, vpc: str):
@@ -134,7 +134,7 @@ class RDSFacade(AWSBaseFacade):
             await self._cache_subnet_groups(region)
             return [subnet_group for subnet_group in self._subnet_groups_cache[region] if subnet_group['VpcId'] == vpc]
         except Exception as e:
-            print_exception('Failed to get RDS subnet groups: {}'.format(e))
+            print_exception(f'Failed to get RDS subnet groups: {e}')
             return []
 
     async def _cache_subnet_groups(self, region: str):
@@ -152,7 +152,7 @@ class RDSFacade(AWSBaseFacade):
             await get_and_set_concurrently(
                 [self._get_and_set_db_parameters], parameter_groups, region=region)
         except Exception as e:
-            print_exception('Failed to get RDS parameter groups: {}'.format(e))
+            print_exception(f'Failed to get RDS parameter groups: {e}')
             parameter_groups = []
         finally:
             return parameter_groups
@@ -170,12 +170,12 @@ class RDSFacade(AWSBaseFacade):
                 parameter_name = parameter.pop('ParameterName')
                 parameter_group['Parameters'][parameter_name] = parameter
         except Exception as e:
-            print_exception('Failed fetching DB parameters for %s: %s' % (name, e))
+            print_exception(f'Failed fetching DB parameters for {name}: {e}')
 
     async def get_security_groups(self, region: str) :
         try:
             return await AWSFacadeUtils.get_all_pages(
                 'rds', region, self.session, 'describe_db_security_groups', 'DBSecurityGroups')
         except Exception as e:
-            print_exception('Failed to get RDS security groups: {}'.format(e))
+            print_exception(f'Failed to get RDS security groups: {e}')
             return []

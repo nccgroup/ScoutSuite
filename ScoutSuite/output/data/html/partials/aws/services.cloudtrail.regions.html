@@ -1,5 +1,4 @@
-
-<!-- Trail partial -->
+<!-- Region partial -->
 <script id="services.cloudtrail.regions.partial" type="text/x-handlebars-template">
     <div class="list-group-item active">
       <h4 class="list-group-item-heading">{{name}}</h4>
@@ -9,7 +8,7 @@
       <ul>
         <li class="list-group-item-text">Configured:
           <span id="cloudtrail.regions.{{name}}.NotConfigured">
-            {{#ifPositive trails_count}}true{{else}}false{{/ifPositive}}
+              <samp>{{#ifPositive trails_count}}True{{else}}False{{/ifPositive}}</samp>
           </span>
         </li>
       </ul>

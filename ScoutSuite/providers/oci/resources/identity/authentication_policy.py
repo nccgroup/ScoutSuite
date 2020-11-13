@@ -4,7 +4,7 @@ from ScoutSuite.providers.oci.facade.base import OracleFacade
 
 class PasswordPolicy(OracleResources):
     def __init__(self, facade: OracleFacade):
-        super(PasswordPolicy, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         raw_authentication_policy = await self.facade.identity.get_authentication_policy()

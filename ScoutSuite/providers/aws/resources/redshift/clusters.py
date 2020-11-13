@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class Clusters(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(Clusters, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 
@@ -17,5 +17,8 @@ class Clusters(AWSResources):
     def _parse_cluster(self, raw_cluster):
         name = raw_cluster.pop('ClusterIdentifier')
         raw_cluster['name'] = name
+        raw_cluster['arn'] = 'arn:aws:redshift:{}:{}:cluster/{}'.format(self.region,
+                                                                    self.facade.owner_id,
+                                                                    name)
 
         return name, raw_cluster

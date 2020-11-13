@@ -12,7 +12,7 @@ class Topics(AWSCompositeResources):
     ]
 
     def __init__(self, facade: AWSFacade, region: str):
-        super(Topics, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):
@@ -40,5 +40,8 @@ class Topics(AWSCompositeResources):
             raw_topic[k] = attributes[k] if k in attributes else None
         for k in ['Policy', 'DeliveryPolicy', 'EffectiveDeliveryPolicy']:
             raw_topic[k] = json.loads(attributes[k]) if k in attributes else None
+
+        if "KmsMasterKeyId" in attributes:
+            raw_topic["KmsMasterKeyId"] = attributes["KmsMasterKeyId"]
 
         return raw_topic['name'], raw_topic

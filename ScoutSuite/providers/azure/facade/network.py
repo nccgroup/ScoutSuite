@@ -2,6 +2,7 @@ from azure.mgmt.network import NetworkManagementClient
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.utils import get_user_agent
 
 
 class NetworkFacade:
@@ -10,8 +11,10 @@ class NetworkFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return NetworkManagementClient(self.credentials.get_credentials('arm'),
+        client = NetworkManagementClient(self.credentials.get_credentials('arm'),
                                        subscription_id=subscription_id)
+        client._client.config.add_user_agent(get_user_agent())
+        return client
 
     async def get_network_watchers(self, subscription_id: str):
         try:
@@ -20,7 +23,7 @@ class NetworkFacade:
                 lambda: list(client.network_watchers.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve network watchers: {}'.format(e))
+            print_exception(f'Failed to retrieve network watchers: {e}')
             return []
 
     async def get_network_security_groups(self, subscription_id: str):
@@ -30,7 +33,7 @@ class NetworkFacade:
                 lambda: list(client.network_security_groups.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve network security groups: {}'.format(e))
+            print_exception(f'Failed to retrieve network security groups: {e}')
             return []
 
     async def get_application_security_groups(self, subscription_id: str):
@@ -40,7 +43,7 @@ class NetworkFacade:
                 lambda: list(client.application_security_groups.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve application security groups: {}'.format(e))
+            print_exception(f'Failed to retrieve application security groups: {e}')
             return []
 
     async def get_virtual_networks(self, subscription_id: str):
@@ -50,7 +53,7 @@ class NetworkFacade:
                 lambda: list(client.virtual_networks.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve virtual networks: {}'.format(e))
+            print_exception(f'Failed to retrieve virtual networks: {e}')
             return []
 
     async def get_network_interfaces(self, subscription_id: str):
@@ -60,5 +63,5 @@ class NetworkFacade:
                 lambda: list(client.network_interfaces.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve network interfaces: {}'.format(e))
+            print_exception(f'Failed to retrieve network interfaces: {e}')
             return []

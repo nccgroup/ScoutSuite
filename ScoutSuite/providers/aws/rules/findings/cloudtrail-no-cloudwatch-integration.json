@@ -1,0 +1,50 @@
+{
+    "description": "Trail Is Not Integrated with CloudWatch",
+    "rationale": "The lack of integration with CloudWatch hinders ral-time and historic activity logging as well as not allowing the configuration of alarms and notifications for anomalous account activity.",
+    "remediation": "Configure each Trail to have a CloudWatch Logs group attached",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "2.4"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "2.4"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "2.4"
+        }
+    ],
+    "dashboard_name": "Configurations",
+    "display_path": "cloudtrail.regions.id.trails.id",
+    "path": "cloudtrail.regions.id.trails.id",
+    "conditions": [
+        "and",
+        [
+            "cloudtrail.regions.id.trails.id.",
+            "withKey",
+            "LatestCloudWatchLogsDeliveryTime"
+        ],
+        [
+            "or",
+            [
+                "cloudtrail.regions.id.trails.id.LatestCloudWatchLogsDeliveryTime",
+                "null",
+                ""
+            ],
+            [
+                "cloudtrail.regions.id.trails.id.LatestCloudWatchLogsDeliveryTime",
+                "olderThan",
+                [
+                    "1",
+                    "days"
+                ]
+            ]
+        ]
+    ],
+    "id_suffix": "TrailCloudwatchNoIntegration"
+}

@@ -19,7 +19,7 @@ class Resources(dict, metaclass=abc.ABCMeta):
     def __init__(self, service_facade):
         self.facade = service_facade
 
-        super(Resources, self).__init__()
+        super().__init__()
 
     @abc.abstractmethod
     async def fetch_all(self, **kwargs):

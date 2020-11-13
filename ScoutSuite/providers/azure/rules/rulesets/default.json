@@ -37,6 +37,36 @@
                 "level": "warning"
             }
         ],
+        "appservice-outdated-http-version.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-dotnet.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-java.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-php.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-python.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "appservice-tls-v1-supported.json": [
             {
                 "enabled": true,
@@ -76,7 +106,7 @@
             },
             {
                 "args": [
-                    "SQL",
+                    "MsSQL",
                     "1433",
                     "6.3"
                 ],
@@ -255,13 +285,13 @@
                 "level": "danger"
             }
         ],
-        "storageaccount-trusted-microsoft-services.json": [
+        "storageaccount-public-traffic-allowed.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "storageaccount-public-traffic-allowed.json": [
+        "storageaccount-trusted-microsoft-services.json": [
             {
                 "enabled": true,
                 "level": "warning"

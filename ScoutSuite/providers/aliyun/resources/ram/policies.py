@@ -5,7 +5,7 @@ import json
 
 class Policies(AliyunResources):
     def __init__(self, facade: AliyunFacade):
-        super(Policies, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         for raw_policy in await self.facade.ram.get_policies():

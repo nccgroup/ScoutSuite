@@ -4,7 +4,7 @@ from ScoutSuite.providers.gcp.facade.base import GCPFacade
 
 class Firewalls(Resources):
     def __init__(self, facade: GCPFacade, project_id: str):
-        super(Firewalls, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
@@ -24,6 +24,7 @@ class Firewalls(Resources):
         firewall_dict['network_url'] = raw_firewall['network']
         firewall_dict['priority'] = raw_firewall['priority']
         firewall_dict['source_ranges'] = raw_firewall.get('sourceRanges', [])
+        firewall_dict['destination_ranges'] = raw_firewall.get('destinationRanges', [])
         firewall_dict['source_tags'] = raw_firewall.get('sourceTags', [])
         firewall_dict['target_tags'] = raw_firewall.get('targetTags', [])
         firewall_dict['direction'] = raw_firewall['direction']

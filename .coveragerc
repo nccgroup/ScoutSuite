@@ -3,11 +3,11 @@ include =   ScoutSuite/*.py
             ScoutSuite/core/*.py
             ScoutSuite/output/*.py
             ScoutSuite/providers/aws/*.py
-            ScoutSuite/providers/aws/configs/*.py
-            ScoutSuite/providers/aws/services/*.py
+            ScoutSuite/providers/aws/facade/*.py
+            ScoutSuite/providers/aws/resources/*.py
             ScoutSuite/providers/azure/*.py
-            ScoutSuite/providers/azure/configs/*.py
-            ScoutSuite/providers/azure/services/*.py
+            ScoutSuite/providers/azure/facade/*.py
+            ScoutSuite/providers/azure/resources/*.py
             ScoutSuite/providers/gcp/*.py
-            ScoutSuite/providers/gcp/configs/*.py
-            ScoutSuite/providers/gcp/services/*.py
+            ScoutSuite/providers/gcp/facade/*.py
+            ScoutSuite/providers/gcp/resources/*.py

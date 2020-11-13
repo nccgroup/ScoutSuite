@@ -1,6 +1,24 @@
 {
-    "description": "Non-Empty Ruleset for Default Security Group",
+    "description": "Non-empty Rulesets for Default Security Groups",
     "rationale": "The default security group created in each VPC comes with rules allowing all inbound traffic from instances assigned to the same security group, as well as all outbound traffic. In order to improve system hardening, you should remove all rules from the default security groups so that they restricts all traffic. Should an instance be created without custom security groups, it will inherit the default security group and be unable to communicate with other instances within the VPC until the required custom security groups are assigned.",
+    "remediation": "Ensure the default security group of every VPC restricts all traffic",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "4.4"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "4.4"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "4.3"
+        }
+    ],
     "references": [
         "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-cis-controls-4.3"
     ],
@@ -17,6 +35,11 @@
         [
             "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols",
             "notEmpty",
+            ""
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.is_default_configuration",
+            "true",
             ""
         ]
     ],

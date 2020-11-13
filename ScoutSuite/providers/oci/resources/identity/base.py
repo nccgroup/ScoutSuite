@@ -15,7 +15,7 @@ class Identity(OracleCompositeResources):
     ]
 
     def __init__(self, facade: OracleFacade):
-        super(Identity, self).__init__(facade)
+        super().__init__(facade)
         self.service = 'identity'
 
     async def fetch_all(self, **kwargs):

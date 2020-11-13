@@ -1,10 +1,28 @@
 {
     "description": "Disabled Trails",
     "rationale": "Logging is disabled for a given Trail. Depending on the configuration, logs for important API activity may be missing.",
+    "remediation": "Configure all Trails to enable Logging, set Apply trail to all regions and ensure that Read/Write Events are set to ALL",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "2.1"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "2.1"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "2.1"
+        }
+    ],
     "references": [
         "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/best-practices-security.html"
     ],
-    "dashboard_name": "Trails",
+    "dashboard_name": "Configurations",
     "path": "cloudtrail.regions.id.trails.id",
     "conditions": [
         "and",
@@ -19,5 +37,5 @@
             ""
         ]
     ],
-    "id_suffix": "IsLogging"
+    "class_suffix": "IsLogging"
 }

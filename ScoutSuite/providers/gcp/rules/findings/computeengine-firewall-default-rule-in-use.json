@@ -14,6 +14,12 @@
                 "default-allow-rdp",
                 "default-allow-ssh"
             ]
+        ],
+        [
+            "computeengine.projects.id.firewalls.id.disabled",
+            "false",
+            ""
         ]
-    ]
+    ],
+    "id_suffix": "name"
 }

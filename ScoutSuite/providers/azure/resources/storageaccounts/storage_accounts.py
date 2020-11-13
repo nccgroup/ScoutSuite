@@ -14,7 +14,7 @@ class StorageAccounts(AzureCompositeResources):
     ]
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(StorageAccounts, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
@@ -43,6 +43,10 @@ class StorageAccounts(AzureCompositeResources):
         storage_account['bypass'] = raw_storage_account.network_rule_set.bypass
         storage_account['access_keys_last_rotation_date'] = \
             self._parse_access_keys_last_rotation_date(raw_storage_account.activity_logs)
+        if raw_storage_account.tags is not None:
+            storage_account['tags'] = ["{}:{}".format(key, value) for key, value in  raw_storage_account.tags.items()]
+        else:
+            storage_account['tags'] = []
 
         return storage_account['id'], storage_account
 

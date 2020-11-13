@@ -10,7 +10,7 @@ class AcmFacade(AWSBaseFacade):
             cert_list = await AWSFacadeUtils.get_all_pages('acm', region, self.session, 'list_certificates', 'CertificateSummaryList')
             cert_arns = [cert['CertificateArn'] for cert in cert_list]
         except Exception as e:
-            print_exception('Failed to get acm certificates: {}'.format(e))
+            print_exception(f'Failed to get acm certificates: {e}')
             return []
         else:
             return await map_concurrently(self._get_certificate, cert_arns, region=region)
@@ -20,6 +20,6 @@ class AcmFacade(AWSBaseFacade):
         try:
             return await run_concurrently(lambda: client.describe_certificate(CertificateArn=cert_arn)['Certificate'])
         except Exception as e:
-            print_exception('Failed to describe acm certificate: {}'.format(e))
+            print_exception(f'Failed to describe acm certificate: {e}')
             raise
 

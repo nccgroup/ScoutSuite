@@ -1,6 +1,6 @@
 {
     "description": "Domain Transfer Lock Not Supported by TLD",
-    "rationale": "A domain lock prevents someone from transfering your domain to another registrar without your permission. Your domain's TLD does not support this feature.",
+    "rationale": "A domain lock prevents someone from transferring your domain to another registrar without your permission. Your domain's TLD does not support this feature.",
     "references": [
         "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar-tld-list.html"
     ],
@@ -12,14 +12,30 @@
             "name",
             "match",
             [
-                ".*\\.io",
-                ".*\\.co.nz",
-                ".*\\.jp",
-                ".*\\.co.uk",
                 ".*\\.fr",
-                ".*\\.it",
+                ".*\\.qa",
+                ".*\\.co.nz",
+                ".*\\.nl",
+                ".*\\.fi",
+                ".*\\.es",
+                ".*\\.de",
+                ".*\\.se",
+                ".*\\.co.uk",
+                ".*\\.me.uk",
+                ".*\\.ru",
+                ".*\\.jp",
+                ".*\\.net.au",
+                ".*\\.ch",
+                ".*\\.co.za",
+                ".*\\.com.au",
+                ".*\\.com.ar",
+                ".*\\.cl",
                 ".*\\.org.uk",
-                ".*\\.uk"
+                ".*\\.it",
+                ".*\\.net.nz",
+                ".*\\.uk",
+                ".*\\.eu",
+                ".*\\.org.nz"
             ]
         ]
     ],
