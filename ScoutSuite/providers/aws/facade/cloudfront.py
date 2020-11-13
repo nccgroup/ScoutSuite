@@ -6,6 +6,7 @@ from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
 
 class CloudFront(AWSBaseFacade):
+
     async def get_distributions(self):
         client = AWSFacadeUtils.get_client('cloudfront',self.session)
         # When no cloudfront distribution exists, we first need to initiate the creation
@@ -29,7 +30,7 @@ class CloudFront(AWSBaseFacade):
                 return []
 
         try:
-            return response['DistributionList']['Items']
+            return response.get('DistributionList', {}).get('Items', [])
         except Exception as e:
-            print_exception('Failed to parse cloudfront distribution list: {}'.format(e))
+            print_exception(f'Failed to get CloudFront distribution lists: {e}')
             return []
