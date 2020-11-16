@@ -44,8 +44,7 @@ class EC2Instances(AWSResources):
             get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
             instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
 
-        instance['metadata_options'] = raw_instance['MetadataOptions']
-
+        instance['metadata_options'] = raw_instance.get('MetadataOptions', {})
 
         if 'IamInstanceProfile' in raw_instance:
             instance['iam_role'] = raw_instance['IamInstanceProfile']['Arn'].split('/')[-1]
