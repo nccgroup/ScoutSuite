@@ -143,6 +143,14 @@
                     "path": "services.directconnect.connections"
                 }
             }
+        },
+        "cloudfront": {
+            "resources": {
+                "distributions": {
+                    "cols": 2,
+                    "path": "services.cloudfront.distributions"
+                }
+            }
         }
     },
     "compute": {
