@@ -117,8 +117,12 @@ class S3Facade(AWSBaseFacade):
         bucket_name = bucket['Name']
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
-            await run_concurrently(lambda: client.get_bucket_encryption(Bucket=bucket['Name']))
+            config = await run_concurrently(lambda: client.get_bucket_encryption(Bucket=bucket['Name']))
             bucket['default_encryption_enabled'] = True
+            bucket['default_encryption_algorithm'] = config.get('ServerSideEncryptionConfiguration', {})\
+                .get('Rules', [{}])[0].get('ApplyServerSideEncryptionByDefault', {}).get('SSEAlgorithm')
+            bucket['default_encryption_key'] = config.get('ServerSideEncryptionConfiguration', {})\
+                .get('Rules', [{}])[0].get('ApplyServerSideEncryptionByDefault', {}).get('KMSMasterKeyID')
         except ClientError as e:
             if 'ServerSideEncryptionConfigurationNotFoundError' in e.response['Error']['Code']:
                 bucket['default_encryption_enabled'] = False
