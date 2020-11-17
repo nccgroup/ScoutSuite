@@ -12,7 +12,7 @@
                 <li class="list-group-item-text">Engine: <samp>{{Engine}}</samp></li>
                 <li class="list-group-item-text">Created: {{format_date InstanceCreateTime}}</li>
                 <li class="list-group-item-text">Status: <samp>{{makeTitle DBInstanceStatus}}</samp></li>
-                <li class="list-group-item-text">Is read replica: <samp>{{is_read_replica}}</samp></li>
+                <li class="list-group-item-text">Is Read Replica: <samp>{{is_read_replica}}</samp></li>
                 <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.AutoMinorVersionUpgrade">{{convert_bool_to_enabled AutoMinorVersionUpgrade}}</span></li>
                 <li class="list-group-item-text">Multi Availability Zones: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.MultiAZ">{{convert_bool_to_enabled MultiAZ}}</span></li>
                 <li class="list-group-item-text">Instance Class: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.DBInstanceClass"><samp>{{DBInstanceClass}}</samp></span></li>
