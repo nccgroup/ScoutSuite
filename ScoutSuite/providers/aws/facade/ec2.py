@@ -171,8 +171,6 @@ class EC2Facade(AWSBaseFacade):
 
     async def cache_flow_logs(self, region: str):
         async with self.regional_flow_logs_cache_locks.setdefault(region, asyncio.Lock()):
-            if region in self.flow_logs_cache:
-                return
 
             self.flow_logs_cache[region] = \
                 await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_flow_logs', 'FlowLogs')

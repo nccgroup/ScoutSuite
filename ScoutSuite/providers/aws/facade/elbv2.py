@@ -21,8 +21,6 @@ class ELBv2Facade(AWSBaseFacade):
 
     async def cache_load_balancers(self, region):
         async with self.regional_load_balancers_cache_locks.setdefault(region, asyncio.Lock()):
-            if region in self.load_balancers_cache:
-                return
 
             self.load_balancers_cache[region] = \
                 await AWSFacadeUtils.get_all_pages('elbv2', region, self.session,

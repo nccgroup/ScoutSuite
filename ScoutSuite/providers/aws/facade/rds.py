@@ -28,8 +28,6 @@ class RDSFacade(AWSBaseFacade):
 
     async def _cache_instances(self, region: str):
         async with self._regional_instances_cache_locks.setdefault(region, Lock()):
-            if region in self._instances_cache:
-                return
 
             self._instances_cache[region] = await AWSFacadeUtils.get_all_pages(
                 'rds', region, self.session, 'describe_db_instances', 'DBInstances')
@@ -80,8 +78,6 @@ class RDSFacade(AWSBaseFacade):
 
     async def _cache_snapshots(self, region: str):
         async with self._regional_snapshots_cache_locks.setdefault(region, Lock()):
-            if region in self._snapshots_cache:
-                return
 
             # First, fetch regular snapshots
             self._snapshots_cache[region] = await AWSFacadeUtils.get_all_pages(
@@ -139,8 +135,6 @@ class RDSFacade(AWSBaseFacade):
 
     async def _cache_subnet_groups(self, region: str):
         async with self._regional_subnet_groups_cache_locks.setdefault(region, Lock()):
-            if region in self._subnet_groups_cache:
-                return
 
             self._subnet_groups_cache[region] = await AWSFacadeUtils.get_all_pages(
                 'rds', region, self.session, 'describe_db_subnet_groups', 'DBSubnetGroups')
