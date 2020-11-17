@@ -10,4 +10,4 @@ class SecretsManager(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super().__init__('sqs', facade)
+        super().__init__('secretsmanager', facade)
