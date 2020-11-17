@@ -47,7 +47,7 @@ class SecretsManagerFacade(AWSBaseFacade):
             if policy_json:
                 secret['policy'] = json.loads(policy_json)
             else:
-                secret['policy'] = None
+                secret['policy'] = {}
         except Exception as e:
             print_exception('Failed to get Secrets Manager secret policy: {}'.format(e))
-            secret['policy'] = None
+            secret['policy'] = {}
