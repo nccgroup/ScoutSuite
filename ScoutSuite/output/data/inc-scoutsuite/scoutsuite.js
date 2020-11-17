@@ -1234,6 +1234,8 @@ function makeTitle(title) {
         return 'GuardDuty'
     } else if (title === 'secretsmanager') {
         return 'Secrets Manager'
+    } else if (title === 'ssm') {
+        return 'Systems Manager'
     } else if (title === 'elasticache') {
         return 'ElastiCache'
     } else if (title === 'redshift') {

@@ -33,6 +33,7 @@ formatted_service_name = {
     'route53': 'Route53',
     'secretsmanager': 'Secrets Manager',
     'docdb': 'DocumentDB',
+    'ssm': 'Systems Manager',
     # Azure
     'aad': 'Azure Active Directory',
     'rbac': 'Azure RBAC',

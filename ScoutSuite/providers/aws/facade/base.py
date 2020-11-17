@@ -56,6 +56,10 @@ try:
     from ScoutSuite.providers.aws.facade.guardduty_private import GuardDutyFacade
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.aws.facade.ssm_private import SSMFacade
+except ImportError:
+    pass
 
 
 class AWSFacade(AWSBaseFacade):
@@ -289,5 +293,9 @@ class AWSFacade(AWSBaseFacade):
             pass
         try:
             self.guardduty = GuardDutyFacade(self.session)
+        except NameError:
+            pass
+        try:
+            self.ssm = SSMFacade(self.session)
         except NameError:
             pass

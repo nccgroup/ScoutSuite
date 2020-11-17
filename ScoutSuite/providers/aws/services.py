@@ -52,6 +52,10 @@ try:
     from ScoutSuite.providers.aws.resources.private_guardduty.base import GuardDuty
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.aws.resources.private_ssm.base import SSM
+except ImportError:
+    pass
 
 
 class AWSServicesConfig(BaseServicesConfig):
@@ -134,6 +138,10 @@ class AWSServicesConfig(BaseServicesConfig):
             pass
         try:
             self.guardduty = GuardDuty(facade)
+        except NameError as _:
+            pass
+        try:
+            self.ssm = SSM(facade)
         except NameError as _:
             pass
 
