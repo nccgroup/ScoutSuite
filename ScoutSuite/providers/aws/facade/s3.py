@@ -16,7 +16,7 @@ class S3Facade(AWSBaseFacade):
             # This is required in case there's an IAM policy that denies access to APIs on a regional basis,
             # as per https://github.com/nccgroup/ScoutSuite/issues/727
             buckets = []
-            exception = ''
+            exception = None
             region_list = self.regions if self.regions else await run_concurrently(lambda: self.session.get_available_regions('s3'))
             for region in region_list:
                 try:
@@ -25,6 +25,7 @@ class S3Facade(AWSBaseFacade):
                 except Exception as e:
                     exception = e
                 else:
+                    exception = None  # Fix for https://github.com/nccgroup/ScoutSuite/issues/916#issuecomment-728783965
                     break
             if not buckets:
                 if exception:
