@@ -36,8 +36,6 @@ class SNSFacade(AWSBaseFacade):
 
     async def cache_subscriptions(self, region: str):
         async with self.regional_subscriptions_cache_locks.setdefault(region, asyncio.Lock()):
-            if region in self.subscriptions_cache:
-                return
 
             self.subscriptions_cache[region] = \
                 await AWSFacadeUtils.get_all_pages('sns', region, self.session, 'list_subscriptions', 'Subscriptions')

@@ -23,8 +23,6 @@ class RedshiftFacade(AWSBaseFacade):
 
     async def cache_clusters(self, region):
         async with self.regional_cluster_cache_locks.setdefault(region, Lock()):
-            if region in self.clusters_cache:
-                return
 
             self.clusters_cache[region] = await AWSFacadeUtils.get_all_pages(
                 'redshift', region, self.session, 'describe_clusters', 'Clusters')

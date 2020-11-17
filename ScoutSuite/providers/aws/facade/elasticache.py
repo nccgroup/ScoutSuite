@@ -21,8 +21,6 @@ class ElastiCacheFacade(AWSBaseFacade):
 
     async def cache_clusters(self, region):
         async with self.regional_clusters_cache_locks.setdefault(region, Lock()):
-            if region in self.clusters_cache:
-                return
 
             self.clusters_cache[region] = await AWSFacadeUtils.get_all_pages(
                 'elasticache', region, self.session, 'describe_cache_clusters', 'CacheClusters')
@@ -61,8 +59,6 @@ class ElastiCacheFacade(AWSBaseFacade):
 
     async def cache_subnets(self, region):
         async with self.regional_subnets_cache_locks.setdefault(region, Lock()):
-            if region in self.subnets_cache:
-                return
 
             self.subnets_cache[region] = await AWSFacadeUtils.get_all_pages(
                 'elasticache', region, self.session, 'describe_cache_subnet_groups', 'CacheSubnetGroups')
