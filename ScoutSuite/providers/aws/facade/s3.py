@@ -126,12 +126,18 @@ class S3Facade(AWSBaseFacade):
         except ClientError as e:
             if 'ServerSideEncryptionConfigurationNotFoundError' in e.response['Error']['Code']:
                 bucket['default_encryption_enabled'] = False
+                bucket['default_encryption_algorithm'] = None
+                bucket['default_encryption_key'] = None
             else:
                 bucket['default_encryption_enabled'] = None
+                bucket['default_encryption_algorithm'] = None
+                bucket['default_encryption_key'] = None
                 print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
         except Exception as e:
-            print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
             bucket['default_encryption'] = 'Unknown'
+            bucket['default_encryption_algorithm'] = None
+            bucket['default_encryption_key'] = None
+            print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
 
     async def _get_and_set_s3_acls(self, bucket: {}, key_name=None):
         bucket_name = bucket['Name']
