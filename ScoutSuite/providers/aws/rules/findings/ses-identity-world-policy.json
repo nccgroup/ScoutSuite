@@ -1,6 +1,6 @@
 {
     "description": "_ARG_0_ Authorized to All Principals",
-    "rationale": "Allowing IAM actions to all principals is contrary to the principle of least privilege and presents and opportunity for abuse. This policy should be reviewed to ensure it is secure and in line with the resource's intended use.",
+    "rationale": "Allowing IAM actions to all principals is contrary to the principle of least privilege and presents an opportunity for abuse. This policy should be reviewed to ensure it is secure and in line with the resource's intended use.",
     "dashboard_name": "Statements",
     "display_path": "ses.regions.id.identities.id",
     "path": "ses.regions.id.identities.id.policies.id.Statement.id",

@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  ncc-scoutsuite:
+    image: scoutsuite:latest
+    env_file:
+      - config/build.env
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VCS_REF
+        - VCS_URL
+        - VERSION
+        - BUILD_DATE
+        - VENDOR
+        - NAME
+        - DESCRIPTION

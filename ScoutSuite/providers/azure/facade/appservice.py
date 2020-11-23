@@ -3,6 +3,7 @@ from azure.mgmt.web import WebSiteManagementClient
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
+from ScoutSuite.utils import get_user_agent
 
 
 class AppServiceFacade:
@@ -11,8 +12,10 @@ class AppServiceFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return WebSiteManagementClient(self.credentials.get_credentials('arm'),
+        client = WebSiteManagementClient(self.credentials.get_credentials('arm'),
                                        subscription_id=subscription_id)
+        client._client.config.add_user_agent(get_user_agent())
+        return client
 
     async def get_web_apps(self, subscription_id: str):
         try:

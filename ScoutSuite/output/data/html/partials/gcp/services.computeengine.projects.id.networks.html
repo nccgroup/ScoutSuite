@@ -6,11 +6,39 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">ID: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.id">{{id}}</span></div>
         <div class="list-group-item-text item-margin">Name: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">ID: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.id">{{id}}</span></div>
         <div class="list-group-item-text item-margin">Project ID: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.project_id">{{project_id}}</span></div>
         <div class="list-group-item-text item-margin">Description: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.description"><samp>{{description}}</samp></span></div>
         <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.creation_timestamp">{{format_date creation_timestamp}}</span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading accordion-heading">Firewall Rules
+            {{> count_badge count=(count_vpc_instances firewalls) target=(concat '#services.computeengine.projects' project 'networks' @key 'firewalls')}}
+        </h4>
+        <div id="computeengine.projects.{{@../key}}.networks.{{@key}}.firewalls" class="accordion-body">
+            <div class="accordion-inner">
+                <ul>
+                    {{#each firewalls}}
+                    <li><a href="javascript:showObject('services.computeengine.projects.{{@../../key}}.firewalls.{{this}}')">{{getValueAt 'services.computeengine.projects' @../../key 'firewalls' this 'name'}}</a></li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading accordion-heading">Compute Engine Instances
+            {{> count_badge count=(count_vpc_instances instances) target=(concat '#services.computeengine.projects' project 'neworks' @key 'instances')}}
+        </h4>
+        <div id="computeengine.projects.{{@../key}}.networks.{{@key}}.instances" class="accordion-body">
+            <div class="accordion-inner">
+                <ul>
+                    {{#each instances}}
+                    <li><a href="javascript:showObject('services.computeengine.projects.{{@../../key}}.zones.{{instance_zone}}.instances.{{instance_id}}')">{{getValueAt 'services.computeengine.projects' @../../key 'zones' instance_zone 'instances' instance_id 'name'}}</a></li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
     </div>
 </script>
 

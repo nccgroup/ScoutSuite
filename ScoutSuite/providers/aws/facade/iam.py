@@ -99,6 +99,7 @@ class IAMFacade(AWSBaseFacade):
         await get_and_set_concurrently(
             [functools.partial(self._get_and_set_inline_policies, iam_resource_type='user'),
              self._get_and_set_user_groups,
+             self._get_and_set_user_tags,
              self._get_and_set_user_login_profile,
              self._get_and_set_user_access_keys,
              self._get_and_set_user_mfa_devices],
@@ -124,6 +125,10 @@ class IAMFacade(AWSBaseFacade):
             'iam', None, self.session, 'list_groups_for_user', 'Groups', UserName=user['UserName'])
         user['groups'] = [group['GroupName'] for group in groups]
 
+    async def _get_and_set_user_tags(self, user: {}):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        user['tags'] = client.list_user_tags(UserName=user['UserName'])
+
     async def get_roles(self):
         roles = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_roles', 'Roles')
         for role in roles:
@@ -134,9 +139,14 @@ class IAMFacade(AWSBaseFacade):
                 'AssumeRolePolicyDocument')
         await get_and_set_concurrently(
             [functools.partial(self._get_and_set_inline_policies, iam_resource_type='role'),
-             self._get_and_set_role_profiles], roles)
+             self._get_and_set_role_profiles,
+             self._get_and_set_role_tags], roles)
 
         return roles
+
+    async def _get_and_set_role_tags(self, role: {}):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        role['tags'] = client.list_role_tags(RoleName=role['RoleName'])
 
     async def _get_and_set_role_profiles(self, role: {}):
         profiles = await AWSFacadeUtils.get_all_pages(
@@ -169,12 +179,23 @@ class IAMFacade(AWSBaseFacade):
             print_exception(f'Failed to list access keys: {e}')
 
     async def _get_and_set_user_mfa_devices(self, user: {}):
+        user['MFADevices'] = await self.get_user_mfa_devices(user['UserName'])
+
+    async def get_user_mfa_devices(self, username: str):
         client = AWSFacadeUtils.get_client('iam', self.session)
         try:
-            user['MFADevices'] = await run_concurrently(
-                lambda: client.list_mfa_devices(UserName=user['UserName'])['MFADevices'])
+            return await run_concurrently(
+                lambda: client.list_mfa_devices(UserName=username)['MFADevices'])
         except Exception as e:
-            print_exception(f'Failed to list MFA devices: {e}')
+            print_exception(f'Failed to list MFA devices for user: {e}')
+
+    async def get_virtual_mfa_devices(self):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        try:
+            return await run_concurrently(
+                lambda: client.list_virtual_mfa_devices()['VirtualMFADevices'])
+        except Exception as e:
+            print_exception(f'Failed to list virtual MFA devices: {e}')
 
     async def _get_and_set_group_users(self, group: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)

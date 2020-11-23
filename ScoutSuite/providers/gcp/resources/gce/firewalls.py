@@ -24,6 +24,7 @@ class Firewalls(Resources):
         firewall_dict['network_url'] = raw_firewall['network']
         firewall_dict['priority'] = raw_firewall['priority']
         firewall_dict['source_ranges'] = raw_firewall.get('sourceRanges', [])
+        firewall_dict['destination_ranges'] = raw_firewall.get('destinationRanges', [])
         firewall_dict['source_tags'] = raw_firewall.get('sourceTags', [])
         firewall_dict['target_tags'] = raw_firewall.get('targetTags', [])
         firewall_dict['direction'] = raw_firewall['direction']

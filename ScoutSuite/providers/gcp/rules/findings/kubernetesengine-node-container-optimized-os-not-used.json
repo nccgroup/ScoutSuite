@@ -1,0 +1,32 @@
+{
+    "description": "Lack of Container-Optimized OS Node Images",
+    "rationale": "The Container-Optimized OS image provides better support, security, and stability than previous images.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.9"
+        },
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.5.1"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/container-optimized-os/docs/concepts/features-and-benefits",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.zones.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.zones.id.clusters.id.image_type",
+            "notEqual",
+            "COS"
+        ]
+    ],
+    "id_suffix": "container_optimized_os_not_used"
+}

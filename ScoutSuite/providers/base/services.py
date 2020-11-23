@@ -18,13 +18,14 @@ class BaseServicesConfig:
         if not services:
             print_debug('No services to scan')
         else:
+            # Remove "credentials" as it isn't a service
+            if 'credentials' in services:
+                services.remove('credentials')
+
             # Print services that are going to get skipped:
             for service in vars(self):
-                if service not in services:
+                if service not in services and service != 'credentials':
                     print_debug('Skipping the {} service'.format(format_service_name(service)))
-
-            # Remove "credentials" as it isn't a service
-            if 'credentials' in services: services.remove('credentials')
 
             # Then, fetch concurrently all services:
             if services:
@@ -52,8 +53,7 @@ class BaseServicesConfig:
                     if service != 'iam':
                         method_args['partition_name'] = get_partition_name(self.credentials.session)
 
-                await service_config.fetch_all(**method_args)
-
+                await service_config.fetch_all(**method_args)                
                 if hasattr(service_config, 'finalize'):
                     await service_config.finalize()
             else:

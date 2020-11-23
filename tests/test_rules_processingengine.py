@@ -20,8 +20,7 @@ class TestScoutRulesProcessingEngine(unittest.TestCase):
         self.test_dir = os.path.dirname(os.path.realpath(__file__))
 
     # TODO
-    # Check that one testcase per finding rule exists (should be within default
-    # reulset)
+    # Check that one testcase per finding rule exists (should be within default ruleset)
 
     def test_all_finding_rules(self):
         ruleset_file_name = os.path.join(self.test_dir, 'data/ruleset-test.json')

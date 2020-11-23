@@ -1,6 +1,24 @@
 {
-    "description": "Default Security Group in Use",
+    "description": "Default Security Groups in Use",
     "rationale": "The use of default security groups can indicate a lack of intentional enforcement of the principle of least privilege. Use custom security groups to ensure you are properly minimizing privilege and access.",
+    "remediation": "Ensure resources are not within default security groups. Instead, create a custom security group tailored to each resource needs.",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "4.4"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "4.4"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "4.3"
+        }
+    ],
     "references": [
         "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-cis-controls-4.3"
     ],
@@ -17,6 +35,11 @@
             "ec2.regions.id.vpcs.id.security_groups.id.",
             "withKey",
             "used_by"
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.is_default_configuration",
+            "true",
+            ""
         ]
     ],
     "id_suffix": "default_in_use"

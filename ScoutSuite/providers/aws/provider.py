@@ -1,7 +1,7 @@
 import copy
 import os
 
-from ScoutSuite.core.console import print_error, print_exception
+from ScoutSuite.core.console import print_error, print_exception, print_debug
 from ScoutSuite.providers.aws.services import AWSServicesConfig
 from ScoutSuite.providers.aws.resources.vpc.base import put_cidr_name
 from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
@@ -79,6 +79,9 @@ class AWSProvider(BaseProvider):
 
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
+        
+        if 'awslambda' in self.service_list and 'iam' in self.service_list:
+            self._match_lambdas_and_roles()
 
         if 'elbv2' in self.service_list and 'ec2' in self.service_list:
             self._add_security_group_data_to_elbv2()
@@ -153,17 +156,23 @@ class AWSProvider(BaseProvider):
 
     def _check_ec2_zone_distribution(self):
         regions = self.services['ec2']['regions'].values()
-        self.services['ec2']['number_of_regions_with_instances'] = sum(
-            r['instances_count'] > 0 for r in regions)
+        self.services['ec2']['number_of_regions_with_instances'] = sum(r['instances_count'] > 0 for r in regions)
+
+        for regions in self.services['ec2']['regions'].values():
+            instances_availability_zones = set()
+            for vpcs in regions['vpcs'].values():
+                for instance in vpcs['instances'].values():
+                    instances_availability_zones.add(instance.get('availability_zone'))
+            regions['instances_availability_zones'] = len(instances_availability_zones)
 
     def _add_last_snapshot_date_to_ec2_volumes(self):
         for region in self.services['ec2']['regions'].values():
             for volumeId, volume in region.get('volumes').items():
                 completed_snapshots = [s for s in region['snapshots'].values() if
-                                       s['VolumeId'] == volumeId and s['State'] == 'completed']
+                                       s['volume_id'] == volumeId and s['state'] == 'completed']
                 sorted_snapshots = sorted(
-                    completed_snapshots, key=lambda s: s['StartTime'], reverse=True)
-                volume['LastSnapshotDate'] = sorted_snapshots[0]['StartTime'] if len(
+                    completed_snapshots, key=lambda s: s['start_time'], reverse=True)
+                volume['LastSnapshotDate'] = sorted_snapshots[0]['start_time'] if len(
                     sorted_snapshots) > 0 else None
 
     def add_security_group_name_to_ec2_grants_callback(self, current_config, path, current_path, ec2_grant,
@@ -425,6 +434,25 @@ class AWSProvider(BaseProvider):
                         iam_config['roles'][role_id]['instances_count'] += len(
                             role_instances[instance_profile_id])
 
+    def _match_lambdas_and_roles(self):
+        if self.services.get('awslambda') and self.services.get('iam'):
+            awslambda_config = self.services['awslambda']
+            iam_config = self.services['iam']
+            awslambda_funtions = {}
+            for r in awslambda_config['regions']:
+                for lambda_function in awslambda_config['regions'][r]['functions']:
+                    awslambda_function = awslambda_config['regions'][r]['functions'][lambda_function]
+                    awslambda_function['region'] = r
+                    if awslambda_function['role_arn'] in awslambda_funtions:
+                        awslambda_funtions[awslambda_function['role_arn']][awslambda_function['name']] = awslambda_function
+                    else:
+                        awslambda_funtions[awslambda_function['role_arn']] = {awslambda_function['name']: awslambda_function}
+            for role_id in iam_config['roles']:
+                iam_config['roles'][role_id]['awslambdas_count'] = 0
+                if iam_config['roles'][role_id]['arn'] in awslambda_funtions:
+                    iam_config['roles'][role_id]['awslambdas'] = awslambda_funtions[iam_config['roles'][role_id]['arn']]
+                    iam_config['roles'][role_id]['awslambdas_count'] = len(awslambda_funtions[iam_config['roles'][role_id]['arn']])
+
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
         # Create a list of peering connection IDs in each VPC
@@ -600,39 +628,36 @@ class AWSProvider(BaseProvider):
             callback_args['clear_list'].append(region)
 
     def sort_vpc_flow_logs_callback(self, current_config, path, current_path, flow_log_id, callback_args):
-        # FIXME it's not clear if the below is still necessary/useful
-        return
-
-        # attached_resource = current_config['ResourceId']
-        # if attached_resource.startswith('vpc-'):
-        #     vpc_path = combine_paths(
-        #         current_path[0:4], ['vpcs', attached_resource])
-        #     try:
-        #         attached_vpc = get_object_at(self, vpc_path)
-        #     except Exception:
-        #         print_debug(
-        #             'It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (
-        #                 flow_log_id, attached_resource))
-        #         return
-        #     manage_dictionary(attached_vpc, 'flow_logs', [])
-        #     if flow_log_id not in attached_vpc['flow_logs']:
-        #         attached_vpc['flow_logs'].append(flow_log_id)
-        #     for subnet_id in attached_vpc['subnets']:
-        #         manage_dictionary(
-        #             attached_vpc['subnets'][subnet_id], 'flow_logs', [])
-        #         if flow_log_id not in attached_vpc['subnets'][subnet_id]['flow_logs']:
-        #             attached_vpc['subnets'][subnet_id]['flow_logs'].append(
-        #                 flow_log_id)
-        # elif attached_resource.startswith('subnet-'):
-        #     subnet_path = combine_paths(current_path[0:4],
-        #                                 ['vpcs', self.subnet_map[attached_resource]['vpc_id'], 'subnets',
-        #                                  attached_resource])
-        #     subnet = get_object_at(self, subnet_path)
-        #     manage_dictionary(subnet, 'flow_logs', [])
-        #     if flow_log_id not in subnet['flow_logs']:
-        #         subnet['flow_logs'].append(flow_log_id)
-        # else:
-        #     print_exception('Resource %s attached to flow logs is not handled' % attached_resource)
+        attached_resource = current_config['resource_id']
+        if attached_resource.startswith('vpc-'):
+            vpc_path = combine_paths(
+                current_path[0:4], ['vpcs', attached_resource])
+            try:
+                attached_vpc = get_object_at(self, vpc_path)
+            except Exception:
+                print_debug(
+                    'It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (
+                        flow_log_id, attached_resource))
+                return
+            manage_dictionary(attached_vpc, 'flow_logs', [])
+            if flow_log_id not in attached_vpc['flow_logs']:
+                attached_vpc['flow_logs'].append(flow_log_id)
+            for subnet_id in attached_vpc['subnets']:
+                manage_dictionary(
+                    attached_vpc['subnets'][subnet_id], 'flow_logs', [])
+                if flow_log_id not in attached_vpc['subnets'][subnet_id]['flow_logs']:
+                    attached_vpc['subnets'][subnet_id]['flow_logs'].append(
+                        flow_log_id)
+        elif attached_resource.startswith('subnet-'):
+            subnet_path = combine_paths(current_path[0:4],
+                                        ['vpcs', self.subnet_map[attached_resource]['vpc_id'], 'subnets',
+                                         attached_resource])
+            subnet = get_object_at(self, subnet_path)
+            manage_dictionary(subnet, 'flow_logs', [])
+            if flow_log_id not in subnet['flow_logs']:
+                subnet['flow_logs'].append(flow_log_id)
+        else:
+            print_exception('Resource %s attached to flow logs is not handled' % attached_resource)
 
     def get_db_attack_surface(self, current_config, path, current_path, db_id, callback_args):
         service = current_path[1]

@@ -16,7 +16,7 @@ class VPC(Regions):
     _children = [
         (RegionalVpcs, 'vpcs'),
         (FlowLogs, 'flow_logs'),
-        (PeeringConnections, 'peering_connections'),
+        (PeeringConnections, 'peering_connections')
     ]
 
     def __init__(self, facade: AWSFacade):

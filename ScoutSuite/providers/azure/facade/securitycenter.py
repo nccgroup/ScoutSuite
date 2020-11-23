@@ -2,6 +2,7 @@ from azure.mgmt.security import SecurityCenter
 
 from ScoutSuite.core.console import print_exception, print_debug
 from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.utils import get_user_agent
 
 
 class SecurityCenterFacade:
@@ -10,8 +11,10 @@ class SecurityCenterFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return SecurityCenter(self.credentials.get_credentials('arm'),
+        client = SecurityCenter(self.credentials.get_credentials('arm'),
                               subscription_id, '')
+        client._client.config.add_user_agent(get_user_agent())
+        return client
 
     async def get_pricings(self, subscription_id: str):
         try:

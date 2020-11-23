@@ -1,24 +1,29 @@
-from ScoutSuite.providers.aws.authentication_strategy import AWSCredentials
-from ScoutSuite.providers.base.authentication_strategy import AuthenticationException
-from ScoutSuite.providers.base.authentication_strategy_factory import (
-    get_authentication_strategy,
-)
-from ScoutSuite.providers import get_provider
-from ScoutSuite.providers.aws.provider import AWSProvider
-import pytest
 import unittest
 from unittest import mock
+
+import pytest
+
+from ScoutSuite.providers import get_provider
+from ScoutSuite.providers.aws.authentication_strategy import AWSCredentials
+from ScoutSuite.providers.base.authentication_strategy import AuthenticationException
+from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
+
+
+class Object(object):
+    pass
 
 
 # Test methods for AWS Provider
 class TestAWSProviderClass(unittest.TestCase):
     @mock.patch("ScoutSuite.providers.aws.authentication_strategy.boto3")
     @mock.patch("ScoutSuite.providers.aws.authentication_strategy.get_caller_identity")
-    def test_authenticate(self, mock_get_caller_identity, mock_Session):
-        auth_strat = get_authentication_strategy("aws")
+    def test_authenticate(self, mock_get_caller_identity, mock_boto3):
 
-        boto3_session = "_boto3_session_"
-        mock_Session.Session.return_value = boto3_session
+        aws_authentication_strategy = get_authentication_strategy("aws")
+
+        boto3_session = Object()
+        boto3_session._session = Object()
+        mock_boto3.Session.return_value = boto3_session
 
         test_cases = [
             # no params
@@ -63,21 +68,21 @@ class TestAWSProviderClass(unittest.TestCase):
         ]
 
         for test_case in test_cases:
-            result = auth_strat.authenticate(
+            result = aws_authentication_strategy.authenticate(
                 test_case["profile"],
                 test_case["aws_access_key_id"],
                 test_case["aws_secret_access_key"],
                 test_case["aws_session_token"],
             )
-            mock_Session.Session.assert_called_with(**test_case["call_dict"])
+            mock_boto3.Session.assert_called_with(**test_case["call_dict"])
             mock_get_caller_identity.assert_called_with(boto3_session)
             assert isinstance(result, AWSCredentials)
             assert result.session == boto3_session
 
         # exception test
-        mock_Session.Session.side_effect = Exception("an exception")
+        mock_boto3.Session.side_effect = Exception("an exception")
         with pytest.raises(AuthenticationException):
-            result = auth_strat.authenticate(None, None, None, None)
+            result = aws_authentication_strategy.authenticate(None, None, None, None)
 
     # mock two separate places from which get_aws_account_id is called
     @mock.patch("ScoutSuite.providers.aws.facade.base.get_aws_account_id")

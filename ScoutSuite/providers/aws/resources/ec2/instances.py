@@ -22,9 +22,10 @@ class EC2Instances(AWSResources):
         id = raw_instance['InstanceId']
         instance['id'] = id
         instance['arn'] = 'arn:aws:ec2:{}.{}.instance/{}'.format(self.region,
-                                                                raw_instance['OwnerId'],
-                                                                raw_instance['InstanceId'])
+                                                                 raw_instance['OwnerId'],
+                                                                 raw_instance['InstanceId'])
         instance['reservation_id'] = raw_instance['ReservationId']
+        instance['availability_zone'] = raw_instance.get('Placement', {}).get('AvailabilityZone')
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
         instance['user_data'] = await self.facade.ec2.get_instance_user_data(self.region, id)
         instance['user_data_secrets'] = self._identify_user_data_secrets(instance['user_data'])
@@ -43,7 +44,12 @@ class EC2Instances(AWSResources):
             get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
             instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
 
-        instance['metadata_options'] = raw_instance['MetadataOptions']
+        instance['metadata_options'] = raw_instance.get('MetadataOptions', {})
+
+        if 'IamInstanceProfile' in raw_instance:
+            instance['iam_role'] = raw_instance['IamInstanceProfile']['Arn'].split('/')[-1]
+        else:
+            instance['iam_role'] = None
 
         return id, instance
 

@@ -1,24 +1,6 @@
 {
     "about": "This ruleset attempts to cover as many recommendations from the CIS Google Cloud Platform Foundation v1.0.0.",
     "rules": {
-        "iam-gmail-accounts-used.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-sa-has-admin-privileges.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-user-has-sa-user-role.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "cloudsql-allows-root-login-from-any-host.json": [
             {
                 "enabled": true,
@@ -55,13 +37,145 @@
                 "level": "warning"
             }
         ],
+        "iam-gmail-accounts-used.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-lack-of-service-account-key-rotation.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
+        "iam-sa-has-admin-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-service-account-with-user-managed-keys.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-user-has-sa-user-role.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-basic-authentication-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-certificate-authentication-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-alias-ip-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-has-no-labels.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-logging-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-master-authorized-networks-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-monitoring-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-network-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-pod-security-policy-config-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-private-google-access-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-dashboard-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-default-service-account-used.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-legacy-abac-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-legacy-metadata-endpoints-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-node-auto-repair-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-node-auto-upgrade-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-node-container-optimized-os-not-used.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-private-cluster-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-scopes-not-limited.json": [
             {
                 "enabled": true,
                 "level": "warning"

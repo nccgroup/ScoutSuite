@@ -1,0 +1,55 @@
+{
+    "description": "Managed Policy Allows All Actions",
+    "rationale": "Providing full privileges instead of restricting to the minimum set of permissions that the principal requires exposes the resources to potentially unwanted actions.",
+    "remediation": "Ensure no managed policies are configured with <samp>Effect: Allow</samp>, <samp>Action: *</samp> and <samp>Resource: *</samp>",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "1.24"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "1.22"
+        }
+    ],
+    "references": [
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
+        "https://aws.amazon.com/blogs/security/back-to-school-understanding-the-iam-policy-grammar/"
+    ],
+    "dashboard_name": "Statements",
+    "display_path": "iam.policies.id",
+    "path": "iam.policies.id.PolicyDocument.Statement.id",
+    "conditions": [
+        "and",
+        [
+            "iam.policies.id.PolicyDocument.Statement.id.Effect",
+            "equal",
+            "Allow"
+        ],
+        [
+            "and",
+            [
+                "iam.policies.id.PolicyDocument.Statement.id.",
+                "withKey",
+                "Action"
+            ],
+            [
+                "iam.policies.id.PolicyDocument.Statement.id.Action",
+                "containAtLeastOneOf",
+                [
+                    "*",
+                    "*:*"
+                ]
+            ]
+        ],
+        [
+            "iam.policies.id.PolicyDocument.Statement.id.Resource",
+            "containAtLeastOneOf",
+            [
+                "*"
+            ]
+        ]
+    ]
+}

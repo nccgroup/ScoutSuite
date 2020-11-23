@@ -11,6 +11,7 @@ from ScoutSuite.providers.azure.facade.appservice import AppServiceFacade
 
 from azure.mgmt.resource import SubscriptionClient
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationException
+from ScoutSuite.utils import get_user_agent
 
 from ScoutSuite.core.console import print_info, print_exception
 
@@ -78,6 +79,7 @@ class AzureFacade:
 
         # Create the client
         subscription_client = SubscriptionClient(self.credentials.arm_credentials)
+        subscription_client._client.config.add_user_agent(get_user_agent())
         # Get all the accessible subscriptions
         accessible_subscriptions_list = list(subscription_client.subscriptions.list())
 
@@ -102,7 +104,6 @@ class AzureFacade:
                     print_exception('Unable to infer a Subscription ID')
                     # raise
             finally:
-                print_info(f'Running against the "{s.subscription_id}" subscription')
                 subscriptions_list.append(s)
 
         # All subscriptions

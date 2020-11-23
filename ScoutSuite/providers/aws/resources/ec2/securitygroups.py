@@ -41,7 +41,28 @@ class SecurityGroups(AWSResources):
             raw_security_group['IpPermissionsEgress'])
         security_group['rules']['egress']['protocols'] = egress_protocols
         security_group['rules']['egress']['count'] = egress_rules_count
+
+        security_group['is_default_configuration'] = \
+            self._has_default_egress_rule(raw_security_group['IpPermissionsEgress']) and \
+            self._has_default_ingress_rule(raw_security_group['IpPermissions'], raw_security_group['GroupId'])
+
         return security_group['id'], security_group
+
+    def _has_default_egress_rule(self, rule_list):
+        for rule in rule_list:
+            if rule['IpProtocol'] == '-1':
+                for ip_range in rule['IpRanges']:
+                    if ip_range['CidrIp'] == '0.0.0.0/0':
+                        return True
+        return False
+
+    def _has_default_ingress_rule(self, rule_list, group_id):
+        for rule in rule_list:
+            if rule['IpProtocol'] == '-1':
+                for source_group in rule['UserIdGroupPairs']:
+                    if source_group['GroupId'] == group_id:
+                        return True
+        return False
 
     def _parse_security_group_rules(self, rules):
         protocols = {}

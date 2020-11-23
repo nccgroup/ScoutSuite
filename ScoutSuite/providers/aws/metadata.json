@@ -42,12 +42,10 @@
                 "alarms": {
                     "cols": 2,
                     "path": "services.cloudwatch.regions.id.alarms"
-                }
-            },
-            "summaries": {
-                "statistics": {
-                    "cols": 1,
-                    "path": "services.cloudwatch.statistics"
+                },
+                "metric_filters": {
+                    "cols": 2,
+                    "path": "services.cloudwatch.regions.id.metric_filters"
                 }
             }
         },
@@ -62,6 +60,14 @@
                 },
                 "rules": {
                     "path": "services.config.regions.id.rules"
+                }
+            }
+        },
+        "ssm" : {
+            "resources": {
+                "parameters": {
+                    "cols": 2,
+                    "path": "services.ssm.regions.id.parameters"
                 }
             }
         }
@@ -108,7 +114,6 @@
                     "path": "services.vpc.regions.id.vpcs"
                 },
                 "flow_logs": {
-                    "hidden": true,
                     "path": "services.vpc.regions.id.flow_logs",
                     "callbacks": [
                         [ "sort_vpc_flow_logs_callback", {} ],
@@ -120,7 +125,6 @@
                     "path": "services.vpc.regions.id.vpcs.id.subnets"
                 },
                 "peering_connections": {
-                    "hidden": true,
                     "path": "services.vpc.regions.id.peering_connections",
                     "callbacks": [
                         [ "process_vpc_peering_connections_callback", {} ]
@@ -145,6 +149,14 @@
                 "connections": {
                     "cols": 2,
                     "path": "services.directconnect.connections"
+                }
+            }
+        },
+        "cloudfront": {
+            "resources": {
+                "distributions": {
+                    "cols": 2,
+                    "path": "services.cloudfront.distributions"
                 }
             }
         }
@@ -400,6 +412,17 @@
                 "certificates": {
                     "cols": 2,
                     "path": "services.acm.regions.id.certificates"
+                }
+            }
+        },
+        "guardduty": {
+            "resources": {
+                "regions": {
+                    "cols": 2,
+                    "path": "services.guardduty.regions"
+                },
+                "detectors": {
+                    "path": "services.guardduty.regions.id.detectors"
                 }
             }
         },

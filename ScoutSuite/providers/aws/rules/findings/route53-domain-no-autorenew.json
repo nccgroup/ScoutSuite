@@ -1,6 +1,6 @@
 {
     "description": "Automatic Renewal Not Set for Domain",
-    "rationale": "Enable automatic renewal to remove the risk of lising control over your domain names.",
+    "rationale": "Enable automatic renewal to remove the risk of losing control over your domain names.",
     "references": [
         "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-enable-disable-auto-renewal.html"
     ],

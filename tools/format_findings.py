@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-import os
-import json
 import argparse
+import json
+import os
+import sys
 from collections import OrderedDict
+
 from utils import get_capitalized_title
 
 
@@ -73,7 +75,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.folder:
-        format_folder(args.folder)
+        if not os.path.isdir(args.folder):
+            print('Error, the path provided is not valid.')
+            sys.exit(1)
+        else:
+            format_folder(args.folder)
     else:
         provider_codes = ['aliyun', 'aws', 'azure', 'gcp', 'oci']
 

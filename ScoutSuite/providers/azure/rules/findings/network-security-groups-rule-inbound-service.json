@@ -15,7 +15,7 @@
         "and",
         [
             "network.subscriptions.id.security_groups.id.security_rules.id.destination_ports",
-            "containAtLeastOneOf",
+            "portsInPortList",
             "_ARG_1_"
         ],
         [
