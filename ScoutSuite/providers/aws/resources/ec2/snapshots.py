@@ -32,7 +32,7 @@ class Snapshots(AWSResources):
 
         snapshot_dict['arn'] = 'arn:aws:ec2:{}:{}:snapshot/{}'.format(self.region,
                                                                       raw_snapshot.get('OwnerId'),
-                                                                      raw_snapshot.get('name'))
+                                                                      raw_snapshot.get('SnapshotId'))
 
         return snapshot_dict['id'], snapshot_dict
 

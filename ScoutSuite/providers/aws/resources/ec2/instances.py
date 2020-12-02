@@ -21,7 +21,7 @@ class EC2Instances(AWSResources):
         instance = {}
         id = raw_instance['InstanceId']
         instance['id'] = id
-        instance['arn'] = 'arn:aws:ec2:{}.{}.instance/{}'.format(self.region,
+        instance['arn'] = 'arn:aws:ec2:{}:{}:instance/{}'.format(self.region,
                                                                  raw_instance['OwnerId'],
                                                                  raw_instance['InstanceId'])
         instance['reservation_id'] = raw_instance['ReservationId']
