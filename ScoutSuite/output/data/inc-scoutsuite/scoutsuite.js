@@ -1004,8 +1004,9 @@ function updateTitle(title) {
  * Updates the Document Object Model
  */
 function showPageFromHash() {
-    if (location.hash) {
-        updateDOM(location.hash)
+    myhash = location.hash.replace(/[^a-z|0-9|.]/gi,'')
+    if (myhash) {
+        updateDOM(myhash)
     } else {
         updateDOM('')
     }
