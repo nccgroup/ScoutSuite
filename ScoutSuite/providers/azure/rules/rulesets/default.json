@@ -37,12 +37,6 @@
                 "level": "warning"
             }
         ],
-        "appservice-outdated-http-version.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "appservice-outdated-version-dotnet.json": [
             {
                 "enabled": true,
