@@ -21,5 +21,5 @@ class Volumes(AWSResources):
                                                                  self.facade.owner_id,
                                                                  raw_volume.get('id'))
         if "Tags" in raw_volume:
-            raw_volume['tags'] = {x["Key"]: x["Value"] for x in raw_volume["Tags"]}
+            raw_volume['tags'] = {x["Key"]: x["Value"] for x in raw_volume.get("Tags")}
         return raw_volume['id'], raw_volume
