@@ -9,6 +9,7 @@
                 <li class="list-group-item-text">ARN: <samp>{{arn}}</samp></li>
                 <li class="list-group-item-text">ID: <samp>{{id}}</samp></li>
                 <li class="list-group-item-text">Region: <samp>{{region}}</samp></li>
+                <li class="list-group-item-text">Availability Zone: <samp>{{availability_zone}}</samp></li>
                 <li class="list-group-item-text">VPC: <samp>{{getValueAt 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</samp></li>
                 <li class="list-group-item-text">Reservation ID: <samp>{{reservation_id}}</samp></li>
                 <li class="list-group-item-text">IAM role: <samp>{{value_or_none iam_role}}</samp></li>

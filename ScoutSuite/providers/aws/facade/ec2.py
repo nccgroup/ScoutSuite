@@ -34,17 +34,27 @@ class EC2Facade(AWSBaseFacade):
             else:
                 try:
                     return await self._decode_user_data(user_data_response['UserData']['Value'])
-                except base64.binascii.Error as e:
-                    return await self._decode_user_data(base64.b64decode(user_data_response['UserData']['Value'] + "==="))
                 except Exception as e:
                     print_exception(f'Unable to decode EC2 instance user data: {e}')
 
     async def _decode_user_data(self, user_data):
-        value = base64.b64decode(user_data)
+        try:
+            value = base64.b64decode(user_data)
+        except base64.binascii.Error as e:
+            value = base64.b64decode(f'{user_data}===')
         if value[0:2] == b'\x1f\x8b':  # GZIP magic number
             return zlib.decompress(value, zlib.MAX_WBITS | 32).decode('utf-8')
         else:
-            return value.decode('utf-8')
+            # Try another run of b64 decoding
+            try:
+                value = base64.b64decode(value)
+            except Exception as e:
+                value = value
+            # Return a string, not a byte string
+            try:
+                return value.decode('utf-8')
+            except UnicodeDecodeError:
+                return value.decode('latin-1')
 
     async def get_instances(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
