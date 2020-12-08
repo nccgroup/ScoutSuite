@@ -35,7 +35,7 @@ class Snapshots(AWSResources):
                                                                       raw_snapshot.get('SnapshotId'))
 
         if "Tags" in raw_snapshot:
-            snapshot_dict['tags'] = {x["Key"]: x["Value"] for x in raw_snapshot.get("Tags")]}
+            snapshot_dict['tags'] = {x["Key"]: x["Value"] for x in raw_snapshot.get("Tags")}
         return snapshot_dict['id'], snapshot_dict
 
     @staticmethod
