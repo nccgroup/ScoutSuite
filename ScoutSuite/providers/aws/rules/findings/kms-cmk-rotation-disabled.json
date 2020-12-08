@@ -1,7 +1,7 @@
 {
-    "description": "Customer Master Keys (CMKs) with Rotation Disabled",
+    "description": "KMS Customer Master Keys (CMKs) with Rotation Disabled",
     "rationale": "Cryptographic best practices discourage extensive reuse of encryption keys. Consequently, Customer Master Keys (CMKs) should be rotated to prevent usage of compromised keys.<br><br>Note that AWS KMS supports optional automatic key rotation only for customer managed CMKs.",
-    "remediation": "For every Customer-created Master Key (CMK) ensure that Rotate this key every year is enabled",
+    "remediation": "For every KMS Customer Master Keys (CMKs), ensure that Rotate this key every year is enabled",
     "compliance": [
         {
             "name": "CIS Amazon Web Services Foundations",

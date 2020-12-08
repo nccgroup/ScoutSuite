@@ -20,7 +20,6 @@
                 <li class="list-group-item-text">Enhanced Monitoring:
                     <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.EnhancedMonitoringResourceArn">{{convert_bool_to_enabled EnhancedMonitoringResourceArn}}</span>
                 </li>
-
                 <li class="list-group-item-text">Encrypted Storage: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.StorageEncrypted">{{convert_bool_to_enabled StorageEncrypted}}</span></li>
                 <li class="list-group-item-text">CA Certificate: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.CACertificateIdentifier"><samp>{{CACertificateIdentifier}}</samp></span></li>
             </ul>

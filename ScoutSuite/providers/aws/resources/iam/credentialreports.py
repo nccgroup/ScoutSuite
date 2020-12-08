@@ -53,7 +53,8 @@ class CredentialReports(AWSResources):
             if username == '<root_account>':
                 devices = await self.facade.iam.get_virtual_mfa_devices()
                 for device in devices:
-                    if device['User']['Arn'][-5:] == ':root':
+                    # If no EnableDate the device has been disabled
+                    if device.get('EnableDate') and device['User']['Arn'][-5:] == ':root':
                         return False
                 return True
             else:

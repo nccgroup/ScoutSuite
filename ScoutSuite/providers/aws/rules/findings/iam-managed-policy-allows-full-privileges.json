@@ -24,6 +24,11 @@
     "conditions": [
         "and",
         [
+            "iam.policies.id.arn",
+            "notContainString",
+            "arn:aws:iam::aws:policy/aws-service-role"
+        ],
+        [
             "iam.policies.id.PolicyDocument.Statement.id.Effect",
             "equal",
             "Allow"

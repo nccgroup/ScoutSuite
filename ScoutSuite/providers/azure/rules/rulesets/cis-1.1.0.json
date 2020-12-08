@@ -1,12 +1,6 @@
 {
     "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.1.0.",
     "rules": {
-        "appservice-outdated-http-version.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "appservice-outdated-version-dotnet.json": [
             {
                 "enabled": true,
