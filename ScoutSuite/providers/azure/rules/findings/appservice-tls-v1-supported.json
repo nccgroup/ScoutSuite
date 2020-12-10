@@ -17,9 +17,9 @@
     "conditions": [
         "and",
         [
-            "appservice.subscriptions.id.web_apps.id.https_only",
-            "false",
-            ""
+            "appservice.subscriptions.id.web_apps.id.minimum_tls_version_supported",
+            "notEqual",
+            "1.2"
         ]
     ],
     "id_suffix": "minimum_tls_supported"

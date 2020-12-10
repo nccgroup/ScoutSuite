@@ -1218,6 +1218,8 @@ function makeTitle(title) {
         return 'CloudWatch'
     } else if (title === 'cloudformation') {
         return 'CloudFormation'
+    } else if (title === 'cloudfront') {
+        return 'CloudFront'
     } else if (title === 'config') {
         return 'Config'
     } else if (title === 'cognito') {
@@ -1232,6 +1234,8 @@ function makeTitle(title) {
         return 'GuardDuty'
     } else if (title === 'secretsmanager') {
         return 'Secrets Manager'
+    } else if (title === 'ssm') {
+        return 'Systems Manager'
     } else if (title === 'elasticache') {
         return 'ElastiCache'
     } else if (title === 'redshift') {

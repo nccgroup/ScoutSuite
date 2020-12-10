@@ -1,25 +1,35 @@
 
-<!-- EBS volume partial -->
+
+<!-- ec2 snapshots -->
 <script id="services.ec2.regions.id.snapshots.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <ul>
-            <li class="list-group-item-text">ID: {{id}}</li>
-            <li class="list-group-item-text">ARN: {{arn}}</li>
-            <li class="list-group-item-text">Date:  <span id="ec2.regions.{{region}}.snapshots.{{id}}.old_snapshot">{{StartTime}}</span></li>
-            <li class="list-group-item-text">Description:{{Description}}</li>
-            <li class="list-group-item-text">State: <span id="ec2.regions.{{region}}.snapshots.{{id}}.snapshot_errored">{{State}}</span></li>
-            <li class="list-group-item-text">Encrypted: {{Encrypted}}</li>
-            <li class="list-group-item-text">Volume: {{> resource_link resource_path = (concat 'services.ec2.regions' region 'volumes' VolumeId )}}</li>
-            <li class="list-group-item-text">Is Public: <span id="ec2.regions.{{region}}.snapshots.{{id}}.ebs_snapshot_public">{{getValueAt 'services.ec2.regions' region 'snapshots' id 'public'}}</span></li>
-        </ul>
+        <div class="list-group-item-text item-margin">ID: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">ARN: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.arn"><samp>{{value_or_none arn}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">State: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.state"><samp>{{value_or_none state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Progress: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.progress"><samp>{{value_or_none progress}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Start Time: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.start_time"><samp>{{value_or_none start_time}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Volume: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.volume"><samp>{{> resource_link resource_path = (concat 'services.ec2.regions' region 'volumes' volume_id )}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Owner ID: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.owner_id"><samp>{{value_or_none owner_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Encryption: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.encrypted">{{convert_bool_to_enabled encrypted}}</span></div>
+        <div class="list-group-item-text item-margin">KMS Key ID: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.kms_key_id"><samp>{{value_or_none kms_key_id}}</samp></span></div>
     </div>
 </script>
 
 <script>
     Handlebars.registerPartial("services.ec2.regions.id.snapshots", $("#services\\.ec2\\.regions\\.id\\.snapshots\\.partial").html());
 </script>
+
+<!-- Single ec2 snapshot template -->
+<script id="single_ec2_snapshot-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ec2.regions.id.snapshots'}}
+</script>
+<script>
+    var single_ec2_snapshot_template = Handlebars.compile($("#single_ec2_snapshot-template").html());
+</script>
+
 

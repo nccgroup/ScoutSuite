@@ -17,7 +17,7 @@
                 <div style="display: inline-flex;"><samp>None</samp></div>
             {{/each}}
         </div>
-        <div class="list-group-item-text item-margin">Status: <span id="aad.service_principals.{{@key}}.account_enabled"><samp>{{convert_bool_to_enabled account_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="aad.service_principals.{{@key}}.account_enabled">{{convert_bool_to_enabled account_enabled}}</span></div>
         {{#if app_name}}
             <div class="list-group-item-text item-margin">App: <a href="javascript:showObject('services.aad.applications', 'app_id', '{{app_id}}')">{{value_or_none app_name}}</a></span></div>
         {{else}}

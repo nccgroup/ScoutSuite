@@ -19,6 +19,8 @@ class Trails(AWSResources):
     def _parse_trail(self, raw_trail):
         trail = {'name': raw_trail.pop('Name')}
         trail_id = get_non_provider_id(trail['name'])
+        
+        trail['arn'] = raw_trail.get('TrailARN')
 
         # Do not duplicate entries for multiregion trails
         if 'IsMultiRegionTrail' in raw_trail and raw_trail['IsMultiRegionTrail'] and \
