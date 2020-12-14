@@ -22,6 +22,6 @@ class Roles(AWSResources):
         role_dict['inline_policies'] = raw_role.get('inline_policies')
         role_dict['inline_policies_count'] = raw_role.get('inline_policies_count')
         role_dict['assume_role_policy'] = raw_role.get('assume_role_policy')
-        if (len(raw_role['tags']['Tags']) > 0):
+        if (len(raw_role['tags'].get('Tags', '')) > 0):
             role_dict['Tags'] = raw_role['tags']['Tags']
         return role_dict['id'], role_dict
