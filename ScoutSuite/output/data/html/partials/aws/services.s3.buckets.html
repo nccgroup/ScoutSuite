@@ -5,16 +5,20 @@
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
-          <h4 class="list-group-item-heading">Information</h4>
-          <div class="list-group-item-text item-margin">ARN: <samp>{{arn}}</samp></div>
-          <div class="list-group-item-text item-margin">Region: {{region}}</div>
-          <div class="list-group-item-text item-margin">Creation date: {{CreationDate}}</div>
-          <div class="list-group-item-text item-margin">Logging: <span id="s3.buckets.{{@key}}.logging">{{has_logging? logging}}</span></div>
-          <div class="list-group-item-text item-margin">Default encryption: <span id="s3.buckets.{{@key}}.default_encryption_enabled">{{ convert_bool_to_enabled default_encryption_enabled}}</span></div>
-          <div class="list-group-item-text item-margin">Versioning: <span id="s3.buckets.{{@key}}.versioning">{{convert_bool_to_enabled versioning_status_enabled}}</span></div>
-          <div class="list-group-item-text item-margin">MFA Delete: <span id="s3.buckets.{{@key}}.mfa_delete">{{convert_bool_to_enabled version_mfa_delete_enabled}}</span></div>
-          <div class="list-group-item-text item-margin">Secure transport: <span id="s3.buckets.{{@key}}.secure_transport_enabled">{{convert_bool_to_enabled secure_transport_enabled}}</span></div>
-          <div class="list-group-item-text item-margin">Static website hosting: <span id="s3.buckets.{{@key}}.web_hosting_enabled">{{convert_bool_to_enabled web_hosting_enabled}}</span></div>
+            <h4 class="list-group-item-heading">Information</h4>
+            <div class="list-group-item-text item-margin">ARN: <samp>{{arn}}</samp></div>
+            <div class="list-group-item-text item-margin">Region: {{region}}</div>
+            <div class="list-group-item-text item-margin">Creation Date: {{CreationDate}}</div>
+            <div class="list-group-item-text item-margin">Logging: <span id="s3.buckets.{{@key}}.logging">{{has_logging? logging}}</span></div>
+            <div class="list-group-item-text item-margin">Default Encryption: <span id="s3.buckets.{{@key}}.default_encryption_enabled">{{ convert_bool_to_enabled default_encryption_enabled}}</span></div>
+            {{#if default_encryption_enabled}}
+                <div class="list-group-item-text item-margin">Encryption Algorithm: <span class="s3.buckets.{{@key}}.encryption_config"><samp>{{ value_or_none default_encryption_algorithm}}</samp></span></div>
+                <div class="list-group-item-text item-margin">Encryption Key: <span class="s3.buckets.{{@key}}.encryption_config"><samp>{{ value_or_none default_encryption_key}}</samp></span></div>
+            {{/if}}
+            <div class="list-group-item-text item-margin">Versioning: <span id="s3.buckets.{{@key}}.versioning">{{convert_bool_to_enabled versioning_status_enabled}}</span></div>
+            <div class="list-group-item-text item-margin">MFA Delete: <span id="s3.buckets.{{@key}}.mfa_delete">{{convert_bool_to_enabled version_mfa_delete_enabled}}</span></div>
+            <div class="list-group-item-text item-margin">Secure Transport: <span id="s3.buckets.{{@key}}.secure_transport_enabled">{{convert_bool_to_enabled secure_transport_enabled}}</span></div>
+            <div class="list-group-item-text item-margin">Static Website Hosting: <span id="s3.buckets.{{@key}}.web_hosting_enabled">{{convert_bool_to_enabled web_hosting_enabled}}</span></div>
         </div>
         {{> services.s3.public_access_block_configuration resource_type = 'bucket' resource_path = (concat 's3.buckets' @key)}}
         <div class="list-group-item">

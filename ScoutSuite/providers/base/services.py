@@ -53,8 +53,7 @@ class BaseServicesConfig:
                     if service != 'iam':
                         method_args['partition_name'] = get_partition_name(self.credentials.session)
 
-                await service_config.fetch_all(**method_args)
-
+                await service_config.fetch_all(**method_args)                
                 if hasattr(service_config, 'finalize'):
                     await service_config.finalize()
             else:

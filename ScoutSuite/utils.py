@@ -15,6 +15,7 @@ formatted_service_name = {
     'cloudformation': 'CloudFormation',
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
+    'cloudfront': 'CloudFront',
     'credentials': 'Credentials',
     'cognito': 'Cognito',
     'config': 'Config',
@@ -32,6 +33,7 @@ formatted_service_name = {
     'route53': 'Route53',
     'secretsmanager': 'Secrets Manager',
     'docdb': 'DocumentDB',
+    'ssm': 'Systems Manager',
     # Azure
     'aad': 'Azure Active Directory',
     'rbac': 'Azure RBAC',
