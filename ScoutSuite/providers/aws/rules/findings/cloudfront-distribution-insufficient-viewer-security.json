@@ -1,6 +1,6 @@
 {
-    "description": "CloudFront Insecure Content Distribution - Insufficient Viewer Security Policy ",
-    "rationale": "Distributing insecure content to the Internet viewers (browsers), without using AWS encryption solutions; or using an encyption standard prior to TLSv1.1. So that the content data may be easily sniffed when in transit. (Depends on the content data classification, this could be false-positive finding.)",
+    "description": "Content Distribution with Insufficient Viewer Security Policy",
+    "rationale": "Distributing content between AWS CloudFront distributions and their custom origins without the use of a valid certificate, can potentially expose sensitive data.",
     "references": [
         "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-viewercertificate.html"
     ],
@@ -11,16 +11,8 @@
         [
             "this",
             "withoutKey",
-            "view_certificate"        ],
-        [
-            "cloudfront.distributions.id.view_certificate.MinimumProtocolVersion.",
-            "containNoneOf",
-            [
-              "TLSv1.1",
-              "TLSv1.1_2016",
-              "TLSv1.2_2018",
-              "TLSv1.2_2019"
-            ]
+            "view_certificate"
         ]
-    ]
+    ],
+    "id_suffix": "certificate"
 }
