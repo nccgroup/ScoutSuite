@@ -62,6 +62,14 @@
                     "path": "services.config.regions.id.rules"
                 }
             }
+        },
+        "ssm" : {
+            "resources": {
+                "parameters": {
+                    "cols": 2,
+                    "path": "services.ssm.regions.id.parameters"
+                }
+            }
         }
     },
     "messaging": {
@@ -141,6 +149,14 @@
                 "connections": {
                     "cols": 2,
                     "path": "services.directconnect.connections"
+                }
+            }
+        },
+        "cloudfront": {
+            "resources": {
+                "distributions": {
+                    "cols": 2,
+                    "path": "services.cloudfront.distributions"
                 }
             }
         }

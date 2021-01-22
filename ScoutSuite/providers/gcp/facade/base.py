@@ -137,6 +137,10 @@ class GCPFacade(GCPBaseFacade):
         Given a project ID and service name, this method tries to determine if the service's API is enabled
         """
 
+        # All projects have IAM policies regardless of whether the IAM API is enabled.
+        if service == 'IAM':
+            return True
+
         serviceusage_client = self._build_arbitrary_client('serviceusage', 'v1', force_new=True)
         services = serviceusage_client.services()
         try:
@@ -148,9 +152,7 @@ class GCPFacade(GCPBaseFacade):
             return True
 
         # These are hardcoded endpoint correspondences as there's no easy way to do this.
-        if service == 'IAM':
-            endpoint = 'iam'
-        elif service == 'KMS':
+        if service == 'KMS':
             endpoint = 'cloudkms'
         elif service == 'CloudStorage':
             endpoint = 'storage-component'
