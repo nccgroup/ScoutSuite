@@ -32,5 +32,5 @@ class Buckets(AWSResources):
 
         raw_bucket['id'] = get_non_provider_id(raw_bucket['name'])
         # Passing empty strings for 'region' and 'account-id' since S3 bucket ARNs omit them
-        raw_bucket['arns'] = format_arn(self.partition, self.service, '', '', '*', raw_bucket['name'])
+        raw_bucket['arn'] = format_arn(self.partition, self.service, '', '', '*', raw_bucket['name'])
         return raw_bucket['id'], raw_bucket
