@@ -40,14 +40,16 @@ class HTMLReport:
     def get_content_from_folder(self, templates_type):
         contents = ''
         template_dir = os.path.join(self.html_data_path, templates_type)
-        template_files = [os.path.join(template_dir, f) for f in os.listdir(template_dir) if
-                          os.path.isfile(os.path.join(template_dir, f))]
-        for filename in template_files:
-            try:
-                with open('%s' % filename) as f:
-                    contents = contents + f.read()
-            except Exception as e:
-                print_exception(f'Error reading filename {filename}: {e}')
+        print(template_dir )
+        if os.path.isdir(template_dir):
+            template_files = [os.path.join(template_dir, f) for f in os.listdir(template_dir) if
+                            os.path.isfile(os.path.join(template_dir, f))]
+            for filename in template_files:
+                try:
+                    with open('%s' % filename) as f:
+                        contents = contents + f.read()
+                except Exception as e:
+                    print_exception(f'Error reading filename {filename}: {e}')
         return contents
 
     def get_content_from_file(self, filename):
