@@ -1,0 +1,27 @@
+{
+    "description": "Secure Transfer (HTTPS) Not Enforced",
+    "rationale": "The secure transfer option enhances the security of a storage account by only allowing requests to the storage account by a secure connection.<br><br>For example, when calling REST APIs to access storage accounts, the connection must use HTTPS. Any requests using HTTP will be rejected when 'secure transfer required' is enabled. When using the Azure files service, connection without encryption will fail, including scenarios using SMB 2.1, SMB 3.0 without encryption, and some flavors of the Linux SMB client.<br><br>Because Azure storage does not support HTTPS for custom domain names, this option is not applied when using a custom domain name.",
+    "remediation": "In the Azure console:<ol><li>Go to <samp>Storage Accounts</samp></li> <li>For each storage account, go to <samp>Configuration</samp></li> <li>Set <samp>Secure transfer</samp> required to <samp>Enabled</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "3.1"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-security-guide",
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer"
+    ],
+    "dashboard_name": "Accounts",
+    "path": "storageaccounts.subscriptions.id.storage_accounts.id",
+    "conditions": [
+        "and",
+        [
+            "storageaccounts.subscriptions.id.storage_accounts.id.https_traffic_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "https_traffic_enabled"
+}
