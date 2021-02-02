@@ -22,7 +22,6 @@ class OutscaleAuthenticationStrategy(AuthenticationStrategy):
         if profile:
             try:
                 session = Gateway(**{"profile": profile})
-                session.ReadAccounts()
             except Exception as e:
                 raise AuthenticationException(e)
         elif access:
