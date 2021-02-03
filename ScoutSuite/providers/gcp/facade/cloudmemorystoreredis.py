@@ -8,6 +8,7 @@ class CloudMemorystoreRedisFacade(GCPBaseFacade):
         super().__init__('redis', 'v1beta1')
 
     async def get_redis_instances(self, project_id: str):
+        # Retrieves Redis Instances using the Cloud Memorystore API
         try:
             formatted_parent = f'projects/{project_id}/locations/-'
             cloudmem_client = self._get_client()

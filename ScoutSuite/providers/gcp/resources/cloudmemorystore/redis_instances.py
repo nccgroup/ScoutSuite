@@ -37,6 +37,8 @@ class RedisInstances(GCPCompositeResources):
         return instance_dict['id'], instance_dict
 
     def _is_ssl_required(self, raw_instance):
+        # Checks if transit encryption mode is SERVER_AUTHENTICATION. Otherwise, SSL
+        # is not enabled.
         is_ssl_required = raw_instance.get('transitEncryptionMode', False)
         if is_ssl_required == 'SERVER_AUTHENTICATION':
             return True
