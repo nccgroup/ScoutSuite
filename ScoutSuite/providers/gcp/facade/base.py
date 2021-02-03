@@ -4,6 +4,7 @@ from ScoutSuite.core.console import print_exception, print_info, print_debug, pr
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
+from ScoutSuite.providers.gcp.facade.cloudmemorystoreredis import CloudMemorystoreRedisFacade
 from ScoutSuite.providers.gcp.facade.cloudstorage import CloudStorageFacade
 from ScoutSuite.providers.gcp.facade.gce import GCEFacade
 from ScoutSuite.providers.gcp.facade.iam import IAMFacade
@@ -29,6 +30,7 @@ class GCPFacade(GCPBaseFacade):
         self.cloudresourcemanager = CloudResourceManagerFacade()
         self.cloudsql = CloudSQLFacade()
         self.cloudstorage = CloudStorageFacade()
+        self.cloudmemorystoreredis = CloudMemorystoreRedisFacade()
         self.gce = GCEFacade()
         self.iam = IAMFacade()
         self.kms = KMSFacade()

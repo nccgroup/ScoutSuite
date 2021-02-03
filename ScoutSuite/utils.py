@@ -47,6 +47,7 @@ formatted_service_name = {
     'virtualmachines': 'Virtual Machines',
     # GCP
     'cloudstorage': 'Cloud Storage',
+    'cloudmemorystore': 'Cloud Memorystore',
     'cloudsql': 'Cloud SQL',
     'stackdriverlogging': 'Stackdriver Logging',
     'stackdrivermonitoring': 'Stackdriver Monitoring',
