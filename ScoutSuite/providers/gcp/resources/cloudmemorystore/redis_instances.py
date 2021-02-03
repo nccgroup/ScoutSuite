@@ -45,3 +45,4 @@ class RedisInstances(GCPCompositeResources):
     def _is_auth_required(self, raw_instance):
         is_auth_enabled = raw_instance.get('authEnabled', False)
         return is_auth_enabled
+
