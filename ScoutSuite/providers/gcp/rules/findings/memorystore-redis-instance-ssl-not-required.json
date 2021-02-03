@@ -6,7 +6,7 @@
     "references": [
         "https://cloud.google.com/memorystore/docs/redis/securing-tls-connections"
     ],
-    "dashboard_name": "Instances",
+    "dashboard_name": "Redis Instances",
     "path": "cloudmemorystore.projects.id.redis_instances.id",
     "conditions": [
         "and",
