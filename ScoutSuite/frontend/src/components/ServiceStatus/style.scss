@@ -1,0 +1,20 @@
+.service-status {
+  font-weight: 600;
+  margin-left: 1rem;
+
+  svg {
+    margin-right: 0.5rem;
+  }
+
+  &.good {
+    color: #3fbd50;
+  }
+
+  &.issues {
+    color: #fc6464;
+  }
+
+  &.warnings {
+    color: #fccc04;
+  }
+}
