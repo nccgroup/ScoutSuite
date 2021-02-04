@@ -3,7 +3,7 @@ import * as Cache from "./cache";
 import * as API from "./api";
 
 /**
- * React Hook to fecth API data and re-render the component
+ * React Hook to fetch API data and re-render the component
  * @param {*} path
  */
 export const useAPI = (path) => {
