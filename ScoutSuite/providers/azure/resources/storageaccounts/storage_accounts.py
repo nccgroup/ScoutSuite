@@ -43,6 +43,7 @@ class StorageAccounts(AzureCompositeResources):
         storage_account['bypass'] = raw_storage_account.network_rule_set.bypass
         storage_account['access_keys_last_rotation_date'] = \
             self._parse_access_keys_last_rotation_date(raw_storage_account.activity_logs)
+        storage_account['encryption_key_source'] = raw_storage_account.encryption.key_source
         if raw_storage_account.tags is not None:
             storage_account['tags'] = ["{}:{}".format(key, value) for key, value in  raw_storage_account.tags.items()]
         else:

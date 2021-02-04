@@ -291,6 +291,12 @@
                 "level": "warning"
             }
         ],
+        "storageaccount-encrypted-not-customer-managed.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "virtual-machines-disk-encryption.json": [
             {
                 "enabled": true,
