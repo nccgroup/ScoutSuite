@@ -15,8 +15,8 @@ class StorageAccountsFacade:
 
     def get_client(self, subscription_id: str):
         client = StorageManagementClient(self.credentials.get_credentials('arm'),
-                                       subscription_id=subscription_id)
-        client._client.config.add_user_agent(get_user_agent())
+                                         subscription_id=subscription_id,
+                                         user_agent=get_user_agent())
         return client
 
     async def get_storage_accounts(self, subscription_id: str):
@@ -39,12 +39,13 @@ class StorageAccountsFacade:
             containers = await run_concurrently(
                 lambda: list(client.blob_containers.list(resource_group_name, storage_account_name))
             )
+            logging = client.queue_services.get_service_properties(resource_group_name,storage_account_name)
+            x=1
         except Exception as e:
             print_exception(f'Failed to retrieve blob containers: {e}')
             return []
         else:
             return containers
-
     async def _get_and_set_activity_logs(self, storage_account, subscription_id: str):
         client = MonitorManagementClient(self.credentials.arm_credentials, subscription_id)
         client._client.config.add_user_agent(get_user_agent())
@@ -87,4 +88,3 @@ class StorageAccountsFacade:
     #     else:
     #         return None
     #         # return queues
-
