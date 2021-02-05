@@ -15,5 +15,6 @@
             "false",
             ""
         ]
-    ]
+    ],
+    "id_suffix": "ssl_required"
 }
