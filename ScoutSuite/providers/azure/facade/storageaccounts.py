@@ -15,9 +15,8 @@ class StorageAccountsFacade:
 
     def get_client(self, subscription_id: str):
         client = StorageManagementClient(self.credentials.get_credentials('arm'),
-                                         subscription_id=subscription_id)
-
-        # client._client.config.add_user_agent(get_user_agent())
+                                         subscription_id=subscription_id,
+                                         user_agent=get_user_agent())
         return client
 
     async def get_storage_accounts(self, subscription_id: str):
