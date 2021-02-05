@@ -5,11 +5,13 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 from .blob_containers import BlobContainers
 # from .queues import Queues
+from .blob_services import BlobServices
 
 
 class StorageAccounts(AzureCompositeResources):
     _children = [
         (BlobContainers, 'blob_containers'),
+        (BlobServices, 'blob_services'),
         # (Queues, 'queues')  # FIXME - not implemented by SDK
     ]
 
@@ -32,6 +34,8 @@ class StorageAccounts(AzureCompositeResources):
 
     def _parse_storage_account(self, raw_storage_account):
         storage_account = {}
+
+        encryption = raw_storage_account.encryption
         raw_id = raw_storage_account.id
         storage_account['id'] = get_non_provider_id(raw_id.lower())
         storage_account['resource_group_name'] = get_resource_group_name(raw_id)

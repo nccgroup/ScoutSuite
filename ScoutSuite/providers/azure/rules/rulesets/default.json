@@ -291,6 +291,13 @@
                 "level": "warning"
             }
         ],
+
+        "storageaccount-soft-delete-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "virtual-machines-disk-encryption.json": [
             {
                 "enabled": true,
