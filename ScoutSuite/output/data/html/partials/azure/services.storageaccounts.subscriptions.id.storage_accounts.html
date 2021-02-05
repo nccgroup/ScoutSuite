@@ -19,7 +19,7 @@
                 {{/if}}
             </span>
         </div>
-        <div class="list-group-item-text item-margin">Storage Encryption Source: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.encryption_key_source">{{encryption_key_source }}</span></div>
+        <div class="list-group-item-text item-margin">Storage encrypted with Customer Managed Key: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.encryption_key_source">{{convert_bool_to_enabled encryption_key_customer_managed }}</span></div>
 
         <div class="list-group-item-text item-margin">Tags: 
             {{#each tags}}

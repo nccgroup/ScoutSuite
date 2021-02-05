@@ -39,8 +39,7 @@ class StorageAccountsFacade:
             containers = await run_concurrently(
                 lambda: list(client.blob_containers.list(resource_group_name, storage_account_name))
             )
-            logging = client.queue_services.get_service_properties(resource_group_name,storage_account_name)
-            x=1
+
         except Exception as e:
             print_exception(f'Failed to retrieve blob containers: {e}')
             return []
