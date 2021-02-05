@@ -21,8 +21,8 @@ class BlobServices(AzureResources):
 
     def _parse_blob_service(self, raw_blob_service):
         blob_service = {}
-        raw_id = raw_blob_service.id
-        blob_service['id'] = get_non_provider_id(raw_id.lower())
+        blob_service['id'] = get_non_provider_id(raw_blob_service.id.lower())
+        blob_service['name'] = raw_blob_service.name
         blob_service['soft_delete_enabled'] = raw_blob_service.delete_retention_policy.enabled
 
         return blob_service['id'], blob_service
