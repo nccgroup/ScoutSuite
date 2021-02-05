@@ -81,6 +81,14 @@
           "path": "services.cloudsql.projects.id.instances"
         }
       }
+    },
+    "cloudmemorystore": {
+      "resources": {
+        "redis_instances": {
+          "cols": 2,
+          "path": "services.cloudmemorystore.projects.id.redis_instances"
+        }
+      }
     }
   },
   "management": {
