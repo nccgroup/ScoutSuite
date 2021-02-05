@@ -23,5 +23,5 @@
             "False"
         ]
     ],
-    "id_suffix": "encryption_key_not_customer_managed"
+    "id_suffix": "encryption_key_customer_managed"
 }
