@@ -1,4 +1,3 @@
-from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.utils import get_non_provider_id
@@ -11,7 +10,7 @@ class RedisInstances(GCPCompositeResources):
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_instances = await self.facade.cloudmemorystoreredis.get_redis_instances(self.project_id)
+        raw_instances = await self.facade.memorystoreredis.get_redis_instances(self.project_id)
         for raw_instance in raw_instances:
             instance_id, instance = self._parse_instance(raw_instance)
             self[instance_id] = instance

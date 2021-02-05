@@ -1253,6 +1253,8 @@ function makeTitle(title) {
         return 'Compute Engine'
     } else if (title === 'kubernetesengine') {
         return 'Kubernetes Engine'
+    } else if (title === 'cloudmemorystore') {
+        return 'Cloud Memorystore'
     } else if (title === 'aad') {
         return 'Azure Active Directory'
     } else if (title === 'rbac') {
