@@ -129,7 +129,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     else:
                         raise AuthenticationException('Username and/or password not set')
 
-                # cont = msal.PublicClientApplication(client_id)
+                # cont = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID)
 
                 # Resource Manager
                 # resource_uri = 'https://management.core.windows.net/'
@@ -151,7 +151,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 # authority_uri = AUTHORITY_HOST_URI + '/' + tenant_id
                 # context = adal.AuthenticationContext(authority_uri, )
-                cont = msal.PublicClientApplication(client_id)
+                cont = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID)
 
                 # Resource Manager
                 resource_uri = 'https://management.core.windows.net/'
