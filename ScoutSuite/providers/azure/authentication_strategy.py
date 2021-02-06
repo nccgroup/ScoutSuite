@@ -155,7 +155,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 # Resource Manager
                 resource_uri = 'https://management.core.windows.net/'
-                scopes = [resource_uri + ".default"]
+                scopes = [resource_uri + "/.default"]
                 code = cont.initiate_device_flow(scopes)
                 print_info('To authenticate to the Resource Manager API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
