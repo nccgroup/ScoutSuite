@@ -1,5 +1,7 @@
 import json
 import logging
+
+import msal
 import requests
 from getpass import getpass
 from datetime import datetime, timedelta
@@ -9,7 +11,6 @@ from msrestazure.azure_active_directory import MSIAuthentication
 from ScoutSuite.core.console import print_info, print_debug, print_exception
 from msrestazure.azure_active_directory import AADTokenCredentials
 import adal
-
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
@@ -75,6 +76,7 @@ class AzureCredentials:
         print_debug('Refreshing credentials')
         authority_uri = AUTHORITY_HOST_URI + '/' + self.get_tenant_id()
         existing_cache = self.context.cache
+        #cont = msal.PublicClientApplication(self.get_tenant_id(), cache=existing_cache)
         context = adal.AuthenticationContext(authority_uri, cache=existing_cache)
         new_token = context.acquire_token(credentials.token['resource'],
                                           credentials.token['user_id'],
@@ -113,7 +115,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 arm_credentials, subscription_id, tenant_id = \
                     get_azure_cli_credentials(with_tenant=True)
                 aad_graph_credentials, placeholder_1, placeholder_2 = \
-                    get_azure_cli_credentials(with_tenant=True, resource='https://graph.windows.net')
+                    get_azure_cli_credentials(with_tenant=True, resource='https://graph.microsoft.com')
 
             elif user_account:
 
@@ -126,29 +128,32 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 arm_credentials = UserPassCredentials(username, password)
                 aad_graph_credentials = UserPassCredentials(username, password,
-                                                            resource='https://graph.windows.net')
+                                                            resource='https://graph.microsoft.com')
 
             elif user_account_browser:
 
                 authority_uri = AUTHORITY_HOST_URI + '/' + tenant_id
-                context = adal.AuthenticationContext(authority_uri, api_version=None)
+                #context = adal.AuthenticationContext(authority_uri, )
+                cont = msal.PublicClientApplication(tenant_id, api_version=None)
 
                 # Resource Manager
                 resource_uri = 'https://management.core.windows.net/'
-                code = context.acquire_user_code(resource_uri, AZURE_CLI_CLIENT_ID)
+                scopes = [resource_uri + "/.default"]
+                code = cont.initiate_device_flow(scopes)
                 print_info('To authenticate to the Resource Manager API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
-                arm_token = context.acquire_token_with_device_code(resource_uri, code, AZURE_CLI_CLIENT_ID)
+                arm_token = context.acquire_token_by_device_flow(code)
                 arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
 
                 # AAD Graph
-                resource_uri = 'https://graph.windows.net'
-                code = context.acquire_user_code(resource_uri, AZURE_CLI_CLIENT_ID)
-                print_info('To authenticate to the Azure AD Graph API, use a web browser to '
+                resource_uri = 'https://graph.microsoft.com'
+                scopes = [resource_uri + "/.default"]
+                code = context.initiate_device_flow(scopes)
+                print_info('To authenticate to the microsoft Graph API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
-                aad_graph_token = context.acquire_token_with_device_code(resource_uri, code, AZURE_CLI_CLIENT_ID)
+                aad_graph_token = context.acquire_token_by_device_flow(code)
                 aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
 
             elif service_principal:
@@ -181,7 +186,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id,
-                    resource='https://graph.windows.net'
+                    resource='https://graph.microsoft.com'
                 )
 
             elif file_auth:
@@ -201,13 +206,13 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id,
-                    resource='https://graph.windows.net'
+                    resource='https://graph.microsoft.com'
                 )
 
             elif msi:
 
                 arm_credentials = MSIAuthentication()
-                aad_graph_credentials = MSIAuthentication(resource='https://graph.windows.net')
+                aad_graph_credentials = MSIAuthentication(resource='https://graph.microsoft.com')
 
             else:
                 raise AuthenticationException('Unknown authentication method')
