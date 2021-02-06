@@ -76,7 +76,10 @@ class AzureCredentials:
         print_debug('Refreshing credentials')
         authority_uri = AUTHORITY_HOST_URI + '/' + self.get_tenant_id()
         existing_cache = self.context.cache
-        #cont = msal.PublicClientApplication(self.get_tenant_id(), cache=existing_cache)
+        # cont = msal.PublicClientApplication(self.get_tenant_id(), cache=existing_cache)
+        # scopes = [authority_uri + "/.default"]
+        # new_token = cont.acquire_token_silent(scopes)
+
         context = adal.AuthenticationContext(authority_uri, cache=existing_cache)
         new_token = context.acquire_token(credentials.token['resource'],
                                           credentials.token['user_id'],
@@ -126,34 +129,48 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     else:
                         raise AuthenticationException('Username and/or password not set')
 
+                # cont = msal.PublicClientApplication(client_id)
+
+                # Resource Manager
+                # resource_uri = 'https://management.core.windows.net/'
+                # scopes = [resource_uri + ".default"]
+                # arm_token = cont.acquire_token_by_username_password(username, password, scopes)
+                # arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
+
+                # AAD Graph
+                # resource_uri = 'https://graph.microsoft.com'
+                # scopes = [resource_uri + "/.default"]
+                # aad_graph_token = cont.acquire_token_by_username_password(username, password, scopes)
+                # aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
+
                 arm_credentials = UserPassCredentials(username, password)
                 aad_graph_credentials = UserPassCredentials(username, password,
                                                             resource='https://graph.microsoft.com')
 
             elif user_account_browser:
 
-                authority_uri = AUTHORITY_HOST_URI + '/' + tenant_id
-                #context = adal.AuthenticationContext(authority_uri, )
-                cont = msal.PublicClientApplication(tenant_id, api_version=None)
+                # authority_uri = AUTHORITY_HOST_URI + '/' + tenant_id
+                # context = adal.AuthenticationContext(authority_uri, )
+                cont = msal.PublicClientApplication(client_id)
 
                 # Resource Manager
                 resource_uri = 'https://management.core.windows.net/'
-                scopes = [resource_uri + "/.default"]
+                scopes = [resource_uri + ".default"]
                 code = cont.initiate_device_flow(scopes)
                 print_info('To authenticate to the Resource Manager API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
-                arm_token = context.acquire_token_by_device_flow(code)
+                arm_token = cont.acquire_token_by_device_flow(code)
                 arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
 
                 # AAD Graph
                 resource_uri = 'https://graph.microsoft.com'
                 scopes = [resource_uri + "/.default"]
-                code = context.initiate_device_flow(scopes)
+                code = cont.initiate_device_flow(scopes)
                 print_info('To authenticate to the microsoft Graph API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
-                aad_graph_token = context.acquire_token_by_device_flow(code)
+                aad_graph_token = cont.acquire_token_by_device_flow(code)
                 aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
 
             elif service_principal:
