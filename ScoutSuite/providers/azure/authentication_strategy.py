@@ -158,7 +158,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 scopes = [resource_uri + "/.default"]
                 code = cont.initiate_device_flow(scopes)
                 print_info('To authenticate to the Resource Manager API, use a web browser to '
-                           'access {} and enter the {} code.'.format(code['verification_url'],
+                           'access {} and enter the {} code.'.format(code['verification_uri'],
                                                                      code['user_code']))
                 arm_token = cont.acquire_token_by_device_flow(code)
                 arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
@@ -168,7 +168,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 scopes = [resource_uri + "/.default"]
                 code = cont.initiate_device_flow(scopes)
                 print_info('To authenticate to the microsoft Graph API, use a web browser to '
-                           'access {} and enter the {} code.'.format(code['verification_url'],
+                           'access {} and enter the {} code.'.format(code['verification_uri'],
                                                                      code['user_code']))
                 aad_graph_token = cont.acquire_token_by_device_flow(code)
                 aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
