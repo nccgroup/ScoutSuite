@@ -133,7 +133,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 # Resource Manager
                 # resource_uri = 'https://management.core.windows.net/'
-                # scopes = [resource_uri + ".default"]
+                # scopes = [resource_uri + "/.default"]
                 # arm_token = cont.acquire_token_by_username_password(username, password, scopes)
                 # arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
 
