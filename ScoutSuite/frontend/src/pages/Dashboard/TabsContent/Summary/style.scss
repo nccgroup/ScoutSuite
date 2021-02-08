@@ -1,0 +1,48 @@
+@import 'src/variables';
+
+.dashboard-summary {
+  .overview, .services {
+    color: $font_color;
+    margin-bottom: 2rem;
+
+    & > hr {
+      border: 0;
+      border-bottom: 2px solid $default-grey-subtle;
+      margin-top: 0.5rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  h1 {
+    margin: 0;
+  }
+
+  .overview {
+    .summary {
+      display: flex;
+      align-items: center;
+
+      .service-status {
+        font-size: 2.5rem;
+        width: 25rem;
+        padding: 1rem 1.5rem;
+        margin-left: 0;
+        margin-right: 3rem;
+        border-radius: $border_radius;
+        background-color: $white;
+
+        svg {
+          font-size: 3rem;
+          margin-right: 2rem;
+        }
+      }
+    }
+  }
+
+  .services {
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+}

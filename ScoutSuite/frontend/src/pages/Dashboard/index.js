@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import ServiceStatus from '../../components/ServiceStatus';
-import ServiceCard from '../../components/ServiceCard';
+import TabsMenu from '../../components/TabsMenu';
+import Summary from './TabsContent/Summary';
+import ExecutionDetails from './TabsContent/ExecutionDetails';
+import ResourcesDetails from './TabsContent/ResourcesDetails';
+import { TAB_NAMES } from '../../utils/Dashboard';
 
 import './style.scss';
 
@@ -11,33 +14,32 @@ const propTypes = {
 }
 
 const Dashboard = props => {
-  const services = props.services.sort((a, b) => b.issues - a.issues || b.warnings - a.warnings);
+  const { services } = props;
 
-  console.log(services);
+  const [ selectedTab, setSelectedTab ] = useState(TAB_NAMES.SUMMARY);
+  const onClickTab = event => setSelectedTab(event.target.getAttribute('value'))
 
-  const issues_sum = services.map(service => service.issues).reduce((total, issues) => total + issues);
-  const warnings_sum = services.map(service => service.warnings).reduce((total, warnings) => total + warnings);
+  const getTabContent = selectedTab => {
+    switch (selectedTab) {
+      case TAB_NAMES.SUMMARY:
+        return <Summary services={services} />;
+      case TAB_NAMES.EXECUTION_DETAILS:
+        return <ExecutionDetails />;
+      case TAB_NAMES.RESOURCES_DETAILS:
+        return <ResourcesDetails />;
+      default:
+        return <div/>;
+    }
+  }
 
   return (
     <div className="dashboard">
-      <div className="overview"> 
-        <h1>Overview</h1>
-        <hr/>
-        <div className="summary">
-          <ServiceStatus status="issues" amount={issues_sum} />
-          <ServiceStatus status="warnings" amount={warnings_sum} />
-        </div>
-      </div>
-      
-      <div className="services">
-        <h1>Services</h1>
-        <hr/>
-        <div className="cards">
-          {services.map((service, i) => (
-            <ServiceCard {...service} key={i}/>
-          ))}
-        </div>
-      </div>
+      <TabsMenu 
+        tabs={TAB_NAMES}
+        selectedTab={selectedTab}
+        onClick={onClickTab}
+      />
+      {getTabContent(selectedTab)}
     </div>
   );
 }
