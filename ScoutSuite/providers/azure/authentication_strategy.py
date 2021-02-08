@@ -14,10 +14,10 @@ import adal
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
-AUTHORITY_HOST_URI = 'https://login.microsoftonline.com'
-AZURE_CLI_CLIENT_ID = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
-
-
+AUTHORITY_HOST_URI = 'https://login.microsoftonline.com/'
+AZURE_CLI_CLIENT_ID = "f08b9c19-7203-4e46-9ab6-90d30c74f8cf"
+# CLIENT_SECRET_VALUE='F~.eHWSWDO_WIv1Xh9c4.MapGe6_.WH8j5'
+DIRECTORY_ID='0cc90829-0d8e-40d6-ba9c-aea092ba7de5'
 class AzureCredentials:
 
     def __init__(self,
@@ -122,6 +122,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             elif user_account:
 
+
+
                 if not (username and password):
                     if not programmatic_execution:
                         username = username if username else input("Username: ")
@@ -129,23 +131,23 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     else:
                         raise AuthenticationException('Username and/or password not set')
 
-                # cont = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID)
+                cont = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID,authority=AUTHORITY_HOST_URI+DIRECTORY_ID)
 
                 # Resource Manager
-                # resource_uri = 'https://management.core.windows.net/'
-                # scopes = [resource_uri + "/.default"]
-                # arm_token = cont.acquire_token_by_username_password(username, password, scopes)
-                # arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
+                resource_uri = 'https://management.core.windows.net/'
+                scopes = [resource_uri + "/.default"]
+                arm_token = cont.acquire_token_by_username_password(username, password, scopes)
+                arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
 
                 # AAD Graph
-                # resource_uri = 'https://graph.microsoft.com'
-                # scopes = [resource_uri + "/.default"]
-                # aad_graph_token = cont.acquire_token_by_username_password(username, password, scopes)
-                # aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
+                resource_uri = 'https://graph.microsoft.com'
+                scopes = [resource_uri + "0cc90829-0d8e-40d6-ba9c-aea092ba7de5"+"/oauth2/v2.0"]
+                aad_graph_token = cont.acquire_token_by_username_password(username, password, scopes)
+                aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
 
-                arm_credentials = UserPassCredentials(username, password)
-                aad_graph_credentials = UserPassCredentials(username, password,
-                                                            resource='https://graph.microsoft.com')
+                # arm_credentials = UserPassCredentials(username, password)
+                # aad_graph_credentials = UserPassCredentials(username, password,
+                #                                             resource='https://graph.microsoft.com')
 
             elif user_account_browser:
 
