@@ -13,7 +13,7 @@ class AADFacade:
     def get_client(self):
         client = GraphRbacManagementClient(self.credentials.get_credentials('aad_graph'),
                                          tenant_id=self.credentials.get_tenant_id())
-        client._client.config.add_user_agent(get_user_agent())
+        # client._client.config.add_user_agent(get_user_agent())
         return client
 
     async def get_users(self):

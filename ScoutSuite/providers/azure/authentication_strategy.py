@@ -129,23 +129,23 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     else:
                         raise AuthenticationException('Username and/or password not set')
 
-                # cont = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID)
-
-                # Resource Manager
-                # resource_uri = 'https://management.core.windows.net/'
-                # scopes = [resource_uri + "/.default"]
-                # arm_token = cont.acquire_token_by_username_password(username, password, scopes)
-                # arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
+                cont = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID)
 
                 # AAD Graph
-                # resource_uri = 'https://graph.microsoft.com'
-                # scopes = [resource_uri + "/.default"]
-                # aad_graph_token = cont.acquire_token_by_username_password(username, password, scopes)
-                # aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
+                resource_uri = 'https://graph.microsoft.com'
+                scopes = [resource_uri + "/.default"]
+                aad_graph_token = cont.acquire_token_by_username_password(username, password, scopes)
+                aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
 
-                arm_credentials = UserPassCredentials(username, password)
-                aad_graph_credentials = UserPassCredentials(username, password,
-                                                            resource='https://graph.microsoft.com')
+                # Resource Manager
+                resource_uri = 'https://management.core.windows.net/'
+                scopes = [resource_uri + "/.default"]
+                arm_token = cont.acquire_token_by_username_password(username, password, scopes)
+                arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
+
+                # arm_credentials = UserPassCredentials(username, password)
+                # aad_graph_credentials = UserPassCredentials(username, password,
+                                                            #resource='https://graph.microsoft.com')
 
             elif user_account_browser:
 
