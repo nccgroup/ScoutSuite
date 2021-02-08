@@ -122,14 +122,15 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             elif user_account:
 
-                if not (username and password):
+                if not (username and password and tenant_id):
                     if not programmatic_execution:
+                        tenant_id= tenant_id if tenant_id else input("Tenant ID: ")
                         username = username if username else input("Username: ")
                         password = password if password else getpass("Password: ")
                     else:
-                        raise AuthenticationException('Username and/or password not set')
+                        raise AuthenticationException('Username, Tenant ID and/or password not set')
 
-                cont = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID, authority=AUTHORITY_HOST_URI + DIRECTORY_TENANT_ID)
+                cont = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID, authority=AUTHORITY_HOST_URI + tenant_id)
 
                 # Resource Manager
                 resource_uri = 'https://management.core.windows.net/'
