@@ -1004,7 +1004,7 @@ function updateTitle(title) {
  * Updates the Document Object Model
  */
 function showPageFromHash() {
-    myhash = location.hash.replace(/[^a-z|0-9|.#-]/gi,'')
+    myhash = location.hash.replace(/[^a-zA-Z|0-9|.#-_]/gi,'')
     if (myhash) {
         updateDOM(myhash)
     } else {
@@ -1253,6 +1253,8 @@ function makeTitle(title) {
         return 'Compute Engine'
     } else if (title === 'kubernetesengine') {
         return 'Kubernetes Engine'
+    } else if (title === 'cloudmemorystore') {
+        return 'Cloud Memorystore'
     } else if (title === 'aad') {
         return 'Azure Active Directory'
     } else if (title === 'rbac') {
