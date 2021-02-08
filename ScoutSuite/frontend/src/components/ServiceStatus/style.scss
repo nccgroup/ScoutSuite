@@ -1,3 +1,5 @@
+@import 'src/variables';
+
 .service-status {
   font-weight: 600;
   margin-left: 1rem;
@@ -7,14 +9,14 @@
   }
 
   &.good {
-    color: #3fbd50;
+    color: $success_color;
   }
 
   &.issues {
-    color: #fc6464;
+    color: $issue_color;
   }
 
   &.warnings {
-    color: #fccc04;
+    color: $warning_color;
   }
 }

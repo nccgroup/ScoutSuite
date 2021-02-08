@@ -1,14 +1,16 @@
+@import 'src/variables.scss';
+
 .service-card {
-  color: #4d4d4d;
+  color: $font_color;
+  background: $white;
   width: 25rem;
   margin: 0 2rem 2rem 0;
-  background: white;
-  border-radius: 5px;
+  border-radius: $border_radius;
 
   hr {
     margin: 0;
-    border: 1.5px solid #eaeaea;
-    border-bottom: 0;
+    border: 0;
+    border-bottom: 1px solid $default-grey-subtle;;
   }
 
   .header {
@@ -44,7 +46,7 @@
     padding: 1rem;
 
     .link {
-      color: #5491f3;
+      color: $link_color;
       display: flex;
       justify-content: space-between;
       align-items: center;
