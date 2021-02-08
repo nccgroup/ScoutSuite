@@ -1,3 +1,5 @@
+import json
+
 from azure.graphrbac import GraphRbacManagementClient
 
 from ScoutSuite.core.console import print_exception
@@ -13,7 +15,7 @@ class AADFacade:
     def get_client(self):
         client = GraphRbacManagementClient(self.credentials.get_credentials('aad_graph'),
                                          tenant_id=self.credentials.get_tenant_id())
-        # client._client.config.add_user_agent(get_user_agent())
+        client._client.config.add_user_agent(get_user_agent())
         return client
 
     async def get_users(self):
@@ -24,7 +26,9 @@ class AADFacade:
             user_filter = " and ".join([
                 'userType eq \'Guest\''
             ])
-            return await run_concurrently(lambda: list(self.get_client().users.list(filter=user_filter)))
+
+            users = await run_concurrently(lambda: list(self.get_client().users.list(filter= user_filter)))
+            return users
         except Exception as e:
             print_exception(f'Failed to retrieve users: {e}')
             return []
