@@ -1,3 +1,5 @@
+@import 'src/variables';
+
 .dashboard {
   margin: 2rem 3rem;
 
@@ -25,8 +27,8 @@
         padding: 1rem 1.5rem;
         margin-left: 0;
         margin-right: 3rem;
-        border-radius: 5px;
-        background-color: white;
+        border-radius: $border_radius;
+        background-color: $white;
 
         svg {
           font-size: 3rem;
