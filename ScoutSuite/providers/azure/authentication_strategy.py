@@ -10,7 +10,6 @@ from azure.common.credentials import ServicePrincipalCredentials, UserPassCreden
 from msrestazure.azure_active_directory import MSIAuthentication
 from ScoutSuite.core.console import print_info, print_debug, print_exception
 from msrestazure.azure_active_directory import AADTokenCredentials
-import adal
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 AUTHORITY_HOST_URI = 'https://login.microsoftonline.com/'
