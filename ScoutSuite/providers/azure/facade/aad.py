@@ -76,10 +76,10 @@ class AADFacade:
 
     async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
         scopes = ['https://graph.microsoft.com/.default']
-        cli = GraphSession(self.credentials.get_credentials('aad_graph'), scopes)
+        client = GraphSession(self.credentials.get_credentials('aad_graph'), scopes)
         endpoint = 'https://graph.microsoft.com/{}/{}'.format(api_version, api_resource)
         try:
-            response = cli.get(endpoint)
+            response = client.get(endpoint)
             if response.status_code == 200:
                 return response.json()
             else:
@@ -92,9 +92,9 @@ class AADFacade:
 
     async def get_users(self):
         try:
-            test = await self._get_microsoft_graph_response('users')
-            test_beta = await self._get_microsoft_graph_response('users', 'beta')
-            users = test_beta.get('value')
+            # test = await self._get_microsoft_graph_response('users') # missing some necessary information for rules
+            users_response_beta = await self._get_microsoft_graph_response('users', 'beta')
+            users = users_response_beta.get('value')
             users_filtered = [d for d in users if d['userType'] in 'Guest']
             return users_filtered
         except Exception as e:
@@ -103,9 +103,9 @@ class AADFacade:
 
     async def get_user(self, user_id):
         try:
-            test = await self._get_microsoft_graph_response('users')
-            test_beta = await self._get_microsoft_graph_response('users', 'beta')
-            users = test_beta.get('value')
+            # test = await self._get_microsoft_graph_response('users') # missing some necessary information for rules
+            user_response_beta = await self._get_microsoft_graph_response('users', 'beta')
+            users = user_response_beta.get('value')
             users_filtered = [d for d in users if d['id'] in user_id]
             return users_filtered[0]
         except Exception as e:
@@ -114,9 +114,8 @@ class AADFacade:
 
     async def get_groups(self):
         try:
-            test = await self._get_microsoft_graph_response('groups')
-            test_beta = await self._get_microsoft_graph_response('groups', 'beta')
-            groups = test_beta.get('value')
+            groups_response = await self._get_microsoft_graph_response('groups')
+            groups = groups_response.get('value')
             return groups
         except Exception as e:
             print_exception(f'Failed to retrieve groups: {e}')
@@ -124,9 +123,8 @@ class AADFacade:
 
     async def get_user_groups(self, group_id):
         try:
-            test = await self._get_microsoft_graph_response('groups')
-            test_beta = await self._get_microsoft_graph_response('groups', 'beta')
-            groups = test_beta.get('value')
+            user_groups_response = await self._get_microsoft_graph_response('groups')
+            groups = user_groups_response.get('value')
             filtered_group = [d for d in groups if d['id'] in group_id]
             return filtered_group
         except Exception as e:
@@ -135,9 +133,9 @@ class AADFacade:
 
     async def get_service_principals(self):
         try:
-            test = await self._get_microsoft_graph_response('servicePrincipals')
-            test_beta = await self._get_microsoft_graph_response('servicePrincipals', 'beta')
-            service_principals = test_beta.get('value')
+            # Need publisher name value for serviceprincipals.py. v1.0 does not have that value, thus we use beta
+            service_principals_response_beta = await self._get_microsoft_graph_response('servicePrincipals', 'beta')
+            service_principals = service_principals_response_beta.get('value')
             return service_principals
         except Exception as e:
             print_exception(f'Failed to retrieve service principals: {e}')
@@ -145,9 +143,8 @@ class AADFacade:
 
     async def get_applications(self):
         try:
-            test = await self._get_microsoft_graph_response('applications')
-            test_beta = await self._get_microsoft_graph_response('applications', 'beta')
-            applications = test_beta.get('value')
+            applications_response = await self._get_microsoft_graph_response('applications')
+            applications = applications_response.get('value')
             return applications
         except Exception as e:
             print_exception(f'Failed to retrieve applications: {e}')

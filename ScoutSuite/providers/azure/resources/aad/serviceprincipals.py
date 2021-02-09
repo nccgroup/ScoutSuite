@@ -27,7 +27,7 @@ class ServicePrincipals(AzureResources):
         service_principal_dict['homepage'] = raw_service_principal.get('homepage')
         service_principal_dict['key_credentials'] = raw_service_principal.get('keyCredentials')
         service_principal_dict['logout_url'] = raw_service_principal.get('logoutUrl')
-        service_principal_dict['oauth2_permissions'] = raw_service_principal.get('publishedPermissionScopes')
+        service_principal_dict['oauth2_permissions'] = raw_service_principal.get('oauth2PermissionScopes')
         service_principal_dict['password_credentials'] = raw_service_principal.get('passwordCredentials')
         service_principal_dict[
             'preferred_token_signing_key_thumbprint'] = raw_service_principal.get('preferredTokenSigningKeyThumbprint')

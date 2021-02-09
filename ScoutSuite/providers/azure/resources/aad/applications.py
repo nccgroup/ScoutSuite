@@ -33,8 +33,9 @@ class Applications(AzureResources):
         # application_dict['oauth2_allow_implicit_flow'] = raw_application.oauth2_allow_implicit_flow
         # application_dict['oauth2_allow_url_path_matching'] = raw_application.oauth2_allow_url_path_matching
         application_dict['oauth2_permissions'] = raw_application['api'].get('oauth2PermissionScopes')
-        application_dict['oauth2_require_post_response'] = raw_application.get('oauth2RequirePostResponse')
-        application_dict['org_restrictions'] = raw_application.get('orgRestrictions')
+        # application_dict['oauth2_require_post_response'] = raw_application.get('oauth2RequirePostResponse')
+        # only in beta
+        # application_dict['org_restrictions'] = raw_application.get('orgRestrictions') # only in beta
         application_dict['optional_claims'] = raw_application.get('optionalClaims')
         application_dict['password_credentials'] = raw_application.get('passwordCredentials')
         application_dict['pre_authorized_applications'] = raw_application['api'].get('preAuthorizedApplications')

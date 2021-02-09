@@ -6,7 +6,7 @@ from azure.mgmt.storage import StorageManagementClient
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
 from ScoutSuite.utils import get_user_agent
-
+from azure.mgmt.resource import ResourceManagementClient
 
 class StorageAccountsFacade:
 
@@ -16,7 +16,10 @@ class StorageAccountsFacade:
     def get_client(self, subscription_id: str):
         client = StorageManagementClient(self.credentials.get_credentials('arm'),
                                        subscription_id=subscription_id)
-        client._client.config.add_user_agent(get_user_agent())
+        # client._client.config.add_user_agent(get_user_agent())
+
+        cli = ResourceManagementClient(self.credentials.get_credentials('arm'),
+                                       subscription_id=subscription_id)
         return client
 
     async def get_storage_accounts(self, subscription_id: str):
