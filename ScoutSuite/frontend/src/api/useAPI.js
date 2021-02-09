@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import * as Cache from './cache'
+import { useEffect, useState } from 'react'
 import * as API from './api'
 
 /**

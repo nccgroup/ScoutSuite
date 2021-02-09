@@ -8,8 +8,8 @@ export const UseAPIExample = () => {
     if (loading) return <p>Loading...</p>
 
     return <div>
-        {Object.values(data).map((service) => {
-            return <p>
+        {Object.values(data).map((service, index) => {
+            return <p key={index}>
                 <b>Checked items:</b> {service.checked_items} <br />
                 <b>Max level:</b> {service.max_level} <br />
                 <b>Rules count:</b> {service.rules_count} <br />

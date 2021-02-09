@@ -7,7 +7,7 @@ import * as Cache from './cache'
 
 import json from './temp/scoutsuite_results_aws.json' // TEMP
 
-const BASE_URL = 'http://localhost:5000'
+// const BASE_URL = 'http://localhost:5000'
 
 /**
  * Gets a resource from the run results.
