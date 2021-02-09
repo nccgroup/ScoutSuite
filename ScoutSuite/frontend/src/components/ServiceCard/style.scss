@@ -1,11 +1,10 @@
 @import 'src/variables.scss';
 
 .service-card {
-  color: $font_color;
-  background: $white;
   width: 25rem;
   margin: 0 2rem 2rem 0;
-  border-radius: $border_radius;
+  background: $white;
+  border-radius: $border-radius;
 
   hr {
     margin: 0;
@@ -46,7 +45,7 @@
     padding: 1rem;
 
     .link {
-      color: $link_color;
+      color: $link-color;
       display: flex;
       justify-content: space-between;
       align-items: center;

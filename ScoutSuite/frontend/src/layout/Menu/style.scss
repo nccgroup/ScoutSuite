@@ -1,0 +1,14 @@
+@import 'src/variables';
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  background-color: $ncc-grey-dark;
+
+  span {
+    color: $white;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid $font_color;
+  }
+}

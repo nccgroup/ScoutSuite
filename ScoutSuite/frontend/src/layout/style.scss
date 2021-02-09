@@ -1,0 +1,28 @@
+@import 'src/variables';
+
+.main-layout {
+  color: $font_color;
+  display: grid;
+  grid-template-areas: 
+    'header header'
+    'menu   main';
+  grid-template-rows: $nav-header-height auto;
+  grid-template-columns: $nav-menu-width auto;
+
+  .nav-header {
+    grid-area: header;
+    position: sticky;
+    top: 0;
+  }
+
+  .nav-menu {
+    grid-area: menu;
+    height: calc(100vh - #{$nav-header-height});
+    position: sticky;
+    top: $nav-header-height;
+  }
+
+  .main {
+    grid-area: main;
+  }
+}
