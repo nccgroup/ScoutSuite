@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import TabsMenu from '../../components/TabsMenu';
+import { TabsMenu, TabPane } from '../../components/Tabs/';
 import Summary from './TabsContent/Summary';
 import ExecutionDetails from './TabsContent/ExecutionDetails';
 import ResourcesDetails from './TabsContent/ResourcesDetails';
@@ -16,30 +16,19 @@ const propTypes = {
 const Dashboard = props => {
   const { services } = props;
 
-  const [ selectedTab, setSelectedTab ] = useState(TAB_NAMES.SUMMARY);
-  const onClickTab = event => setSelectedTab(event.target.getAttribute('value'))
-
-  const getTabContent = selectedTab => {
-    switch (selectedTab) {
-      case TAB_NAMES.SUMMARY:
-        return <Summary services={services} />;
-      case TAB_NAMES.EXECUTION_DETAILS:
-        return <ExecutionDetails />;
-      case TAB_NAMES.RESOURCES_DETAILS:
-        return <ResourcesDetails />;
-      default:
-        return <div/>;
-    }
-  }
-
   return (
     <div className="dashboard">
-      <TabsMenu 
-        tabs={TAB_NAMES}
-        selectedTab={selectedTab}
-        onClick={onClickTab}
-      />
-      {getTabContent(selectedTab)}
+      <TabsMenu>
+        <TabPane title={TAB_NAMES.SUMMARY}>
+          <Summary services={services} />
+        </TabPane>
+        <TabPane title={TAB_NAMES.EXECUTION_DETAILS}>
+          <ExecutionDetails />
+        </TabPane>
+        <TabPane title={TAB_NAMES.RESOURCES_DETAILS}>
+          <ResourcesDetails />
+        </TabPane>
+      </TabsMenu>
     </div>
   );
 }
