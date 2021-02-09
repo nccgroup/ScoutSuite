@@ -16,4 +16,5 @@ class SubnetGroups(AWSResources):
 
     def _parse_subnet_group(self, raw_subnet_group):
         raw_subnet_group['name'] = raw_subnet_group['DBSubnetGroupName']
+        raw_subnet_group['ARN'] = raw_subnet_group.pop('DBSubnetGroupArn')
         return raw_subnet_group['name'], raw_subnet_group
