@@ -19,6 +19,7 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     'quotes': ['error', 'single'],
     'semi': ['error', 'always'],
+    'eol-last': ['warn', 'always'],
     'react/jsx-uses-vars': 'error',
     'react/jsx-uses-react': 1
   },
