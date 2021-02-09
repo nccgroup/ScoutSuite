@@ -67,6 +67,10 @@
         "applications": {
           "cols": 2,
           "path": "services.aad.applications"
+        },
+        "policies": {
+          "cols": 2,
+          "path": "services.aad.policies"
         }
       }
     },
