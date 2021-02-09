@@ -1,11 +1,11 @@
 import logo from './logo.svg'
-import './App.css'
+import './App.css';
 import { UseAPIExample } from './pages/useAPIExample/index'
 
 
 
 function App() {
-    return <UseAPIExample />
+    return <UseAPIExample />;
 }
 
 export default App
