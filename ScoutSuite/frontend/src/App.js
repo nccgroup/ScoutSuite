@@ -1,6 +1,6 @@
 import logo from './logo.svg'
 import './App.css';
-import { UseAPIExample } from './pages/useAPIExample/index'
+import { UseAPIExample } from './pages/useAPIExample/index';
 
 
 
