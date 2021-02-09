@@ -7,6 +7,12 @@
                 "level": "warning"
             }
         ],
+        "aad-security-default-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "appservice-authentication-disabled.json": [
             {
                 "enabled": true,

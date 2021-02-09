@@ -150,3 +150,11 @@ class AADFacade:
             print_exception(f'Failed to retrieve applications: {e}')
             return []
 
+    async def get_security_defaults(self):
+        try:
+            security_default_response = await self._get_microsoft_graph_response(
+                'identitySecurityDefaultsEnforcementPolicy')
+            return security_default_response
+        except Exception as e:
+            print_exception(f'Failed to retrieve applications: {e}')
+            return []
