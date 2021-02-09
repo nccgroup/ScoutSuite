@@ -1,6 +1,5 @@
-import json
-
 from azure.graphrbac import GraphRbacManagementClient
+from msgraphcore import GraphSession
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
@@ -12,61 +11,140 @@ class AADFacade:
     def __init__(self, credentials):
         self.credentials = credentials
 
-    def get_client(self):
-        client = GraphRbacManagementClient(self.credentials.get_credentials('aad_graph'),
-                                         tenant_id=self.credentials.get_tenant_id())
-        client._client.config.add_user_agent(get_user_agent())
-        return client
+    # def get_client(self):
+    #     client = GraphRbacManagementClient(self.credentials.get_credentials('aad_graph'),
+    #                                      tenant_id=self.credentials.get_tenant_id())
+    #     client._client.config.add_user_agent(get_user_agent())
+    #     return client
+    #
+    # async def get_users(self):
+    #     try:
+    #         # This filters down the users which are pulled from the directory, otherwise for large tenants this
+    #         # gets out of hands.
+    #         # See https://github.com/nccgroup/ScoutSuite/issues/698
+    #         user_filter = " and ".join([
+    #             'userType eq \'Guest\''
+    #         ])
+    #
+    #         users = await run_concurrently(lambda: list(self.get_client().users.list(filter= user_filter)))
+    #         return users
+    #     except Exception as e:
+    #         print_exception(f'Failed to retrieve users: {e}')
+    #         return []
+    #
+    # async def get_user(self, user_id):
+    #     try:
+    #         return await run_concurrently(lambda: self.get_client().users.get(user_id))
+    #     except Exception as e:
+    #         print_exception(f'Failed to retrieve user {user_id}: {e}')
+    #         return None
+    #
+    # async def get_groups(self):
+    #     try:
+    #         return await run_concurrently(lambda: list(self.get_client().groups.list()))
+    #     except Exception as e:
+    #         print_exception(f'Failed to retrieve groups: {e}')
+    #         return []
+    #
+    # async def get_user_groups(self, user_id):
+    #     try:
+    #         return await run_concurrently(lambda: list(
+    #             self.get_client().users.get_member_groups(object_id=user_id,
+    #                                                       security_enabled_only=False))
+    #                                       )
+    #     except Exception as e:
+    #         print_exception(f'Failed to retrieve user\'s groups: {e}')
+    #         return []
+    #
+    # async def get_service_principals(self):
+    #     try:
+    #         return await run_concurrently(lambda: list(self.get_client().service_principals.list()))
+    #     except Exception as e:
+    #         print_exception(f'Failed to retrieve service principals: {e}')
+    #         return []
+    #
+    # async def get_applications(self):
+    #     try:
+    #         return await run_concurrently(lambda: list(self.get_client().applications.list()))
+    #     except Exception as e:
+    #         print_exception(f'Failed to retrieve applications: {e}')
+    #         return []
+
+    # New functions for microsoft graph
+
+    async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
+        scopes = ['https://graph.microsoft.com/.default']
+        cli = GraphSession(self.credentials.get_credentials('aad_graph'), scopes)
+        endpoint = 'https://graph.microsoft.com/{}/{}'.format(api_version, api_resource)
+        try:
+            response = cli.get(endpoint)
+            if response.status_code == 200:
+                return response.json()
+            else:
+                print_exception('Failed to query Microsoft Graph endpoint \"{}\": status code {}'.
+                                format(api_resource, response.status_code))
+                return {}
+        except Exception as e:
+            print_exception('Failed to query Microsoft Graph endpoint \"{}\": {}'.format(api_resource, e))
+            return {}
 
     async def get_users(self):
         try:
-            # This filters down the users which are pulled from the directory, otherwise for large tenants this
-            # gets out of hands.
-            # See https://github.com/nccgroup/ScoutSuite/issues/698
-            user_filter = " and ".join([
-                'userType eq \'Guest\''
-            ])
-
-            users = await run_concurrently(lambda: list(self.get_client().users.list(filter= user_filter)))
-            return users
+            test = await self._get_microsoft_graph_response('users')
+            test_beta = await self._get_microsoft_graph_response('users', 'beta')
+            users = test_beta.get('value')
+            users_filtered = [d for d in users if d['userType'] in 'Guest']
+            return users_filtered
         except Exception as e:
             print_exception(f'Failed to retrieve users: {e}')
             return []
 
     async def get_user(self, user_id):
         try:
-            return await run_concurrently(lambda: self.get_client().users.get(user_id))
+            test = await self._get_microsoft_graph_response('users/{}'.format(user_id))
+            test_beta = await self._get_microsoft_graph_response('users/{}'.format(user_id), 'beta')
+            return test_beta
         except Exception as e:
             print_exception(f'Failed to retrieve user {user_id}: {e}')
             return None
 
     async def get_groups(self):
         try:
-            return await run_concurrently(lambda: list(self.get_client().groups.list()))
+            test = await self._get_microsoft_graph_response('groups')
+            test_beta = await self._get_microsoft_graph_response('groups', 'beta')
+            groups = test_beta.get('value')
+            return groups
         except Exception as e:
             print_exception(f'Failed to retrieve groups: {e}')
             return []
 
-    async def get_user_groups(self, user_id):
+    async def get_user_groups(self, group_id):
         try:
-            return await run_concurrently(lambda: list(
-                self.get_client().users.get_member_groups(object_id=user_id,
-                                                          security_enabled_only=False))
-                                          )
+            test = await self._get_microsoft_graph_response('groups/{}'.format(group_id))
+            test_beta = await self._get_microsoft_graph_response('groups/{}'.format(group_id), 'beta')
+            groups = test_beta.get('value')
+            return groups
         except Exception as e:
             print_exception(f'Failed to retrieve user\'s groups: {e}')
             return []
 
     async def get_service_principals(self):
         try:
-            return await run_concurrently(lambda: list(self.get_client().service_principals.list()))
+            test = await self._get_microsoft_graph_response('servicePrincipals')
+            test_beta = await self._get_microsoft_graph_response('servicePrincipals', 'beta')
+            service_principals = test_beta.get('value')
+            return service_principals
         except Exception as e:
             print_exception(f'Failed to retrieve service principals: {e}')
             return []
 
     async def get_applications(self):
         try:
-            return await run_concurrently(lambda: list(self.get_client().applications.list()))
+            test = await self._get_microsoft_graph_response('applications')
+            test_beta = await self._get_microsoft_graph_response('applications', 'beta')
+            applications = test_beta.get('value')
+            return applications
         except Exception as e:
             print_exception(f'Failed to retrieve applications: {e}')
             return []
+
