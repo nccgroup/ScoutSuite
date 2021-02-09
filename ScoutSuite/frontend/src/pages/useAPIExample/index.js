@@ -1,10 +1,10 @@
-import React from "react"
-import { useAPI } from '../../api/useAPI';
+import React from 'react'
+import { useAPI } from '../../api/useAPI'
 
 export const UseAPIExample = () => {
-    const { data, loading, error } = useAPI("dashboards.home")
+    const { data, loading, error } = useAPI('dashboards.home')
 
-    if (error) return <p style={{ color: "red" }}>{error}</p>
+    if (error) return <p style={{ color: 'red' }}>{error}</p>
     if (loading) return <p>Loading...</p>
 
     return <div>

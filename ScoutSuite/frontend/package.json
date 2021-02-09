@@ -17,7 +17,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "precommit": "npx eslint .eslintrc.js --fix src/**"
   },
   "browserslist": {
     "production": [
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "eslint": "^7.19.0",
-    "eslint-plugin-react": "^7.22.0"
+    "eslint-plugin-react": "^7.22.0",
+    "husky": "^5.0.9"
   }
 }
