@@ -11,6 +11,8 @@ class AADFacade:
     def __init__(self, credentials):
         self.credentials = credentials
 
+    # Azure active directory methods
+
     # def get_client(self):
     #     client = GraphRbacManagementClient(self.credentials.get_credentials('aad_graph'),
     #                                      tenant_id=self.credentials.get_tenant_id())
@@ -70,7 +72,7 @@ class AADFacade:
     #         print_exception(f'Failed to retrieve applications: {e}')
     #         return []
 
-    # New functions for microsoft graph
+    # Azure microsoft graph new methods
 
     async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
         scopes = ['https://graph.microsoft.com/.default']
@@ -101,9 +103,11 @@ class AADFacade:
 
     async def get_user(self, user_id):
         try:
-            test = await self._get_microsoft_graph_response('users/{}'.format(user_id))
-            test_beta = await self._get_microsoft_graph_response('users/{}'.format(user_id), 'beta')
-            return test_beta
+            test = await self._get_microsoft_graph_response('users')
+            test_beta = await self._get_microsoft_graph_response('users', 'beta')
+            users = test_beta.get('value')
+            users_filtered = [d for d in users if d['id'] in user_id]
+            return users_filtered[0]
         except Exception as e:
             print_exception(f'Failed to retrieve user {user_id}: {e}')
             return None
@@ -120,10 +124,11 @@ class AADFacade:
 
     async def get_user_groups(self, group_id):
         try:
-            test = await self._get_microsoft_graph_response('groups/{}'.format(group_id))
-            test_beta = await self._get_microsoft_graph_response('groups/{}'.format(group_id), 'beta')
+            test = await self._get_microsoft_graph_response('groups')
+            test_beta = await self._get_microsoft_graph_response('groups', 'beta')
             groups = test_beta.get('value')
-            return groups
+            filtered_group = [d for d in groups if d['id'] in group_id]
+            return filtered_group
         except Exception as e:
             print_exception(f'Failed to retrieve user\'s groups: {e}')
             return []
