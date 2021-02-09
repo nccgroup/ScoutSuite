@@ -18,7 +18,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "precommit": "npx eslint .eslintrc.js --fix src/**"
+    "precommit": "npx eslint .eslintrc.js --fix --ext .js src/"
   },
   "browserslist": {
     "production": [
