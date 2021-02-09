@@ -132,6 +132,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 client = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID, authority=AUTHORITY_HOST_URI + tenant_id)
 
+
                 # Resource Manager
                 resource_uri = 'https://management.core.windows.net/'
                 scopes = [resource_uri + "/.default"]
@@ -143,6 +144,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 scopes = [resource_uri + "/.default"]
                 aad_graph_token = client.acquire_token_by_username_password(username, password, scopes)
                 aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
+
 
             elif user_account_browser:
 
