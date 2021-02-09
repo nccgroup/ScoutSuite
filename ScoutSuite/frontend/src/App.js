@@ -1,11 +1,11 @@
-import React from 'react'
-import './App.css'
-import { UseAPIExample } from './pages/useAPIExample/index'
+import React from 'react';
+import './App.css';
+import { UseAPIExample } from './pages/useAPIExample/index';
 
 
 
 function App() {
-    return <UseAPIExample />
+  return <UseAPIExample />;
 }
 
-export default App
+export default App;
