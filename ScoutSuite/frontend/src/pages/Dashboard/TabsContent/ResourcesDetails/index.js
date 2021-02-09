@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const ResourcesDetails = props => {
   return (
-    <div/>
+    <div>Resources Details</div>
   );
 }
 

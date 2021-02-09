@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const ExecutionDetails = props => {
   return (
-    <div/>
+    <div>Execution Details</div>
   );
 }
 
