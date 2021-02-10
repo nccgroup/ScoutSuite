@@ -1,9 +1,10 @@
-from azure.graphrbac import GraphRbacManagementClient
+import os
+
 from msgraphcore import GraphSession
 
 from ScoutSuite.core.console import print_exception
-from ScoutSuite.providers.utils import run_concurrently
-from ScoutSuite.utils import get_user_agent
+from azure.identity import DeviceCodeCredential, DefaultAzureCredential, AzureCliCredential, ManagedIdentityCredential, \
+    ClientSecretCredential
 
 
 class AADFacade:
@@ -76,9 +77,11 @@ class AADFacade:
 
     async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
         scopes = ['https://graph.microsoft.com/.default']
-        AADTokenCredentials = self.credentials.get_credentials('aad_graph')
-        client = GraphSession(AADTokenCredentials, scopes)
+
+        default_cli_credentials = AzureCliCredential()
+        client = GraphSession(default_cli_credentials, scopes)
         endpoint = 'https://graph.microsoft.com/{}/{}'.format(api_version, api_resource)
+
         try:
             response = client.get(endpoint)
             if response.status_code == 200:
@@ -151,3 +154,11 @@ class AADFacade:
             print_exception(f'Failed to retrieve applications: {e}')
             return []
 
+    async def get_security_defaults(self):
+        try:
+            security_default_response = await self._get_microsoft_graph_response(
+                'identitySecurityDefaultsEnforcementPolicy')
+            return security_default_response
+        except Exception as e:
+            print_exception(f'Failed to retrieve applications: {e}')
+            return []

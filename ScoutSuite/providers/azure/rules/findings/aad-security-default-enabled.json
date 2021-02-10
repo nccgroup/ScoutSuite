@@ -1,0 +1,27 @@
+{
+    "description": "Security Defaults Is Enabled",
+    "rationale": "Security defaults provide secure default settings that we manage on behalf of organizations to keep customers safe until they are ready to manage their own identity security story. Security defaults contain preconfigured security settings for common attacks.",
+    "remediation": "To enable security defaults in your directory:<ol><li>Sign in to the Azure portal as a security administrator, Conditional Access administrator, or global administrator.</li> <li>Browse to Azure Active Directory > Properties.</li> <li>Select Manage security defaults.</li> <li>Set the Enable security defaults toggle to Yes.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "1.22"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/concept-fundamentals-security-defaults",
+        "https://techcommunity.microsoft.com/t5/azure-active-directory-identity/introducing-security-defaults/ba-p/1061414"
+    ],
+    "dashboard_name": "Security Defaults",
+    "path": "aad.security_defaults.id",
+    "conditions": [
+        "and",
+        [
+            "aad.security_defaults.id.is_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "is_enabled"
+}

@@ -67,6 +67,10 @@
         "applications": {
           "cols": 2,
           "path": "services.aad.applications"
+        },
+        "security_defaults": {
+          "cols": 2,
+          "path": "services.aad.security_defaults"
         }
       }
     },

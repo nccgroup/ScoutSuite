@@ -1,12 +1,13 @@
 import datetime
 
+from azure.identity import AzureCliCredential
 from azure.mgmt.monitor import MonitorManagementClient
 from azure.mgmt.storage import StorageManagementClient
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
 from ScoutSuite.utils import get_user_agent
-from azure.mgmt.resource import ResourceManagementClient
+
 
 class StorageAccountsFacade:
 
@@ -14,12 +15,10 @@ class StorageAccountsFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        client = StorageManagementClient(self.credentials.get_credentials('arm'),
-                                       subscription_id=subscription_id)
-        # client._client.config.add_user_agent(get_user_agent())
-
-        cli = ResourceManagementClient(self.credentials.get_credentials('arm'),
-                                       subscription_id=subscription_id)
+        default_cli_credential = AzureCliCredential()
+        client = StorageManagementClient(default_cli_credential,
+                                         subscription_id=subscription_id,
+                                         user_agent=get_user_agent())
         return client
 
     async def get_storage_accounts(self, subscription_id: str):
@@ -49,8 +48,8 @@ class StorageAccountsFacade:
             return containers
 
     async def _get_and_set_activity_logs(self, storage_account, subscription_id: str):
-        client = MonitorManagementClient(self.credentials.arm_credentials, subscription_id)
-        client._client.config.add_user_agent(get_user_agent())
+        default_cli_credential = AzureCliCredential()
+        client = MonitorManagementClient(default_cli_credential, subscription_id, user_agent=get_user_agent())
 
         # Time format used by Azure API:
         time_format = "%Y-%m-%dT%H:%M:%S.%f"
@@ -90,4 +89,3 @@ class StorageAccountsFacade:
     #     else:
     #         return None
     #         # return queues
-

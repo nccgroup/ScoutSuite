@@ -31,22 +31,22 @@ httplib2shim>=0.0.3
 
 # Azure Provider
 ## core requirements
-azure-cli-core==2.12.0
+azure-cli-core==2.19.0
 ## for RBAC in AAD
 azure-graphrbac==0.61.1
-msal==1.8.0
-PyJWT==1.7.1
+msal==1.9.0
+PyJWT==1.7.1  # FIXME - this is currently required due to the MSAL dependency but should be removed once we switch to ADAL
 ## for resources
-azure-mgmt-storage==7.1.0
-azure-mgmt-monitor==0.5.2
-azure-mgmt-sql==0.11.0
-azure-mgmt-security==0.4.1
-azure-mgmt-keyvault==1.1.0
-azure-mgmt-network==2.5.1
+azure-mgmt-storage==16.0.0
+azure-mgmt-monitor==2.0.0
+azure-mgmt-sql==1.0.0
+azure-mgmt-security==1.0.0
+azure-mgmt-keyvault==8.0.0
+azure-mgmt-network==17.1.0
 azure-mgmt-redis==6.0.0
-azure-mgmt-web==0.47.0
-azure-mgmt-compute==12.0.0
-azure-mgmt-authorization==0.60.0
+azure-mgmt-web==1.0.0
+azure-mgmt-compute==18.2.0
+azure-mgmt-authorization==1.0.0
 azure-identity==1.5.0
 msgraphcore==0.0.2
 
