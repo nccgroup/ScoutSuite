@@ -12,8 +12,7 @@ class NetworkFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        default_cli_credential = AzureCliCredential()
-        client = NetworkManagementClient(default_cli_credential,
+        client = NetworkManagementClient(self.credentials.identity_credentials,
                                          subscription_id=subscription_id)
         return client
 

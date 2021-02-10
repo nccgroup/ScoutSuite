@@ -12,8 +12,7 @@ class SecurityCenterFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        default_cli_credential = AzureCliCredential()
-        client = SecurityCenter(default_cli_credential,
+        client = SecurityCenter(self.credentials.identity_credentials,
                                 subscription_id, '',
                                 user_agent=get_user_agent())
         return client

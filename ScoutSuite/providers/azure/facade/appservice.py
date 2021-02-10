@@ -13,8 +13,7 @@ class AppServiceFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        default_cli_credential = AzureCliCredential()
-        client = WebSiteManagementClient(default_cli_credential,
+        client = WebSiteManagementClient(self.credentials.identity_credentials,
                                          subscription_id=subscription_id, user_agent=get_user_agent())
         return client
 

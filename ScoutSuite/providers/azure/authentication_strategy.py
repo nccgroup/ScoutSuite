@@ -21,76 +21,76 @@ AZURE_CLI_CLIENT_ID = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
 class AzureCredentials:
 
     def __init__(self,
-                 arm_credentials, aad_graph_credentials,identity_credentials,
+                 identity_credentials,
                  tenant_id=None, default_subscription_id=None,
                  context=None):
 
-        self.arm_credentials = arm_credentials  # Azure Resource Manager API credentials
-        self.aad_graph_credentials = aad_graph_credentials  # Azure AD Graph API credentials
+        # self.arm_credentials = arm_credentials  # Azure Resource Manager API credentials
+        # self.aad_graph_credentials = aad_graph_credentials  # Azure AD Graph API credentials
         self.identity_credentials = identity_credentials  # Azure Resource Manager API credentials
 
         self.tenant_id = tenant_id
         self.default_subscription_id = default_subscription_id
         self.context = context
 
-    def get_tenant_id(self):
-        if self.tenant_id:
-            return self.tenant_id
-        elif 'tenant_id' in self.aad_graph_credentials.token:
-            return self.aad_graph_credentials.token['tenant_id']
-        else:
-            # This is a last resort, e.g. for MSI authentication
-            try:
-                h = {'Authorization': 'Bearer {}'.format(self.arm_credentials.token['access_token'])}
-                r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
-                r2 = r.json()
-                return r2.get('value')[0].get('tenantId')
-            except Exception as e:
-                print_exception('Unable to infer tenant ID: {}'.format(e))
-                return None
-
-    def get_credentials(self, resource):
-        if resource == 'arm':
-            self.arm_credentials = self.get_fresh_credentials(self.arm_credentials)
-            return self.arm_credentials
-        elif resource == 'aad_graph':
-            self.aad_graph_credentials = self.get_fresh_credentials(self.aad_graph_credentials)
-            return self.aad_graph_credentials
-        else:
-            raise AuthenticationException('Invalid credentials resource type')
-
-    def get_fresh_credentials(self, credentials):
-        """
-        Check if credentials are outdated and if so refresh them.
-        """
-
-        if self.context and hasattr(credentials, 'token'):
-            expiration_datetime = datetime.fromtimestamp(credentials.token['expires_on'])
-            current_datetime = datetime.now()
-            expiration_delta = expiration_datetime - current_datetime
-            if expiration_delta < timedelta(minutes=50000):
-                return self.refresh_credential(credentials)
-        return credentials
-
-    def refresh_credential(self, credentials):
-        """
-        Refresh credentials
-        """
-        print_debug('Refreshing credentials')
-        authority_uri = AUTHORITY_HOST_URI + self.get_tenant_id()
-        existing_cache = self.context.cache
-
-
-        client = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID, token_cache=existing_cache,
-                                              authority=authority_uri)
-
-        scopes = [credentials.resource+ "/.default"]
-
-        new_token = client.acquire_token_by_refresh_token(credentials.token['refresh_token'],scopes)
-
-
-        new_credentials = AADTokenCredentials(new_token, credentials.token.get('_client_id'))
-        return new_credentials
+    # def get_tenant_id(self):
+    #     if self.tenant_id:
+    #         return self.tenant_id
+    #     elif 'tenant_id' in self.aad_graph_credentials.token:
+    #         return self.aad_graph_credentials.token['tenant_id']
+    #     else:
+    #         # This is a last resort, e.g. for MSI authentication
+    #         try:
+    #             h = {'Authorization': 'Bearer {}'.format(self.arm_credentials.token['access_token'])}
+    #             r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
+    #             r2 = r.json()
+    #             return r2.get('value')[0].get('tenantId')
+    #         except Exception as e:
+    #             print_exception('Unable to infer tenant ID: {}'.format(e))
+    #             return None
+    #
+    # def get_credentials(self, resource):
+    #     if resource == 'arm':
+    #         self.arm_credentials = self.get_fresh_credentials(self.arm_credentials)
+    #         return self.arm_credentials
+    #     elif resource == 'aad_graph':
+    #         self.aad_graph_credentials = self.get_fresh_credentials(self.aad_graph_credentials)
+    #         return self.aad_graph_credentials
+    #     else:
+    #         raise AuthenticationException('Invalid credentials resource type')
+    #
+    # def get_fresh_credentials(self, credentials):
+    #     """
+    #     Check if credentials are outdated and if so refresh them.
+    #     """
+    #
+    #     if self.context and hasattr(credentials, 'token'):
+    #         expiration_datetime = datetime.fromtimestamp(credentials.token['expires_on'])
+    #         current_datetime = datetime.now()
+    #         expiration_delta = expiration_datetime - current_datetime
+    #         if expiration_delta < timedelta(minutes=50000):
+    #             return self.refresh_credential(credentials)
+    #     return credentials
+    #
+    # def refresh_credential(self, credentials):
+    #     """
+    #     Refresh credentials
+    #     """
+    #     print_debug('Refreshing credentials')
+    #     authority_uri = AUTHORITY_HOST_URI + self.get_tenant_id()
+    #     existing_cache = self.context.cache
+    #
+    #
+    #     client = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID, token_cache=existing_cache,
+    #                                           authority=authority_uri)
+    #
+    #     scopes = [credentials.resource+ "/.default"]
+    #
+    #     new_token = client.acquire_token_by_refresh_token(credentials.token['refresh_token'],scopes)
+    #
+    #
+    #     new_credentials = AADTokenCredentials(new_token, credentials.token.get('_client_id'))
+    #     return new_credentials
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
@@ -246,8 +246,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             else:
                 raise AuthenticationException('Unknown authentication method')
 
-            return AzureCredentials(arm_credentials,
-                                    aad_graph_credentials,
+            return AzureCredentials(
                                     identity_credentials,
                                     tenant_id, subscription_id,
                                     context)
