@@ -13,7 +13,6 @@ from msrestazure.azure_active_directory import AADTokenCredentials
 import adal
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
-
 AUTHORITY_HOST_URI = 'https://login.microsoftonline.com'
 AZURE_CLI_CLIENT_ID = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
 
@@ -76,9 +75,10 @@ class AzureCredentials:
         print_debug('Refreshing credentials')
         authority_uri = AUTHORITY_HOST_URI + '/' + self.get_tenant_id()
         existing_cache = self.context.cache
-        # cont = msal.PublicClientApplication(self.get_tenant_id(), cache=existing_cache)
-        # scopes = [authority_uri + "/.default"]
-        # new_token = cont.acquire_token_silent(scopes)
+        # context = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID, cache=existing_cache,
+        #                                        authority=authority_uri)
+        # scopes = ["https://graph.microsoft.com/.default"]
+        # new_token = context.acquire_token_silent(scopes, account=None)
 
         context = adal.AuthenticationContext(authority_uri, cache=existing_cache)
         new_token = context.acquire_token(credentials.token['resource'],
@@ -145,7 +145,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 # arm_credentials = UserPassCredentials(username, password)
                 # aad_graph_credentials = UserPassCredentials(username, password,
-                                                            #resource='https://graph.microsoft.com')
+                # resource='https://graph.microsoft.com')
 
             elif user_account_browser:
 

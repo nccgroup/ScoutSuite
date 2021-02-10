@@ -1,3 +1,4 @@
+from azure.identity import AzureCliCredential
 from azure.mgmt.security import SecurityCenter
 
 from ScoutSuite.core.console import print_exception, print_debug
@@ -11,9 +12,10 @@ class SecurityCenterFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        client = SecurityCenter(self.credentials.get_credentials('arm'),
-                              subscription_id, '')
-        client._client.config.add_user_agent(get_user_agent())
+        default_cli_credential = AzureCliCredential()
+        client = SecurityCenter(default_cli_credential,
+                                subscription_id, '',
+                                user_agent=get_user_agent())
         return client
 
     async def get_pricings(self, subscription_id: str):
