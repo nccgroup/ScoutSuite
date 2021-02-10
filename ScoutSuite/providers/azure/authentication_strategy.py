@@ -8,10 +8,8 @@ from datetime import datetime, timedelta
 
 from azure.common.credentials import ServicePrincipalCredentials, get_azure_cli_credentials
 from azure.identity import UsernamePasswordCredential, AzureCliCredential, ClientSecretCredential, \
-    ManagedIdentityCredential, InteractiveBrowserCredential, ChainedTokenCredential
-from msrestazure.azure_active_directory import MSIAuthentication
+    ManagedIdentityCredential, InteractiveBrowserCredential, ChainedTokenCredential, SharedTokenCacheCredential
 from ScoutSuite.core.console import print_info, print_debug, print_exception
-from msrestazure.azure_active_directory import AADTokenCredentials
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 AUTHORITY_HOST_URI = 'https://login.microsoftonline.com/'
@@ -34,56 +32,46 @@ class AzureCredentials:
         self.default_subscription_id = default_subscription_id
         self.context = context
 
-    # def get_tenant_id(self):
-    #     if self.tenant_id:
-    #         return self.tenant_id
-    #     elif 'tenant_id' in self.identity_credentials._tenant_id:
-    #         return self.identity_credentials._tenant_id
-    #     else:
-    #         # This is a last resort, e.g. for MSI authentication
-    #         try:
-    #             h = {'Authorization': 'Bearer {}'.format(self.identity_credentials._cache.CredentialType.ACCESS_TOKEN)}
-    #             r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
-    #             r2 = r.json()
-    #             return r2.get('value')[0].get('tenantId')
-    #         except Exception as e:
-    #             print_exception('Unable to infer tenant ID: {}'.format(e))
-    #             return None
-    #
-    # def get_credentials(self, resource):
-    #     self.identity_credentials = self.get_fresh_credentials(self.identity_credentials)
-    #     return self.identity_credentials
-    #
-    # def get_fresh_credentials(self, credentials):
-    #     """
-    #     Check if credentials are outdated and if so refresh them.
-    #     """
-    #
-    #     if self.context and hasattr(credentials, 'token'):
-    #         expiration_datetime = datetime.fromtimestamp(credentials.token['expires_on'])
-    #         current_datetime = datetime.now()
-    #         expiration_delta = expiration_datetime - current_datetime
-    #         if expiration_delta < timedelta(minutes=50000):
-    #             return self.refresh_credential(credentials)
-    #     return credentials
-    #
-    # def refresh_credential(self, credentials):
-    #     """
-    #     Refresh credentials
-    #     """
-    #     print_debug('Refreshing credentials')
-    #     authority_uri = AUTHORITY_HOST_URI + self.get_tenant_id()
-    #     existing_cache = self.context.cache
-    #
-    #     client = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID, token_cache=existing_cache,
-    #                                           authority=authority_uri)
-    #
-    #     scopes = [credentials.resource + "/.default"]
-    #
-    #     new_token = client.acquire_token_by_refresh_token(credentials.token['refresh_token'], scopes)
-    #
-    #     new_credentials = AADTokenCredentials(new_token, credentials.token.get('_client_id'))
-    #     return new_credentials
+    def get_tenant_id(self):
+        if self.tenant_id:
+            return self.tenant_id
+        elif 'tenant_id' in self.identity_credentials['tenant_id']:
+            return self.identity_credentials['tenant_id']
+        # else:
+        #     # This is a last resort, e.g. for MSI authentication
+        #     try:
+        #         h = {'Authorization': 'Bearer {}'.format(self.identity_credentials._cache.CredentialType.ACCESS_TOKEN)}
+        #         r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
+        #         r2 = r.json()
+        #         return r2.get('value')[0].get('tenantId')
+        #     except Exception as e:
+        #         print_exception('Unable to infer tenant ID: {}'.format(e))
+        #         return None
+
+    def get_credentials(self, resource):
+        self.identity_credentials = self.get_fresh_credentials(self.identity_credentials)
+        return self.identity_credentials
+
+    def get_fresh_credentials(self, credentials):
+        """
+        Check if credentials are outdated and if so refresh them.
+        """
+
+        if self.context and hasattr(credentials, 'token'):
+            expiration_datetime = datetime.fromtimestamp(credentials.token['expires_on'])
+            current_datetime = datetime.now()
+            expiration_delta = expiration_datetime - current_datetime
+            if expiration_delta < timedelta(minutes=50000):
+                return self.refresh_credential(credentials)
+        return credentials
+
+    def refresh_credential(self, credentials):
+        """
+        Refresh credentials
+        """
+        print_debug('Refreshing credentials')
+        new_credentials = SharedTokenCacheCredential()
+        return new_credentials
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
@@ -143,7 +131,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 # aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
 
                 identity_credentials = UsernamePasswordCredential(AZURE_CLI_CLIENT_ID, username, password,
-                                                                  authority=AUTHORITY_HOST_URI)
+                                                                  authority=AUTHORITY_HOST_URI,tenant_id=tenant_id)
 
             elif user_account_browser:
 
@@ -235,7 +223,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 # )
 
             elif msi:
-                identity_credentials = ManagedIdentityCredential()
+                identity_credentials = ManagedIdentityCredential(client_id=AZURE_CLI_CLIENT_ID)
                 # arm_credentials = MSIAuthentication()
                 # aad_graph_credentials = MSIAuthentication(resource='https://graph.microsoft.com')
 
