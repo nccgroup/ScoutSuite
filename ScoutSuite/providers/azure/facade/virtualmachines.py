@@ -2,6 +2,7 @@ from azure.identity import AzureCliCredential, DefaultAzureCredential
 from azure.mgmt.compute import ComputeManagementClient
 
 from ScoutSuite.core.console import print_exception
+from ScoutSuite.providers.azure.facade.azureidentitycredentialadapter import AzureIdentityCredentialAdapter
 from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.utils import get_user_agent
 
@@ -13,7 +14,8 @@ class VirtualMachineFacade:
 
     def get_client(self, subscription_id: str):
 
-        client = ComputeManagementClient(self.credentials.identity_credentials,
+        credential_wrapper = AzureIdentityCredentialAdapter(self.credentials.identity_credentials)
+        client = ComputeManagementClient(credential_wrapper,
                                          subscription_id=subscription_id)
         return client
 

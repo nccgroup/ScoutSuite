@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 from azure.common.credentials import ServicePrincipalCredentials, get_azure_cli_credentials
 from azure.identity import UsernamePasswordCredential, AzureCliCredential, ClientSecretCredential, \
-    ManagedIdentityCredential, InteractiveBrowserCredential
+    ManagedIdentityCredential, InteractiveBrowserCredential, ChainedTokenCredential
 from msrestazure.azure_active_directory import MSIAuthentication
 from ScoutSuite.core.console import print_info, print_debug, print_exception
 from msrestazure.azure_active_directory import AADTokenCredentials
@@ -37,12 +37,12 @@ class AzureCredentials:
     # def get_tenant_id(self):
     #     if self.tenant_id:
     #         return self.tenant_id
-    #     elif 'tenant_id' in self.aad_graph_credentials.token:
-    #         return self.aad_graph_credentials.token['tenant_id']
+    #     elif 'tenant_id' in self.identity_credentials._tenant_id:
+    #         return self.identity_credentials._tenant_id
     #     else:
     #         # This is a last resort, e.g. for MSI authentication
     #         try:
-    #             h = {'Authorization': 'Bearer {}'.format(self.arm_credentials.token['access_token'])}
+    #             h = {'Authorization': 'Bearer {}'.format(self.identity_credentials._cache.CredentialType.ACCESS_TOKEN)}
     #             r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
     #             r2 = r.json()
     #             return r2.get('value')[0].get('tenantId')
@@ -51,14 +51,8 @@ class AzureCredentials:
     #             return None
     #
     # def get_credentials(self, resource):
-    #     if resource == 'arm':
-    #         self.arm_credentials = self.get_fresh_credentials(self.arm_credentials)
-    #         return self.arm_credentials
-    #     elif resource == 'aad_graph':
-    #         self.aad_graph_credentials = self.get_fresh_credentials(self.aad_graph_credentials)
-    #         return self.aad_graph_credentials
-    #     else:
-    #         raise AuthenticationException('Invalid credentials resource type')
+    #     self.identity_credentials = self.get_fresh_credentials(self.identity_credentials)
+    #     return self.identity_credentials
     #
     # def get_fresh_credentials(self, credentials):
     #     """
@@ -81,14 +75,12 @@ class AzureCredentials:
     #     authority_uri = AUTHORITY_HOST_URI + self.get_tenant_id()
     #     existing_cache = self.context.cache
     #
-    #
     #     client = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID, token_cache=existing_cache,
     #                                           authority=authority_uri)
     #
-    #     scopes = [credentials.resource+ "/.default"]
+    #     scopes = [credentials.resource + "/.default"]
     #
-    #     new_token = client.acquire_token_by_refresh_token(credentials.token['refresh_token'],scopes)
-    #
+    #     new_token = client.acquire_token_by_refresh_token(credentials.token['refresh_token'], scopes)
     #
     #     new_credentials = AADTokenCredentials(new_token, credentials.token.get('_client_id'))
     #     return new_credentials
@@ -136,8 +128,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     else:
                         raise AuthenticationException('Username, Tenant ID and/or password not set')
 
-                #client = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID, authority=AUTHORITY_HOST_URI + tenant_id)
-
+                # client = msal.PublicClientApplication(AZURE_CLI_CLIENT_ID, authority=AUTHORITY_HOST_URI + tenant_id)
 
                 # Resource Manager
                 # resource_uri = 'https://management.core.windows.net/'
@@ -201,10 +192,10 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                         raise AuthenticationException('No Client Secret set')
 
                 identity_credentials = ClientSecretCredential(
-                      client_id=client_id,
-                      client_secret=client_secret,
-                      tenant_id=tenant_id
-                  )
+                    client_id=client_id,
+                    client_secret=client_secret,
+                    tenant_id=tenant_id
+                )
                 # arm_credentials = ServicePrincipalCredentials(
                 #     client_id=client_id,
                 #     secret=client_secret,
@@ -252,9 +243,9 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 raise AuthenticationException('Unknown authentication method')
 
             return AzureCredentials(
-                                    identity_credentials,
-                                    tenant_id, subscription_id,
-                                    context)
+                identity_credentials,
+                tenant_id, subscription_id,
+                context)
 
         except Exception as e:
             if ', AdalError: Unsupported wstrust endpoint version. ' \
