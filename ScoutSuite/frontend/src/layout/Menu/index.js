@@ -1,18 +1,8 @@
-import React from 'react';
+import MenuBar from './MenuBar';
+import SubMenu from './SubMenu';
+import MenuGroup from './MenuGroup';
+import MenuElement from './MenuElement';
 
 import './style.scss';
 
-const Menu = () => {
-  return (
-    <div className="nav-menu">
-      <span>Fake element</span>
-      <span>Fake element</span>
-      <span>Fake element</span>
-      <span>Fake element</span>
-      <span>Fake element</span>
-      <span>Fake element</span>
-    </div>
-  );
-}
-
-export default Menu;
+export { MenuBar, SubMenu, MenuGroup, MenuElement }

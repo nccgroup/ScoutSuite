@@ -1,7 +1,7 @@
 @import 'src/variables';
 
 .main-layout {
-  color: $font_color;
+  color: $font-color;
   display: grid;
   grid-template-areas: 
     'header header'
@@ -15,7 +15,7 @@
     top: 0;
   }
 
-  .nav-menu {
+  .menu-bar {
     grid-area: menu;
     height: calc(100vh - #{$nav-header-height});
     position: sticky;

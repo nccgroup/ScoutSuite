@@ -7,9 +7,9 @@
   margin-right: 1.5rem;
 
   &.is-selected {
-    color: $font_color;
+    color: $font-color;
     padding-bottom: 0.175rem;
-    border-bottom: 3px solid $font_color;
+    border-bottom: 3px solid $font-color;
   }
   
   &:not(.is-selected):hover {

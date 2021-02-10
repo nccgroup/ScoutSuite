@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Header from './Header';
-import Menu from './Menu';
+import { MenuBar, SubMenu, MenuGroup, MenuElement } from './Menu';
 import Dashboard from '../pages/Dashboard';
 
 import './style.scss';
@@ -38,7 +38,33 @@ const Layout = () => {
   return (
     <div className="main-layout">
       <Header />
-      <Menu />
+      <MenuBar>
+        <MenuElement>Home</MenuElement>
+        <SubMenu title="Analytics">
+          <MenuGroup title="Summaries">
+            <MenuElement>Lambda</MenuElement>
+            <MenuElement>EC2</MenuElement>
+            <MenuElement>ELB</MenuElement>
+          </MenuGroup>
+          <MenuGroup title="Resources">
+            <MenuElement>Lambda</MenuElement>
+            <MenuElement>EC2</MenuElement>
+            <MenuElement>ELB</MenuElement>
+          </MenuGroup>
+        </SubMenu>
+        <SubMenu title="Compute">
+          <MenuGroup title="Summaries">
+            <MenuElement>Lambda</MenuElement>
+            <MenuElement>EC2</MenuElement>
+            <MenuElement>ELB</MenuElement>
+          </MenuGroup>
+          <MenuGroup title="Resources">
+            <MenuElement>Lambda</MenuElement>
+            <MenuElement>EC2</MenuElement>
+            <MenuElement>ELB</MenuElement>
+          </MenuGroup>
+        </SubMenu>
+      </MenuBar>
       <div className="main">
         <Dashboard services={services} />
       </div>
