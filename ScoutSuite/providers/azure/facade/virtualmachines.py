@@ -3,6 +3,7 @@ from azure.mgmt.compute import ComputeManagementClient
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.utils import get_user_agent
 
 
 class VirtualMachineFacade:
