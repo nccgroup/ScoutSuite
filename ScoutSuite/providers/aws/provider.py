@@ -410,6 +410,16 @@ class AWSProvider(BaseProvider):
                 if instance_id not in subnet['instances']:
                     subnet['instances'].append(instance_id)
 
+    def match_instances_and_vpcs_callback(self, current_config, path, current_path, instance_id, callback_args):
+        if 'ec2' in self.service_list and 'vpc' in self.service_list:  # validate both services were included in run
+            subnet_id = current_config['SubnetId']  # get the subnet ID
+            if subnet_id:
+                vpc_data = self.subnet_map[subnet_id]  # get the corresponding VPC ID and region
+                vpc = self.services['vpc']['regions'][vpc_data['region']]['vpcs'][vpc_data['vpc_id']]  # find the VPC reference
+                manage_dictionary(vpc, 'instances', [])  # initialize instances list for the VPC (if not already set)
+                if instance_id not in vpc['instances']:  # if instance is not already mapped to the VPC
+                    vpc['instances'].append(instance_id)  # append EC2 instance ID to instance list in VPC
+
     def _match_instances_and_roles(self):
         if 'ec2' in self.service_list and 'iam' in self.service_list:  # validate both services were included in run
             ec2_config = self.services['ec2']
