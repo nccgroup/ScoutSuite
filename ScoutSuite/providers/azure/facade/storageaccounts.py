@@ -1,6 +1,6 @@
 import datetime
 
-from azure.identity import AzureCliCredential
+from azure.identity import AzureCliCredential, DeviceCodeCredential
 from azure.mgmt.monitor import MonitorManagementClient
 from azure.mgmt.storage import StorageManagementClient
 
@@ -15,6 +15,7 @@ class StorageAccountsFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
+        device = DeviceCodeCredential("04b07795-8ddb-461a-bbee-02f9e1bf7b46")
         default_cli_credential = AzureCliCredential()
         client = StorageManagementClient(default_cli_credential,
                                          subscription_id=subscription_id,

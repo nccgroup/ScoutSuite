@@ -1,10 +1,8 @@
-import os
 
 from msgraphcore import GraphSession
 
 from ScoutSuite.core.console import print_exception
-from azure.identity import DeviceCodeCredential, DefaultAzureCredential, AzureCliCredential, ManagedIdentityCredential, \
-    ClientSecretCredential
+from azure.identity import DefaultAzureCredential, AzureCliCredential, ChainedTokenCredential, ManagedIdentityCredential
 
 
 class AADFacade:
@@ -78,9 +76,9 @@ class AADFacade:
     async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
         scopes = ['https://graph.microsoft.com/.default']
         default_cli_credentials = AzureCliCredential()
-        client = GraphSession(default_cli_credentials, scopes)
+        default = ManagedIdentityCredential()
+        client = GraphSession(default, scopes)
         endpoint = 'https://graph.microsoft.com/{}/{}'.format(api_version, api_resource)
-
         try:
             response = client.get(endpoint)
             if response.status_code == 200:

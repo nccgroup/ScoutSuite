@@ -1,4 +1,4 @@
-from azure.identity import AzureCliCredential
+from azure.identity import AzureCliCredential, DeviceCodeCredential
 from azure.mgmt.network import NetworkManagementClient
 
 from ScoutSuite.core.console import print_exception
@@ -20,9 +20,10 @@ class NetworkFacade:
     async def get_network_watchers(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
+            val= await run_concurrently(
                 lambda: list(client.network_watchers.list_all())
             )
+            return val
         except Exception as e:
             print_exception(f'Failed to retrieve network watchers: {e}')
             return []
