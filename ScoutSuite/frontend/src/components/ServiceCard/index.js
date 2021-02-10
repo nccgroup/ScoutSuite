@@ -16,7 +16,7 @@ const propTypes = {
   resources: PropTypes.number.isRequired,
   rules: PropTypes.number.isRequired,
   checks: PropTypes.number.isRequired,
-}
+};
 
 const ServiceCard = props => {
   const {
@@ -58,7 +58,7 @@ const ServiceCard = props => {
       </div>
     </div>
   );
-}
+};
 
 ServiceCard.propTypes = propTypes;
 

@@ -11,7 +11,7 @@ import './style.scss';
 
 const propTypes = {
   services: PropTypes.arrayOf(PropTypes.object).isRequired,
-}
+};
 
 const Dashboard = props => {
   const { services } = props;
@@ -31,7 +31,7 @@ const Dashboard = props => {
       </TabsMenu>
     </div>
   );
-}
+};
 
 Dashboard.propTypes = propTypes;
 

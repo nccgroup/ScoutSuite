@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import './style.scss'
+import './style.scss';
 
 const propTypes = {
   title: PropTypes.string.isRequired,
-}
+  isSelected: PropTypes.bool,
+  onClick: PropTypes.func
+};
 
 const TabPane = props => {
   const {
@@ -15,14 +17,14 @@ const TabPane = props => {
     onClick,
   } = props;
 
-  const className = cx('tab-pane', {'is-selected': isSelected})
+  const className = cx('tab-pane', {'is-selected': isSelected});
 
   return (
     <span className={className} onClick={onClick}>
       {title}
     </span>
   );
-}
+};
 
 TabPane.propTypes = propTypes;
 

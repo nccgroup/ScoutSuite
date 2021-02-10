@@ -32,7 +32,7 @@ const services = [
     rules: 1097,
     checks: 786,
   },
-]
+];
 
 const Layout = () => {
   return (
@@ -44,6 +44,6 @@ const Layout = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Layout;

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
 
-import './style.scss'
+import './style.scss';
 
 const propTypes = {
   children: PropTypes.array.isRequired,
-}
+};
 
 const TabsMenu = props => {
   const { children } = props;
@@ -28,7 +28,7 @@ const TabsMenu = props => {
       </div>
     </>
   );
-}
+};
 
 TabsMenu.propTypes = propTypes;
 

@@ -13,6 +13,6 @@ const Menu = () => {
       <span>Fake element</span>
     </div>
   );
-}
+};
 
 export default Menu;
