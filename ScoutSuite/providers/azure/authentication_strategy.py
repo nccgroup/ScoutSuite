@@ -6,7 +6,8 @@ import requests
 from getpass import getpass
 from datetime import datetime, timedelta
 
-from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
+from azure.common.credentials import ServicePrincipalCredentials, get_azure_cli_credentials
+from azure.identity import UsernamePasswordCredential
 from msrestazure.azure_active_directory import MSIAuthentication
 from ScoutSuite.core.console import print_info, print_debug, print_exception
 from msrestazure.azure_active_directory import AADTokenCredentials
@@ -20,12 +21,14 @@ AZURE_CLI_CLIENT_ID = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
 class AzureCredentials:
 
     def __init__(self,
-                 arm_credentials, aad_graph_credentials,
+                 arm_credentials, aad_graph_credentials,identity_credentials,
                  tenant_id=None, default_subscription_id=None,
                  context=None):
 
         self.arm_credentials = arm_credentials  # Azure Resource Manager API credentials
         self.aad_graph_credentials = aad_graph_credentials  # Azure AD Graph API credentials
+        self.identity_credentials = identity_credentials  # Azure Resource Manager API credentials
+
         self.tenant_id = tenant_id
         self.default_subscription_id = default_subscription_id
         self.context = context
@@ -146,7 +149,17 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 aad_graph_token = client.acquire_token_by_username_password(username, password, scopes)
                 aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
 
-
+                identity_credentials = UsernamePasswordCredential(AZURE_CLI_CLIENT_ID,username,password,authority=AUTHORITY_HOST_URI)
+                # resource_uri = 'https://management.core.windows.net/'
+                # scopes = resource_uri + "/.default"
+                # arm_token = credential.get_token( scopes)
+                # arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
+                #
+                # # AAD Graph
+                # resource_uri = 'https://graph.microsoft.com'
+                # scopes = resource_uri + "/.default"
+                # aad_graph_token = credential.get_token(scopes)
+                # aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
 
             elif user_account_browser:
 
@@ -235,6 +248,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             return AzureCredentials(arm_credentials,
                                     aad_graph_credentials,
+                                    identity_credentials,
                                     tenant_id, subscription_id,
                                     context)
 

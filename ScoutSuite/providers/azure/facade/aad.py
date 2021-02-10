@@ -12,74 +12,11 @@ class AADFacade:
     def __init__(self, credentials):
         self.credentials = credentials
 
-    # Azure active directory methods
-
-    # def get_client(self):
-    #     client = GraphRbacManagementClient(self.credentials.get_credentials('aad_graph'),
-    #                                      tenant_id=self.credentials.get_tenant_id())
-    #     client._client.config.add_user_agent(get_user_agent())
-    #     return client
-    #
-    # async def get_users(self):
-    #     try:
-    #         # This filters down the users which are pulled from the directory, otherwise for large tenants this
-    #         # gets out of hands.
-    #         # See https://github.com/nccgroup/ScoutSuite/issues/698
-    #         user_filter = " and ".join([
-    #             'userType eq \'Guest\''
-    #         ])
-    #
-    #         users = await run_concurrently(lambda: list(self.get_client().users.list(filter= user_filter)))
-    #         return users
-    #     except Exception as e:
-    #         print_exception(f'Failed to retrieve users: {e}')
-    #         return []
-    #
-    # async def get_user(self, user_id):
-    #     try:
-    #         return await run_concurrently(lambda: self.get_client().users.get(user_id))
-    #     except Exception as e:
-    #         print_exception(f'Failed to retrieve user {user_id}: {e}')
-    #         return None
-    #
-    # async def get_groups(self):
-    #     try:
-    #         return await run_concurrently(lambda: list(self.get_client().groups.list()))
-    #     except Exception as e:
-    #         print_exception(f'Failed to retrieve groups: {e}')
-    #         return []
-    #
-    # async def get_user_groups(self, user_id):
-    #     try:
-    #         return await run_concurrently(lambda: list(
-    #             self.get_client().users.get_member_groups(object_id=user_id,
-    #                                                       security_enabled_only=False))
-    #                                       )
-    #     except Exception as e:
-    #         print_exception(f'Failed to retrieve user\'s groups: {e}')
-    #         return []
-    #
-    # async def get_service_principals(self):
-    #     try:
-    #         return await run_concurrently(lambda: list(self.get_client().service_principals.list()))
-    #     except Exception as e:
-    #         print_exception(f'Failed to retrieve service principals: {e}')
-    #         return []
-    #
-    # async def get_applications(self):
-    #     try:
-    #         return await run_concurrently(lambda: list(self.get_client().applications.list()))
-    #     except Exception as e:
-    #         print_exception(f'Failed to retrieve applications: {e}')
-    #         return []
-
-    # Azure microsoft graph new methods
 
     async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
         scopes = ['https://graph.microsoft.com/.default']
 
-        default_cli_credentials = AzureCliCredential()
-        client = GraphSession(default_cli_credentials, scopes)
+        client = GraphSession(self.credentials.identity_credentials, scopes)
         endpoint = 'https://graph.microsoft.com/{}/{}'.format(api_version, api_resource)
 
         try:

@@ -1,6 +1,6 @@
 import datetime
 
-from azure.identity import AzureCliCredential
+from azure.identity import AzureCliCredential, DefaultAzureCredential, UsernamePasswordCredential
 from azure.mgmt.monitor import MonitorManagementClient
 from azure.mgmt.storage import StorageManagementClient
 
@@ -15,8 +15,8 @@ class StorageAccountsFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        default_cli_credential = AzureCliCredential()
-        client = StorageManagementClient(default_cli_credential,
+
+        client = StorageManagementClient(self.credentials.identity_credentials,
                                          subscription_id=subscription_id,
                                          user_agent=get_user_agent())
         return client
