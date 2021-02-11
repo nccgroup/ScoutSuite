@@ -45,7 +45,7 @@ setup(
         ]
     },
     include_package_data=True,
-    install_requires=requirements+['--index-url https://test.pypi.org/simple msgraphcore'],
+    install_requires=requirements,
     license='GNU General Public License v2 (GPLv2)',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
