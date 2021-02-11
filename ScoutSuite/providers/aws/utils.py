@@ -128,9 +128,9 @@ def format_arn(partition, service, region, account_id, resource_id, resource_typ
     try:
         # If a resource type is specified
         if resource_type is not None:
-            arn = 'arn:{}:{}:{}:{}:{}/{}'.format(partition, service, region, account_id, resource_type, resource_id)
+            arn = f"arn:{partition}:{service}:{region}:{account_id}:{resource_type}/{resource_id}"
         else:
-            arn = 'arn:{}:{}:{}:{}:{}'.format(partition, service, region, account_id, resource_id)
+            arn = f"arn:{partition}:{service}:{region}:{account_id}:{resource_id}"
     except Exception as e:
         print_exception(f'Failed to parse a resource ARN: {e}')
         return None
