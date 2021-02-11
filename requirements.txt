@@ -1,6 +1,6 @@
 # Core
 python-dateutil<2.8.1,>=2.1
-netaddr>=0.7.11
+netaddr>=0.8.0
 sqlitedict>=1.6.0
 cherrypy>=18.1.0
 cherrypy-cors>=1.6
@@ -45,9 +45,6 @@ azure-mgmt-web==1.0.0
 azure-mgmt-compute==18.2.0
 azure-mgmt-authorization==1.0.0
 
-# Microsoft Graph client library still in test pypi not in production pypi
--i https://test.pypi.org/simple
-msgraphcore==0.0.2
 
 # Aliyun / Alibaba Cloud Provider
 aliyun-python-sdk-core>=2.13.4
@@ -63,3 +60,4 @@ oss2>=2.8.0
 
 # Oracle Cloud Infrastructure Provider
 oci>=2.2.4
+
