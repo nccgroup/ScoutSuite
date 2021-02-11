@@ -1,0 +1,60 @@
+@import 'src/variables.scss';
+
+.service-card {
+  color: $font_color;
+  background: $white;
+  width: 25rem;
+  margin: 0 2rem 2rem 0;
+  border-radius: $border_radius;
+
+  hr {
+    margin: 0;
+    border: 0;
+    border-bottom: 1px solid $default-grey-subtle;;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+
+    h3 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .status {
+      display: flex;
+    }
+  }
+
+  .content {
+    padding: 1rem;
+
+    .detailed-value {
+      display: flex;
+      justify-content: space-between;
+
+      .label {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .footer {
+    padding: 1rem;
+
+    .link {
+      color: $link_color;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

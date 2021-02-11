@@ -1,0 +1,22 @@
+@import 'src/variables';
+
+.service-status {
+  font-weight: 600;
+  margin-left: 1rem;
+
+  svg {
+    margin-right: 0.5rem;
+  }
+
+  &.good {
+    color: $success_color;
+  }
+
+  &.issues {
+    color: $issue_color;
+  }
+
+  &.warnings {
+    color: $warning_color;
+  }
+}
