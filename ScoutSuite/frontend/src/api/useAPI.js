@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import * as Cache from "./cache";
-import * as API from "./api";
+import { useEffect, useState } from 'react';
+import * as API from './api';
 
 /**
  * React Hook to fetch API data and re-render the component
@@ -9,7 +8,7 @@ import * as API from "./api";
 export const useAPI = (path) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const asyncAPI = async () => {
@@ -18,8 +17,8 @@ export const useAPI = (path) => {
         const response = await API.get(path);
         setData(response);
       } catch(e) {
-        setError(`Oops! Something went wrong loading this content. Is the server working?`)
-        console.error(e.message)
+        setError('Oops! Something went wrong loading this content. Is the server working?');
+        console.error(e.message);
       }
       setLoading(false);
     };
@@ -28,7 +27,7 @@ export const useAPI = (path) => {
 
   const loadMore = () => {
     // TODO: Load more content when the content is paginated
-  }
+  };
 
   return {data, loading, error, loadMore};
 };
