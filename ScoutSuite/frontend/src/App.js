@@ -1,4 +1,8 @@
+import React from 'react';
+
 import Dashboard from './pages/Dashboard';
+
+import './App.css';
 
 // TODO: Change for API hook
 const services = [
