@@ -48,30 +48,9 @@ class AzureCredentials:
         #         print_exception('Unable to infer tenant ID: {}'.format(e))
         #         return None
 
-    def get_credentials(self, resource):
-        self.identity_credentials = self.get_fresh_credentials(self.identity_credentials)
+    def get_credentials(self):
         return self.identity_credentials
 
-    def get_fresh_credentials(self, credentials):
-        """
-        Check if credentials are outdated and if so refresh them.
-        """
-
-        if self.context and hasattr(credentials, 'token'):
-            expiration_datetime = datetime.fromtimestamp(credentials.token['expires_on'])
-            current_datetime = datetime.now()
-            expiration_delta = expiration_datetime - current_datetime
-            if expiration_delta < timedelta(minutes=50000):
-                return self.refresh_credential(credentials)
-        return credentials
-
-    def refresh_credential(self, credentials):
-        """
-        Refresh credentials
-        """
-        print_debug('Refreshing credentials')
-        new_credentials = SharedTokenCacheCredential()
-        return new_credentials
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
@@ -157,7 +136,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 # aad_graph_token = client.acquire_token_by_device_flow(code)
                 # aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
 
-                identity_credentials = InteractiveBrowserCredential()
+                identity_credentials = InteractiveBrowserCredential(tenant_id=tenant_id)
 
             elif service_principal:
 

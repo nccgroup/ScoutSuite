@@ -12,7 +12,7 @@ class KeyVaultFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        client = KeyVaultManagementClient(self.credentials.identity_credentials,
+        client = KeyVaultManagementClient(self.credentials.get_credentials(),
                                           subscription_id=subscription_id, user_agent=get_user_agent())
         return client
 

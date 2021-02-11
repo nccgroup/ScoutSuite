@@ -13,7 +13,7 @@ class AppServiceFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        client = WebSiteManagementClient(self.credentials.identity_credentials,
+        client = WebSiteManagementClient(self.credentials.get_credentials(),
                                          subscription_id=subscription_id, user_agent=get_user_agent())
         return client
 

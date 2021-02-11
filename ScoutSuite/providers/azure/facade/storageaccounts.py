@@ -16,7 +16,7 @@ class StorageAccountsFacade:
 
     def get_client(self, subscription_id: str):
 
-        client = StorageManagementClient(self.credentials.identity_credentials,
+        client = StorageManagementClient(self.credentials.get_credentials(),
                                          subscription_id=subscription_id,
                                          user_agent=get_user_agent())
         return client
@@ -48,7 +48,7 @@ class StorageAccountsFacade:
             return containers
 
     async def _get_and_set_activity_logs(self, storage_account, subscription_id: str):
-        client = MonitorManagementClient(self.credentials.identity_credentials, subscription_id, user_agent=get_user_agent())
+        client = MonitorManagementClient(self.credentials.get_credentials(), subscription_id, user_agent=get_user_agent())
 
         # Time format used by Azure API:
         time_format = "%Y-%m-%dT%H:%M:%S.%f"

@@ -12,7 +12,7 @@ class NetworkFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        client = NetworkManagementClient(self.credentials.identity_credentials,
+        client = NetworkManagementClient(self.credentials.get_credentials(),
                                          subscription_id=subscription_id)
         return client
 

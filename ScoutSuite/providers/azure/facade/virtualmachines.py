@@ -16,7 +16,7 @@ class VirtualMachineFacade:
 
         # this wrapper removes the error 'AzureCliCredential' object has no attribute 'signed_session'
         # should not be used --> even though azure.mgmt.compute does support azure-identity it still causes an error
-        credential_wrapper = AzureIdentityCredentialAdapter(self.credentials.identity_credentials)
+        credential_wrapper = AzureIdentityCredentialAdapter(self.credentials.get_credentials())
         client = ComputeManagementClient(credential_wrapper,
                                          subscription_id=subscription_id)
         return client
