@@ -1,4 +1,3 @@
-from azure.identity import AzureCliCredential
 from azure.mgmt.security import SecurityCenter
 
 from ScoutSuite.core.console import print_exception, print_debug

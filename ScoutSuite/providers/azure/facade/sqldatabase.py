@@ -1,4 +1,3 @@
-from azure.identity import AzureCliCredential
 from msrestazure.azure_exceptions import CloudError
 
 from azure.mgmt.sql import SqlManagementClient

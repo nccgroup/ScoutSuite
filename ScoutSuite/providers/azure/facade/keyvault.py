@@ -1,4 +1,3 @@
-from azure.identity import AzureCliCredential
 from azure.mgmt.keyvault import KeyVaultManagementClient
 
 from ScoutSuite.core.console import print_exception

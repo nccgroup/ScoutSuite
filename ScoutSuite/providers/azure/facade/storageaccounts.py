@@ -1,6 +1,5 @@
 import datetime
 
-from azure.identity import AzureCliCredential, DefaultAzureCredential, UsernamePasswordCredential
 from azure.mgmt.monitor import MonitorManagementClient
 from azure.mgmt.storage import StorageManagementClient
 

@@ -3,8 +3,6 @@ import os
 from msgraphcore import GraphSession
 
 from ScoutSuite.core.console import print_exception
-from azure.identity import DeviceCodeCredential, DefaultAzureCredential, AzureCliCredential, ManagedIdentityCredential, \
-    ClientSecretCredential
 
 
 class AADFacade:

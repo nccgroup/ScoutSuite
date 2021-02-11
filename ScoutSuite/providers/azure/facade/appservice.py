@@ -1,4 +1,3 @@
-from azure.identity import AzureCliCredential
 from azure.mgmt.web import WebSiteManagementClient
 
 from ScoutSuite.core.console import print_exception

@@ -1,4 +1,3 @@
-from azure.identity import AzureCliCredential
 from azure.mgmt.network import NetworkManagementClient
 
 from ScoutSuite.core.console import print_exception
@@ -13,7 +12,8 @@ class NetworkFacade:
 
     def get_client(self, subscription_id: str):
         client = NetworkManagementClient(self.credentials.get_credentials(),
-                                         subscription_id=subscription_id)
+                                         subscription_id=subscription_id,
+                                         user_agent=get_user_agent())
         return client
 
     async def get_network_watchers(self, subscription_id: str):
