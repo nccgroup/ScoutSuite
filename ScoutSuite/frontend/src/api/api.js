@@ -16,7 +16,7 @@ import json from './temp/scoutsuite_results_aws.json'; // TEMP
 const getResource = (path) => {
   let data = json; // TEMP
   for (const attribute of path.split('.')) {
-    data = data[attribute];
+    data = data[attribute] || {};
   }
   return data;
 };

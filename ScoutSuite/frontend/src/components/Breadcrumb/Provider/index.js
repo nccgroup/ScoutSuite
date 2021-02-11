@@ -12,11 +12,12 @@ const getProviderLogo = (providerCode) => {
 };
 
 const Provider = () => {
-  const { data: providerCode, loading: l1 } = useAPI('provider_code');
-  const { data: providerName, loading: l2 } = useAPI('provider_name');
-  const { data: acccountID, loading:l3 } = useAPI('account_id');
-  
-  if (l1 || l2 || l3) return null;
+  const { data: providerCode } = useAPI('provider_code');
+  const { data: providerName, loading: l1 } = useAPI('provider_name');
+  const { data: acccountID, loading: l2} = useAPI('account_id');
+
+
+  if (l1 || l2) return null;
 
   return (
     <>
