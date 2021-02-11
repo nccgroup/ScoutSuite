@@ -181,9 +181,7 @@
                 "instances": {
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.instances",
-                    "callbacks": [
-                        [ "match_instances_and_subnets_callback", { } ]
-                    ]
+                    "callbacks": [  ]
                 },
                 "security_groups": {
                     "cols": 2,
