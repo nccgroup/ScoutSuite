@@ -36,6 +36,7 @@ azure-cli-core==2.19.1
 azure-graphrbac==0.61.1
 PyJWT==1.7.1  # FIXME - this is currently required due to the MSAL dependency but should be removed once we switch to ADAL
 ## for resources
+
 azure-mgmt-resource==15.0.0
 azure-mgmt-storage==16.0.0
 azure-mgmt-monitor==2.0.0
@@ -48,7 +49,10 @@ azure-mgmt-web==1.0.0
 azure-mgmt-compute==18.2.0
 azure-mgmt-authorization==1.0.0
 azure-identity==1.5.0
-#msgraphcore==0.0.2
+
+# Microsoft Graph client library still in test pypi not in production pypi
+-i https://test.pypi.org/simple
+msgraphcore==0.0.2
 
 # Aliyun / Alibaba Cloud Provider
 aliyun-python-sdk-core>=2.13.4
