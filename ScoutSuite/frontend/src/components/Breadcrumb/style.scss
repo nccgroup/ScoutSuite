@@ -1,0 +1,15 @@
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  margin-bottom: 1rem;
+
+  font-size: 1.1rem;
+  font-weight: 600;
+
+  .provider-logo {
+    height: 1.1rem;
+  }
+
+}

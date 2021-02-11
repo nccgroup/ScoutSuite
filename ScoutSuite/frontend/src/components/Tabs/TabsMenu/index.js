@@ -32,7 +32,7 @@ const TabsMenu = props => {
       </div>
     </>
   );
-}
+};
 
 TabsMenu.propTypes = propTypes;
 
