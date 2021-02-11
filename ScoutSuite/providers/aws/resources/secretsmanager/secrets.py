@@ -9,12 +9,16 @@ class Secrets(AWSResources):
         self.region = region
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_secret in await self.facade.secretsmanager.get_secrets(self.region):
             try:
                 id, secret = self._parse_secret(raw_secret)
                 self[id] = secret
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_secret(self, raw_secret):
         secret_dict = {}

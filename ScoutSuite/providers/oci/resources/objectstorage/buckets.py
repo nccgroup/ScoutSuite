@@ -10,13 +10,17 @@ class Buckets(OracleResources):
     async def fetch_all(self):
 
         namespace = await self.facade.objectstorage.get_namespace()
+        parsing_error_counter = 0
 
         for raw_bucket in await self.facade.objectstorage.get_buckets(namespace):
             try:
                 id, bucket = await self._parse_bucket(raw_bucket)
                 self[id] = bucket
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     async def _parse_bucket(self, raw_bucket):
         bucket_dict = {}

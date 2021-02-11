@@ -10,12 +10,16 @@ class SecurityContacts(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_contact in await self.facade.securitycenter.get_security_contacts(self.subscription_id):
             try:
                 id, security_contact = self._parse_security_contact(raw_contact)
                 self[id] = security_contact
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_security_contact(self, security_contact):
         security_contact_dict = {}

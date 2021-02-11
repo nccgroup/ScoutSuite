@@ -12,12 +12,16 @@ class Vaults(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_vault in await self.facade.keyvault.get_key_vaults(self.subscription_id):
             try:
                 id, vault = self._parse_key_vault(raw_vault)
                 self[id] = vault
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_key_vault(self, raw_vault):
         vault = {}

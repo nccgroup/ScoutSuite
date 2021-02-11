@@ -11,12 +11,16 @@ class AlertPolicies(Resources):
 
     async def fetch_all(self):
         raw_alert_policies = await self.facade.stackdrivermonitoring.get_alert_policies(self.project_id)
+        parsing_error_counter = 0
         for raw_alert_policy in raw_alert_policies:
             try:
                 alert_policy_name, alert_policy = self._parse_alert_policy(raw_alert_policy)
                 self[alert_policy_name] = alert_policy
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_alert_policy(self, raw_alert_policy):
         alert_policy_dict = {}

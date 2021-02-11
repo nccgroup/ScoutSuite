@@ -11,12 +11,16 @@ class Disks(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_disk in await self.facade.virtualmachines.get_disks(self.subscription_id):
             try:
                 id, disk = self._parse_disk(raw_disk)
                 self[id] = disk
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_disk(self, raw_disk):
         disk_dict = {}

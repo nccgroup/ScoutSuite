@@ -17,12 +17,16 @@ class ClusterParameterGroups(AWSCompositeResources):
 
     async def fetch_all(self):
         raw_parameter_groups = await self.facade.redshift.get_cluster_parameter_groups(self.region)
+        parsing_error_counter = 0
         for raw_parameter_group in raw_parameter_groups:
             try:
                 id, parameter_group = self._parse_parameter_group(raw_parameter_group)
                 self[id] = parameter_group
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
         await self._fetch_children_of_all_resources(
             resources=self,

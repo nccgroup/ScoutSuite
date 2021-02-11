@@ -11,13 +11,17 @@ class PeeringConnections(AWSResources):
 
     async def fetch_all(self):
         raw_peering_connections = await self.facade.ec2.get_peering_connections(self.region)
+        parsing_error_counter = 0
 
         for raw_peering_connection in raw_peering_connections:
             try:
                 id, peering_connection = self._parse_peering_connections(raw_peering_connection)
                 self[id] = peering_connection
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_peering_connections(self, raw_peering_connection):
         raw_peering_connection['id'] = raw_peering_connection['name'] = raw_peering_connection['VpcPeeringConnectionId']

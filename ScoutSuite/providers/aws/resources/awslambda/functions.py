@@ -10,12 +10,16 @@ class Functions(AWSResources):
 
     async def fetch_all(self):
         raw_functions = await self.facade.awslambda.get_functions(self.region)
+        parsing_error_counter = 0
         for raw_function in raw_functions:
             try:
                 name, resource = await self._parse_function(raw_function)
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     async def _parse_function(self, raw_function):
 

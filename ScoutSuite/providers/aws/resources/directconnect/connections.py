@@ -9,12 +9,16 @@ class Connections(AWSResources):
 
     async def fetch_all(self):
         raw_connections = await self.facade.directconnect.get_connections(self.region)
+        parsing_error_counter = 0
         for raw_connection in raw_connections:
             try:
                 name, resource = self._parse_connection(raw_connection)
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_connection(self, raw_connection):
         raw_connection['id'] = raw_connection.pop('connectionId')

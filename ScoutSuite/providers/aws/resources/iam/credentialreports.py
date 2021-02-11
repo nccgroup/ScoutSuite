@@ -7,12 +7,16 @@ from ScoutSuite.core.console import print_exception
 class CredentialReports(AWSResources):
     async def fetch_all(self):
         raw_credential_reports = await self.facade.iam.get_credential_reports()
+        parsing_error_counter = 0
         for raw_credential_report in raw_credential_reports:
             try:
                 name, resource = await self._parse_credential_reports(raw_credential_report)
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     async def _parse_credential_reports(self, raw_credential_report):
         raw_credential_report['id'] = get_non_provider_id(raw_credential_report['user'])

@@ -10,12 +10,16 @@ class MetricFilters(AWSResources):
         self.region = region
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_metric_filter in await self.facade.cloudwatch.get_metric_filters(self.region):
             try:
                 name, resource = self._parse_metric_filter(raw_metric_filter)
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_metric_filter(self, raw_metric_filter):
         metric_filter_dict = {}

@@ -11,12 +11,16 @@ class Listeners(AWSResources):
 
     async def fetch_all(self):
         listeners = await self.facade.elbv2.get_listeners(self.region, self.load_balancer_arn)
+        parsing_error_counter = 0
         for raw_listener in listeners:
             try:
                 id, listener = self._parse_listener(raw_listener)
                 self[id] = listener
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_listener(self, raw_listener):
             raw_listener.pop('ListenerArn')

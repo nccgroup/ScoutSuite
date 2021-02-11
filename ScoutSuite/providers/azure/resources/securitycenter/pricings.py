@@ -10,12 +10,16 @@ class Pricings(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_pricing in await self.facade.securitycenter.get_pricings(self.subscription_id):
             try:
                 id, pricing = self._parse_pricing(raw_pricing)
                 self[id] = pricing
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_pricing(self, pricing):
         pricing_dict = {}

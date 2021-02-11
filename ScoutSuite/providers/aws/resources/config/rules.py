@@ -10,12 +10,16 @@ class Rules(AWSResources):
 
     async def fetch_all(self):
         raw_rules = await self.facade.config.get_rules(self.region)
+        parsing_error_counter = 0
         for raw_rule in raw_rules:
             try:
                 name, resource = self._parse_rule(raw_rule)
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_rule(self, raw_rule):
         rule = {}

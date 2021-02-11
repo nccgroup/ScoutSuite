@@ -10,6 +10,7 @@ class InformationProtectionPolicies(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_information_policies in await self.facade.securitycenter.get_information_protection_policies(
                 self.subscription_id):
             try:
@@ -17,7 +18,10 @@ class InformationProtectionPolicies(AzureResources):
                     raw_information_policies)
                 self[id] = information_protection_policies
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_information_protection_policies(self, auto_provisioning_settings):
         information_protection_policies_dict = {}

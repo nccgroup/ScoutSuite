@@ -15,12 +15,16 @@ class BlobContainers(AzureResources):
         raw_blob_containers = await self.facade.storageaccounts.get_blob_containers(self.resource_group_name,
                                                                                     self.storage_account_name,
                                                                                     self.subscription_id)
+        parsing_error_counter = 0
         for raw_blob_container in raw_blob_containers:
             try:
                 id, blob_container = self._parse_blob_container(raw_blob_container)
                 self[id] = blob_container
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_blob_container(self, raw_blob_container):
         blob_container = {}

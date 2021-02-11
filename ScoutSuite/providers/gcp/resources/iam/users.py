@@ -12,11 +12,15 @@ class Users(Resources):
     async def fetch_all(self):
         raw_bindings = await self.facade.cloudresourcemanager.get_member_bindings(self.project_id)
         parsed_users = self._parse_binding(raw_bindings)
+        parsing_error_counter = 0
         for user_id in parsed_users.keys():
             try:
                 self[parsed_users[user_id]['id']] = parsed_users[user_id]
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_binding(self, raw_bindings):
 

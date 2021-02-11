@@ -17,13 +17,17 @@ class Instances(GCPCompositeResources):
 
     async def fetch_all(self):
         raw_instances = await self.facade.gce.get_instances(self.project_id, self.zone)
+        parsing_error_counter = 0
         for raw_instance in raw_instances:
             try:
                 instance_id, instance = self._parse_instance(raw_instance)
                 self[instance_id] = instance
                 self[instance_id]['disks'].fetch_all()
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_instance(self, raw_instance):
         instance_dict = {}

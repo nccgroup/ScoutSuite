@@ -13,13 +13,17 @@ class Clusters(Resources):
 
     async def fetch_all(self):
         raw_clusters = await self.facade.gke.get_clusters(self.project_id, self.zone)
+        parsing_error_counter = 0
         for raw_cluster in raw_clusters:
             try:
                 cluster_id, cluster = await self._parse_cluster(raw_cluster)
                 self[cluster_id] = cluster
                 self[cluster_id]['node_pools'].fetch_all()
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     async def _parse_cluster(self, raw_cluster):
         cluster_dict = {}

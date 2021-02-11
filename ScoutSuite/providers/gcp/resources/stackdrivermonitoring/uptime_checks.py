@@ -11,12 +11,16 @@ class UptimeChecks(Resources):
 
     async def fetch_all(self):
         raw_uptime_checks = await self.facade.stackdrivermonitoring.get_uptime_checks(self.project_id)
+        parsing_error_counter = 0
         for raw_uptime_check in raw_uptime_checks:
             try:
                 uptime_check_name, uptime_check = self._parse_uptime_check(raw_uptime_check)
                 self[uptime_check_name] = uptime_check
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_uptime_check(self, raw_uptime_check):
         uptime_check_dict = {}

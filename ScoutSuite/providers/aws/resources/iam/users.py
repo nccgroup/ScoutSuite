@@ -5,6 +5,7 @@ from ScoutSuite.core.console import print_exception
 class Users(AWSResources):
     async def fetch_all(self):
         raw_users = await self.facade.iam.get_users()
+        parsing_error_counter = 0
         for raw_user in raw_users:
             try:
                 name, resource = self._parse_user(raw_user)
@@ -14,7 +15,10 @@ class Users(AWSResources):
 
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_user(self, raw_user):
         raw_user['id'] = raw_user.pop('UserId')

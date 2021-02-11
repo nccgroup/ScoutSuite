@@ -13,12 +13,16 @@ class Queues(AWSResources):
     async def fetch_all(self):
         queues = await self.facade.sqs.get_queues(self.region,
                                                   ['CreatedTimestamp', 'Policy', 'QueueArn', 'KmsMasterKeyId'])
+        parsing_error_counter = 0
         for queue_url, queue_attributes in queues:
             try:
                 id, queue = self._parse_queue(queue_url, queue_attributes)
                 self[id] = queue
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_queue(self, queue_url, queue_attributes):
         queue = {}

@@ -10,12 +10,16 @@ class Networks(Resources):
 
     async def fetch_all(self):
         raw_networks = await self.facade.gce.get_networks(self.project_id)
+        parsing_error_counter = 0
         for raw_network in raw_networks:
             try:
                 network_id, network = self._parse_network(raw_network)
                 self[network_id] = network
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_network(self, raw_network):
         network_dict = {}

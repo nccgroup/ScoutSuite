@@ -11,12 +11,16 @@ class Images(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_image in await self.facade.virtualmachines.get_images(self.subscription_id):
             try:
                 id, image = self._parse_image(raw_image)
                 self[id] = image
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_image(self, raw_image):
         image_dict = {}

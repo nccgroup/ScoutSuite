@@ -15,13 +15,17 @@ class KeyVaults(OracleCompositeResources):
         super().__init__(facade)
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         raw_keyvaults = await self.facade.kms.get_vaults()
         for raw_keyvault in raw_keyvaults:
             try:
                 id, keyvault = self._parse_keyvault(raw_keyvault)
                 self[id] = keyvault
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
         await self._fetch_children_of_all_resources(
             resources=self,

@@ -10,12 +10,16 @@ class Sinks(Resources):
 
     async def fetch_all(self):
         raw_sinks = await self.facade.stackdriverlogging.get_sinks(self.project_id)
+        parsing_error_counter = 0
         for raw_sink in raw_sinks:
             try:
                 sink_name, sink = self._parse_sink(raw_sink)
                 self[sink_name] = sink
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_sink(self, raw_sink):
         sink_dict = {}

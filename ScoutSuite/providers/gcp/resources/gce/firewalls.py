@@ -10,12 +10,16 @@ class Firewalls(Resources):
 
     async def fetch_all(self):
         raw_firewalls = await self.facade.gce.get_firewalls(self.project_id)
+        parsing_error_counter = 0
         for raw_firewall in raw_firewalls:
             try:
                 firewall_id, firewall = self._parse_firewall(raw_firewall)
                 self[firewall_id] = firewall
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_firewall(self, raw_firewall):
         firewall_dict = {}

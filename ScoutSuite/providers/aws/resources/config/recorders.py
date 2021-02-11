@@ -10,12 +10,16 @@ class Recorders(AWSResources):
 
     async def fetch_all(self):
         raw_recorders = await self.facade.config.get_recorders(self.region)
+        parsing_error_counter = 0
         for raw_recorder in raw_recorders:
             try:
                 name, resource = self._parse_recorder(raw_recorder)
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_recorder(self, raw_recorder):
         recorder = {}

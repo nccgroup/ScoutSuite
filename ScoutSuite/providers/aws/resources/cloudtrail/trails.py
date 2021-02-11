@@ -13,12 +13,16 @@ class Trails(AWSResources):
 
     async def fetch_all(self):
         raw_trails = await self.facade.cloudtrail.get_trails(self.region)
+        parsing_error_counter = 0
         for raw_trail in raw_trails:
             try:
                 name, resource = self._parse_trail(raw_trail)
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_trail(self, raw_trail):
         trail = {'name': raw_trail.pop('Name')}

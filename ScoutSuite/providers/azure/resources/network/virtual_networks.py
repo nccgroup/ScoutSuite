@@ -12,12 +12,16 @@ class VirtualNetworks(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_virtual_network in await self.facade.network.get_virtual_networks(self.subscription_id):
             try:
                 id, virtual_network = self._parse_virtual_network(raw_virtual_network)
                 self[id] = virtual_network
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_virtual_network(self, raw_virtual_network):
         virtual_network_dict = {}

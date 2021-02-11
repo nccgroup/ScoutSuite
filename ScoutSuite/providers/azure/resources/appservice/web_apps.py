@@ -13,11 +13,15 @@ class WebApplication(AzureResources):
 
     async def fetch_all(self):
         for raw_web_app in await self.facade.appservice.get_web_apps(self.subscription_id):
+            parsing_error_counter = 0
             try:
                 id, web_app = self._parse_web_app(raw_web_app)
                 self[id] = web_app
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_web_app(self, raw_web_app):
 

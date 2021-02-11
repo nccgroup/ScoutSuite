@@ -11,12 +11,16 @@ class Volumes(AWSResources):
 
     async def fetch_all(self):
         raw_volumes = await self.facade.ec2.get_volumes(self.region)
+        parsing_error_counter = 0
         for raw_volume in raw_volumes:
             try:
                 name, resource = self._parse_volume(raw_volume)
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_volume(self, raw_volume):
         raw_volume['id'] = raw_volume.pop('VolumeId')

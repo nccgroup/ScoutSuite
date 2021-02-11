@@ -4,12 +4,16 @@ from ScoutSuite.core.console import print_exception
 
 class Trails(AliyunResources):
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_trail in await self.facade.actiontrail.get_trails():
             try:
                 id, trail = self._parse_trails(raw_trail)
                 self[id] = trail
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_trails(self, raw_trail):
         trail_dict = {}

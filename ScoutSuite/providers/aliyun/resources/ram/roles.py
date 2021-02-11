@@ -8,12 +8,16 @@ class Roles(AliyunResources):
         super().__init__(facade)
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_role in await self.facade.ram.get_roles():
             try:
                 id, role = await self._parse_role(raw_role)
                 self[id] = role
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     async def _parse_role(self, raw_role):
         role_dict = {}

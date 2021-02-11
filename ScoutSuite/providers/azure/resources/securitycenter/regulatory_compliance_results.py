@@ -11,6 +11,7 @@ class RegulatoryComplianceResults(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_regulatory_compliance_result in await \
                 self.facade.securitycenter.get_regulatory_compliance_results(self.subscription_id):
             try:
@@ -18,7 +19,10 @@ class RegulatoryComplianceResults(AzureResources):
                     self._parse_regulatory_compliance_result(raw_regulatory_compliance_result)
                 self[id] = regulatory_compliance_result
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_regulatory_compliance_result(self, raw_regulatory_compliance_result):
         regulatory_compliance_result_dict = {}

@@ -19,12 +19,16 @@ class StorageAccounts(AzureCompositeResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_storage_account in await self.facade.storageaccounts.get_storage_accounts(self.subscription_id):
             try:
                 id, storage_account = self._parse_storage_account(raw_storage_account)
                 self[id] = storage_account
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
         await self._fetch_children_of_all_resources(
             resources=self,

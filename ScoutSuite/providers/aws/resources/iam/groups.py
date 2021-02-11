@@ -4,12 +4,16 @@ from ScoutSuite.core.console import print_exception
 class Groups(AWSResources):
     async def fetch_all(self):
         raw_groups = await self.facade.iam.get_groups()
+        parsing_error_counter = 0
         for raw_group in raw_groups:
             try:
                 name, resource = self._parse_group(raw_group)
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_group(self, raw_group):
         if raw_group['GroupName'] in self:

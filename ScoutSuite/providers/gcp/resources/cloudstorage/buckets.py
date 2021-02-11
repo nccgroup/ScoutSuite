@@ -11,12 +11,16 @@ class Buckets(Resources):
 
     async def fetch_all(self):
         raw_buckets = await self.facade.cloudstorage.get_buckets(self.project_id)
+        parsing_error_counter = 0
         for raw_bucket in raw_buckets:
             try:
                 bucket_id, bucket = self._parse_bucket(raw_bucket)
                 self[bucket_id] = bucket
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_bucket(self, raw_bucket):
         bucket_dict = {}

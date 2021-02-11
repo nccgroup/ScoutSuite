@@ -24,6 +24,7 @@ class Databases(AzureCompositeResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for db in await self.facade.sqldatabase.get_databases(
                 self.resource_group_name, self.server_name, self.subscription_id):
             try:
@@ -38,7 +39,10 @@ class Databases(AzureCompositeResources):
                     'resource_group_name': get_resource_group_name(db.id)
                 }
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
         await self._fetch_children_of_all_resources(
             resources=self,

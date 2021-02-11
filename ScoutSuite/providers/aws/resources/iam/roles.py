@@ -6,12 +6,16 @@ from ScoutSuite.core.console import print_exception
 class Roles(AWSResources):
     async def fetch_all(self):
         raw_roles = await self.facade.iam.get_roles()
+        parsing_error_counter = 0
         for raw_role in raw_roles:
             try:
                 name, resource = self._parse_role(raw_role)
                 self[name] = resource
             except Exception as e:
-                print_exception('Failed to parse {} resource: {}'.format(self.__class__.__name__, e))
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_role(self, raw_role):
         role_dict = {}
