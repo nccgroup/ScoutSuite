@@ -85,7 +85,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             elif user_account_browser:
 
-                identity_credentials = InteractiveBrowserCredential(tenant_id=tenant_id)
+                identity_credentials = InteractiveBrowserCredential()
+                tenant_id = tenant_id
 
             elif service_principal:
 
@@ -113,7 +114,6 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     tenant_id=tenant_id
                 )
 
-
             elif file_auth:
 
                 data = json.loads(file_auth.read())
@@ -126,7 +126,6 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     client_secret=client_secret,
                     tenant_id=tenant_id
                 )
-
 
             elif msi:
                 identity_credentials = ManagedIdentityCredential(client_id=AZURE_CLI_CLIENT_ID)
