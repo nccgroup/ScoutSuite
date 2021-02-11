@@ -33,9 +33,11 @@ class AADFacade:
         try:
             # test = await self._get_microsoft_graph_response('users') # missing some necessary information for rules
             users_response_beta = await self._get_microsoft_graph_response('users', 'beta')
-            users = users_response_beta.get('value')
-            users_filtered = [d for d in users if d['userType'] in 'Guest']
-            return users_filtered
+            if users_response_beta:
+                users = users_response_beta.get('value')
+                users_filtered = [d for d in users if d['userType'] in 'Guest']
+                return users_filtered
+            return users_response_beta
         except Exception as e:
             print_exception(f'Failed to retrieve users: {e}')
             return []
@@ -54,8 +56,10 @@ class AADFacade:
     async def get_groups(self):
         try:
             groups_response = await self._get_microsoft_graph_response('groups')
-            groups = groups_response.get('value')
-            return groups
+            if groups_response:
+                groups = groups_response.get('value')
+                return groups
+            return groups_response
         except Exception as e:
             print_exception(f'Failed to retrieve groups: {e}')
             return []
@@ -74,8 +78,10 @@ class AADFacade:
         try:
             # Need publisher name value for serviceprincipals.py. v1.0 does not have that value, thus we use beta
             service_principals_response_beta = await self._get_microsoft_graph_response('servicePrincipals', 'beta')
-            service_principals = service_principals_response_beta.get('value')
-            return service_principals
+            if service_principals_response_beta:
+                service_principals = service_principals_response_beta.get('value')
+                return service_principals
+            return service_principals_response_beta
         except Exception as e:
             print_exception(f'Failed to retrieve service principals: {e}')
             return []
@@ -83,8 +89,10 @@ class AADFacade:
     async def get_applications(self):
         try:
             applications_response = await self._get_microsoft_graph_response('applications')
-            applications = applications_response.get('value')
-            return applications
+            if applications_response:
+                applications = applications_response.get('value')
+                return applications
+            return applications_response
         except Exception as e:
             print_exception(f'Failed to retrieve applications: {e}')
             return []

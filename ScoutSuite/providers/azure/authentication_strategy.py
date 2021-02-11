@@ -22,11 +22,11 @@ class AzureCredentials:
         self.default_subscription_id = default_subscription_id
         self.context = context
 
-    def get_tenant_id(self):
-        if self.tenant_id:
-            return self.tenant_id
-        elif 'tenant_id' in self.identity_credentials['tenant_id']:
-            return self.identity_credentials['tenant_id']
+    # def get_tenant_id(self):
+    #     if self.tenant_id:
+    #         return self.tenant_id
+    #     elif 'tenant_id' in self.identity_credentials['tenant_id']:
+    #         return self.identity_credentials['tenant_id']
         # else:
         #     # This is a last resort, e.g. for MSI authentication
         #     try:
