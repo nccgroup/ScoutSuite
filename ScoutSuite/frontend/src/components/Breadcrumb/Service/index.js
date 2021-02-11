@@ -14,8 +14,6 @@ const Service = props => {
   const { service } = props;
   const { pathname } = useLocation();
 
-  console.log(pathname);
-
   return (
     <>
       <ChevronRightIcon />
