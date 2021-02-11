@@ -39,6 +39,10 @@
 
 .sub-menu, .menu-element {
   cursor: pointer;
+
+  &.is-selected {
+    cursor: default;
+  }
 }
 
 .menu-group {

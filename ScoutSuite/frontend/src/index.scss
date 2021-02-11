@@ -1,11 +1,8 @@
 @import 'src/variables';
 
-html {
-  background: $background-color;
-}
-
 body {
   margin: 0;
+  background: $background-color;
   font-family: 'Quicksand', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
