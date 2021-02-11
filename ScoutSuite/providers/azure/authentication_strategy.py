@@ -2,7 +2,7 @@ import json
 import logging
 from getpass import getpass
 
-from azure.identity import UsernamePasswordCredential, AzureCliCredential, ClientSecretCredential, \
+from azure.identity import UsernamePasswordCredential,AzureCliCredential, ClientSecretCredential, \
     ManagedIdentityCredential, InteractiveBrowserCredential
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 

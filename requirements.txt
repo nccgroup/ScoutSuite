@@ -31,7 +31,6 @@ httplib2shim>=0.0.3
 
 # Azure Provider
 ## core requirements
-azure-cli-core==2.19.1
 ## for RBAC in AAD
 azure-graphrbac==0.61.1
 msal==1.9.0
