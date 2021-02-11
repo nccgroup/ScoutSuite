@@ -52,7 +52,7 @@ const ServiceCard = props => {
       </div>
       <hr/>
       <div className="footer">
-        <Link className="link" to={`/services/${name}/findings`}>
+        <Link className="link" to={`/services/${name.toLowerCase()}/findings`}>
           View report <FontAwesomeIcon icon={faChevronRight}/>
         </Link>
       </div>
