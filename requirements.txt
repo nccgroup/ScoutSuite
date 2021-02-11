@@ -49,6 +49,7 @@ azure-mgmt-web==1.0.0
 azure-mgmt-compute==18.2.0
 azure-mgmt-authorization==1.0.0
 azure-identity==1.5.0
+msal-extensions>=0.1.3
 #msgraphcore==0.0.2
 
 # Aliyun / Alibaba Cloud Provider
