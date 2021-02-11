@@ -7,7 +7,7 @@ const propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
-}
+};
 
 const MenuGroup = props => {
   const {
@@ -25,7 +25,7 @@ const MenuGroup = props => {
       </ul>
     </li>
   );
-}
+};
 
 MenuGroup.propTypes = propTypes;
 

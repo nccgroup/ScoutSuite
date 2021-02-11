@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { TabsMenu, TabPane } from '../../components/Tabs/';
 import Layout from '../../layout/index';
@@ -54,7 +53,5 @@ const Dashboard = () => {
     </Layout>
   );
 };
-
-Dashboard.propTypes = propTypes;
 
 export default Dashboard;

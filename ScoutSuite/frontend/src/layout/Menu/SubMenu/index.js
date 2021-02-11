@@ -8,7 +8,7 @@ const propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
-}
+};
 
 const SubMenu = props => {
   const { 
@@ -17,7 +17,7 @@ const SubMenu = props => {
   } = props;
 
   const [isSelected, setIsSelected] = useState(false);
-  const className = cx('sub-menu', {'is-selected': isSelected})
+  const className = cx('sub-menu', {'is-selected': isSelected});
 
   return (
     <li className={className} onClick={() => setIsSelected(true)}>
@@ -31,8 +31,8 @@ const SubMenu = props => {
       )}
     </li>
   );
-}
+};
 
 SubMenu.propTypes = propTypes;
 
-export default SubMenu
+export default SubMenu;

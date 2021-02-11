@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 
-import './style.scss'
+import './style.scss';
 
 const propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
-}
+};
 
 const TabsMenu = props => {
   const children = isArray(props.children) ? props.children : [props.children];

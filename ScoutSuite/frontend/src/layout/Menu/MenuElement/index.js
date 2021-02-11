@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const propTypes = {
   children: PropTypes.element.isRequired,
-}
+};
 
 const MenuElement = props => {
   const {
@@ -15,7 +15,7 @@ const MenuElement = props => {
       <div>{children}</div>
     </li>
   );
-}
+};
 
 MenuElement.propTypes = propTypes;
 

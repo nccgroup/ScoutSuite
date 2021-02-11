@@ -6,7 +6,7 @@ const propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
-}
+};
 
 const MenuBar = props => {
   const { children } = props;
@@ -16,8 +16,8 @@ const MenuBar = props => {
       {children}
     </ul>
   );
-}
+};
 
 MenuBar.propTypes = propTypes;
 
-export default MenuBar
+export default MenuBar;
