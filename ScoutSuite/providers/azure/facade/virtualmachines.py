@@ -1,10 +1,7 @@
-from azure.identity import AzureCliCredential, DefaultAzureCredential
 from azure.mgmt.compute import ComputeManagementClient
 
 from ScoutSuite.core.console import print_exception
-from ScoutSuite.providers.azure.facade.azureidentitycredentialadapter import AzureIdentityCredentialAdapter
 from ScoutSuite.providers.utils import run_concurrently
-from ScoutSuite.utils import get_user_agent
 
 
 class VirtualMachineFacade:
@@ -14,10 +11,7 @@ class VirtualMachineFacade:
 
     def get_client(self, subscription_id: str):
 
-        # this wrapper removes the error 'AzureCliCredential' object has no attribute 'signed_session'
-        # should not be used --> even though azure.mgmt.compute does support azure-identity it still causes an error
-        credential_wrapper = AzureIdentityCredentialAdapter(self.credentials.get_credentials())
-        client = ComputeManagementClient(credential_wrapper,
+        client = ComputeManagementClient(self.credentials.get_credentials(),
                                          subscription_id=subscription_id)
         return client
 

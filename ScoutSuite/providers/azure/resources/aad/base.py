@@ -5,7 +5,6 @@ from .users import Users
 from .groups import Groups
 from .serviceprincipals import ServicePrincipals
 from .applications import Applications
-from .securitydefaults import SecurityDefaults
 
 
 class AAD(AzureCompositeResources):
@@ -14,7 +13,6 @@ class AAD(AzureCompositeResources):
         (Groups, 'groups'),
         (ServicePrincipals, 'service_principals'),
         (Applications, 'applications'),
-        (SecurityDefaults, 'security_defaults')
     ]
 
     async def fetch_all(self):
