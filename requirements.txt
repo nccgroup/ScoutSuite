@@ -45,8 +45,6 @@ azure-mgmt-web==1.0.0
 azure-mgmt-compute==18.2.0
 azure-mgmt-authorization==1.0.0
 
-azure-cli==2.19.1
-
 --extra-index-url https://test.pypi.org/simple
 msgraphcore==0.0.2
 
