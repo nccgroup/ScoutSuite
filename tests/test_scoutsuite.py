@@ -42,7 +42,7 @@ class TestScoutSuiteClass(unittest.TestCase):
         command = './scout.py --help'
         process = subprocess.Popen(command, shell=True, stdout=None)
         process.wait()
-        assert process.returncode == 0
+        assert process.returncode == 102
 
     @pytest.mark.xfail
     def test_scout_suite_default_run(self):
