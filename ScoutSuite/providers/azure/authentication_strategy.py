@@ -1,6 +1,8 @@
 import json
 import logging
 from getpass import getpass
+from azure.common.credentials import get_cli_profile
+
 
 from azure.identity import UsernamePasswordCredential,AzureCliCredential, ClientSecretCredential, \
     ManagedIdentityCredential, InteractiveBrowserCredential
@@ -22,11 +24,14 @@ class AzureCredentials:
         self.default_subscription_id = default_subscription_id
         self.context = context
 
-    # def get_tenant_id(self):
-    #     if self.tenant_id:
-    #         return self.tenant_id
-    #     elif 'tenant_id' in self.identity_credentials['tenant_id']:
-    #         return self.identity_credentials['tenant_id']
+    def get_tenant_id(self):
+        if self.tenant_id:
+            return self.tenant_id
+        elif hasattr(self.identity_credentials,'tenant_id'):
+            return self.identity_credentials['tenant_id']
+        else:
+            cli_profile =get_cli_profile()
+            x=0
         # else:
         #     # This is a last resort, e.g. for MSI authentication
         #     try:
@@ -128,7 +133,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 )
 
             elif msi:
-                identity_credentials = ManagedIdentityCredential(client_id=AZURE_CLI_CLIENT_ID)
+                identity_credentials = ManagedIdentityCredential()
 
             else:
                 raise AuthenticationException('Unknown authentication method')
