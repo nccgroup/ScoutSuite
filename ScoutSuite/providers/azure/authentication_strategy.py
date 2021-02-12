@@ -1,7 +1,6 @@
 import json
 import logging
 from getpass import getpass
-from azure.common.credentials import get_cli_profile
 
 
 from azure.identity import UsernamePasswordCredential,AzureCliCredential, ClientSecretCredential, \
@@ -30,8 +29,8 @@ class AzureCredentials:
         elif hasattr(self.identity_credentials,'tenant_id'):
             return self.identity_credentials['tenant_id']
         else:
-            cli_profile =get_cli_profile()
-            x=0
+            x= self.identity_credentials.get_token("https://graph.windows.net/")
+            return x
         # else:
         #     # This is a last resort, e.g. for MSI authentication
         #     try:
