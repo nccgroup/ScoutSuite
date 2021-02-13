@@ -1,23 +1,58 @@
-import { useParams, Link } from '@reach/router';
+import { useParams } from '@reach/router';
 import React from 'react';
-import Layout from '../../layout';
+
 // import PropTypes from 'prop-types';
 
+import { useAPI } from '../../api/useAPI';
+import Layout from '../../layout';
+import Table from '../../components/Table';
+import Name from './formatters/Name';
+import Description from './formatters/Description/index';
+
 import './style.scss';
+import Severity from './formatters/Severity/index';
+
 
 const propTypes = {};
 
 const Findings = () => {
   const params = useParams();
+  const { data: results } = useAPI(`services.${params.service}.findings`);
+
+  const findings = Object.entries(results);
+
+  const columns = [
+    { name: 'Severity', key: 'severity' },
+    { name: 'Name', key: 'name' },
+    { name: 'Flagged Items', key: 'flagged' },
+    { name: 'Description', key: 'description' }
+  ];
+
+  const data = findings.map(([key, item]) => ({
+    id: key,
+    severity: item.flagged_items === 0 ? 'success' : item.level,
+    name: item.description,
+    flagged: `${item.flagged_items}/${item.checked_items}`,
+    description: item.rationale
+  }));
+
+  const formatters = {
+    name: Name,
+    description: Description,
+    severity: Severity
+  };
 
   return (
     <Layout>
-      <div>
-        <h3>Findings page</h3>
-        <ul>
-          <li>Service: {params.service}</li>
-          <li><Link to="s3-bucket-AllUsers-read/items" >Go to items list</Link></li>
-        </ul>
+      <div className="findings">
+
+        <div className="table-card">
+          <Table
+            columns={columns}
+            data={data}
+            formatters={formatters} />
+        </div>
+
       </div>
     </Layout>
   );

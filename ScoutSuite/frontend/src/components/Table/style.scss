@@ -1,0 +1,40 @@
+@import 'src/variables.scss';
+
+.table {
+  text-align: left;
+  border: none;
+  border-collapse: collapse;
+  width: 100%;
+
+  thead {
+    background-color: $default-grey-subtle;
+  }
+
+  th, td {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-right: $default-grey-subtle solid 1px;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  th {
+    border-right: $default-grey-light solid 1px;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  tr {
+    border: none;
+    border-bottom: $default-grey-subtle solid 1px;
+
+    &:first-child {
+      border-top: $default-grey-light solid 1px;
+      border-bottom: $default-grey-subtle solid 1px;
+    }
+  }
+}
