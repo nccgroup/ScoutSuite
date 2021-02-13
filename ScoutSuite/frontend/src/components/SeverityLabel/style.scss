@@ -3,11 +3,11 @@
 .severity-label {
   font-weight: 600;
 
-  &.danger {
+  &.high {
     color: $ncc-red;
   }
 
-  &.warning {
+  &.medium {
     color: $scoutsuite-orange;
   }
 

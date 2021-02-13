@@ -13,21 +13,39 @@ const propTypes = {
 const SeverityLabel = props => {
   const { severity } = props;
 
-  if (severity === 'danger') {
-    return <div className="severity-label danger">
-      <ReportProblemOutlinedIcon fontSize="inherit" /> Insecure
+  if (severity === 'critical') {
+    return <div className="severity-label critical">
+      <ReportProblemOutlinedIcon fontSize="inherit" /> Critical
     </div>;
   }
 
-  if (severity === 'warning') {
-    return <div className="severity-label warning">
-      <ErrorOutlineOutlinedIcon fontSize="inherit" /> Warning
+  if (severity === 'danger' || severity === 'high') {
+    return <div className="severity-label high">
+      <ReportProblemOutlinedIcon fontSize="inherit" /> High
+    </div>;
+  }
+
+  if (severity === 'warning' || severity === 'medium') {
+    return <div className="severity-label medium">
+      <ErrorOutlineOutlinedIcon fontSize="inherit" /> Medium
+    </div>;
+  }
+
+  if (severity === 'low') {
+    return <div className="severity-label low">
+      <ErrorOutlineOutlinedIcon fontSize="inherit" /> Low
+    </div>;
+  }
+
+  if (severity === 'info') {
+    return <div className="severity-label info">
+      <ErrorOutlineOutlinedIcon fontSize="inherit" /> Info
     </div>;
   }
 
   if (severity === 'success') {
     return <div className="severity-label success">
-      <CheckCircleOutlineOutlinedIcon fontSize="inherit" /> Passed
+      <CheckCircleOutlineOutlinedIcon fontSize="inherit" /> All good
     </div>;
   }
 

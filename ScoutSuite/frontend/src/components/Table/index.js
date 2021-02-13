@@ -1,6 +1,8 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { useTable } from 'react-table';
+import { useTable, useSortBy } from 'react-table';
+import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
+import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 
 import './style.scss';
 
@@ -40,7 +42,7 @@ const TableRender = props => {
   const columnsMemo = React.useMemo(() => columns);
   const dataMemo = React.useMemo(() => data);
   
-  const tableInstance = useTable({ columns: columnsMemo, data: dataMemo });
+  const tableInstance = useTable({ columns: columnsMemo, data: dataMemo }, useSortBy);
 
   const {
     getTableProps,
@@ -57,8 +59,18 @@ const TableRender = props => {
           {headerGroups.map((headerGroup, headerKey) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={headerKey}>
               {headerGroup.headers.map((column, columnKey) => (
-                <th {...column.getHeaderProps()} key={columnKey}>
-                  {column.render('Header')}
+                <th {...column.getHeaderProps(column.getSortByToggleProps())} key={columnKey}>
+                  <span>
+                    {column.render('Header')}
+                  </span>
+                  
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? <ArrowDownwardOutlinedIcon fontSize="inherit" />
+                        : <ArrowUpwardOutlinedIcon fontSize="inherit" />
+                      : ''}
+                  </span>
                 </th>
               ))}
             </tr>
