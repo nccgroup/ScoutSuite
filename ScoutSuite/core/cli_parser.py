@@ -348,29 +348,6 @@ class ScoutSuiteArgumentParser:
                             default=None,
                             nargs='?',
                             help='Exception file to use during analysis.')
-        parser.add_argument('--result-format',
-                            dest='result_format',
-                            default='json',
-                            type=str,
-                            choices=['json', 'sqlite'],
-                            help="[EXPERIMENTAL FEATURE] The database file format to use. JSON doesn't require a server to view the report, "
-                                 "but cannot be viewed if the result file is over 400mb.")
-        parser.add_argument('--serve',
-                            dest="database_name",
-                            default=None,
-                            const=True,
-                            nargs="?",
-                            help="[EXPERIMENTAL FEATURE] Serve the specified result database on the server to show the report. "
-                                 "This must be used when the results are exported as an sqlite database.")
-        parser.add_argument('--host',
-                            dest="host_ip",
-                            default="127.0.0.1",
-                            help="[EXPERIMENTAL FEATURE] Address on which you want the server to listen. Defaults to localhost.")
-        parser.add_argument('--port',
-                            dest="host_port",
-                            type=int,
-                            default=8000,
-                            help="[EXPERIMENTAL FEATURE] Port on which you want the server to listen. Defaults to 8000.")
 
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)

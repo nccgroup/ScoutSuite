@@ -58,10 +58,6 @@ def run_from_cli():
                    timestamp=args.get('timestamp'),
                    services=args.get('services'), skipped_services=args.get('skipped_services'),
                    list_services=args.get('list_services'),
-                   result_format=args.get('result_format'),
-                   database_name=args.get('database_name'),
-                   host_ip=args.get('host_ip'),
-                   host_port=args.get('host_port'),
                    max_workers=args.get('max_workers'),
                    regions=args.get('regions'),
                    excluded_regions=args.get('excluded_regions'),
@@ -103,8 +99,6 @@ def run(provider,
         report_name=None, report_dir=None,
         timestamp=False,
         services=[], skipped_services=[], list_services=None,
-        result_format='json',
-        database_name=None, host_ip='127.0.0.1', host_port=8000,
         max_workers=10,
         regions=[],
         excluded_regions=[],
@@ -155,8 +149,6 @@ async def _run(provider,
                report_name, report_dir,
                timestamp,
                services, skipped_services, list_services,
-               result_format,
-               database_name, host_ip, host_port,
                regions,
                excluded_regions,
                fetch_local, update,
@@ -237,13 +229,7 @@ async def _run(provider,
         report = ScoutReport(cloud_provider.provider_code,
                              report_name,
                              report_dir,
-                             timestamp,
-                             result_format=result_format)
-
-        if database_name:
-            database_file, _ = get_filename('RESULTS', report_name, report_dir, file_extension="db")
-            Server.init(database_file, host_ip, host_port)
-            return
+                             timestamp)
     except Exception as e:
         print_exception('Report initialization failure: {}'.format(e))
         return 103

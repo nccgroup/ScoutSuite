@@ -3,7 +3,6 @@ import json
 import os
 
 import dateutil
-from sqlitedict import SqliteDict
 
 from ScoutSuite import DEFAULT_REPORT_DIRECTORY
 from ScoutSuite.core.console import print_exception, print_info
@@ -46,47 +45,6 @@ class ScoutResultEncoder:
     @staticmethod
     def to_dict(config):
         return json.loads(json.dumps(config, separators=(',', ': '), cls=ScoutJsonEncoder))
-
-
-class SqlLiteEncoder(ScoutResultEncoder):
-    def load_from_file(self, config_type, config_path=None):
-        if not config_path:
-            config_path, _ = get_filename(config_type, self.report_name, self.report_dir)
-        return SqliteDict(config_path, autocommit=True).data
-
-    def save_to_file(self, config, config_type, force_write, _debug):
-        config_path, first_line = get_filename(config_type, self.report_name, self.report_dir, file_extension="db")
-        print_info('Saving data to %s' % config_path)
-        try:
-            with self.__open_file(config_path, force_write) as database:
-                result_dict = self.to_dict(config)
-                for k, v in result_dict.items():
-                    database[k] = v
-                database.commit()
-        except Exception as e:
-            print_exception(e)
-
-    @staticmethod
-    def __open_file(config_filename, force_write):
-        """
-
-        :param config_filename:
-        :param force_write:
-        :param quiet:
-        :return:
-        """
-        if prompt_for_overwrite(config_filename, force_write):
-            try:
-                config_dirname = os.path.dirname(config_filename)
-                if not os.path.isdir(config_dirname):
-                    os.makedirs(config_dirname)
-                if os.path.exists(config_filename):
-                    os.remove(config_filename)
-                return SqliteDict(config_filename)
-            except Exception as e:
-                print_exception(e)
-        else:
-            return None
 
 
 class JavaScriptEncoder(ScoutResultEncoder):
