@@ -21,6 +21,8 @@ const TableRender = (props) => {
       columns: columnsMemo,
       data: dataMemo,
       initialState,
+      disableMultiSort: true, 
+      disableSortRemove: true
     },
     useSortBy,
   );

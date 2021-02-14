@@ -3,8 +3,44 @@ import { PropTypes } from 'prop-types';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
+import cx from 'classnames';
 
 import './style.scss';
+
+const severities = {
+  critical: {
+    text: 'Critical',
+    icon: <ReportProblemOutlinedIcon fontSize="inherit" />
+  },
+  danger: {
+    text: 'High',
+    icon: <ReportProblemOutlinedIcon fontSize="inherit" />
+  },
+  high: {
+    text: 'High',
+    icon: <ReportProblemOutlinedIcon fontSize="inherit" />
+  },
+  warning: {
+    text: 'Medium',
+    icon: <ErrorOutlineOutlinedIcon fontSize="inherit" />
+  },
+  medium: {
+    text: 'Medium',
+    icon: <ErrorOutlineOutlinedIcon fontSize="inherit" />
+  },
+  low: {
+    text: 'Low',
+    icon: <ErrorOutlineOutlinedIcon fontSize="inherit" />
+  },
+  info: {
+    text: 'Info',
+    icon: <ReportProblemOutlinedIcon fontSize="inherit" />
+  },
+  success: {
+    text: 'All good',
+    icon: <CheckCircleOutlineOutlinedIcon fontSize="inherit" />
+  },
+};
 
 const propTypes = {
   severity: PropTypes.string.isRequired,
@@ -13,43 +49,9 @@ const propTypes = {
 const SeverityLabel = props => {
   const { severity } = props;
 
-  if (severity === 'critical') {
-    return <div className="severity-label critical">
-      <ReportProblemOutlinedIcon fontSize="inherit" /> Critical
-    </div>;
-  }
-
-  if (severity === 'danger' || severity === 'high') {
-    return <div className="severity-label high">
-      <ReportProblemOutlinedIcon fontSize="inherit" /> High
-    </div>;
-  }
-
-  if (severity === 'warning' || severity === 'medium') {
-    return <div className="severity-label medium">
-      <ErrorOutlineOutlinedIcon fontSize="inherit" /> Medium
-    </div>;
-  }
-
-  if (severity === 'low') {
-    return <div className="severity-label low">
-      <ErrorOutlineOutlinedIcon fontSize="inherit" /> Low
-    </div>;
-  }
-
-  if (severity === 'info') {
-    return <div className="severity-label info">
-      <ErrorOutlineOutlinedIcon fontSize="inherit" /> Info
-    </div>;
-  }
-
-  if (severity === 'success') {
-    return <div className="severity-label success">
-      <CheckCircleOutlineOutlinedIcon fontSize="inherit" /> All good
-    </div>;
-  }
-
-  return <span>Undefined</span>;
+  return <div className={cx('severity-label', severity)}>
+    {severities[severity].icon} {severities[severity].text}
+  </div>;
   
 };
 

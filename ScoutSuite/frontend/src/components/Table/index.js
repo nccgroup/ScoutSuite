@@ -28,11 +28,7 @@ const Table = (props) => {
       accessor: item.key,
     };
     if (formatters[item.key]) col.Cell = formatters[item.key];
-    if (sortBy[item.key])
-      col.sortType =
-        typeof sortBy[item.key] === 'function'
-          ? sortBy[item.key]
-          : sortBy[item.key];
+    if (sortBy[item.key]) col.sortType = sortBy[item.key];
     return col;
   });
 

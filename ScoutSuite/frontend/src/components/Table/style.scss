@@ -14,6 +14,8 @@
     padding: 0.5rem 1rem;
     border: none;
     border-right: $default-grey-subtle solid 1px;
+    text-align: left; 
+    vertical-align: middle;
 
     &:last-child {
       border-right: none;
