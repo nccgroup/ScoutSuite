@@ -1,15 +1,15 @@
 @import 'src/variables';
 
 .tab-pane {
-  color: $default-grey;
+  color: $text-muted;
   font-size: 1.75rem;
   font-weight: 700;
   margin-right: 1.5rem;
 
   &.is-selected {
-    color: $font_color;
+    color: $font-color;
     padding-bottom: 0.175rem;
-    border-bottom: 3px solid $font_color;
+    border-bottom: 3px solid $font-color;
   }
   
   &:not(.is-selected):hover {

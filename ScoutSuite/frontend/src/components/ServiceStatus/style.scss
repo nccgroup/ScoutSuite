@@ -9,14 +9,14 @@
   }
 
   &.good {
-    color: $success_color;
+    color: $success-color;
   }
 
   &.issues {
-    color: $issue_color;
+    color: $issue-color;
   }
 
   &.warnings {
-    color: $warning_color;
+    color: $warning-color;
   }
 }

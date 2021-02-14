@@ -8,7 +8,7 @@ import './style.scss';
 
 const propTypes = {
   services: PropTypes.arrayOf(PropTypes.object).isRequired,
-}
+};
 
 const Summary = props => {
   const services = props.services.sort((a, b) => b.issues - a.issues || b.warnings - a.warnings);
@@ -38,7 +38,7 @@ const Summary = props => {
       </div>
     </div>
   );
-}
+};
 
 Summary.propTypes = propTypes;
 

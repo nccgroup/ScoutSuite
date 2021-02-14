@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
+import isArray from 'lodash/isArray';
 
-import './style.scss'
+import './style.scss';
 
 const propTypes = {
-  children: PropTypes.array.isRequired,
-}
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]).isRequired,
+};
 
 const TabsMenu = props => {
-  const { children } = props;
+  const children = isArray(props.children) ? props.children : [props.children];
 
   const [ selectedTab, setSelectedTab ] = useState(0);
   const content = get(children[selectedTab], ['props', 'children']);
@@ -28,7 +32,7 @@ const TabsMenu = props => {
       </div>
     </>
   );
-}
+};
 
 TabsMenu.propTypes = propTypes;
 

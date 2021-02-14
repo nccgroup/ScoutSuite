@@ -16,7 +16,7 @@ const propTypes = {
   resources: PropTypes.number.isRequired,
   rules: PropTypes.number.isRequired,
   checks: PropTypes.number.isRequired,
-}
+};
 
 const ServiceCard = props => {
   const {
@@ -52,13 +52,13 @@ const ServiceCard = props => {
       </div>
       <hr/>
       <div className="footer">
-        <Link className="link" to="report/TEMP">
+        <Link className="link" to={`/services/${name.toLowerCase()}/findings`}>
           View report <FontAwesomeIcon icon={faChevronRight}/>
         </Link>
       </div>
     </div>
   );
-}
+};
 
 ServiceCard.propTypes = propTypes;
 

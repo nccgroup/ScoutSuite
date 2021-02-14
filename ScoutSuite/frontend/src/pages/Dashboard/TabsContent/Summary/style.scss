@@ -2,7 +2,6 @@
 
 .dashboard-summary {
   .overview, .services {
-    color: $font_color;
     margin-bottom: 2rem;
 
     & > hr {
@@ -28,7 +27,7 @@
         padding: 1rem 1.5rem;
         margin-left: 0;
         margin-right: 3rem;
-        border-radius: $border_radius;
+        border-radius: $border-radius;
         background-color: $white;
 
         svg {

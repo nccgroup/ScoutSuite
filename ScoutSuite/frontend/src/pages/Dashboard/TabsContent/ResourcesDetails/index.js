@@ -1,10 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
-const ResourcesDetails = props => {
+const propTypes = {};
+
+const ResourcesDetails = () => {
   return (
     <div>Resources Details</div>
   );
-}
+};
+
+ResourcesDetails.propTypes = propTypes;
 
 export default ResourcesDetails;
