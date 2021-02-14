@@ -13,7 +13,7 @@ from ScoutSuite.core.console import set_logger_configuration, print_info, print_
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
-from ScoutSuite.core.server import Server
+from ScoutSuite.core.server import startAPI
 from ScoutSuite.output.html import ScoutReport
 from ScoutSuite.output.utils import get_filename
 from ScoutSuite.providers import get_provider
@@ -353,6 +353,8 @@ async def _run(provider,
         print_info('Opening the HTML report')
         url = 'file://%s' % os.path.abspath(html_report_path)
         webbrowser.open(url, new=2)
+
+    startAPI(report.encoder.load_from_file('RESULTS'))
 
     if ERRORS_LIST:  # errors were handled during execution
         return 200
