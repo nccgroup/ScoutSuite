@@ -4,14 +4,15 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 
 import { useAPI } from '../../api/useAPI';
+import { sortBySeverity } from '../../utils/Severity/sort';
 import Layout from '../../layout';
 import Table from '../../components/Table';
 import Name from './formatters/Name';
 import Description from './formatters/Description/index';
-
-import './style.scss';
 import Severity from './formatters/Severity/index';
 
+
+import './style.scss';
 
 const propTypes = {};
 
@@ -36,10 +37,20 @@ const Findings = () => {
     description: item.rationale
   }));
 
+  const initialState = {
+    sortBy: [{
+      id: 'severity', desc: true
+    }]
+  };
+
   const formatters = {
     name: Name,
     description: Description,
     severity: Severity
+  };
+
+  const sortBy = {
+    severity: sortBySeverity
   };
 
   return (
@@ -50,7 +61,9 @@ const Findings = () => {
           <Table
             columns={columns}
             data={data}
-            formatters={formatters} />
+            initialState={initialState}
+            formatters={formatters}
+            sortBy={sortBy} />
         </div>
 
       </div>
