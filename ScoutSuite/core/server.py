@@ -2,7 +2,7 @@ import flask
 
 from flask import request, jsonify
 
-def startAPI(results):
+def start_api(results):
     app = flask.Flask(__name__)
     app.config["DEBUG"] = True
 
