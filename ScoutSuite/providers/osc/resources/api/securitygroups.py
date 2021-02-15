@@ -65,8 +65,9 @@ class SecurityGroups(OSCResources):
                     port_value = '%s-%s' % (rule['FromPort'], rule['ToPort'])
             manage_dictionary(protocols[ip_protocol]['ports'], port_value, {})
 
-
-            security_groups_members = rule['SecurityGroupsMembers']
+            security_groups_members = []
+            if 'SecurityGroupsMembers' in rule:
+                security_groups_members = rule['SecurityGroupsMembers']
             account_id = "EMPTY"
             if "AccountId" in security_groups_members:
                 account_id = security_groups_members["AccountId"]
