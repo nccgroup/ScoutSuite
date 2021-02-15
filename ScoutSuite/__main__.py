@@ -2,7 +2,6 @@ import asyncio
 import copy
 import os
 import webbrowser
-from time import sleep
 
 from asyncio_throttle import Throttler
 from ScoutSuite import ERRORS_LIST
@@ -234,7 +233,6 @@ async def _run(provider,
 
     # Create a new report
     try:
-        sleep(7200)
         report_name = report_name if report_name else cloud_provider.get_report_name()
         report = ScoutReport(cloud_provider.provider_code,
                              report_name,
