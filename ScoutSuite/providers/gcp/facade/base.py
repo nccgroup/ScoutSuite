@@ -120,8 +120,8 @@ class GCPFacade(GCPBaseFacade):
                     if project['lifecycleState'] == "ACTIVE":
                         projects.append(project)
             else:
-                print_exception('No Projects Found: '
-                                'You may have specified a non-existing organization/folder/project?')
+                print_exception('No Projects Found, '
+                                'you may have specified a non-existing Organization, Folder or Project')
 
         except Exception as e:
             try:
