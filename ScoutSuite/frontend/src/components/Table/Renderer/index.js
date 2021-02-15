@@ -1,8 +1,8 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { useTable, useSortBy } from 'react-table';
-import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
-import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 const propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -36,7 +36,11 @@ const TableRender = (props) => {
   } = tableInstance;
 
   return (
-    <div>
+    <>
+      <div className="search-bar">
+        <input placeholder="Search in this table" /> 
+      </div>
+
       <table className="table" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup, headerKey) => (
@@ -47,18 +51,19 @@ const TableRender = (props) => {
                   key={columnKey}
                 >
                   <span>{column.render('Header')}</span>
-
-                  <span>
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <ArrowDownwardOutlinedIcon fontSize="inherit" />
-                      ) : (
-                        <ArrowUpwardOutlinedIcon fontSize="inherit" />
-                      )
-                    ) : (
-                      ''
+                  {
+                    column.canSort && (
+                      <div className="sort-icons">
+                        <ArrowDropUpIcon
+                          color={column.isSorted && !column.isSortedDesc ? 'primary' : ''}
+                          fontSize="small"
+                        />
+                        <ArrowDropDownIcon
+                          color={column.isSorted && column.isSortedDesc ? 'primary' : ''}
+                          fontSize="small"
+                        />
+                      </div>
                     )}
-                  </span>
                 </th>
               ))}
             </tr>
@@ -81,7 +86,7 @@ const TableRender = (props) => {
           })}
         </tbody>
       </table>
-    </div>
+    </>
   );
 };
 

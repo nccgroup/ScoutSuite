@@ -23,9 +23,9 @@ const Findings = () => {
   const findings = Object.entries(results);
 
   const columns = [
-    { name: 'Severity', key: 'severity' },
+    { name: 'Severity', key: 'severity', sortInverted: true },
     { name: 'Name', key: 'name' },
-    { name: 'Flagged Items', key: 'flagged' },
+    { name: 'Flagged Items', key: 'flagged', sortInverted: true },
     { name: 'Description', key: 'description' }
   ];
 
@@ -39,7 +39,7 @@ const Findings = () => {
 
   const initialState = {
     sortBy: [{
-      id: 'severity', desc: true
+      id: 'severity',
     }]
   };
 

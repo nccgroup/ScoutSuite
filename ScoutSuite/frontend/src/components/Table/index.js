@@ -26,6 +26,7 @@ const Table = (props) => {
     let col = {
       Header: item.name,
       accessor: item.key,
+      ...item,
     };
     if (formatters[item.key]) col.Cell = formatters[item.key];
     if (sortBy[item.key]) col.sortType = sortBy[item.key];

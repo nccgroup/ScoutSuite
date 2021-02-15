@@ -11,11 +11,10 @@
   }
 
   th, td {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.5rem;
     border: none;
     border-right: $default-grey-subtle solid 1px;
-    text-align: left; 
-    vertical-align: middle;
+    text-align: left;
 
     &:last-child {
       border-right: none;
@@ -24,6 +23,32 @@
 
   th {
     border-right: $default-grey-light solid 1px;
+
+    * {
+      vertical-align: middle;
+    }
+
+    .sort-icons {
+      display: inline-flex;
+      flex-direction: column;
+
+      svg {
+        color: $default-grey;
+        position: relative;
+
+        &.MuiSvgIcon-colorPrimary {
+          color: $font-color;
+        }
+
+        &:first-child {
+          top: 0.375rem;
+        }
+
+        &:last-child {
+          top: -0.375rem;
+        }
+      }
+    }
 
     &:last-child {
       border-right: none;
@@ -37,6 +62,22 @@
     &:first-child {
       border-top: $default-grey-light solid 1px;
       border-bottom: $default-grey-subtle solid 1px;
+    }
+  }
+}
+
+.search-bar {
+  padding: 1rem;
+
+  input {
+    width: 18rem;
+    padding: 0.3125rem 1.5rem;
+    border: 1px solid $default-grey-light;
+    border-radius: $border-radius;
+    outline: none;
+
+    &::placeholder {
+      color: $default-grey;
     }
   }
 }
