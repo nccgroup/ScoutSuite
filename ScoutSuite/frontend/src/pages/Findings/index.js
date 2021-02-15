@@ -39,7 +39,7 @@ const Findings = () => {
 
   const initialState = {
     sortBy: [{
-      id: 'severity',
+      id: 'severity', desc: false,
     }]
   };
 
