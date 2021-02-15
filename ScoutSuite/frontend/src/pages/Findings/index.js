@@ -56,7 +56,6 @@ const Findings = () => {
   return (
     <Layout>
       <div className="findings">
-
         <div className="table-card">
           <Table
             columns={columns}
@@ -65,7 +64,6 @@ const Findings = () => {
             formatters={formatters}
             sortBy={sortBy} />
         </div>
-
       </div>
     </Layout>
   );

@@ -18,9 +18,7 @@ const FlaggedItems = () => {
   const { data: items, loading } = useAPI(`services.${params.service}.findings.${params.finding}.items`);
 
   if (loading) return (
-    <Layout>
-      
-    </Layout>
+    <Layout />
   );
 
   const columns = [
@@ -54,8 +52,7 @@ const FlaggedItems = () => {
 
   return (
     <Layout>
-      <div className="findings">
-
+      <div className="flagged-items">
         <div className="table-card">
           <Table
             columns={columns}
@@ -68,7 +65,6 @@ const FlaggedItems = () => {
         <div className="table-card">
           {!params.item ? 'No selected item.' : params.item}
         </div>
-
       </div>
     </Layout>
   );
