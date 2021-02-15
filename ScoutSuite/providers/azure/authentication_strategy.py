@@ -1,7 +1,8 @@
 import json
 import logging
 from getpass import getpass
-
+import requests
+from ScoutSuite.core.console import print_exception
 
 from azure.identity import UsernamePasswordCredential,AzureCliCredential, ClientSecretCredential, \
     ManagedIdentityCredential, InteractiveBrowserCredential
@@ -28,19 +29,18 @@ class AzureCredentials:
             return self.tenant_id
         elif hasattr(self.identity_credentials,'tenant_id'):
             return self.identity_credentials['tenant_id']
+
         else:
-            x= self.identity_credentials.get_token("https://graph.windows.net/")
-            return x
-        # else:
-        #     # This is a last resort, e.g. for MSI authentication
-        #     try:
-        #         h = {'Authorization': 'Bearer {}'.format(self.identity_credentials._cache.CredentialType.ACCESS_TOKEN)}
-        #         r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
-        #         r2 = r.json()
-        #         return r2.get('value')[0].get('tenantId')
-        #     except Exception as e:
-        #         print_exception('Unable to infer tenant ID: {}'.format(e))
-        #         return None
+            # Additional request for CLI & MSI authentication
+            try:
+                access_token = self.identity_credentials.get_token("https://management.core.windows.net/")
+                h = {'Authorization': 'Bearer {}'.format(access_token.token)}
+                r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
+                r2 = r.json()
+                return r2.get('value')[0].get('tenantId')
+            except Exception as e:
+                print_exception('Unable to infer tenant ID: {}'.format(e))
+                return None
 
     def get_credentials(self):
         return self.identity_credentials
