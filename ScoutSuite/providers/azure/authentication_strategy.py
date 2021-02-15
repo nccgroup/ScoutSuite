@@ -1,6 +1,8 @@
 import json
 import logging
 from getpass import getpass
+from time import sleep
+
 import requests
 from ScoutSuite.core.console import print_exception
 
@@ -34,12 +36,12 @@ class AzureCredentials:
             # Additional request for CLI & MSI authentication
             try:
                 access_token = self.identity_credentials.get_token("https://management.core.windows.net/")
-                h = {'Authorization': 'Bearer {}'.format(access_token.token)}
+                h = {'Authorization': f'Bearer {access_token.token}'}
                 r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
                 r2 = r.json()
                 return r2.get('value')[0].get('tenantId')
             except Exception as e:
-                print_exception('Unable to infer tenant ID: {}'.format(e))
+                print_exception(f'Unable to infer tenant ID: {e}')
                 return None
 
     def get_credentials(self):
@@ -91,6 +93,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 identity_credentials = InteractiveBrowserCredential()
                 tenant_id = tenant_id
+
 
             elif service_principal:
 
