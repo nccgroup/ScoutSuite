@@ -321,6 +321,14 @@ Handlebars.registerHelper('concat', function () {
     return path
 })
 
+Handlebars.registerHelper('append', function () {
+    var path = arguments[0]
+    for (var i = 1; i < arguments.length - 1; i++) {
+        path = path + arguments[i]
+    }
+    return path
+})
+
 Handlebars.registerHelper('concatWith', function (str1, str2, sep) {
     return [str1, str2].join(sep);
 })
