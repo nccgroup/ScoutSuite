@@ -1,6 +1,6 @@
 {
     "description": "Use of _ARG_0_ Instances",
-    "rationale": "Policies dictacte _ARG_0_ EC2 instances should not be used in this environment",
+    "rationale": "Policies dictate _ARG_0_ EC2 instances should not be used in this environment",
     "references": [
         "https://aws.amazon.com/ec2/instance-types/"
     ],

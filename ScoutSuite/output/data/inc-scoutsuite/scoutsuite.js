@@ -870,9 +870,8 @@ function loadMetadata() {
 function exportSummary() {
     var anchor = window.location.hash.substr(1)
     // Strip the # sign
-    var path = decodeURIComponent(anchor.replace('#', ''))
     // Get resource path based on browsed-to path
-    var item_indexes = getValueAt(path);
+    var item_indexes = getValueAt("");
 
     // create array with item values
         var items = [];
@@ -924,8 +923,7 @@ function showResourcesDetails() {
 
     $('#resources_details_download_csv_button').click(function(){
             var anchor = window.location.hash.substr(1)
-            var path = decodeURIComponent(anchor.replace('#', ""))
-            var item_indexes = getValueAt(path)
+            var item_indexes = getValueAt("")
             var items = []
             var index = 0
             items[index] = ["Service", "Resource", "#"]
@@ -1006,8 +1004,9 @@ function updateTitle(title) {
  * Updates the Document Object Model
  */
 function showPageFromHash() {
-    if (location.hash) {
-        updateDOM(location.hash)
+    myhash = location.hash.replace(/[^a-zA-Z|0-9|.#-_]/gi,'')
+    if (myhash) {
+        updateDOM(myhash)
     } else {
         updateDOM('')
     }
@@ -1220,6 +1219,8 @@ function makeTitle(title) {
         return 'CloudWatch'
     } else if (title === 'cloudformation') {
         return 'CloudFormation'
+    } else if (title === 'cloudfront') {
+        return 'CloudFront'
     } else if (title === 'config') {
         return 'Config'
     } else if (title === 'cognito') {
@@ -1234,6 +1235,8 @@ function makeTitle(title) {
         return 'GuardDuty'
     } else if (title === 'secretsmanager') {
         return 'Secrets Manager'
+    } else if (title === 'ssm') {
+        return 'Systems Manager'
     } else if (title === 'elasticache') {
         return 'ElastiCache'
     } else if (title === 'redshift') {
@@ -1250,6 +1253,8 @@ function makeTitle(title) {
         return 'Compute Engine'
     } else if (title === 'kubernetesengine') {
         return 'Kubernetes Engine'
+    } else if (title === 'cloudmemorystore') {
+        return 'Cloud Memorystore'
     } else if (title === 'aad') {
         return 'Azure Active Directory'
     } else if (title === 'rbac') {

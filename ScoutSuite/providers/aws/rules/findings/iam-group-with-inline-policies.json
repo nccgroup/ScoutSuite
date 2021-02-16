@@ -5,7 +5,7 @@
         "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#best-practice-managed-vs-inline",
         "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html"
     ],
-    "dashboard_name": "groups",
+    "dashboard_name": "Groups",
     "path": "iam.groups.id",
     "conditions": [
         "and",

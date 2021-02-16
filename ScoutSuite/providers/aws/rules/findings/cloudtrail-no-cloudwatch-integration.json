@@ -19,7 +19,7 @@
             "reference": "2.4"
         }
     ],
-    "dashboard_name": "Trails",
+    "dashboard_name": "Configurations",
     "display_path": "cloudtrail.regions.id.trails.id",
     "path": "cloudtrail.regions.id.trails.id",
     "conditions": [

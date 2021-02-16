@@ -9,9 +9,10 @@
     "conditions": [
         "and",
         [
-            "Encrypted",
+            "encrypted",
             "false",
             ""
         ]
-    ]
+    ],
+    "id_suffix": "encrypted"
 }

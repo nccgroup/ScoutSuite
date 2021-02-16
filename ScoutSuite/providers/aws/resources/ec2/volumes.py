@@ -26,6 +26,6 @@ class Volumes(AWSResources):
         raw_volume['id'] = raw_volume.pop('VolumeId')
         raw_volume['name'] = get_name(raw_volume, raw_volume, 'id')
         raw_volume['arn'] = 'arn:aws:ec2:{}:{}:volume/{}'.format(self.region,
-                                                                             self.facade.owner_id,
-                                                                             raw_volume.get('name'))
+                                                                 self.facade.owner_id,
+                                                                 raw_volume.get('id'))
         return raw_volume['id'], raw_volume

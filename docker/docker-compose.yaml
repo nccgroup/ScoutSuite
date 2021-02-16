@@ -1,19 +1,20 @@
-version: "3.7"
+version: "3.8"
 services:
   ncc-scoutsuite:
     image: scoutsuite:latest
-    volumes:
-      - ./bin:/root/bin
     env_file:
       - config/build.env
     build:
-      context: src
-      dockerfile: src/Dockerfile
+      context: .
+      dockerfile: Dockerfile
       args:
-        - VCS_REF
-        - VCS_URL
-        - VERSION
-        - BUILD_DATE
-        - VENDOR
-        - NAME
-        - DESCRIPTION
+        - VCS_REF=${VCS_REF}
+        - VCS_URL=${VCS_URL}
+        - VERSION=${VERSION}
+        - BUILD_DATE=${BUILD_DATE}
+        - VENDOR=${VENDOR}
+        - NAME=${NAME}
+        - IMAGE_NAME=${IMAGE_NAME}
+        - DESCRIPTION=${DESCRIPTION}
+      env_file:
+        - config/build.env

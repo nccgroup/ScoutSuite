@@ -1,5 +1,5 @@
 {
-    "description": "CloudTrail Logs Not Encrypted with KMS CMKs",
+    "description": "CloudTrail Logs Not Encrypted with KMS Customer Master Keys (CMKs)",
     "rationale": "Not encrypting CloudTrail logs with SSE-KMS affects the confidentiality of the log data.",
     "remediation": "Ensure each Trail is encrypted with a KMS key",
     "compliance": [
@@ -22,21 +22,37 @@
     "references": [
         "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/encrypting-cloudtrail-log-files-with-aws-kms.html"
     ],
-    "dashboard_name": "Trails",
+    "dashboard_name": "Configurations",
     "display_path": "cloudtrail.regions.id.trails.id",
     "path": "cloudtrail.regions.id.trails.id",
     "conditions": [
         "and",
         [
             "cloudtrail.regions.id.trails.id.",
-            "withKey",
-            "KMSKeyId"
+            "withoutKey",
+            "scout_link"
         ],
         [
-            "cloudtrail.regions.id.trails.id.KMSKeyId",
-            "null",
-            ""
+            "or",
+            [
+                "cloudtrail.regions.id.trails.id.",
+                "withoutKey",
+                "KmsKeyId"
+            ],
+            [
+                "and",
+                [
+                    "cloudtrail.regions.id.trails.id.",
+                    "withKey",
+                    "KmsKeyId"
+                ],
+                [
+                    "cloudtrail.regions.id.trails.id.KmsKeyId",
+                    "null",
+                    ""
+                ]
+            ]
         ]
     ],
-    "id_suffix": "NoKMSEncryption"
+    "id_suffix": "cloudtrail-kms-key-unused"
 }

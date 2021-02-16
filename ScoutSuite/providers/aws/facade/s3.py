@@ -2,7 +2,7 @@ import json
 
 from botocore.exceptions import ClientError
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_debug
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
@@ -12,27 +12,25 @@ class S3Facade(AWSBaseFacade):
     async def get_buckets(self):
         try:
             # If there are regions specified, try for each of them until one works.
+            # Otherwise, try all the available regions until one works.
             # This is required in case there's an IAM policy that denies access to APIs on a regional basis,
             # as per https://github.com/nccgroup/ScoutSuite/issues/727
-            region = None
-            if self.regions:
-                buckets = []
-                exception = ''
-                for region in self.regions:
-                    try:
-                        client = AWSFacadeUtils.get_client('s3', self.session, region)
-                        buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
-                    except Exception as e:
-                        exception = e
-                    else:
-                        break
-                if not buckets:
-                    if exception:
-                        print_exception(f'Failed to list buckets: {exception}')
-                    return []
-            else:
-                client = AWSFacadeUtils.get_client('s3', self.session)
-                buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
+            buckets = []
+            exception = None
+            region_list = self.regions if self.regions else await run_concurrently(lambda: self.session.get_available_regions('s3'))
+            for region in region_list:
+                try:
+                    client = AWSFacadeUtils.get_client('s3', self.session, region)
+                    buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
+                except Exception as e:
+                    exception = e
+                else:
+                    exception = None  # Fix for https://github.com/nccgroup/ScoutSuite/issues/916#issuecomment-728783965
+                    break
+            if not buckets:
+                if exception:
+                    print_exception(f'Failed to list buckets: {exception}')
+                return []
         except Exception as e:
             print_exception(f'Failed to list buckets: {e}')
             return []
@@ -55,6 +53,8 @@ class S3Facade(AWSBaseFacade):
             # Non-async post-processing
             for bucket in buckets:
                 self._set_s3_bucket_secure_transport(bucket)
+            # Try to update CreationDate of all buckets with the correct values from 'us-east-1'
+            self._get_and_set_s3_bucket_creationdate(buckets)
 
             return buckets
 
@@ -117,17 +117,27 @@ class S3Facade(AWSBaseFacade):
         bucket_name = bucket['Name']
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
-            await run_concurrently(lambda: client.get_bucket_encryption(Bucket=bucket['Name']))
+            config = await run_concurrently(lambda: client.get_bucket_encryption(Bucket=bucket['Name']))
             bucket['default_encryption_enabled'] = True
+            bucket['default_encryption_algorithm'] = config.get('ServerSideEncryptionConfiguration', {})\
+                .get('Rules', [{}])[0].get('ApplyServerSideEncryptionByDefault', {}).get('SSEAlgorithm')
+            bucket['default_encryption_key'] = config.get('ServerSideEncryptionConfiguration', {})\
+                .get('Rules', [{}])[0].get('ApplyServerSideEncryptionByDefault', {}).get('KMSMasterKeyID')
         except ClientError as e:
             if 'ServerSideEncryptionConfigurationNotFoundError' in e.response['Error']['Code']:
                 bucket['default_encryption_enabled'] = False
+                bucket['default_encryption_algorithm'] = None
+                bucket['default_encryption_key'] = None
             else:
                 bucket['default_encryption_enabled'] = None
+                bucket['default_encryption_algorithm'] = None
+                bucket['default_encryption_key'] = None
                 print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
         except Exception as e:
-            print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
             bucket['default_encryption'] = 'Unknown'
+            bucket['default_encryption_algorithm'] = None
+            bucket['default_encryption_key'] = None
+            print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
 
     async def _get_and_set_s3_acls(self, bucket: {}, key_name=None):
         bucket_name = bucket['Name']
@@ -194,6 +204,23 @@ class S3Facade(AWSBaseFacade):
             pass
         except Exception as e:
             print_exception('Failed to get the public access block configuration for {}: {}'.format(bucket['Name'], e))
+
+    def _get_and_set_s3_bucket_creationdate(self, buckets):
+        # When using region other than 'us-east-1', the 'CreationDate' is the last modified time according to bucket's
+        # last replication in the respective region
+        # Source: https://github.com/aws/aws-cli/issues/3597#issuecomment-424167129
+        # Fixes issue https://github.com/nccgroup/ScoutSuite/issues/858
+        client = AWSFacadeUtils.get_client('s3', self.session, 'us-east-1')
+        try:
+            buckets_useast1 = client.list_buckets()['Buckets']
+            for bucket in buckets:
+                # Find the bucket with the same name and update 'CreationDate' from the 'us-east-1' region data,
+                # if doesn't exist keep the original value
+                bucket['CreationDate'] = next((b['CreationDate'] for b in buckets_useast1 if
+                                               b['Name'] == bucket['Name']), bucket['CreationDate'])
+        except Exception as e:
+            # Only output exception when in debug mode
+            print_debug('Failed to get bucket creation date from "us-east-1" region')
 
     def _set_s3_bucket_secure_transport(self, bucket: {}):
         try:

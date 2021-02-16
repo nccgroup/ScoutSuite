@@ -68,3 +68,8 @@ report-*
 # Private folders
 /private*/
 /**/private*/
+
+#Profiling output
+*.prof
+
+!docker/bin

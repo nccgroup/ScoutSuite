@@ -5,11 +5,16 @@
         "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_notaction.html",
         "https://aws.amazon.com/blogs/security/back-to-school-understanding-the-iam-policy-grammar/"
     ],
-    "dashboard_name": "Policies",
+    "dashboard_name": "Statements",
     "display_path": "iam.policies.id",
     "path": "iam.policies.id.PolicyDocument.Statement.id",
     "conditions": [
         "and",
+        [
+            "iam.policies.id.arn",
+            "notContainString",
+            "arn:aws:iam::aws:policy/aws-service-role"
+        ],
         [
             "iam.policies.id.PolicyDocument.Statement.id.Effect",
             "equal",
