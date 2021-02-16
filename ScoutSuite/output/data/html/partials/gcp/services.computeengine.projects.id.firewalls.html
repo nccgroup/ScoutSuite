@@ -9,10 +9,11 @@
         <div class="list-group-item-text item-margin">Firewall name: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.name">{{name}}</span></div>
         <div class="list-group-item-text item-margin">Project ID: <span id="computeengine.projects.{{@../key}}.instances.{{@key}}.project_id"><samp>{{project_id}}</samp></span></div>
         <div class="list-group-item-text item-margin">Description: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.description"><samp>{{description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Disabled: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.disabled"><samp>{{disabled}}</samp></span></div>
         <div class="list-group-item-text item-margin">Network: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.network"><a href="javascript:showObject('services.computeengine.projects.{{@../key}}.networks.{{network_id}}')">{{getValueAt 'services.computeengine.projects' @../key 'networks' network_id 'name'}}</a></span></div>
         <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.creation_timestamp">{{format_date creation_timestamp}}</span></div>
         <div class="list-group-item-text item-margin">Priority: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.priority"><samp>{{priority}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Disabled: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.disabled"><samp>{{disabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Logs: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.logs"><samp>{{convert_bool_to_enabled logs}}</samp></span></div>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Configuration</h4>
