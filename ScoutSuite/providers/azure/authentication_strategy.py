@@ -80,7 +80,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                         username = username if username else input("Username: ")
                         password = password if password else getpass("Password: ")
                     else:
-                        raise AuthenticationException('Username, Tenant ID and/or password not set')
+                        raise AuthenticationException('Username, password and/or Tenant ID not set')
 
                 identity_credentials = UsernamePasswordCredential(AZURE_CLI_CLIENT_ID, username, password,
                                                                   authority=AUTHORITY_HOST_URI, tenant_id=tenant_id)
