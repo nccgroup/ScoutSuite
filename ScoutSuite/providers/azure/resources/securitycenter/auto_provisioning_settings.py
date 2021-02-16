@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.core.console import print_exception
 
 
 class AutoProvisioningSettings(AzureResources):
@@ -9,10 +10,17 @@ class AutoProvisioningSettings(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_settings in await self.facade.securitycenter.get_auto_provisioning_settings(self.subscription_id):
-            id, auto_provisioning_settings = self._parse_auto_provisioning_settings(
-                raw_settings)
-            self[id] = auto_provisioning_settings
+            try:
+                id, auto_provisioning_settings = self._parse_auto_provisioning_settings(
+                    raw_settings)
+                self[id] = auto_provisioning_settings
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_auto_provisioning_settings(self, auto_provisioning_settings):
         auto_provisioning_setting_dict = {}

@@ -1,5 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Keys(Resources):
@@ -11,9 +12,16 @@ class Keys(Resources):
 
     async def fetch_all(self):
         raw_keys = await self.facade.kms.list_keys(self.project_id, self.location, self.keyring_name)
+        parsing_error_counter = 0
         for raw_key in raw_keys:
-            key_id, key = self._parse_key(raw_key)
-            self[key_id] = key
+            try:
+                key_id, key = self._parse_key(raw_key)
+                self[key_id] = key
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_key(self, raw_key):
         key_dict = {}

@@ -1,6 +1,7 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Users(Resources):
@@ -11,8 +12,15 @@ class Users(Resources):
     async def fetch_all(self):
         raw_bindings = await self.facade.cloudresourcemanager.get_member_bindings(self.project_id)
         parsed_users = self._parse_binding(raw_bindings)
+        parsing_error_counter = 0
         for user_id in parsed_users.keys():
-            self[parsed_users[user_id]['id']] = parsed_users[user_id]
+            try:
+                self[parsed_users[user_id]['id']] = parsed_users[user_id]
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_binding(self, raw_bindings):
 

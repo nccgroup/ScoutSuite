@@ -1,6 +1,7 @@
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.kms.keys import Keys
+from ScoutSuite.core.console import print_exception
 
 
 class KeyRings(GCPCompositeResources):
@@ -14,10 +15,17 @@ class KeyRings(GCPCompositeResources):
 
     async def fetch_all(self):
         raw_keyrings = await self.facade.kms.list_key_rings(self.project_id)
+        parsing_error_counter = 0
         for location in raw_keyrings.keys():
-            for raw_keyring in raw_keyrings.get(location, []):
-                keyring_id, keyring = self._parse_keyring(raw_keyring, location)
-                self[keyring_id] = keyring
+            try:
+                for raw_keyring in raw_keyrings.get(location, []):
+                    keyring_id, keyring = self._parse_keyring(raw_keyring, location)
+                    self[keyring_id] = keyring
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
         await self._fetch_children_of_all_resources(
             resources=self,

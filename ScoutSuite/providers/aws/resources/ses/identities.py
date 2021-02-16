@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 from .identity_policies import IdentityPolicies
 
@@ -16,9 +17,16 @@ class Identities(AWSCompositeResources):
 
     async def fetch_all(self):
         raw_identities = await self.facade.ses.get_identities(self.region)
+        parsing_error_counter = 0
         for raw_identity in raw_identities:
-            id, identity = self._parse_identity(raw_identity)
-            self[id] = identity
+            try:
+                id, identity = self._parse_identity(raw_identity)
+                self[id] = identity
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
         await self._fetch_children_of_all_resources(
             resources=self,

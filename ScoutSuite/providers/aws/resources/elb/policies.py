@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Policies(AWSResources):
@@ -10,9 +11,16 @@ class Policies(AWSResources):
 
     async def fetch_all(self):
         raw_policies = await self.facade.elb.get_policies(self.region)
+        parsing_error_counter = 0
         for raw_policy in raw_policies:
-            id, policy = self._parse_policy(raw_policy)
-            self[id] = policy
+            try:
+                id, policy = self._parse_policy(raw_policy)
+                self[id] = policy
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_policy(self, raw_policy):
         raw_policy['name'] = raw_policy.pop('PolicyName')

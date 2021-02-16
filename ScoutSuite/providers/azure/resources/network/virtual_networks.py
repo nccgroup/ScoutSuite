@@ -2,6 +2,7 @@ from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 from ScoutSuite.providers.azure.utils import get_resource_group_name
+from ScoutSuite.core.console import print_exception
 
 
 class VirtualNetworks(AzureResources):
@@ -11,9 +12,16 @@ class VirtualNetworks(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_virtual_network in await self.facade.network.get_virtual_networks(self.subscription_id):
-            id, virtual_network = self._parse_virtual_network(raw_virtual_network)
-            self[id] = virtual_network
+            try:
+                id, virtual_network = self._parse_virtual_network(raw_virtual_network)
+                self[id] = virtual_network
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_virtual_network(self, raw_virtual_network):
         virtual_network_dict = {}

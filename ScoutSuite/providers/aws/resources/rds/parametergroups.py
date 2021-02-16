@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class ParameterGroups(AWSResources):
@@ -10,9 +11,16 @@ class ParameterGroups(AWSResources):
 
     async def fetch_all(self):
         raw_parameter_groups = await self.facade.rds.get_parameter_groups(self.region)
+        parsing_error_counter = 0
         for raw_parameter_group in raw_parameter_groups:
-            name, resource = self._parse_parameter_group(raw_parameter_group)
-            self[name] = resource
+            try:
+                name, resource = self._parse_parameter_group(raw_parameter_group)
+                self[name] = resource
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_parameter_group(self, raw_parameter_group):
         raw_parameter_group['arn'] = raw_parameter_group.pop('DBParameterGroupArn')

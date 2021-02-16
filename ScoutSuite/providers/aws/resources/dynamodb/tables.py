@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class Tables(AWSResources):
@@ -9,9 +10,16 @@ class Tables(AWSResources):
 
     async def fetch_all(self):
         raw_tables = await self.facade.dynamodb.get_tables(self.region)
+        parsing_error_counter = 0
         for raw_table in raw_tables:
-            name, resource = self._parse_table(raw_table)
-            self[name] = resource
+            try:
+                name, resource = self._parse_table(raw_table)
+                self[name] = resource
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_table(self, raw_table):
         table_dict = {}

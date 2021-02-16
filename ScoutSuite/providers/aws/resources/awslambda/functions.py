@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class Functions(AWSResources):
@@ -9,9 +10,16 @@ class Functions(AWSResources):
 
     async def fetch_all(self):
         raw_functions = await self.facade.awslambda.get_functions(self.region)
+        parsing_error_counter = 0
         for raw_function in raw_functions:
-            name, resource = await self._parse_function(raw_function)
-            self[name] = resource
+            try:
+                name, resource = await self._parse_function(raw_function)
+                self[name] = resource
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     async def _parse_function(self, raw_function):
 

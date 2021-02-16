@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class RegulatoryComplianceResults(AzureResources):
@@ -10,11 +11,18 @@ class RegulatoryComplianceResults(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_regulatory_compliance_result in await \
                 self.facade.securitycenter.get_regulatory_compliance_results(self.subscription_id):
-            id, regulatory_compliance_result = \
-                self._parse_regulatory_compliance_result(raw_regulatory_compliance_result)
-            self[id] = regulatory_compliance_result
+            try:
+                id, regulatory_compliance_result = \
+                    self._parse_regulatory_compliance_result(raw_regulatory_compliance_result)
+                self[id] = regulatory_compliance_result
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_regulatory_compliance_result(self, raw_regulatory_compliance_result):
         regulatory_compliance_result_dict = {}

@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
 from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Groups(AliyunResources):
@@ -7,9 +8,16 @@ class Groups(AliyunResources):
         super().__init__(facade)
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_group in await self.facade.ram.get_groups():
-            id, group = await self._parse_group(raw_group)
-            self[id] = group
+            try:
+                id, group = await self._parse_group(raw_group)
+                self[id] = group
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     async def _parse_group(self, raw_group):
         group_dict = {}

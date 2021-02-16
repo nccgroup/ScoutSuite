@@ -1,11 +1,19 @@
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.core.console import print_exception
 
 
 class Applications(AzureResources):
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_application in await self.facade.aad.get_applications():
-            id, application = await self._parse_application(raw_application)
-            self[id] = application
+            try:
+                id, application = await self._parse_application(raw_application)
+                self[id] = application
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     async def _parse_application(self, raw_application):
         application_dict = {}

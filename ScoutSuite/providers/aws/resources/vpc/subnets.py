@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.utils import get_name
+from ScoutSuite.core.console import print_exception
 
 
 class Subnets(AWSResources):
@@ -12,9 +13,16 @@ class Subnets(AWSResources):
 
     async def fetch_all(self):
         raw_subnets = await self.facade.ec2.get_subnets(self.region, self.vpc)
+        parsing_error_counter = 0
         for raw_subnet in raw_subnets:
-            id, subnet = self._parse_subnet(raw_subnet)
-            self[id] = subnet
+            try:
+                id, subnet = self._parse_subnet(raw_subnet)
+                self[id] = subnet
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_subnet(self, raw_subnet):
         raw_subnet['id'] = raw_subnet['SubnetId']

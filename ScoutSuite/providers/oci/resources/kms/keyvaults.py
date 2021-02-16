@@ -2,6 +2,7 @@ from ScoutSuite.providers.oci.facade.base import OracleFacade
 from ScoutSuite.providers.oci.resources.base import OracleCompositeResources
 from ScoutSuite.providers.oci.resources.kms.keys import Keys
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class KeyVaults(OracleCompositeResources):
@@ -14,10 +15,17 @@ class KeyVaults(OracleCompositeResources):
         super().__init__(facade)
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         raw_keyvaults = await self.facade.kms.get_vaults()
         for raw_keyvault in raw_keyvaults:
-            id, keyvault = self._parse_keyvault(raw_keyvault)
-            self[id] = keyvault
+            try:
+                id, keyvault = self._parse_keyvault(raw_keyvault)
+                self[id] = keyvault
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
         await self._fetch_children_of_all_resources(
             resources=self,

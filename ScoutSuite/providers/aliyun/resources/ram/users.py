@@ -1,4 +1,5 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunCompositeResources
+from ScoutSuite.core.console import print_exception
 
 from .api_keys import ApiKeys
 
@@ -9,9 +10,16 @@ class Users(AliyunCompositeResources):
     ]
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_user in await self.facade.ram.get_users():
-            id, user = await self._parse_user(raw_user)
-            self[id] = user
+            try:
+                id, user = await self._parse_user(raw_user)
+                self[id] = user
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
         await self._fetch_children_of_all_resources(
             resources=self,

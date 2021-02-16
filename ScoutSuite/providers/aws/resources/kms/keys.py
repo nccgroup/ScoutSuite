@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 from .grants import Grants
 
 
@@ -15,9 +16,16 @@ class Keys(AWSCompositeResources):
 
     async def fetch_all(self):
         raw_keys = await self.facade.kms.get_keys(self.region)
+        parsing_error_counter = 0
         for raw_key in raw_keys:
-            key_id, key = await self._parse_key(raw_key)
-            self[key_id] = key
+            try:
+                key_id, key = await self._parse_key(raw_key)
+                self[key_id] = key
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
         await self._fetch_children_of_all_resources(
             resources=self,

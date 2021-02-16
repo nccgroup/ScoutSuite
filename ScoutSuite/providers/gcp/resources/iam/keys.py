@@ -1,24 +1,43 @@
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.base.resources.base import Resources
+from ScoutSuite.core.console import print_exception
 
 
 class Keys(Resources):
     def __init__(self, facade: GCPFacade, project_id: str, service_account_email: str):
         super().__init__(facade)
         self.project_id = project_id
-        self.service_account_email = service_account_email 
+        self.service_account_email = service_account_email
 
     async def fetch_all(self):
         # fetch system managed keys
-        raw_keys = await self.facade.iam.get_service_account_keys(self.project_id, self.service_account_email, ['SYSTEM_MANAGED'])
+        raw_keys = await self.facade.iam.get_service_account_keys(self.project_id, self.service_account_email,
+                                                                  ['SYSTEM_MANAGED'])
+        parsing_error_system_counter = 0
+        parsing_error_user_counter = 0
         for raw_key in raw_keys:
-            key_id, key = await self._parse_key(raw_key, 'SYSTEM_MANAGED')
-            self[key_id] = key
+            try:
+                key_id, key = await self._parse_key(raw_key, 'SYSTEM_MANAGED')
+                self[key_id] = key
+            except Exception as e:
+                parsing_error_system_counter += 1
+        if parsing_error_system_counter > 0:
+            print_exception(
+                'Failed to parse {} resource [SYSTEM MANAGED]: {} times'.format(self.__class__.__name__,
+                                                                                parsing_error_system_counter))
         # fetch user managed keys
-        raw_keys = await self.facade.iam.get_service_account_keys(self.project_id, self.service_account_email, ['USER_MANAGED'])
+        raw_keys = await self.facade.iam.get_service_account_keys(self.project_id, self.service_account_email,
+                                                                  ['USER_MANAGED'])
         for raw_key in raw_keys:
-            key_id, key = await self._parse_key(raw_key, 'USER_MANAGED')
-            self[key_id] = key
+            try:
+                key_id, key = await self._parse_key(raw_key, 'USER_MANAGED')
+                self[key_id] = key
+            except Exception as e:
+                parsing_error_user_counter += 1
+        if parsing_error_user_counter > 0:
+            print_exception(
+                'Failed to parse {} resource [USER MANAGED]: {} times'.format(self.__class__.__name__,
+                                                                                parsing_error_user_counter))
 
     async def _parse_key(self, raw_key, key_type):
         key_dict = {}

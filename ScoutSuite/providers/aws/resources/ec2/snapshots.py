@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.utils import get_name
+from ScoutSuite.core.console import print_exception
 
 
 class Snapshots(AWSResources):
@@ -10,9 +11,16 @@ class Snapshots(AWSResources):
 
     async def fetch_all(self):
         raw_snapshots = await self.facade.ec2.get_snapshots(self.region)
+        parsing_error_counter = 0
         for raw_snapshot in raw_snapshots:
-            name, resource = self._parse_snapshot(raw_snapshot)
-            self[name] = resource
+            try:
+                name, resource = self._parse_snapshot(raw_snapshot)
+                self[name] = resource
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_snapshot(self, raw_snapshot):
         snapshot_dict = {}

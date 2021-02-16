@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Snapshots(AzureResources):
@@ -10,9 +11,16 @@ class Snapshots(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_snapshot in await self.facade.virtualmachines.get_snapshots(self.subscription_id):
-            id, snapshot = self._parse_snapshot(raw_snapshot)
-            self[id] = snapshot
+            try:
+                id, snapshot = self._parse_snapshot(raw_snapshot)
+                self[id] = snapshot
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_snapshot(self, raw_snapshot):
         snapshot_dict = {}

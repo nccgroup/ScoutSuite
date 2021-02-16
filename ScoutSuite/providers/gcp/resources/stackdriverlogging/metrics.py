@@ -1,5 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Metrics(Resources):
@@ -9,9 +10,16 @@ class Metrics(Resources):
 
     async def fetch_all(self):
         raw_metrics = await self.facade.stackdriverlogging.get_metrics(self.project_id)
+        parsing_error_counter = 0
         for raw_metric in raw_metrics:
-            metric_name, metric = self._parse_metric(raw_metric)
-            self[metric_name] = metric
+            try:
+                metric_name, metric = self._parse_metric(raw_metric)
+                self[metric_name] = metric
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_metric(self, raw_metric):
         metric_dict = {}

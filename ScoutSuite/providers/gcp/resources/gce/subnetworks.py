@@ -1,5 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Subnetworks(Resources):
@@ -10,9 +11,16 @@ class Subnetworks(Resources):
 
     async def fetch_all(self):
         raw_subnetworks = await self.facade.gce.get_subnetworks(self.project_id, self.region)
+        parsing_error_counter = 0
         for raw_subnetwork in raw_subnetworks:
-            subnetwork_id, subnetwork = self._parse_subnetwork(raw_subnetwork)
-            self[subnetwork_id] = subnetwork
+            try:
+                subnetwork_id, subnetwork = self._parse_subnetwork(raw_subnetwork)
+                self[subnetwork_id] = subnetwork
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_subnetwork(self, raw_subnetwork):
         subnetwork_dict = {}

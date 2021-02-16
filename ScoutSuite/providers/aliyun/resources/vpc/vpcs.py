@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
 from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
+from ScoutSuite.core.console import print_exception
 
 
 class VPCs(AliyunResources):
@@ -8,9 +9,16 @@ class VPCs(AliyunResources):
         self.region = region
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_vpc in await self.facade.vpc.get_vpcs(region=self.region):
-            id, vpc = self._parse_vpcs(raw_vpc)
-            self[id] = vpc
+            try:
+                id, vpc = self._parse_vpcs(raw_vpc)
+                self[id] = vpc
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_vpcs(self, raw_vpc):
         vpc_dict = {}

@@ -1,6 +1,7 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class AlertPolicies(Resources):
@@ -10,9 +11,16 @@ class AlertPolicies(Resources):
 
     async def fetch_all(self):
         raw_alert_policies = await self.facade.stackdrivermonitoring.get_alert_policies(self.project_id)
+        parsing_error_counter = 0
         for raw_alert_policy in raw_alert_policies:
-            alert_policy_name, alert_policy = self._parse_alert_policy(raw_alert_policy)
-            self[alert_policy_name] = alert_policy
+            try:
+                alert_policy_name, alert_policy = self._parse_alert_policy(raw_alert_policy)
+                self[alert_policy_name] = alert_policy
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_alert_policy(self, raw_alert_policy):
         alert_policy_dict = {}

@@ -1,4 +1,5 @@
 from ScoutSuite.providers.base.resources.base import Resources
+from ScoutSuite.core.console import print_exception
 
 
 class NodePools(Resources):
@@ -8,9 +9,16 @@ class NodePools(Resources):
 
     def fetch_all(self):
         raw_node_pools = self.cluster['nodePools']
+        parsing_error_counter = 0
         for raw_node_pool in raw_node_pools:
-            node_pool_id, node_pool = self._parse_node_pool(raw_node_pool)
-            self[node_pool_id] = node_pool
+            try:
+                node_pool_id, node_pool = self._parse_node_pool(raw_node_pool)
+                self[node_pool_id] = node_pool
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
         # We need self.cluster to get the node pools, but we do 
         # not want to have it in the generated JSON.
         del self.cluster

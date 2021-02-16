@@ -1,5 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Backups(Resources):
@@ -10,10 +11,17 @@ class Backups(Resources):
 
     async def fetch_all(self):
         raw_backups = await self.facade.cloudsql.get_backups(self.project_id, self.instance_name)
+        parsing_error_counter = 0
         for raw_backup in raw_backups:
-            if raw_backup['status'] == 'SUCCESSFUL':
-                backup_id, backup = self._parse_backup(raw_backup)
-                self[backup_id] = backup
+            try:
+                if raw_backup['status'] == 'SUCCESSFUL':
+                    backup_id, backup = self._parse_backup(raw_backup)
+                    self[backup_id] = backup
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_backup(self, raw_backup):
         backup_dict = {}

@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
 from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Keys(AliyunResources):
@@ -8,9 +9,16 @@ class Keys(AliyunResources):
         self.region = region
 
     async def fetch_all(self):
+        parsing_error_counter = 0
         for raw_key in await self.facade.kms.get_keys(region=self.region):
-            id, key = await self._parse_key(raw_key)
-            self[id] = key
+            try:
+                id, key = await self._parse_key(raw_key)
+                self[id] = key
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     async def _parse_key(self, raw_key):
         key_dict = {}

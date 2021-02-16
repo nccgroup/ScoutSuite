@@ -1,5 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
+from ScoutSuite.core.console import print_exception
 
 
 class Snapshots(Resources):
@@ -9,9 +10,16 @@ class Snapshots(Resources):
 
     async def fetch_all(self):
         raw_snapshots = await self.facade.gce.get_snapshots(self.project_id)
+        parsing_error_counter = 0
         for raw_snapshot in raw_snapshots:
-            snapshot_id, snapshot = self._parse_snapshot(raw_snapshot)
-            self[snapshot_id] = snapshot
+            try:
+                snapshot_id, snapshot = self._parse_snapshot(raw_snapshot)
+                self[snapshot_id] = snapshot
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_snapshot(self, raw_snapshot):
         snapshot_dict = {}

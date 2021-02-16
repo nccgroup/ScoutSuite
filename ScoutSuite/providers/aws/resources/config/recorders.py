@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.core.console import print_exception
 
 
 class Recorders(AWSResources):
@@ -9,9 +10,16 @@ class Recorders(AWSResources):
 
     async def fetch_all(self):
         raw_recorders = await self.facade.config.get_recorders(self.region)
+        parsing_error_counter = 0
         for raw_recorder in raw_recorders:
-            name, resource = self._parse_recorder(raw_recorder)
-            self[name] = resource
+            try:
+                name, resource = self._parse_recorder(raw_recorder)
+                self[name] = resource
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     def _parse_recorder(self, raw_recorder):
         recorder = {}

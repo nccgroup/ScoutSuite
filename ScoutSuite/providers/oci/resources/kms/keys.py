@@ -1,6 +1,7 @@
 from ScoutSuite.providers.oci.resources.base import OracleResources
 from ScoutSuite.providers.oci.facade.base import OracleFacade
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Keys(OracleResources):
@@ -9,10 +10,16 @@ class Keys(OracleResources):
         self.key_vault = keyvault
 
     async def fetch_all(self):
-
+        parsing_error_counter = 0
         for raw_key in await self.facade.kms.get_keys(self.key_vault):
-            id, key = await self._parse_key(raw_key)
-            self[id] = key
+            try:
+                id, key = await self._parse_key(raw_key)
+                self[id] = key
+            except Exception as e:
+                parsing_error_counter += 1
+        if parsing_error_counter > 0:
+            print_exception(
+                'Failed to parse {} resource: {} times'.format(self.__class__.__name__, parsing_error_counter))
 
     async def _parse_key(self, raw_key):
         key_dict = {}
