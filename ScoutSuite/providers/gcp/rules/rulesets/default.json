@@ -308,13 +308,13 @@
                 "level": "warning"
             }
         ],
-        "memorystore-redis-instance-ssl-not-required.json": [
+        "memorystore-redis-instance-auth-not-enabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "memorystore-redis-instance-auth-not-enabled.json": [
+        "memorystore-redis-instance-ssl-not-required.json": [
             {
                 "enabled": true,
                 "level": "warning"
