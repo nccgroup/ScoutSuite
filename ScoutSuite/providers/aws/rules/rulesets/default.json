@@ -1255,6 +1255,12 @@
                 "level": "warning"
             }
         ],
+        "sqs-unencrypted.json": [
+          {
+            "enabled": true,
+            "level": "warning"
+          }
+        ],
         "vpc-custom-network-acls-allow-all.json": [
             {
                 "args": [

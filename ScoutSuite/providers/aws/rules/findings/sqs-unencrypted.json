@@ -1,0 +1,18 @@
+{
+    "description": "SQS Queue Unencrypted",
+    "rationale": "Server-side encryption should be enabled in SQS Queues.",
+    "dashboard_name": "SQS Queues",
+    "references": [
+        "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html"
+    ],
+    "display_path": "sqs.regions.id.queues.id",
+    "path": "sqs.regions.id.queues.id",
+    "conditions": [
+        "and",
+        [
+            "sqs.regions.id.queues.id.kms_master_key_id",
+            "notNull",
+            ""
+        ]
+    ]
+}
