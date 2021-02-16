@@ -1,7 +1,6 @@
 import json
 import logging
 from getpass import getpass
-from time import sleep
 
 import requests
 from ScoutSuite.core.console import print_exception
@@ -65,11 +64,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
         try:
 
             # Set logging level to error for libraries as otherwise generates a lot of warnings
-            logging.getLogger('adal-python').setLevel(logging.ERROR)
-            logging.getLogger('msrest').setLevel(logging.ERROR)
-            logging.getLogger('msrestazure.azure_active_directory').setLevel(logging.ERROR)
-            logging.getLogger('urllib3').setLevel(logging.ERROR)
-            logging.getLogger('cli.azure.cli.core').setLevel(logging.ERROR)
+            logging.getLogger('azure.identity').setLevel(logging.ERROR)
+            logging.getLogger('azure.core.pipeline').setLevel(logging.ERROR)
 
             context = None
 
