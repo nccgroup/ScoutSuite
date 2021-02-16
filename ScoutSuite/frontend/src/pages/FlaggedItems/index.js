@@ -62,7 +62,7 @@ const FlaggedItems = () => {
             sortBy={sortBy} />
         </div>
 
-        <div className="table-card">
+        <div className="selected-item">
           {!params.item ? 'No selected item.' : params.item}
         </div>
       </div>

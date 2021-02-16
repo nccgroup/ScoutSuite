@@ -1,9 +1,14 @@
 @import 'src/variables.scss';
 
 .flagged-items {
-  .table-card {
+  .table-card, .selected-item {
     margin-right: 2rem;
     background: $white;
     border-radius: $border-radius;
+  }
+
+  .selected-item {
+    margin-top: 2rem;
+    padding: 1.5rem;
   }
 }
