@@ -76,11 +76,10 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 if not (username and password and tenant_id):
                     if not programmatic_execution:
-                        tenant_id = tenant_id if tenant_id else input("Tenant ID: ")
                         username = username if username else input("Username: ")
                         password = password if password else getpass("Password: ")
                     else:
-                        raise AuthenticationException('Username, Tenant ID and/or password not set')
+                        raise AuthenticationException('Username or password not set')
 
                 identity_credentials = UsernamePasswordCredential(AZURE_CLI_CLIENT_ID, username, password,
                                                                   authority=AUTHORITY_HOST_URI, tenant_id=tenant_id)
@@ -88,8 +87,6 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             elif user_account_browser:
 
                 identity_credentials = InteractiveBrowserCredential()
-                tenant_id = tenant_id
-
 
             elif service_principal:
 
@@ -142,10 +139,4 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 context)
 
         except Exception as e:
-            if ', AdalError: Unsupported wstrust endpoint version. ' \
-               'Current support version is wstrust2005 or wstrust13.' in e.args:
-                raise AuthenticationException(
-                    'You are likely authenticating with a Microsoft Account. '
-                    'This authentication mode only support Azure Active Directory principal authentication.')
-
             raise AuthenticationException(e)

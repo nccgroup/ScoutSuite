@@ -31,10 +31,13 @@ class AADFacade:
 
     async def get_users(self):
         try:
-            # test = await self._get_microsoft_graph_response('users') # missing some necessary information for rules
+
             users_response_beta = await self._get_microsoft_graph_response('users', 'beta')
             if users_response_beta:
                 users = users_response_beta.get('value')
+                # This filters down the users which are pulled from the directory, otherwise for large tenants this
+                # becomes out of hands
+                # See https://github.com/nccgroup/ScoutSuite/issues/698
                 users_filtered = [d for d in users if d['userType'] in 'Guest']
                 return users_filtered
             return users_response_beta
@@ -44,7 +47,6 @@ class AADFacade:
 
     async def get_user(self, user_id):
         try:
-            # test = await self._get_microsoft_graph_response('users') # missing some necessary information for rules
             user_response_beta = await self._get_microsoft_graph_response('users', 'beta')
             users = user_response_beta.get('value')
             users_filtered = [d for d in users if d['id'] in user_id]
