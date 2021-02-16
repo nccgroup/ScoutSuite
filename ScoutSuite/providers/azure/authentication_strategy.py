@@ -5,7 +5,7 @@ from getpass import getpass
 import requests
 from ScoutSuite.core.console import print_exception
 
-from azure.identity import UsernamePasswordCredential,AzureCliCredential, ClientSecretCredential, \
+from azure.identity import UsernamePasswordCredential, AzureCliCredential, ClientSecretCredential, \
     ManagedIdentityCredential, InteractiveBrowserCredential
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
@@ -28,7 +28,7 @@ class AzureCredentials:
     def get_tenant_id(self):
         if self.tenant_id:
             return self.tenant_id
-        elif hasattr(self.identity_credentials,'tenant_id'):
+        elif hasattr(self.identity_credentials, 'tenant_id'):
             return self.identity_credentials['tenant_id']
 
         else:
