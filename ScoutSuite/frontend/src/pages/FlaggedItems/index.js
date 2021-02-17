@@ -1,15 +1,17 @@
 import { useParams } from '@reach/router';
 import React from 'react';
 
-// import PropTypes from 'prop-types';
-
 import { useAPI } from '../../api/useAPI';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Layout from '../../layout';
 import Table from '../../components/Table';
+import Name from './formatters/Name/index';
+import SelectedItemContainer from './SelectedItemContainer';
+import BucketInformations from '../../partials/S3/BucketInformations';
+
+import fakeData from '../../api/temp/details.json';
 
 import './style.scss';
-import Name from './formatters/Name/index';
 
 const FlaggedItems = () => {
   const params = useParams();
@@ -63,7 +65,18 @@ const FlaggedItems = () => {
         </div>
 
         <div className="selected-item">
-          {!params.item ? 'No selected item.' : params.item}
+          {!params.item ? (
+            <span className="no-item">No selected item</span>
+          ) : (
+            <SelectedItemContainer title={params.item} leftPane={<BucketInformations data={fakeData}/>}>
+              <div>
+                <span>random data</span>
+                <span>random data</span>
+                <span>random data</span>
+                <span>random data</span>
+              </div>
+            </SelectedItemContainer>
+          )}
         </div>
       </div>
     </Layout>
