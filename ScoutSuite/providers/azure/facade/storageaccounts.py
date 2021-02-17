@@ -1,6 +1,4 @@
 import datetime
-from time import sleep
-
 from azure.mgmt.monitor import MonitorManagementClient
 from azure.mgmt.storage import StorageManagementClient
 
