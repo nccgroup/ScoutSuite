@@ -20,7 +20,8 @@ module.exports = {
     'semi': ['error', 'always'],
     'eol-last': ['warn', 'always'],
     'react/jsx-uses-vars': 'error',
-    'react/jsx-uses-react': 1
+    'react/jsx-uses-react': 1,
+    'no-debugger': 0,
   },
   'settings': {
     'react': {

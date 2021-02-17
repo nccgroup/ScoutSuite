@@ -6,6 +6,7 @@
 import * as Cache from './cache';
 
 import json from './temp/scoutsuite_results_aws.json'; // TEMP
+import items from './temp/items.json'; // TEMP
 
 // const BASE_URL = 'http://localhost:5000'
 
@@ -26,6 +27,7 @@ const getResource = (path) => {
  * @param {string} path
  */
 export const get = async (path) => {
+
   // Check path firt
   if (Cache.has(path)) {
     return Cache.get(path);
@@ -35,6 +37,12 @@ export const get = async (path) => {
     // TEMP
     Cache.set(path, json.last_run.summary);
     return json.last_run.summary;
+  }
+
+  if (path.endsWith('.items')) {
+    // TEMP
+    Cache.set(path, items);
+    return items;
   }
 
   const data = getResource(path);

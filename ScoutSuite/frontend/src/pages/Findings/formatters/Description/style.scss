@@ -1,0 +1,11 @@
+@import 'src/variables.scss';
+
+.findings-no-desc {
+  color: $default-grey-light;
+}
+
+.findings-desc {
+  color: $link-color;
+  font-weight: 600;
+  cursor: pointer;
+}

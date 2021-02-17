@@ -1,0 +1,32 @@
+@import 'src/variables.scss';
+
+.severity-label {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+
+  svg {
+    margin-right: 0.5rem;
+  }
+
+  &.high, &.danger {
+    color: $ncc-red;
+  }
+
+  &.medium, &.warning {
+    color: $scoutsuite-orange;
+  }
+
+  &.low {
+    color: $scoutsuite-blue;
+  }
+
+  &.info {
+    color: $text-muted;
+  }
+
+  &.success {
+    color: $scoutsuite-green;
+  }
+
+}

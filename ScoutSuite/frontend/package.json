@@ -18,6 +18,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
+    "react-table": "^7.6.3",
     "sass": "^1.32.6",
     "web-vitals": "^0.2.4"
   },
