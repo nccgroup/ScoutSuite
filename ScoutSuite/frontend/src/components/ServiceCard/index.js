@@ -46,9 +46,9 @@ const ServiceCard = props => {
       </div>
       <hr/>
       <div className="content">
-        <DetailedValue label="Resources" value={resources} />
-        <DetailedValue label="Rules" value={rules} />
-        <DetailedValue label="Checks" value={checks} />
+        <DetailedValue label="Resources" value={resources} separator="" />
+        <DetailedValue label="Rules" value={rules} separator="" />
+        <DetailedValue label="Checks" value={checks} separator="" />
       </div>
       <hr/>
       <div className="footer">

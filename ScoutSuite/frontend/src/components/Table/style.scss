@@ -73,8 +73,9 @@
     width: 18rem;
     padding: 0.3125rem 1.5rem;
     border: 1px solid $default-grey-light;
-    border-radius: $border-radius;
     outline: none;
+    caret-color: $default-grey;
+    border-radius: $border-radius;
 
     &::placeholder {
       color: $default-grey;

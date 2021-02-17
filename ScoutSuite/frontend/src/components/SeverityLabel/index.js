@@ -49,10 +49,11 @@ const propTypes = {
 const SeverityLabel = props => {
   const { severity } = props;
 
-  return <div className={cx('severity-label', severity)}>
-    {severities[severity].icon} {severities[severity].text}
-  </div>;
-  
+  return (
+    <div className={cx('severity-label', severity)}>
+      {severities[severity].icon} {severities[severity].text}
+    </div>
+  );
 };
 
 SeverityLabel.propTypes = propTypes;
