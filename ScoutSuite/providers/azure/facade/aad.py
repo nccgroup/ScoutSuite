@@ -16,7 +16,6 @@ class AADFacade:
 
         client = GraphSession(self.credentials.get_credentials(), scopes)
         endpoint = 'https://graph.microsoft.com/{}/{}'.format(api_version, api_resource)
-
         try:
             response = client.get(endpoint)
             if response.status_code == 200:
@@ -31,15 +30,15 @@ class AADFacade:
 
     async def get_users(self):
         try:
-
-            users_response_beta = await self._get_microsoft_graph_response('users', 'beta')
+            # This filters down the users which are pulled from the directory, otherwise for large tenants this
+            # becomes out of hands
+            # See https://github.com/nccgroup/ScoutSuite/issues/698
+            user_filter = '?$filter=userType+eq+%27Guest%27'
+            api_resource_with_filter = 'users' + user_filter
+            users_response_beta = await self._get_microsoft_graph_response(api_resource_with_filter, 'beta')
             if users_response_beta:
                 users = users_response_beta.get('value')
-                # This filters down the users which are pulled from the directory, otherwise for large tenants this
-                # becomes out of hands
-                # See https://github.com/nccgroup/ScoutSuite/issues/698
-                users_filtered = [d for d in users if d['userType'] in 'Guest']
-                return users_filtered
+                return users
             return users_response_beta
         except Exception as e:
             print_exception(f'Failed to retrieve users: {e}')
