@@ -11,14 +11,14 @@ import Table from '../../components/Table';
 import './style.scss';
 import Name from './formatters/Name/index';
 
-const propTypes = {};
-
 const FlaggedItems = () => {
   const params = useParams();
   const { data: items, loading } = useAPI(`services.${params.service}.findings.${params.finding}.items`);
 
   if (loading) return (
-    <Layout />
+    <Layout> 
+      <div/>
+    </Layout>
   );
 
   const columns = [
@@ -69,7 +69,5 @@ const FlaggedItems = () => {
     </Layout>
   );
 };
-
-FlaggedItems.propTypes = propTypes;
 
 export default FlaggedItems;

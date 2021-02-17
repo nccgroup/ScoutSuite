@@ -18,29 +18,55 @@ const Layout = (props) => {
     <div className="main-layout">
       <Header />
       <MenuBar>
-        <MenuElement>Home</MenuElement>
+        <MenuElement>
+          <span>Home</span>
+        </MenuElement>
         <SubMenu title="Analytics">
           <MenuGroup title="Summaries">
-            <MenuElement>Lambda</MenuElement>
-            <MenuElement>EC2</MenuElement>
-            <MenuElement>ELB</MenuElement>
+            <MenuElement>
+              <span>Lambda</span>
+            </MenuElement>
+            <MenuElement>
+              <span>EC2</span>
+            </MenuElement>
+            <MenuElement>
+              <span>ELB</span>
+            </MenuElement>
           </MenuGroup>
           <MenuGroup title="Resources">
-            <MenuElement>Lambda</MenuElement>
-            <MenuElement>EC2</MenuElement>
-            <MenuElement>ELB</MenuElement>
+            <MenuElement>
+              <span>Lambda</span>
+            </MenuElement>
+            <MenuElement>
+              <span>EC2</span>
+            </MenuElement>
+            <MenuElement>
+              <span>ELB</span>
+            </MenuElement>
           </MenuGroup>
         </SubMenu>
         <SubMenu title="Compute">
           <MenuGroup title="Summaries">
-            <MenuElement>Lambda</MenuElement>
-            <MenuElement>EC2</MenuElement>
-            <MenuElement>ELB</MenuElement>
+            <MenuElement>
+              <span>Lambda</span>
+            </MenuElement>
+            <MenuElement>
+              <span>EC2</span>
+            </MenuElement>
+            <MenuElement>
+              <span>ELB</span>
+            </MenuElement>
           </MenuGroup>
           <MenuGroup title="Resources">
-            <MenuElement>Lambda</MenuElement>
-            <MenuElement>EC2</MenuElement>
-            <MenuElement>ELB</MenuElement>
+            <MenuElement>
+              <span>Lambda</span>
+            </MenuElement>
+            <MenuElement>
+              <span>EC2</span>
+            </MenuElement>
+            <MenuElement>
+              <span>ELB</span>
+            </MenuElement>
           </MenuGroup>
         </SubMenu>
       </MenuBar>

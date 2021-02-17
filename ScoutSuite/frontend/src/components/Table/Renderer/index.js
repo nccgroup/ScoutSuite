@@ -55,11 +55,11 @@ const TableRender = (props) => {
                     column.canSort && (
                       <div className="sort-icons">
                         <ArrowDropUpIcon
-                          color={column.isSorted && !column.isSortedDesc ? 'primary' : ''}
+                          color={column.isSorted && !column.isSortedDesc ? 'primary' : undefined}
                           fontSize="small"
                         />
                         <ArrowDropDownIcon
-                          color={column.isSorted && column.isSortedDesc ? 'primary' : ''}
+                          color={column.isSorted && column.isSortedDesc ? 'primary' : undefined}
                           fontSize="small"
                         />
                       </div>
