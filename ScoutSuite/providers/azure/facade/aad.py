@@ -34,8 +34,7 @@ class AADFacade:
             # becomes out of hands
             # See https://github.com/nccgroup/ScoutSuite/issues/698
             user_filter = '?$filter=userType+eq+%27Guest%27'
-            api_resource_with_filter = 'users' + user_filter
-            users_response_beta = await self._get_microsoft_graph_response(api_resource_with_filter, 'beta')
+            users_response_beta = await self._get_microsoft_graph_response('users'+ user_filter, 'beta')
             if users_response_beta:
                 users = users_response_beta.get('value')
                 return users
@@ -46,10 +45,12 @@ class AADFacade:
 
     async def get_user(self, user_id):
         try:
-            user_response_beta = await self._get_microsoft_graph_response('users', 'beta')
-            users = user_response_beta.get('value')
-            users_filtered = [d for d in users if d['id'] in user_id]
-            return users_filtered[0]
+            user_filter = f'?$filter=id+eq+%27{user_id}%27'
+            user_response_beta = await self._get_microsoft_graph_response('users'+user_filter, 'beta')
+            if user_response_beta:
+                users = user_response_beta.get('value')
+                return users[0]
+            return user_response_beta
         except Exception as e:
             print_exception(f'Failed to retrieve user {user_id}: {e}')
             return None
@@ -67,10 +68,12 @@ class AADFacade:
 
     async def get_user_groups(self, group_id):
         try:
-            user_groups_response = await self._get_microsoft_graph_response('groups')
-            groups = user_groups_response.get('value')
-            filtered_group = [d for d in groups if d['id'] in group_id]
-            return filtered_group
+            group_filter = f'?$filter=id+eq+%27{group_id}%27'
+            user_groups_response = await self._get_microsoft_graph_response('groups' + group_filter)
+            if user_groups_response:
+                groups = user_groups_response.get('value')
+                return groups
+            return user_groups_response
         except Exception as e:
             print_exception(f'Failed to retrieve user\'s groups: {e}')
             return []
