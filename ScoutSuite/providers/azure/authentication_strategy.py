@@ -34,7 +34,7 @@ class AzureCredentials:
         else:
             # Additional request for CLI & MSI authentication
             try:
-                access_token = self.identity_credentials.get_token("https://management.core.windows.net/")
+                access_token = self.identity_credentials.get_token("https://management.core.windows.net/.default")
                 h = {'Authorization': f'Bearer {access_token.token}'}
                 r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
                 r2 = r.json()
@@ -133,10 +133,21 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             else:
                 raise AuthenticationException('Unknown authentication method')
 
+            # Getting token to authenticate and detect AuthenticationException
+            identity_credentials.get_token("https://management.core.windows.net/.default")
+
             return AzureCredentials(
                 identity_credentials,
                 tenant_id, subscription_id,
                 context)
 
         except Exception as e:
+            if 'Authentication failed: Unable to find wstrust endpoint from MEX. This typically happens when ' \
+               'attempting MSA accounts. More details available here. ' \
+               'https://github.com/AzureAD/microsoft-authentication-library-for-python/' \
+               'wiki/Username-Password-Authentication' in e.args:
+
+                raise AuthenticationException(
+                    'You are likely authenticating with a Microsoft Account. '
+                    'This authentication mode only support Azure Active Directory principal authentication.')
             raise AuthenticationException(e)
