@@ -2,9 +2,11 @@ from flask import Flask, request, jsonify
 from ScoutSuite.utils import format_service_name
 
 import json # TO REMOVE
-with open('/Users/noboruyoshida/code/ScoutSuite/scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-186023717850.json') as json_file:
-    results = json.load(json_file)
 
+scout_suite_directory = '/Users/noboruyoshida/code/ScoutSuite'
+
+with open(f'{scout_suite_directory}/scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-186023717850.json') as json_file:
+    results = json.load(json_file)
 
 # def start_api(results):
 app = Flask(__name__)
@@ -81,7 +83,17 @@ def get_issue_paths(service, finding, item_id):
             issue_path = item_path.split(path)[1][1:]
             issue_paths.append(issue_path)
 
-    return { 'path_to_issues': issue_paths }
+    words = path.split('.')
+    item_path_with_brackets = results['services']
+    for idx in range(len(path.split('.'))):
+        item_path_with_brackets = item_path_with_brackets[words[idx]]
+
+    issue_paths_and_item = {
+        'path_to_issues': issue_paths,
+        'item': item_path_with_brackets,
+    }
+
+    return jsonify(issue_paths_and_item)
 
 @app.route('/api/services/', methods=['GET'])
 def get_services():
@@ -91,30 +103,35 @@ def get_services():
     for category in metadata:
         services = metadata[category]
         service_list = []
+        category_dashboard = []
         for service in services:
-            service_id = service
-            dashboard = ['findings']
+            if service == 'summaries':
+                for dashboard_type in services[service]:
+                    category_dashboard.append(dashboard_type)
+            else:
+                service_id = service
+                dashboard = ['findings']
 
-            if 'summaries' in services[service]:
-                dashboard_types = services[service]['summaries']
-                for dashboard_type in dashboard_types:
-                    dashboard.append(dashboard_type)
-            service_info = {
-                'id': service,
-                'name': format_service_name(service),
-                'dashboards': dashboard
-            }
-            service_list.append(service_info)
+                if 'summaries' in services[service]:
+                    dashboard_types = services[service]['summaries']
+                    for dashboard_type in dashboard_types:
+                        dashboard.append(dashboard_type)
+                service_info = {
+                    'id': service,
+                    'name': format_service_name(service),
+                    'dashboards': dashboard
+                }
+                service_list.append(service_info)
             
         category_info = {
             'id': category,
             'name': category[0].upper() + category[1:],
             'services': service_list
         }
+        if category_dashboard: category_info['dashboard'] = category_dashboard
         category_list.append(category_info)
     
     return jsonify(category_list)
-
 
 def get_attributes_from_path(path):
     attributes = []

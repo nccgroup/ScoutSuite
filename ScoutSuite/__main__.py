@@ -13,7 +13,7 @@ from ScoutSuite.core.console import set_logger_configuration, print_info, print_
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
-from ScoutSuite.core.server import start_api
+# from ScoutSuite.core.server import start_api
 from ScoutSuite.output.html import ScoutReport
 from ScoutSuite.output.utils import get_filename
 from ScoutSuite.providers import get_provider
