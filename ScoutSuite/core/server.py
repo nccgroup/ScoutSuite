@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-# from ScoutSuite.core.api import scout_api
 
 import json # TO REMOVE
 with open('/Users/noboruyoshida/code/ScoutSuite/scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-186023717850.json') as json_file:
@@ -8,7 +7,6 @@ with open('/Users/noboruyoshida/code/ScoutSuite/scoutsuite-report/scoutsuite-res
 
 # def start_api(results):
 app = Flask(__name__)
-# app.register_blueprint(scout_api)
 # app.config["DEBUG"] = True
 
 @app.route('/', methods=['GET'])
@@ -122,7 +120,6 @@ def get_attributes_from_path(path):
 
 # /services/{service}/findings/{finding}/items/{itemID}?path=ec2.regions.{region}.vpcs.{vpc}.security_groups.{sg_id}
 # /services
-
 
 
 app.run()
