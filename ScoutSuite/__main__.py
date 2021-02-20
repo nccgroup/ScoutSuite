@@ -354,7 +354,7 @@ async def _run(provider,
     #     url = 'file://%s' % os.path.abspath(html_report_path)
     #     webbrowser.open(url, new=2)
 
-    start_api(report.encoder.load_from_file('RESULTS'))
+    # start_api(report.encoder.load_from_file('RESULTS'))
 
     # if ERRORS_LIST:  # errors were handled during execution
     #     return 200
