@@ -103,26 +103,32 @@ def get_services():
     for category in metadata:
         services = metadata[category]
         service_list = []
+        category_dashboard = []
         for service in services:
-            service_id = service
-            dashboard = ['findings']
+            if service == 'summaries':
+                for dashboard_type in services[service]:
+                    category_dashboard.append(dashboard_type)
+            else:
+                service_id = service
+                dashboard = ['findings']
 
-            if 'summaries' in services[service]:
-                dashboard_types = services[service]['summaries']
-                for dashboard_type in dashboard_types:
-                    dashboard.append(dashboard_type)
-            service_info = {
-                'id': service,
-                'name': format_service_name(service),
-                'dashboards': dashboard
-            }
-            service_list.append(service_info)
+                if 'summaries' in services[service]:
+                    dashboard_types = services[service]['summaries']
+                    for dashboard_type in dashboard_types:
+                        dashboard.append(dashboard_type)
+                service_info = {
+                    'id': service,
+                    'name': format_service_name(service),
+                    'dashboards': dashboard
+                }
+                service_list.append(service_info)
             
         category_info = {
             'id': category,
             'name': category[0].upper() + category[1:],
             'services': service_list
         }
+        if category_dashboard: category_info['dashboard'] = category_dashboard
         category_list.append(category_info)
     
     return jsonify(category_list)
