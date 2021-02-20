@@ -133,6 +133,16 @@ def get_services():
     
     return jsonify(category_list)
 
+@app.route('/api/provider', methods=['GET'])
+def get_provider():
+    provider_info = {
+        'account_id':results['account_id'],
+        'environment':results['environment'],
+        'provider_code':results['provider_code'],
+        'procider_name': results['provider_name']
+    }
+    return jsonify(provider_info)
+
 def get_attributes_from_path(path):
     attributes = []
     words = path.split('.')
@@ -141,7 +151,6 @@ def get_attributes_from_path(path):
             attributes.append(words[idx-1])
 
     return attributes[:-1]
-
 
 # /services/{service}/findings/{finding}/items/{itemID}?path=ec2.regions.{region}.vpcs.{vpc}.security_groups.{sg_id}
 # /services
