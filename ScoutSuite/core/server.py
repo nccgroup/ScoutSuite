@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from ScoutSuite.utils import format_service_name
 
 import json # TO REMOVE
 with open('/Users/noboruyoshida/code/ScoutSuite/scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-186023717850.json') as json_file:
@@ -82,30 +83,37 @@ def get_issue_paths(service, finding, item_id):
 
     return { 'path_to_issues': issue_paths }
 
-# @app.route('/api/services/', methods=['GET'])
-# def get_services():
-#     metadata = results['metadata']
-#     category_list = []
+@app.route('/api/services/', methods=['GET'])
+def get_services():
+    metadata = results['metadata']
+    category_list = []
 
-#     for category in metadata:
-#         category_id = category
-#         # get category name
+    for category in metadata:
+        services = metadata[category]
+        service_list = []
+        for service in services:
+            service_id = service
+            dashboard = ['findings']
 
-#         services = metadata[category]
-
-#         for service in services:
-#             service_id = service
-#             # get service name
-
-#             if 'summaries' in service[]
-#             # dashboards = metadata[category][service]['resources']
-#             print('category: ' + category)
-#             print('service: ' + service)
-
-#             # print(dashboards)
-
+            if 'summaries' in services[service]:
+                dashboard_types = services[service]['summaries']
+                for dashboard_type in dashboard_types:
+                    dashboard.append(dashboard_type)
+            service_info = {
+                'id': service,
+                'name': format_service_name(service),
+                'dashboards': dashboard
+            }
+            service_list.append(service_info)
+            
+        category_info = {
+            'id': category,
+            'name': category[0].upper() + category[1:],
+            'services': service_list
+        }
+        category_list.append(category_info)
     
-#     return jsonify(results['services'])
+    return jsonify(category_list)
 
 
 def get_attributes_from_path(path):
