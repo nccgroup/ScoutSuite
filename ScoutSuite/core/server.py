@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from ScoutSuite.utils import format_service_name
 
 import json # TO REMOVE
@@ -10,6 +11,7 @@ with open(f'{scout_suite_directory}/scoutsuite-report/scoutsuite-results/scoutsu
 
 # def start_api(results):
 app = Flask(__name__)
+CORS(app)
 # app.config["DEBUG"] = True
 
 @app.route('/', methods=['GET'])
