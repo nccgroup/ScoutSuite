@@ -348,15 +348,15 @@ async def _run(provider,
         print_exception('Failure while generating HTML report: {}'.format(e))
         return 109
 
-    # Open the report by default
-    if not no_browser:
-        print_info('Opening the HTML report')
-        url = 'file://%s' % os.path.abspath(html_report_path)
-        webbrowser.open(url, new=2)
+    # # Open the report by default
+    # if not no_browser:
+    #     print_info('Opening the HTML report')
+    #     url = 'file://%s' % os.path.abspath(html_report_path)
+    #     webbrowser.open(url, new=2)
 
     start_api(report.encoder.load_from_file('RESULTS'))
 
-    if ERRORS_LIST:  # errors were handled during execution
-        return 200
-    else:
-        return 0
+    # if ERRORS_LIST:  # errors were handled during execution
+    #     return 200
+    # else:
+    #     return 0
