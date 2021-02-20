@@ -25,7 +25,10 @@ def api():
 
 @app.route('/api/services/<service>/findings', methods=['GET'])
 def get_findings(service):
-    return jsonify([results['services'][service]['findings']])
+    findings = results['services'][service]['findings']
+    for finding in findings: findings[finding]['name'] = finding
+    
+    return jsonify(list(findings.values()))
 
 @app.route('/api/services/<service>/findings/<finding>/items', methods=['GET'])
 def get_items(service, finding):
@@ -87,7 +90,7 @@ def get_issue_paths(service, finding, item_id):
 
     words = path.split('.')
     item_path_with_brackets = results['services']
-    for idx in range(len(path.split('.'))):
+    for idx in range(len(words)):
         item_path_with_brackets = item_path_with_brackets[words[idx]]
 
     issue_paths_and_item = {
@@ -141,9 +144,19 @@ def get_provider():
         'account_id':results['account_id'],
         'environment':results['environment'],
         'provider_code':results['provider_code'],
-        'procider_name': results['provider_name']
+        'provider_name': results['provider_name']
     }
     return jsonify(provider_info)
+
+@app.route('/api/raw/<path:path_to_element>', methods=['GET'])
+def get_raw_info(path_to_element):
+    words = path_to_element.split('/')
+    path_to_elemnt_in_brackets = results
+
+    for idx in range(len(words)):
+        path_to_elemnt_in_brackets = path_to_elemnt_in_brackets[words[idx]]
+
+    return jsonify(path_to_elemnt_in_brackets)
 
 def get_attributes_from_path(path):
     attributes = []
