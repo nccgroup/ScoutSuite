@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from ScoutSuite.utils import format_service_name
 
 import json # TO REMOVE
@@ -10,6 +11,7 @@ with open(f'{scout_suite_directory}/scoutsuite-report/scoutsuite-results/scoutsu
 
 # def start_api(results):
 app = Flask(__name__)
+CORS(app)
 # app.config["DEBUG"] = True
 
 @app.route('/', methods=['GET'])
@@ -133,6 +135,16 @@ def get_services():
     
     return jsonify(category_list)
 
+@app.route('/api/provider', methods=['GET'])
+def get_provider():
+    provider_info = {
+        'account_id':results['account_id'],
+        'environment':results['environment'],
+        'provider_code':results['provider_code'],
+        'procider_name': results['provider_name']
+    }
+    return jsonify(provider_info)
+
 def get_attributes_from_path(path):
     attributes = []
     words = path.split('.')
@@ -141,7 +153,6 @@ def get_attributes_from_path(path):
             attributes.append(words[idx-1])
 
     return attributes[:-1]
-
 
 # /services/{service}/findings/{finding}/items/{itemID}?path=ec2.regions.{region}.vpcs.{vpc}.security_groups.{sg_id}
 # /services
