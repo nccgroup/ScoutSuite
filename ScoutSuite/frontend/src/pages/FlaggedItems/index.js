@@ -8,6 +8,7 @@ import Table from '../../components/Table';
 import Name from './formatters/Name/index';
 import SelectedItemContainer from './SelectedItemContainer';
 import BucketInformations from '../../partials/S3/BucketInformations';
+import BucketPolicies from '../../partials/S3/BucketPolicies';
 
 import fakeData from '../../api/temp/details.json';
 
@@ -69,12 +70,7 @@ const FlaggedItems = () => {
             <span className="no-item">No selected item</span>
           ) : (
             <SelectedItemContainer title={params.item} leftPane={<BucketInformations data={fakeData}/>}>
-              <div>
-                <span>random data</span>
-                <span>random data</span>
-                <span>random data</span>
-                <span>random data</span>
-              </div>
+              <BucketPolicies />
             </SelectedItemContainer>
           )}
         </div>

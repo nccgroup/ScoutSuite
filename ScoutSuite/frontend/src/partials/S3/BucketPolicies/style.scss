@@ -1,0 +1,20 @@
+@import 'src/variables';
+
+.bucket-policies {
+  table {
+    border-collapse: collapse;
+
+    th, td {
+      font-size: 0.875rem;
+      font-weight: normal;
+      width: 20%;
+      padding: 0.5rem;
+      border: 1px solid $default-grey-light;
+      text-align: center;
+    }
+
+    th {
+      background: $default-grey-subtle;
+    }
+  }
+}

@@ -7,6 +7,8 @@ import ExecutionDetails from './TabsContent/ExecutionDetails';
 import ResourcesDetails from './TabsContent/ResourcesDetails';
 import { TAB_NAMES } from '../../utils/Dashboard';
 
+import './style.scss';
+
 const services = [
   {
     name: 'EC2',
