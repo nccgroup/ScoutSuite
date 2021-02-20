@@ -2,9 +2,11 @@ from flask import Flask, request, jsonify
 from ScoutSuite.utils import format_service_name
 
 import json # TO REMOVE
-with open('/Users/noboruyoshida/code/ScoutSuite/scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-186023717850.json') as json_file:
-    results = json.load(json_file)
 
+scout_suite_directory = '/Users/noboruyoshida/code/ScoutSuite'
+
+with open(f'{scout_suite_directory}/scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-186023717850.json') as json_file:
+    results = json.load(json_file)
 
 # def start_api(results):
 app = Flask(__name__)
@@ -81,7 +83,17 @@ def get_issue_paths(service, finding, item_id):
             issue_path = item_path.split(path)[1][1:]
             issue_paths.append(issue_path)
 
-    return { 'path_to_issues': issue_paths }
+    words = path.split('.')
+    item_path_with_brackets = results['services']
+    for idx in range(len(path.split('.'))):
+        item_path_with_brackets = item_path_with_brackets[words[idx]]
+
+    issue_paths_and_item = {
+        'path_to_issues': issue_paths,
+        'item': item_path_with_brackets,
+    }
+
+    return jsonify(issue_paths_and_item)
 
 @app.route('/api/services/', methods=['GET'])
 def get_services():
