@@ -133,7 +133,6 @@ def get_services():
     
     return jsonify(category_list)
 
-
 def get_attributes_from_path(path):
     attributes = []
     words = path.split('.')
