@@ -35,6 +35,10 @@
 
   ul {
     margin-bottom: 1.25rem;
+
+    &.child {
+      padding-left: 1rem;
+    }
   }
 }
 

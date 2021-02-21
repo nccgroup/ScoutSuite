@@ -8,22 +8,22 @@ const propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
-  size: PropTypes.string
+  type: PropTypes.string
 };
 
 const MenuGroup = props => {
   const {
     title,
     children,
-    size
+    type
   } = props;
 
   return (
     <li className="menu-group">
-      <div className={cx('title', size === 'large' && 'lg')}>
+      <div className={cx('title', type === 'parent' && 'lg')}>
         {title}
       </div>
-      <ul>
+      <ul className={cx(type !== 'parent' && 'child')}>
         {children}
       </ul>
     </li>

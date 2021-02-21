@@ -1,7 +1,8 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import Popover from '@material-ui/core/Popover';
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+
 
 import './style.scss';
 
@@ -34,22 +35,14 @@ const Description = (props) => {
         <InfoOutlinedIcon fontSize="inherit" />  Finding description.
       </span>
 
-      <Popover
-        open={open}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        onClose={handlePopoverClose}
-        disableRestoreFocus
-      >
+      {open && <div className="desc-overlay">
+        <div className="desc-header">
+          <b>Finding Description</b>
+          <CloseOutlinedIcon onClick={handlePopoverClose} />
+        </div>
+        
         <div dangerouslySetInnerHTML={{ __html: value }}></div>
-      </Popover>
+      </div>}
     </>
   );
 };
