@@ -11,9 +11,16 @@ const Name = props => {
   const params = useParams();
   const { value, row: { original } } = props;
 
-  return (
-    <Link to={`/services/${params.service}/findings/${original.id}/items`}>{value}</Link>
-  );
+  console.log('ORIGINAL', original);
+
+  if (original.flagged_items && original.flagged_items > 0) {
+    return (
+      <Link to={`/services/${params.service}/findings/${original.id}/items`}>{value}</Link>
+    );
+  }
+
+  return value;
+  
 };
 
 Name.propTypes = propTypes;

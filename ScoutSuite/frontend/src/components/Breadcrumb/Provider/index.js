@@ -3,7 +3,7 @@ import { useAPI } from '../../../api/useAPI';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import AWSLogo from './Logos/aws.png';
-import { Link } from '@reach/router';
+import { Link, useParams } from '@reach/router';
 
 const getProviderLogo = (providerCode) => {
   if (providerCode === 'azure') return AWSLogo;
@@ -12,21 +12,28 @@ const getProviderLogo = (providerCode) => {
 };
 
 const Provider = () => {
-  const { data: providerCode } = useAPI('provider_code');
-  const { data: providerName, loading: l1 } = useAPI('provider_name');
-  const { data: acccountID, loading: l2} = useAPI('account_id');
+  const params = useParams();
+  const { data: provider, loading } = useAPI('provider');
 
-
-  if (l1 || l2) return null;
+  if (loading) return null;
 
   return (
     <>
-      <img className="provider-logo" src={getProviderLogo(providerCode)} />
-      <span>{providerName}</span>
+      <img
+        className="provider-logo"
+        src={getProviderLogo(provider.provider_code)}
+      />
+      <span>{provider.provider_name}</span>
 
       <ChevronRightIcon />
 
-      <span><Link to="/">{acccountID}</Link></span>
+      {params.service ? (
+        <span>
+          <Link to="/">{provider.account_id}</Link>
+        </span>
+      ) : (
+        <span>{provider.account_id}</span>
+      )}
     </>
   );
 };

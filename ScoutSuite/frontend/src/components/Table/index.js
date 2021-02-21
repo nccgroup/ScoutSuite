@@ -33,7 +33,14 @@ const Table = (props) => {
     return col;
   });
 
-  return <TableRender columns={cols} data={data} initialState={initialState} />;
+  return (
+    <TableRender
+      columns={cols}
+      data={data}
+      initialState={initialState}
+      hasPagination={!!initialState.pageCount}
+    />
+  );
 };
 
 Table.propTypes = propTypes;

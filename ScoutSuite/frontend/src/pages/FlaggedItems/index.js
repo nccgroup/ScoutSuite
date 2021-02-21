@@ -11,12 +11,13 @@ import BucketInformations from '../../partials/S3/BucketInformations';
 import BucketPolicies from '../../partials/S3/BucketPolicies';
 
 import fakeData from '../../api/temp/details.json';
+import { getItems } from '../../api/paths';
 
 import './style.scss';
 
 const FlaggedItems = () => {
   const params = useParams();
-  const { data: items, loading } = useAPI(`services.${params.service}.findings.${params.finding}.items`);
+  const { data: items, loading } = useAPI(getItems(params.service, params.finding), []);
 
   if (loading) return (
     <Layout> 
@@ -29,21 +30,23 @@ const FlaggedItems = () => {
     { name: 'Name', key: 'name' },
   ];
 
-  for (let [key,value] of Object.entries(items[0].extra)) {
-    columns.push({ name: value.name, key });
+  for (let [key,value] of Object.entries(items[0])) {
+    if (key !== 'item') columns.push({ name: value.name, key });
   }
 
   const data = items.map((item) => {
-    let newItem = item;
+    let newItem = item.item;
 
-    for (let [key, extra] of Object.entries(item.extra)) {
-      newItem[key] = extra.value;
+    for (let [key, value] of Object.entries(item)) {
+      if (key !== 'item') newItem[key] = value.id;
     }
 
     return newItem;
   });
 
-  const initialState = {};
+  const initialState = {
+    pageSize: 5
+  };
 
   const formatters = {
     name: Name

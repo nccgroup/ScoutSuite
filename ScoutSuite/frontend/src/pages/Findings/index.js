@@ -4,6 +4,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 
 import { useAPI } from '../../api/useAPI';
+import { getFindings } from '../../api/paths';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Layout from '../../layout';
 import Table from '../../components/Table';
@@ -18,9 +19,9 @@ const propTypes = {};
 
 const Findings = () => {
   const params = useParams();
-  const { data: results } = useAPI(`services.${params.service}.findings`);
+  const { data: findings, loading } = useAPI(getFindings(params.service));
 
-  const findings = Object.entries(results);
+  if (loading) return null;
 
   const columns = [
     { name: 'Severity', key: 'severity', sortInverted: true },
@@ -29,18 +30,20 @@ const Findings = () => {
     { name: 'Description', key: 'description' }
   ];
 
-  const data = findings.map(([key, item]) => ({
-    id: key,
+  const data = findings.map(item => ({
+    id: item.name,
     severity: item.flagged_items === 0 ? 'success' : item.level,
     name: item.description,
     flagged: `${item.flagged_items}/${item.checked_items}`,
-    description: item.rationale
+    description: item.rationale,
+    flagged_items: item.flagged_items,
   }));
 
   const initialState = {
     sortBy: [{
       id: 'severity', desc: false,
-    }]
+    }],
+    pageSize: 25
   };
 
   const formatters = {
