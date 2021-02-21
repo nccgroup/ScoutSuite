@@ -1,75 +1,73 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { useAPI } from '../api/useAPI';
+import { getServices } from '../api/paths';
 import Header from './Header';
 import { MenuBar, SubMenu, MenuGroup, MenuElement } from './Menu';
 import Breadcrumb from '../components/Breadcrumb';
 
 import './style.scss';
+import { getDashboardName } from '../utils/Dashboard';
+import { getDashboardLink } from '../utils/Dashboard/index';
+import { useParams, Link } from '@reach/router';
 
 const propTypes = {
   children: PropTypes.element.isRequired,
 };
 
 const Layout = (props) => {
+  const { data: categories, loading } = useAPI(getServices());
   const { children } = props;
+  const params = useParams();
+
+  if (loading) return null;
 
   return (
     <div className="main-layout">
       <Header />
+
       <MenuBar>
         <MenuElement>
-          <span>Home</span>
+          <span><Link to="/">Home</Link></span>
         </MenuElement>
-        <SubMenu title="Analytics">
-          <MenuGroup title="Summaries">
-            <MenuElement>
-              <span>Lambda</span>
-            </MenuElement>
-            <MenuElement>
-              <span>EC2</span>
-            </MenuElement>
-            <MenuElement>
-              <span>ELB</span>
-            </MenuElement>
-          </MenuGroup>
-          <MenuGroup title="Resources">
-            <MenuElement>
-              <span>Lambda</span>
-            </MenuElement>
-            <MenuElement>
-              <span>EC2</span>
-            </MenuElement>
-            <MenuElement>
-              <span>ELB</span>
-            </MenuElement>
-          </MenuGroup>
-        </SubMenu>
-        <SubMenu title="Compute">
-          <MenuGroup title="Summaries">
-            <MenuElement>
-              <span>Lambda</span>
-            </MenuElement>
-            <MenuElement>
-              <span>EC2</span>
-            </MenuElement>
-            <MenuElement>
-              <span>ELB</span>
-            </MenuElement>
-          </MenuGroup>
-          <MenuGroup title="Resources">
-            <MenuElement>
-              <span>Lambda</span>
-            </MenuElement>
-            <MenuElement>
-              <span>EC2</span>
-            </MenuElement>
-            <MenuElement>
-              <span>ELB</span>
-            </MenuElement>
-          </MenuGroup>
-        </SubMenu>
+        {categories.map((category) => {
+          const isOpened = !!category.services.find(
+            (service) => service.id === params.service,
+          );
+
+          return (
+            <SubMenu
+              title={category.name}
+              isOpened={isOpened}
+              key={category.id}
+            >
+              <MenuGroup title="Summaries">
+                {category.services.map((service) =>
+                  service.dashboards.map((dashboard) => (
+                    <MenuElement
+                      link={getDashboardLink(dashboard, service.id)}
+                      key={service.id + dashboard}
+                    >
+                      <span>
+                        {service.name} - {getDashboardName(dashboard)}
+                      </span>
+                    </MenuElement>
+                  )),
+                )}
+              </MenuGroup>
+              <MenuGroup title="Resources">
+                {category.services.map((service) => (
+                  <MenuElement key={service.id}>
+                    <span>{service.name}</span>
+                  </MenuElement>
+                ))}
+              </MenuGroup>
+            </SubMenu>
+          );
+        })}
       </MenuBar>
+
       <div className="main">
         <Breadcrumb />
         {children}

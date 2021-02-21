@@ -11,6 +11,24 @@ export const getServices = () => '/services';
 export const getFindings = (service) => `services/${service}/findings`;
 
 /**
+ * Get external attach service link
+ * @param {*} service 
+ */
+export const getExternalAttachService = (service) => `services/${service}/external-attack-surface`;
+
+/**
+ * Get password policy link
+ * @param {*} service 
+ */
+export const getPasswordPolicy = (service) => `services/${service}/password-policy`;
+
+/**
+ * Get password policy link
+ * @param {*} service 
+ */
+export const getPermissions = (service) => `services/${service}/permissions`;
+
+/**
  * Get items from a findings
  * @param {*} service 
  * @param {*} finding 
@@ -26,3 +44,5 @@ export const getItems = (service, finding) => `${getFindings(service)}/${finding
  */
 export const getItem = (service, finding, id, path) => 
   `${getFindings(service)}/${finding}/items/${id}?path=${path}`;
+
+export const getResource = (service) => `resources/${service}`;

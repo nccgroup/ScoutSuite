@@ -8,20 +8,22 @@ const propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
+  isOpened: PropTypes.bool.isRequired,
 };
 
 const SubMenu = props => {
   const { 
     title,
     children,
+    isOpened,
   } = props;
 
-  const [isSelected, setIsSelected] = useState(false);
+  const [isSelected, setIsSelected] = useState(isOpened);
   const className = cx('sub-menu', {'is-selected': isSelected});
 
   return (
-    <li className={className} onClick={() => setIsSelected(true)}>
-      <div className="title">
+    <li className={className}>
+      <div className="title" onClick={() => setIsSelected(!isSelected)}>
         {title}
       </div>
       {isSelected && (
