@@ -1,5 +1,6 @@
 import { useParams } from '@reach/router';
 import React from 'react';
+import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 
 // import PropTypes from 'prop-types';
 
@@ -11,7 +12,6 @@ import Table from '../../components/Table';
 import Name from './formatters/Name';
 import Description from './formatters/Description/index';
 import Severity from './formatters/Severity/index';
-
 
 import './style.scss';
 
@@ -27,10 +27,10 @@ const Findings = () => {
     { name: 'Severity', key: 'severity', sortInverted: true },
     { name: 'Name', key: 'name' },
     { name: 'Flagged Items', key: 'flagged', sortInverted: true },
-    { name: 'Description', key: 'description' }
+    { name: 'Description', key: 'description' },
   ];
 
-  const data = findings.map(item => ({
+  const data = findings.map((item) => ({
     id: item.name,
     severity: item.flagged_items === 0 ? 'success' : item.level,
     name: item.description,
@@ -40,21 +40,36 @@ const Findings = () => {
   }));
 
   const initialState = {
-    sortBy: [{
-      id: 'severity', desc: false,
-    }],
-    pageSize: 25
+    sortBy: [
+      {
+        id: 'severity',
+        desc: false,
+      },
+    ],
+    pageSize: 25,
   };
 
   const formatters = {
     name: Name,
     description: Description,
-    severity: Severity
+    severity: Severity,
   };
 
   const sortBy = {
-    severity: sortBySeverity
+    severity: sortBySeverity,
   };
+
+  if (findings.length === 0) {
+    return (
+      <Layout>
+        <div className="findings">
+          <div className="table-card no-items">
+            <CheckCircleOutlineOutlinedIcon /> <b>All good!</b> No findings for this service.
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -65,7 +80,8 @@ const Findings = () => {
             data={data}
             initialState={initialState}
             formatters={formatters}
-            sortBy={sortBy} />
+            sortBy={sortBy}
+          />
         </div>
       </div>
     </Layout>
