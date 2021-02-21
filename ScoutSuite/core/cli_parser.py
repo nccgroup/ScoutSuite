@@ -399,10 +399,9 @@ class ScoutSuiteArgumentParser:
                 self.parser.error('You must provide --tenant when using --service-principal authentication')
             if v.get('user_account_browser') and not v.get('tenant_id'):
                 self.parser.error('You must provide --tenant when using --user-account-browser authentication')
-            if v.get('user_account')and not v.get('tenant_id'):
+            if v.get('user_account') and not v.get('tenant_id'):
                 self.parser.error('You must provide --tenant when using --user-account authentication')
             if v.get('subscription_ids') and v.get('all_subscriptions'):
                 self.parser.error('--subscription-ids and --all-subscriptions are mutually exclusive options')
 
         return args
-
