@@ -38,7 +38,7 @@ def get_items(service, finding):
     if not finding['items']:
         item_list = []
     else:
-        path = finding['display_path'] if finding['display_path'] else finding['path']
+        path = finding['display_path'] if 'display_path' in finding else finding['path']
         attributes = get_attributes_from_path(path) # [regions, vpcs]
 
         for item_path in finding['items']:
