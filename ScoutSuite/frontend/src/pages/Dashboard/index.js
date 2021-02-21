@@ -5,44 +5,28 @@ import Layout from '../../layout/index';
 import Summary from './TabsContent/Summary';
 import ExecutionDetails from './TabsContent/ExecutionDetails';
 import ResourcesDetails from './TabsContent/ResourcesDetails';
+import { useAPI } from '../../api/useAPI';
 import { TAB_NAMES } from '../../utils/Dashboard';
 
 import './style.scss';
 
-const services = [
-  {
-    name: 'EC2',
-    warnings: 6,
-    issues: 6,
-    resources: 1450,
-    rules: 607,
-    checks: 439,
-  },
-  {
-    name: 'IAM',
-    warnings: 0,
-    issues: 0,
-    resources: 0,
-    rules: 0,
-    checks: 0,
-  },
-  {
-    name: 'S3',
-    warnings: 17,
-    issues: 15,
-    resources: 3514,
-    rules: 1097,
-    checks: 786,
-  },
-];
+
 
 const Dashboard = () => {
+  const { data: services, loading } = useAPI('raw/last_run/summary');
+
+  if (loading) return null;
+
+  const serivcesList = Object.entries(services).map(([name, item]) => ({name, ...item}));
+
+  console.log(serivcesList);
+
   return (
     <Layout>
       <div className="dashboard">
         <TabsMenu>
           <TabPane title={TAB_NAMES.SUMMARY}>
-            <Summary services={services} />
+            <Summary services={serivcesList} />
           </TabPane>
           <TabPane title={TAB_NAMES.EXECUTION_DETAILS}>
             <ExecutionDetails />
