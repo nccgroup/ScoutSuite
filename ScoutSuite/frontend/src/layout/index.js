@@ -29,7 +29,9 @@ const Layout = (props) => {
 
       <MenuBar>
         <MenuElement>
-          <span><Link to="/">Home</Link></span>
+          <span>
+            <Link to="/">Home</Link>
+          </span>
         </MenuElement>
         {categories.map((category) => {
           const isOpened = !!category.services.find(
@@ -42,21 +44,22 @@ const Layout = (props) => {
               isOpened={isOpened}
               key={category.id}
             >
-              <MenuGroup title="Summaries">
-                {category.services.map((service) =>
-                  service.dashboards.map((dashboard) => (
-                    <MenuElement
-                      link={getDashboardLink(dashboard, service.id)}
-                      key={service.id + dashboard}
-                    >
-                      <span>
-                        {service.name} - {getDashboardName(dashboard)}
-                      </span>
-                    </MenuElement>
-                  )),
-                )}
+              <MenuGroup title="Summaries" size="large">
+                {category.services.map((service) => (
+                  <MenuGroup title={`${service.name}`} key={service.id}>
+                    {service.dashboards.map((dashboard) => (
+                      <MenuElement
+                        link={getDashboardLink(dashboard, service.id)}
+                        key={dashboard}
+                      >
+                        <span>{getDashboardName(dashboard)}</span>
+                      </MenuElement>
+                    ))}
+                  </MenuGroup>
+                ))}
               </MenuGroup>
-              <MenuGroup title="Resources">
+
+              <MenuGroup title="Resources" size="large">
                 {category.services.map((service) => (
                   <MenuElement key={service.id}>
                     <span>{service.name}</span>

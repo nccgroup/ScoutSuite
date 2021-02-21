@@ -53,6 +53,11 @@
   .title {
     padding: 0.25rem 0;
     border-bottom: 1px solid $ncc-grey-dark;
+
+    &.lg {
+      font-size: 1rem;
+      font-weight: 900;
+    }
   }
 
   .menu-element {
