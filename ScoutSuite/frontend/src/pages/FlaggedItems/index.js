@@ -30,8 +30,8 @@ const FlaggedItems = () => {
     { name: 'Name', key: 'name' },
   ];
 
-  for (let [key,value] of Object.entries(items[0])) {
-    if (key !== 'item') columns.push({ name: value.name, key });
+  for (let [key] of Object.entries(items[0])) {
+    if (key !== 'item') columns.push({ name: key, key });
   }
 
   const data = items.map((item) => {
