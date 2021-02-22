@@ -32,8 +32,6 @@ const BucketInformations = props => {
     staticWebHosting,
   } = props.data;
 
-  console.log(props.data);
-
   const convertBoolToEnable = value => value ? 'enabled' : 'disabled';
 
   return (

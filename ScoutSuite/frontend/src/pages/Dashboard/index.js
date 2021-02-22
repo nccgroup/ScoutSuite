@@ -19,8 +19,6 @@ const Dashboard = () => {
 
   const serivcesList = Object.entries(services).map(([name, item]) => ({name, ...item}));
 
-  console.log(serivcesList);
-
   return (
     <Layout>
       <div className="dashboard">
