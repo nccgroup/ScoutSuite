@@ -1,5 +1,4 @@
 import datetime
-
 from azure.mgmt.monitor import MonitorManagementClient
 from azure.mgmt.storage import StorageManagementClient
 
@@ -14,7 +13,8 @@ class StorageAccountsFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        client = StorageManagementClient(self.credentials.get_credentials('arm'),
+
+        client = StorageManagementClient(self.credentials.get_credentials(),
                                          subscription_id=subscription_id,
                                          user_agent=get_user_agent())
         return client
@@ -46,8 +46,7 @@ class StorageAccountsFacade:
         else:
             return containers
     async def _get_and_set_activity_logs(self, storage_account, subscription_id: str):
-        client = MonitorManagementClient(self.credentials.arm_credentials, subscription_id)
-        client._client.config.add_user_agent(get_user_agent())
+        client = MonitorManagementClient(self.credentials.get_credentials(), subscription_id, user_agent=get_user_agent())
 
         # Time format used by Azure API:
         time_format = "%Y-%m-%dT%H:%M:%S.%f"
