@@ -294,7 +294,7 @@
         "storageaccount-encrypted-not-customer-managed.json": [
             {
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "virtual-machines-disk-encryption.json": [
