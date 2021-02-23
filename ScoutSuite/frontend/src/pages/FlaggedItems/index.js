@@ -7,10 +7,7 @@ import Layout from '../../layout';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
 import SelectedItemContainer from './SelectedItemContainer';
-import BucketInformations from '../../partials/S3/BucketInformations';
-import BucketPolicies from '../../partials/S3/BucketPolicies';
 
-import fakeData from '../../api/temp/details.json';
 import { getItems } from '../../api/paths';
 
 import './style.scss';
@@ -72,9 +69,7 @@ const FlaggedItems = () => {
           {!params.item ? (
             <span className="no-item">No selected item</span>
           ) : (
-            <SelectedItemContainer title={params.item} leftPane={<BucketInformations data={fakeData}/>}>
-              <BucketPolicies />
-            </SelectedItemContainer>
+            <SelectedItemContainer title={params.item} />
           )}
         </div>
       </div>
