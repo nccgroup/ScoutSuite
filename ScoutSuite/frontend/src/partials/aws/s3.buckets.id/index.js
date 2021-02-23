@@ -1,11 +1,16 @@
 import React from 'react';
 
+import { Partial } from '../../../components/Partial';
 import BucketInformations from './BucketInformations';
 import BucketPolicies from './BucketPolicies';
 import { PropTypes } from 'prop-types';
 
+
 const propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.objectOf({
+    item: PropTypes.object.isRequired,
+    path_to_issues: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }).isRequired,
 };
 
 const Bucket = props => {
@@ -15,14 +20,12 @@ const Bucket = props => {
 
   if (!data) return null;
 
-  console.log('DATA', data);
-
-  return (<>
+  return (<Partial data={data}>
     <div className="left-pane">
-      <BucketInformations data={data} />
+      <BucketInformations />
     </div>
-    <BucketPolicies data={data} />
-  </>);
+    <BucketPolicies />
+  </Partial>);
 };
 
 Bucket.propTypes = propTypes;

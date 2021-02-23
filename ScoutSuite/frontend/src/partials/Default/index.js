@@ -11,7 +11,7 @@ const DefaultPartial = (props) => {
   return (
     <>
       <div className="left-pane">
-        <Informations data={data} />
+        <Informations data={data.item} />
       </div>
 
       <b>THIS IS A DEFAULT FALLBACK PARTIAL.</b>

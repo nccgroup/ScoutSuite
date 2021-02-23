@@ -18,10 +18,10 @@ const SelectedItemContainer = props => {
 
   const path = (new URL(document.location)).searchParams.get('path');
   const params = useParams();
-  const { data: finding, loading: l1 } = useAPI(`raw/services/${params.service}/findings/${params.finding}`);
-  const { data, loading: l2 }= useAPI(getItem(params.service, params.finding, params.item, path));
+  const { data: finding, loading: loading1 } = useAPI(`raw/services/${params.service}/findings/${params.finding}`);
+  const { data, loading: loading2 }= useAPI(getItem(params.service, params.finding, params.item, path));
 
-  if (l1 || l2 || !data) return null;
+  if (loading1 || loading2 || !data) return null;
 
   const partialPath = finding.display_path || finding.path;
 
@@ -42,7 +42,7 @@ const SelectedItemContainer = props => {
       </div>
       <div className="content">
         <Suspense fallback={() => <span>Loading...</span>}>
-          <DynamicPartial data={data.item} />
+          <DynamicPartial data={data} />
         </Suspense>
       </div>
     </div>

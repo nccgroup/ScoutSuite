@@ -10,12 +10,13 @@ const propTypes = {
   data: PropTypes.object.isRequired,
 };
 
-const Informations = props => {
-  const {
-    data
-  } = props;
+const Informations = (props) => {
+  const { data } = props;
 
-  const informations = Object.entries(data).filter(([, value]) =>  isNumber(value) || typeof value === 'string' || isBoolean(value));
+  const informations = Object.entries(data).filter(
+    ([, value]) =>
+      isNumber(value) || typeof value === 'string' || isBoolean(value),
+  );
 
   return (
     <div className="bucket-informations">
