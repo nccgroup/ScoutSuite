@@ -11,8 +11,8 @@ import './style.scss';
 
 const propTypes = {
   name: PropTypes.string.isRequired,
-  warnings: PropTypes.number.isRequired,
-  issues: PropTypes.number.isRequired,
+  warnings: PropTypes.number,
+  issues: PropTypes.number,
   resources_count: PropTypes.number.isRequired,
   rules_count: PropTypes.number.isRequired,
   checked_items: PropTypes.number.isRequired,

@@ -5,7 +5,7 @@ import cx from 'classnames';
 
 const propTypes = {
   children: PropTypes.element.isRequired,
-  link: PropTypes.string.isRequired
+  link: PropTypes.string,
 };
 
 const MenuElement = props => {

@@ -23,50 +23,54 @@ const Layout = (props) => {
 
   if (loading) return null;
 
-  return (
-    <div className="main-layout">
-      <Header />
+  const menuBarItems = [
+    <MenuElement link="" key="home">
+      <span>Home</span>
+    </MenuElement>,
+    ...categories.map((category) => {
+      const isOpened = !!category.services.find(
+        (service) => service.id === params.service,
+      );
 
-      <MenuBar>
-        <MenuElement link="">Home</MenuElement>
-        {categories.map((category) => {
-          const isOpened = !!category.services.find(
-            (service) => service.id === params.service,
-          );
-
-          return (
-            <SubMenu
-              title={category.name}
-              isOpened={isOpened}
-              key={category.id}
-            >
-              <MenuGroup title="Summaries" size="large">
-                {category.services.map((service) => (
-                  <MenuGroup title={`${service.name}`} key={service.id}>
-                    {service.dashboards.map((dashboard) => (
-                      <MenuElement
-                        link={getDashboardLink(dashboard, service.id)}
-                        key={dashboard}
-                      >
-                        <span>{getDashboardName(dashboard)}</span>
-                      </MenuElement>
-                    ))}
-                  </MenuGroup>
-                ))}
-              </MenuGroup>
-
-              <MenuGroup title="Resources" size="large">
-                {category.services.map((service) => (
-                  <MenuElement key={service.id}>
-                    <span>{service.name}</span>
+      return (
+        <SubMenu
+          title={category.name}
+          isOpened={isOpened}
+          key={category.id}
+        >
+          <MenuGroup title="Summaries" size="large">
+            {category.services.map((service) => (
+              <MenuGroup title={`${service.name}`} key={service.id}>
+                {service.dashboards.map((dashboard) => (
+                  <MenuElement
+                    link={getDashboardLink(dashboard, service.id)}
+                    key={dashboard}
+                  >
+                    <span>{getDashboardName(dashboard)}</span>
                   </MenuElement>
                 ))}
               </MenuGroup>
-            </SubMenu>
-          );
-        })}
-      </MenuBar>
+            ))}
+          </MenuGroup>
 
+          <MenuGroup title="Resources" size="large">
+            {category.services.map((service) => (
+              <MenuElement key={service.id}>
+                <span>{service.name}</span>
+              </MenuElement>
+            ))}
+          </MenuGroup>
+        </SubMenu>
+      );
+    })
+  ];
+
+  return (
+    <div className="main-layout">
+      <Header />
+      <MenuBar>
+        {menuBarItems}
+      </MenuBar>
       <div className="main">
         <Breadcrumb />
         {children}
