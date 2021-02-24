@@ -110,6 +110,7 @@ def get_services():
         service_list = []
         category_dashboard = []
         for service in services:
+            resource_list = []
             if service == 'summaries':
                 for dashboard_type in services[service]:
                     category_dashboard.append(dashboard_type)
@@ -117,14 +118,27 @@ def get_services():
                 service_id = service
                 dashboard = ['findings']
 
+                if 'resources' in services[service]:
+                    resources = services[service]['resources']
+                    for resource in resources:
+                        count = None if 'count' not in services[service]['resources'][resource] else services[service]['resources'][resource]['count']
+                        resource_info = {
+                            'id': resource,
+                            'name': format_title(resource),
+                            'count': count
+                        }
+                        resource_list.append(resource_info)
+
                 if 'summaries' in services[service]:
                     dashboard_types = services[service]['summaries']
                     for dashboard_type in dashboard_types:
                         dashboard.append(dashboard_type)
+
                 service_info = {
                     'id': service,
                     'name': format_service_name(service),
-                    'dashboards': dashboard
+                    'dashboards': dashboard,
+                    'resources': resource_list
                 }
                 service_list.append(service_info)
             
@@ -166,6 +180,9 @@ def get_attributes_from_path(path):
             attributes.append(words[idx-1])
 
     return attributes[:-1]
+
+def format_title(title):
+    return title[0].upper() + ' '.join(title[1:].lower().split('_'))
 
 # /services/{service}/findings/{finding}/items/{itemID}?path=ec2.regions.{region}.vpcs.{vpc}.security_groups.{sg_id}
 # /services
