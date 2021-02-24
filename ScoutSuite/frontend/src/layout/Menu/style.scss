@@ -19,7 +19,7 @@
   background-color: $ncc-grey-dark;
   overflow-y: auto;
 
-  div {
+  div, a {
     margin: 0.675rem 2rem 0.675rem 1.5rem;
   }
 
@@ -35,17 +35,15 @@
 
   ul {
     margin-bottom: 1.25rem;
-
-    &.child {
-      padding-left: 1rem;
-    }
   }
 }
 
-.sub-menu, .menu-element {
+.menu-element,
+.sub-menu > .title {
   cursor: pointer;
 
   a, a:visited {
+    display: block;
     color: $white;
     text-decoration: none;
   }

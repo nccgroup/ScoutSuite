@@ -10,7 +10,7 @@ import Breadcrumb from '../components/Breadcrumb';
 import './style.scss';
 import { getDashboardName } from '../utils/Dashboard';
 import { getDashboardLink } from '../utils/Dashboard/index';
-import { useParams, Link } from '@reach/router';
+import { useParams } from '@reach/router';
 
 const propTypes = {
   children: PropTypes.element.isRequired,
@@ -28,11 +28,7 @@ const Layout = (props) => {
       <Header />
 
       <MenuBar>
-        <MenuElement>
-          <span>
-            <Link to="/">Home</Link>
-          </span>
-        </MenuElement>
+        <MenuElement link="">Home</MenuElement>
         {categories.map((category) => {
           const isOpened = !!category.services.find(
             (service) => service.id === params.service,

@@ -20,12 +20,14 @@ const Bucket = props => {
 
   if (!data) return null;
 
-  return (<Partial data={data}>
-    <div className="left-pane">
-      <BucketInformations />
-    </div>
-    <BucketPolicies />
-  </Partial>);
+  return (
+    <Partial data={data}>
+      <div className="left-pane">
+        <BucketInformations />
+      </div>
+      <BucketPolicies />
+    </Partial>
+  );
 };
 
 Bucket.propTypes = propTypes;

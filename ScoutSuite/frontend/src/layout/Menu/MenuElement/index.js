@@ -13,13 +13,16 @@ const MenuElement = props => {
     children,
     link
   } = props;
+  
   const location = useLocation();
+
+  const hasLink = link != undefined && link != null; 
 
   return (
     <li className={cx('menu-element', location.pathname.startsWith('/' + link) && 'is-selected')}>
+      {hasLink && <Link to={'/' + link}>{children}</Link>}
       <div>
-        {link && <Link to={'/' + link}>{children}</Link>}
-        {!link && children}
+        {!hasLink && children}
       </div>
     </li>
   );
