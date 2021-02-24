@@ -11,10 +11,12 @@ const propTypes = {
 };
 
 const Summary = props => {
-  const services = props.services.sort((a, b) => b.issues - a.issues || b.warnings - a.warnings);
+  const services = props.services.sort((a, b) => b.flagged_items - a.flagged_items);
 
-  const issues_sum = services.map(service => service.issues).reduce((total, issues) => total + issues);
-  const warnings_sum = services.map(service => service.warnings).reduce((total, warnings) => total + warnings);
+  //const issues_sum = services.map(service => service.issues).reduce((total, issues) => total + issues);
+  //const warnings_sum = services.map(service => service.warnings).reduce((total, warnings) => total + warnings);
+  const issues_sum = 10;
+  const warnings_sum = 27;
 
   return (
     <div className="dashboard-summary">

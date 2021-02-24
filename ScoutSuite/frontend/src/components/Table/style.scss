@@ -84,3 +84,20 @@
     }
   }
 }
+
+.pagination {
+  padding: 0.75rem 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  .icon {
+    cursor: pointer;
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+}

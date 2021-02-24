@@ -17,6 +17,7 @@
   padding: 0;
   margin: 0;
   background-color: $ncc-grey-dark;
+  overflow-y: auto;
 
   div {
     margin: 0.675rem 2rem 0.675rem 1.5rem;
@@ -34,14 +35,19 @@
 
   ul {
     margin-bottom: 1.25rem;
+
+    &.child {
+      padding-left: 1rem;
+    }
   }
 }
 
 .sub-menu, .menu-element {
   cursor: pointer;
 
-  &.is-selected {
-    cursor: default;
+  a, a:visited {
+    color: $white;
+    text-decoration: none;
   }
 }
 
@@ -51,9 +57,21 @@
   .title {
     padding: 0.25rem 0;
     border-bottom: 1px solid $ncc-grey-dark;
+
+    &.lg {
+      font-size: 1rem;
+      font-weight: 900;
+    }
   }
 
   .menu-element {
     font-weight: 400;
+  }
+}
+
+.menu-element {
+  &.is-selected {
+    cursor: default;
+    font-weight: 900;
   }
 }

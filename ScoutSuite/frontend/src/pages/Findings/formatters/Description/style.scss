@@ -9,3 +9,26 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+.desc-overlay {
+  position: absolute;
+  background-color: $white;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  right: -1rem;
+  max-width: 60%;
+
+  margin-top: 0.25rem;
+
+  padding: 0.625rem 1rem;
+
+  .desc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+
+    svg {
+      cursor: pointer;
+    }
+  }
+}

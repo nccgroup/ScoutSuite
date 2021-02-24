@@ -12,6 +12,7 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
+    "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "lodash": "^4.17.20",
     "prop-types": "^15.7.2",
