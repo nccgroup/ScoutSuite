@@ -1,14 +1,17 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { PartialContext } from '../context';
 
 const propTypes = {
-  data: PropTypes.objectOf({
+  data: PropTypes.shape({
     item: PropTypes.object.isRequired,
     path_to_issues: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]).isRequired,
 };
 
 const PartialWrapper = (props) => {

@@ -12,14 +12,12 @@ const propTypes = {
 };
 
 const SelectedItemContainer = props => {
-  const {
-    title
-  } = props;
+  const { title } = props;
 
   const path = (new URL(document.location)).searchParams.get('path');
   const params = useParams();
   const { data: finding, loading: loading1 } = useAPI(`raw/services/${params.service}/findings/${params.finding}`);
-  const { data, loading: loading2 }= useAPI(getItem(params.service, params.finding, params.item, path));
+  const { data, loading: loading2 } = useAPI(getItem(params.service, params.finding, params.item, path));
 
   if (loading1 || loading2 || !data) return null;
 
@@ -41,7 +39,7 @@ const SelectedItemContainer = props => {
         <h3>{title}</h3>
       </div>
       <div className="content">
-        <Suspense fallback={() => <span>Loading...</span>}>
+        <Suspense fallback={<span>Loading...</span>}>
           <DynamicPartial data={data} />
         </Suspense>
       </div>

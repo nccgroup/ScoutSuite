@@ -7,16 +7,14 @@ import { PropTypes } from 'prop-types';
 
 
 const propTypes = {
-  data: PropTypes.objectOf({
+  data: PropTypes.shape({
     item: PropTypes.object.isRequired,
     path_to_issues: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
 };
 
 const Bucket = props => {
-  const {
-    data
-  } = props;
+  const { data } = props;
 
   if (!data) return null;
 
