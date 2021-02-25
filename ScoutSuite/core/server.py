@@ -162,6 +162,41 @@ def get_provider():
     }
     return jsonify(provider_info)
 
+@app.route('/api/dashboard', methods=['GET'])
+def get_dashboard():
+    summary = results['last_run']['summary']
+    service_list = []
+    for summary_service in summary:
+        issues = {
+            'Critical': 0,
+            'High': 0,
+            'Medium': 0,
+            'Low': 0,
+            'All good': 0
+        }
+        findings = results['services'][summary_service]['findings']
+        for rule in findings:
+            if findings[rule]['items']:
+                issue_level = findings[rule]['level']
+                if issue_level == 'danger': issues['High'] += 1
+                if issue_level == 'warning': issues['Medium'] += 1
+            else:
+                issues['All good'] += 1
+
+        summary_service_object = summary[summary_service]
+        service_info = {
+            'id': summary_service,
+            'name': format_service_name(summary_service),
+            'issues': issues,
+            'resources': summary_service_object['resources_count'],
+            'rules': summary_service_object['rules_count'],
+            'flagged-items': summary_service_object['flagged_items']
+        }
+        service_list.append(service_info)
+
+    return jsonify(service_list)
+
+
 @app.route('/api/raw/<path:path_to_element>', methods=['GET'])
 def get_raw_info(path_to_element):
     words = path_to_element.split('/')
