@@ -172,7 +172,7 @@ def get_dashboard():
             'High': 0,
             'Medium': 0,
             'Low': 0,
-            'All good': 0
+            'Good': 0
         }
         findings = results['services'][summary_service]['findings']
         for rule in findings:
@@ -181,7 +181,7 @@ def get_dashboard():
                 if issue_level == 'danger': issues['High'] += 1
                 if issue_level == 'warning': issues['Medium'] += 1
             else:
-                issues['All good'] += 1
+                issues['Good'] += 1
 
         summary_service_object = summary[summary_service]
         service_info = {
