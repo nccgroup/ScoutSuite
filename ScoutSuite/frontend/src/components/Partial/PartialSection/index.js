@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { PropTypes } from 'prop-types';
 
-import {PartialPathContext} from '../context';
+import { PartialPathContext } from '../context';
 
 const propTypes = {
   path: PropTypes.string.isRequired,
@@ -9,11 +9,9 @@ const propTypes = {
 };
 
 const PartialSection = (props) => {
-  let { path, children } = props;
+  const { path, children } = props;
 
-  let basePath = useContext(PartialPathContext);
-
-  if (path.length > 0) path += '.';
+  const basePath = useContext(PartialPathContext);
 
   return (
     <PartialPathContext.Provider value={basePath + path}>

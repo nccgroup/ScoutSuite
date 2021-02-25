@@ -1,0 +1,8 @@
+@import 'src/variables';
+
+.partial-value {
+  .error {
+    color: $warning-color;
+    font-weight: 700;
+  }
+}

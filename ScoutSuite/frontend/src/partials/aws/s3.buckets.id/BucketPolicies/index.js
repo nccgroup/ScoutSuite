@@ -1,6 +1,9 @@
 import React from 'react';
 
 import { TabsMenu, TabPane } from '../../../../components/Tabs';
+import { PartialSection } from '../../../../components/Partial';
+import AccessControlList from './AccessControlList';
+import PoliciesAccessTable from './PoliciesAccessTable';
 
 import './style.scss';
 
@@ -8,35 +11,24 @@ const BucketPolicies = () => {
   return (
     <TabsMenu className="bucket-policies">
       <TabPane title="Bucket ACLs">
-        <table>
-          <thead>
-            <tr>
-              <th/>
-              <th>List</th>
-              <th>Upload/Delete</th>
-              <th>View Permissions</th>
-              <th>Edit Permissions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>rami.mccarthy+BASCworkshop</td>
-              <td>&#10003;</td>
-              <td>&#10003;</td>
-              <td>&#10003;</td>
-              <td>&#10003;</td>
-            </tr>
-          </tbody>
-        </table>
+        <PartialSection path="grantees">
+          <AccessControlList columnName="Groups name"/>
+        </PartialSection>
       </TabPane>
       <TabPane title="Groups">
-        <div>groups</div>
+        <PartialSection path="groups">
+          <PoliciesAccessTable />
+        </PartialSection>
       </TabPane>
       <TabPane title="Roles">
-        <div>roles</div>
+        <PartialSection path="roles">
+          <PoliciesAccessTable columnName="Roles name"/>
+        </PartialSection>
       </TabPane>
       <TabPane title="Users">
-        <div>users</div>
+        <PartialSection path="users">
+          <PoliciesAccessTable columnName="Users name"/>
+        </PartialSection>
       </TabPane>
     </TabsMenu>
   );
