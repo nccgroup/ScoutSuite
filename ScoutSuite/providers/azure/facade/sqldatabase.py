@@ -12,12 +12,13 @@ class SQLDatabaseFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        client = SqlManagementClient(self.credentials.get_credentials('arm'),
-                                   subscription_id=subscription_id)
-        client._client.config.add_user_agent(get_user_agent())
+        client = SqlManagementClient(self.credentials.get_credentials(),
+                                     subscription_id=subscription_id,
+                                     user_agent=get_user_agent())
         return client
 
-    async def get_database_blob_auditing_policies(self, resource_group_name, server_name, database_name, subscription_id: str):
+    async def get_database_blob_auditing_policies(self, resource_group_name, server_name, database_name,
+                                                  subscription_id: str):
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
@@ -28,7 +29,8 @@ class SQLDatabaseFacade:
             print_exception(f'Failed to retrieve database blob auditing policies: {e}')
             return []
 
-    async def get_database_threat_detection_policies(self, resource_group_name, server_name, database_name, subscription_id: str):
+    async def get_database_threat_detection_policies(self, resource_group_name, server_name, database_name,
+                                                     subscription_id: str):
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
@@ -49,7 +51,8 @@ class SQLDatabaseFacade:
             print_exception(f'Failed to retrieve databases: {e}')
             return []
 
-    async def get_database_replication_links(self, resource_group_name, server_name, database_name, subscription_id: str):
+    async def get_database_replication_links(self, resource_group_name, server_name, database_name,
+                                             subscription_id: str):
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
@@ -105,7 +108,8 @@ class SQLDatabaseFacade:
             print_exception(f'Failed to retrieve servers: {e}')
             return []
 
-    async def get_database_transparent_data_encryptions(self, resource_group_name, server_name, database_name, subscription_id: str):
+    async def get_database_transparent_data_encryptions(self, resource_group_name, server_name, database_name,
+                                                        subscription_id: str):
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(

@@ -78,8 +78,7 @@ class AzureFacade:
     def _set_subscriptions(self):
 
         # Create the client
-        subscription_client = SubscriptionClient(self.credentials.arm_credentials)
-        subscription_client._client.config.add_user_agent(get_user_agent())
+        subscription_client = SubscriptionClient(self.credentials.get_credentials(), user_agent=get_user_agent())
         # Get all the accessible subscriptions
         accessible_subscriptions_list = list(subscription_client.subscriptions.list())
 

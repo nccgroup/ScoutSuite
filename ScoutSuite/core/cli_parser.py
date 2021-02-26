@@ -5,7 +5,7 @@ from ScoutSuite import __version__
 class ScoutSuiteArgumentParser:
 
     def __init__(self):
-        self.parser = argparse.ArgumentParser()
+        self.parser = argparse.ArgumentParser(epilog='To get addtional help on a specific provider run: scout.py {provider} -h')
 
         # People will still be able to use the old --provider syntax
         self.parser.add_argument("--provider",
@@ -392,14 +392,16 @@ class ScoutSuiteArgumentParser:
                                   'and Secret Access Key.')
         # Azure
         elif v.get('provider') == 'azure':
-            if v.get('tenant_id') and not (v.get('service_principal') or v.get('user_account_browser')):
-                self.parser.error('--tenant can only be set when using --user-account-browser or --service-principal authentication')
+            if v.get('tenant_id') and not (v.get('service_principal') or v.get('user_account_browser') or v.get('user_account')):
+                self.parser.error('--tenant can only be set when using --user-account-browser or --user-account or '
+                                  '--service-principal authentication')
             if v.get('service_principal') and not v.get('tenant_id'):
                 self.parser.error('You must provide --tenant when using --service-principal authentication')
             if v.get('user_account_browser') and not v.get('tenant_id'):
                 self.parser.error('You must provide --tenant when using --user-account-browser authentication')
+            if v.get('user_account') and not v.get('tenant_id'):
+                self.parser.error('You must provide --tenant when using --user-account authentication')
             if v.get('subscription_ids') and v.get('all_subscriptions'):
                 self.parser.error('--subscription-ids and --all-subscriptions are mutually exclusive options')
 
         return args
-
