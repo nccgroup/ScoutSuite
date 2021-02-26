@@ -120,6 +120,12 @@
                 "level": "warning"
             }
         ],
+        "rbac-custom-subscription-owner-role-not-allowed.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "securitycenter-auto-provisioning-off.json": [
             {
                 "enabled": true,
