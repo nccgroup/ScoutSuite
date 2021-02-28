@@ -6,6 +6,12 @@
                 "enabled": true,
                 "level": "warning"
             }
+        ],
+        "storageaccount-soft-delete-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 }
