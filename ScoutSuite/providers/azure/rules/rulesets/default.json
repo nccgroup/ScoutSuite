@@ -97,13 +97,10 @@
                 ],
                 "enabled": true,
                 "level": "warning"
-            },
+            }
+        ],
+        "network-security-groups-rule-inbound-service-mssql.json": [
             {
-                "args": [
-                    "MsSQL",
-                    "1433",
-                    "6.3"
-                ],
                 "enabled": true,
                 "level": "warning"
             }

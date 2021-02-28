@@ -6,7 +6,16 @@
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.0.0",
             "reference": "_ARG_2_"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "_ARG_2_"
         }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/security/fundamentals/network-best-practices#disable-rdpssh-access-to-azure-virtual-machines",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security"
     ],
     "dashboard_name": "NSGs",
     "display_path": "network.subscriptions.id.security_groups.id",
