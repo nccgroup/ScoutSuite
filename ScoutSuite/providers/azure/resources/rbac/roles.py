@@ -13,6 +13,8 @@ class Roles(AzureResources):
             id, role = self._parse_role(raw_role)
             self[id] = role
 
+
+
     def _parse_role(self, raw_role):
         role_dict = {}
         role_dict['id'] = raw_role.name
@@ -27,4 +29,5 @@ class Roles(AzureResources):
         role_dict['assignments'] = {'users': [],
                                     'groups': [],
                                     'service_principals': []}  # this will be filled in `finalize()`
+        # role_dict['']
         return role_dict['id'], role_dict
