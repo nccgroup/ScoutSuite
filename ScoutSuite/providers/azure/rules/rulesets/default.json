@@ -314,6 +314,12 @@
                 "enabled": true,
                 "level": "warning"
             }
+        ],
+        "virtual-machines-managed-disks.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 }
