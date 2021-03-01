@@ -314,6 +314,12 @@
                 "enabled": true,
                 "level": "warning"
             }
+        ],
+        "virtual-machines-unattached-disks-encrypted-cmk.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
         ]
     }
 }
