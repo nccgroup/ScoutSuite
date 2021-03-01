@@ -116,15 +116,3 @@ class SQLDatabaseFacade:
         except Exception as e:
             print_exception(f'Failed to retrieve database transparent data encryptions: {e}')
             return []
-
-    async def get_server_vulnerability_assessments(self, resource_group_name, server_name,
-                                                   subscription_id: str):
-        try:
-            client = self.get_client(subscription_id)
-            val = await run_concurrently(
-                lambda: list(client.server_vulnerability_assessments.list_by_server(resource_group_name, server_name))
-            )
-            return val
-        except Exception as e:
-            print_exception(f'Failed to retrieve database transparent data encryptions: {e}')
-            return []
