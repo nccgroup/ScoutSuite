@@ -29,5 +29,4 @@ class Roles(AzureResources):
         role_dict['assignments'] = {'users': [],
                                     'groups': [],
                                     'service_principals': []}  # this will be filled in `finalize()`
-        # role_dict['']
         return role_dict['id'], role_dict
