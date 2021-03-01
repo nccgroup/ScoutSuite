@@ -314,6 +314,12 @@
                 "enabled": true,
                 "level": "warning"
             }
+        ],
+        "virtual-machines-os-data-encrypted-cmk.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
         ]
     }
 }
