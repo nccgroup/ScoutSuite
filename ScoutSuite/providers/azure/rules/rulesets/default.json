@@ -258,6 +258,12 @@
                 "level": "warning"
             }
         ],
+        "sqldatabase-allow-any-ip.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "storageaccount-access-keys-not-rotated.json": [
             {
                 "args": [

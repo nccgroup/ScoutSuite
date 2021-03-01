@@ -1,6 +1,12 @@
 {
   "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.2.0.",
   "rules": {
+    "sqldatabase-allow-any-ip.json": [
+        {
+            "enabled": true,
+            "level": "warning"
+        }
+    ],
     "storageaccount-encrypted-not-customer-managed.json": [
       {
         "enabled": true,

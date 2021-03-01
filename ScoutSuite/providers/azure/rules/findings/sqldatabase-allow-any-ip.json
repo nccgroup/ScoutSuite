@@ -1,0 +1,30 @@
+{
+    "description": "SQL Database Allow Ingress 0.0.0.0/0 (Any IP)",
+    "rationale": "SQL Server includes a firewall to block access to unauthorized connections. More granular IP addresses can be defined by referencing the range of addresses available from specific datacenters. In order to reduce the potential attack surface for a SQL server, firewall rules should be defined with more granular IP addresses by referencing the range of addresses available from specific datacenters.",
+    "remediation": "In the Azure console:<ol><li>Go to <samp>SQL servers</samp></li><li>For each SQL server</li><li>Click on <samp>Firewall/Virtual Networks</samp></li><li>Set <samp>Allow access to Azure services</samp> to 'OFF'</li><li>Set firewall rules to limit access to only authorized connections</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "6.3"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/configure-a-windows-firewall-for-database-engine-access?view=sql-server-2017",
+        "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverfirewallrule?view=azurermps-6.13.0&viewFallbackFrom=azurermps-5.2.0",
+        "https://docs.microsoft.com/en-us/azure/azure-sql/database/firewall-configure",
+        "https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-set-database-firewall-rule-azure-sql-database?view=azuresqldb-current"
+    ],
+    "dashboard_name": "Firewall Rules",
+    "display_path": "sqldatabase.subscriptions.id.servers.id",
+    "path": "sqldatabase.subscriptions.id.servers.id.firewall_rules.id",
+    "conditions": [
+        "and",
+        [
+            "sqldatabase.subscriptions.id.servers.id.firewall_rules.id.start_ip",
+            "equal",
+            "0.0.0.0"
+        ]
+    ],
+    "id_suffix": "start_ip"
+}
