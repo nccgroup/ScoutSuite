@@ -15,11 +15,11 @@
         "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access"
     ],
     "dashboard_name": "Roles",
-    "path": "rbac.subscriptions.id.custom_roles_report",
+    "path": "rbac.subscriptions.id.custom_roles_report.id",
     "conditions": [
         "and",
         [
-            "rbac.subscriptions.id.custom_roles_report.missing_custom_role_administering_resource_locks",
+            "rbac.subscriptions.id.custom_roles_report.id.missing_custom_role_administering_resource_locks",
             "true",
             ""
         ]

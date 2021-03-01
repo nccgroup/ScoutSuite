@@ -9,8 +9,14 @@ class CustomRolesReport(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for raw_role in await self.facade.rbac.get_roles(self.subscription_id):
-            self._parse_role(raw_role)
+        custom_role_dict = {}
+        custom_role_dict['id'] = self.subscription_id
+        custom_role_dict['missing_custom_role_administering_resource_locks'] = False
 
-    def _parse_role(self, raw_role):
-        self['missing_custom_role_administering_resource_locks'] = True
+        for raw_role in await self.facade.rbac.get_roles(self.subscription_id):
+            if raw_role.role_name == 'Resource Lock Administrator':
+                custom_role_dict['missing_custom_role_administering_resource_locks'] = True
+
+        self[custom_role_dict['id']] = custom_role_dict
+
+
