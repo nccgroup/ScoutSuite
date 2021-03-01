@@ -258,6 +258,30 @@
                 "level": "warning"
             }
         ],
+        "sqldatabase-servers-vulnerability-assessments-disabled..json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-recurring-scans-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-send-scan-reports-to-not-configured.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-email-notif-to-admins-owners-not-set.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "storageaccount-access-keys-not-rotated.json": [
             {
                 "args": [

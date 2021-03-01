@@ -1,6 +1,30 @@
 {
     "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.2.0.",
     "rules": {
+        "sqldatabase-servers-vulnerability-assessments-disabled..json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+         "sqldatabase-servers-vulnerability-recurring-scans-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-send-scan-reports-to-not-configured.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-email-notif-to-admins-owners-not-set.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "storageaccount-encrypted-not-customer-managed.json": [
             {
                 "enabled": true,

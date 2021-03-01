@@ -14,6 +14,11 @@
         <div class="list-group-item-text item-margin">Threat detection alerts: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.alerts_enabled }}</span></div>
         <div class="list-group-item-text item-margin">Send threat detection alerts: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_send_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.send_alerts_enabled }}</span></div>
         <div class="list-group-item-text item-margin">Threat detection retention period: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_low_threat_detection_retention">{{ threat_detection.retention_days }}</span></div>
+        <div class="list-group-item-text item-margin">Storage account name: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_vulnerability_storage_account_name">{{server_vulnerability.storage_account_name }}</span></div>
+        <div class="list-group-item-text item-margin">Send email notification to admins and subscription owners: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_vulnerability_email_subscription_admin">{{convert_bool_to_enabled server_vulnerability.email_subscription_admin }}</span></div>
+        <div class="list-group-item-text item-margin">Periodic recurring scans: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_vulnerability_recurring_scans_enabled">{{convert_bool_to_enabled server_vulnerability.recurring_scans_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Send scan report to is configured: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_vulnerability_send_scan_reports_to_not_empty">{{server_vulnerability.send_scan_reports_to_not_empty}}</span></div>
+
         <div class="list-group-item-text item-margin">Tags:
             {{#each tags}}
             <div
