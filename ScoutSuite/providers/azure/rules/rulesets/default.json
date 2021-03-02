@@ -7,6 +7,12 @@
                 "level": "warning"
             }
         ],
+         "rbac-administering-resource-locks-assigned.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "appservice-authentication-disabled.json": [
             {
                 "enabled": true,
@@ -104,6 +110,12 @@
                     "1433",
                     "6.3"
                 ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "network-security-groups-rule-inbound-service-udp.json": [
+            {
                 "enabled": true,
                 "level": "warning"
             }
@@ -297,6 +309,12 @@
                 "level": "warning"
             }
         ],
+        "storageaccount-soft-delete-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "storageaccount-encrypted-not-customer-managed.json": [
             {
                 "enabled": true,
@@ -310,6 +328,24 @@
             }
         ],
         "virtual-machines-extensions-installed.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "virtual-machines-managed-disks.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "virtual-machines-os-data-encrypted-cmk.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "virtual-machines-unattached-disks-encrypted-cmk.json": [
             {
                 "enabled": true,
                 "level": "warning"

@@ -5,11 +5,18 @@
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "3.1"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
             "version": "1.2.0",
             "reference": "3.1"
         }
     ],
     "references": [
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-security-guide",
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer",
         "https://docs.microsoft.com/en-us/azure/storage/blobs/security-recommendations#encryption-in-transit",
         "https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_list",
         "https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_update",
