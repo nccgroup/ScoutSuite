@@ -258,6 +258,12 @@
                 "level": "warning"
             }
         ],
+        "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "storageaccount-access-keys-not-rotated.json": [
             {
                 "args": [

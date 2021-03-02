@@ -1,6 +1,12 @@
 {
   "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.2.0.",
   "rules": {
+    "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+        {
+            "enabled": true,
+            "level": "warning"
+        }
+    ],
     "storageaccount-encrypted-not-customer-managed.json": [
       {
         "enabled": true,

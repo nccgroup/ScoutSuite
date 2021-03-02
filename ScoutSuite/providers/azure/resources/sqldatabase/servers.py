@@ -7,6 +7,7 @@ from .databases import Databases
 from .server_azure_ad_administrators import ServerAzureAdAdministrators
 from .server_blob_auditing_policies import ServerBlobAuditingPolicies
 from .server_security_alert_policies import ServerSecurityAlertPolicies
+from .server_encryption_protectors import ServerEncryptionProtectors
 
 
 class Servers(AzureCompositeResources):
@@ -14,7 +15,8 @@ class Servers(AzureCompositeResources):
         (Databases, 'databases'),
         (ServerAzureAdAdministrators, None),
         (ServerBlobAuditingPolicies, 'auditing'),
-        (ServerSecurityAlertPolicies, 'threat_detection')
+        (ServerSecurityAlertPolicies, 'threat_detection'),
+        (ServerEncryptionProtectors, 'encryption_protectors')
     ]
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
