@@ -34,8 +34,8 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: client.database_threat_detection_policies.get(
-                    resource_group_name, server_name, database_name)
+                lambda: client.database_threat_detection_policies.get(resource_group_name, server_name, database_name,
+                                                                      'default')
             )
         except Exception as e:
             print_exception(f'Failed to retrieve database threat detection policies: {e}')
@@ -66,14 +66,10 @@ class SQLDatabaseFacade:
     async def get_server_azure_ad_administrators(self, resource_group_name, server_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: client.server_azure_ad_administrators.get(resource_group_name, server_name)
+            val = await run_concurrently(
+                lambda: list(client.server_azure_ad_administrators.list_by_server(resource_group_name,server_name))
             )
-        except CloudError as e:
-            # No AD admin configured returns a 404 error:
-            if e.status_code != 404:
-                print_exception(f'Failed to retrieve server azure ad administrators: {e}')
-            return None
+            return val
         except Exception as e:
             print_exception(f'Failed to retrieve server azure ad administrators: {e}')
             return None
@@ -92,7 +88,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: client.server_security_alert_policies.get(resource_group_name, server_name)
+                lambda: client.server_security_alert_policies.get(resource_group_name, server_name, 'default')
             )
         except Exception as e:
             print_exception(f'Failed to retrieve server security alert policies: {e}')
@@ -112,10 +108,11 @@ class SQLDatabaseFacade:
                                                         subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
+            val = await run_concurrently(
                 lambda: client.transparent_data_encryptions.get(
-                    resource_group_name, server_name, database_name)
+                    resource_group_name, server_name, database_name, 'current')
             )
+            return val
         except Exception as e:
             print_exception(f'Failed to retrieve database transparent data encryptions: {e}')
             return []
