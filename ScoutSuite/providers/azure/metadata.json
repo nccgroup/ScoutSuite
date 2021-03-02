@@ -166,5 +166,15 @@
         }
       }
     }
+  },
+  "logging": {
+    "loggingmonitoring": {
+      "ressources": {
+        "logging_monitoring": {
+          "cols": 2,
+          "path": "services.loggingmonitoring.subscriptions.id.logging_monitoring"
+        }
+      }
+    }
   }
 }
