@@ -1263,6 +1263,8 @@ function makeTitle(title) {
         return 'Storage Accounts'
     } else if (title === 'sqldatabase') {
         return 'SQL Database'
+    } else if (title === 'postgresqldatabase') {
+        return 'PostreSQL Database'
     } else if (title === 'virtualmachines') {
         return 'Virtual Machines'
     } else if (title === 'securitycenter') {

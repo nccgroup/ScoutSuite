@@ -10,6 +10,7 @@ from ScoutSuite.providers.azure.resources.storageaccounts.base import StorageAcc
 from ScoutSuite.providers.azure.resources.virtualmachines.base import VirtualMachines
 from ScoutSuite.providers.base.services import BaseServicesConfig
 from ScoutSuite.providers.azure.resources.appservice.base import AppServices
+from ScoutSuite.providers.azure.resources.postgresqldatabase.base import PostgreSQLServers
 
 # Try to import proprietary services
 try:
@@ -49,6 +50,7 @@ class AzureServicesConfig(BaseServicesConfig):
         self.network = Networks(facade)
         self.virtualmachines = VirtualMachines(facade)
         self.appservice = AppServices(facade)
+        self.postgresqldatabase = PostgreSQLServers(facade)
 
         # Instantiate proprietary services
         try:
