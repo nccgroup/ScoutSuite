@@ -1,5 +1,5 @@
 {
-    "description": "Storage Soft Delete Is Enabled",
+    "description": "Storage Soft Delete Is Disabled",
     "rationale": "Enabling this configuration for azure storage ensures that even if blobs/data were deleted from the storage account, Blobs/data objects remain recoverable for a particular time which set in the \"Retention policies\" ",
     "remediation": "In the Azure console:<ol><li>Go to <samp>Storage Accounts</samp></li> <li>For each storage account, navigate to <samp>Data protection</samp></li> <li>Ensure that soft delete is <samp>Enabled</samp></li></ol>",
     "compliance": [
