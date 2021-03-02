@@ -1,0 +1,36 @@
+{
+    "description": "OS And Data Disks Not Encrypted With CMK",
+    "rationale": "Encrypting the IaaS VM's OS disk (boot volume), Data disks (non-boot volume) ensures that the entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads. CMK is superior encryption although requires additional planning.",
+    "remediation": "From Azure console: <ol><li>Go to <samp>Virtual machines</samp></li><li>For each virtual machine, go to <samp>Settings</samp></li><li>Click on <samp>Disks</samp></li><li>Click the <samp>X</samp> to detach the disk from the VM</li><li>Now search for <samp>Disks</samp> and locate the unattached disk</li><li>Click the disk then select <samp>Encryption</samp></li><li>Change your encryption type, then select your encryption set</li><li>Click <samp>Save</samp></li><li>Go back to the VM and re-attach the dsk</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "7.2"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/security/fundamentals/azure-disk-encryption-vms-vmss",
+        "https://docs.microsoft.com/en-us/azure/security-center/asset-inventory?toc=%2Fazure%2Fsecurity%2Ftoc.json",
+        "https://docs.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest",
+        "https://docs.microsoft.com/en-us/rest/api/compute/disks/delete",
+        "https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest"
+    ],
+    "dashboard_name": "Disks",
+    "path": "virtualmachines.subscriptions.id.disks.id",
+    "conditions": [
+        "or",
+        [
+          "virtualmachines.subscriptions.id.disks.id.encryption_type",
+          "equal",
+          "EncryptionAtRestWithPlatformKey"
+        ],
+        [
+            "virtualmachines.subscriptions.id.disks.id.encryption_type",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "encryption_type"
+}
