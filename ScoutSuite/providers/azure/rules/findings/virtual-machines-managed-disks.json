@@ -1,5 +1,5 @@
 {
-    "description": "Virtual Machines Utilizing Managed Disks",
+    "description": "Virtual Machines Not Utilizing Managed Disks",
     "rationale": "Managed disks are by default encrypted on the underlying hardware so no additional encryption is required for basic protection, it is available if additional encryption is required. Managed disks are by design more resilient that storage accounts.",
     "remediation": "From Azure console:<ol><li> Using the search feature, go to <samp>Virtual Machines</samp></li><li>Select the virtual machine you would like to convert</li><li>Select <samp> Disks</samp> in the menu for the VM</li><li>At the top select <samp>Migrate to managed disks</samp></li><li>You may follow the prompts to convert the disk and finish by selecting 'Migrate' to start the process</li></ol>",
     "compliance": [

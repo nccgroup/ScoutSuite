@@ -1,5 +1,3 @@
-import os
-
 from msgraphcore import GraphSession
 
 from ScoutSuite.core.console import print_exception
@@ -97,6 +95,14 @@ class AADFacade:
                 applications = applications_response.get('value')
                 return applications
             return applications_response
+        except Exception as e:
+            print_exception(f'Failed to retrieve applications: {e}')
+            return []
+
+    async def get_policies(self):
+        try:
+            policies_response = await self._get_microsoft_graph_response('policies/authorizationPolicy')
+            return policies_response
         except Exception as e:
             print_exception(f'Failed to retrieve applications: {e}')
             return []
