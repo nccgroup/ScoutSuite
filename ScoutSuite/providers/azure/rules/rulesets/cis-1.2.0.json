@@ -1,7 +1,7 @@
 {
     "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.2.0.",
     "rules": {
-        "sqldatabase-servers-vulnerability-assessments-disabled..json": [
+        "sqldatabase-servers-vulnerability-assessments-disabled.json": [
              {
                 "enabled": true,
                 "level": "warning"

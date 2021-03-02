@@ -66,10 +66,9 @@ class SQLDatabaseFacade:
     async def get_server_azure_ad_administrators(self, resource_group_name, server_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            val = await run_concurrently(
+            return await run_concurrently(
                 lambda: list(client.server_azure_ad_administrators.list_by_server(resource_group_name,server_name))
             )
-            return val
         except Exception as e:
             print_exception(f'Failed to retrieve server azure ad administrators: {e}')
             return None
@@ -108,11 +107,10 @@ class SQLDatabaseFacade:
                                                         subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            val = await run_concurrently(
+            return await run_concurrently(
                 lambda: client.transparent_data_encryptions.get(
                     resource_group_name, server_name, database_name, 'current')
             )
-            return val
         except Exception as e:
             print_exception(f'Failed to retrieve database transparent data encryptions: {e}')
             return []
@@ -125,5 +123,5 @@ class SQLDatabaseFacade:
                 lambda: client.server_vulnerability_assessments.get(resource_group_name, server_name, 'default')
             )
         except Exception as e:
-            print_exception(f'Failed to retrieve database transparent data encryptions: {e}')
+            print_exception(f'Failed to retrieve server vulnerability assessments: {e}')
             return []

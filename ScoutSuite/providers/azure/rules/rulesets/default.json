@@ -258,7 +258,7 @@
                 "level": "warning"
             }
         ],
-        "sqldatabase-servers-vulnerability-assessments-disabled..json": [
+        "sqldatabase-servers-vulnerability-assessments-disabled.json": [
              {
                 "enabled": true,
                 "level": "warning"
