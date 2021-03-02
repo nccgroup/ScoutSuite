@@ -25,11 +25,23 @@
               "level": "warning"
           }
       ],
-    "rbac-administering-resource-locks-assigned.json": [
-      {
-        "enabled": true,
-        "level": "danger"
-      }
-    ]
+      "virtual-machines-os-data-encrypted-cmk.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "virtual-machines-unattached-disks-encrypted-cmk.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "rbac-administering-resource-locks-assigned.json": [
+        {
+          "enabled": true,
+          "level": "danger"
+        }
+      ]
   }
 }
