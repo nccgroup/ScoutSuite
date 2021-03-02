@@ -1,8 +1,8 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
-from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
+from ScoutSuite.providers.azure.resources.base import AzureResources
 
 
-class LogProfiles(AzureCompositeResources):
+class LogProfiles(AzureResources):
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
         super().__init__(facade)

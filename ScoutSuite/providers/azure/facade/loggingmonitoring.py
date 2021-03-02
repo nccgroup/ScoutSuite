@@ -26,13 +26,24 @@ class LoggingMonitoringFacade:
             print_exception(f'Failed to retrieve log profiles: {e}')
             return []
 
-    async def get_subscription_diagnostic_settings(self, subscription_id: str):
+    async def get_diagnostic_settings(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
             diagnostic_settings = await run_concurrently(
-                lambda: list(client.subscription_diagnostic_settings.list(subscription_id))
+                lambda: client.subscription_diagnostic_settings.list(subscription_id)
             )
-            return diagnostic_settings
+            return diagnostic_settings.value
         except Exception as e:
             print_exception(f'Failed to retrieve diagnostic settings: {e}')
+            return []
+
+    async def get_activity_log_alerts(self, subscription_id: str):
+        try:
+            client = self.get_client(subscription_id)
+            activity_log_alerts = await run_concurrently(
+                lambda: list(client.activity_log_alerts.list_by_subscription_id())
+            )
+            return activity_log_alerts
+        except Exception as e:
+            print_exception(f'Failed to retrieve activity log alerts: {e}')
             return []

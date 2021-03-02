@@ -167,9 +167,9 @@
       }
     }
   },
-  "logging": {
+ "logging": {
     "loggingmonitoring": {
-      "ressources": {
+      "resources": {
         "logging_monitoring": {
           "cols": 2,
           "path": "services.loggingmonitoring.subscriptions.id.logging_monitoring"

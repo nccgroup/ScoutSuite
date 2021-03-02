@@ -1278,7 +1278,7 @@ function makeTitle(title) {
     } else if (title === 'appservice') {
         return 'App Services'
     } else if (title === 'loggingmonitoring') {
-        return 'Logging and Monitoring'
+        return 'Logging Monitoring'
     } else if (title === 'loadbalancer') {
         return 'Load Balancer'
     } else if (title === 'ram') {
