@@ -43,6 +43,12 @@
             "level": "warning"
         }
     ],
+    "rbac-custom-subscription-owner-role-not-allowed.json": [
+        {
+            "enabled": true,
+            "level": "danger"
+        }
+    ],
     "rbac-administering-resource-locks-assigned.json": [
       {
         "enabled": true,
