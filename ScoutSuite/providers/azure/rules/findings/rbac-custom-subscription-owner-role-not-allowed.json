@@ -1,0 +1,28 @@
+{
+    "description": "Custom Subscription Owner Role Not Allowed",
+    "rationale": "Classic subscription admin roles offer basic access management and include Account Administrator, Service Administrator, and Co-Administrators. It is recommended the least necessary permissions be given initially. Permissions can be added as needed by the account holder. This ensures the account holder cannot perform actions which were not intended.",
+    "remediation": "From Azure Command Line Interface 2.0: <ol><li><samp>az role definition list</samp></li><li>Check for entries with <samp>assignableScope</samp> of <samp>/</samp> or a <samp> subscription</samp>, and an action of <samp>*</samp></li> <li> Verify the usage and impact of removing the role identified:</li><li><samp>az role definition delete --name \"rolename\"</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "1.21"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/add-change-subscription-administrator",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access"
+    ],
+    "dashboard_name": "Roles",
+    "path": "rbac.subscriptions.id.roles.id",
+    "conditions": [
+        "and",
+        [
+            "rbac.subscriptions.id.roles.id.custom_subscription_owner_role",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "custom_subscription_owner_role"
+}
