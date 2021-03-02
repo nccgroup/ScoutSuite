@@ -7,6 +7,12 @@
                 "level": "warning"
             }
         ],
+        "aad-users-create-security-groups-disabled.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "appservice-authentication-disabled.json": [
             {
                 "enabled": true,
@@ -108,6 +114,12 @@
                 "level": "warning"
             }
         ],
+        "network-security-groups-rule-inbound-service-udp.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "network-watcher-not-enabled.json": [
             {
                 "enabled": true,
@@ -118,6 +130,18 @@
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "rbac-custom-subscription-owner-role-not-allowed.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "rbac-administering-resource-locks-assigned.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "securitycenter-auto-provisioning-off.json": [
@@ -310,6 +334,24 @@
             }
         ],
         "virtual-machines-extensions-installed.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "virtual-machines-managed-disks.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "virtual-machines-os-data-encrypted-cmk.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "virtual-machines-unattached-disks-encrypted-cmk.json": [
             {
                 "enabled": true,
                 "level": "warning"

@@ -1,6 +1,12 @@
 {
   "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.2.0.",
   "rules": {
+    "aad-users-create-security-groups-disabled.json": [
+          {
+              "enabled": true,
+              "level": "danger"
+          }
+      ],
     "storageaccount-encrypted-not-customer-managed.json": [
       {
         "enabled": true,
@@ -13,8 +19,59 @@
         "level": "warning"
       }
     ],
+    "network-security-groups-rule-inbound-service-udp.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "virtual-machines-managed-disks.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "virtual-machines-os-data-encrypted-cmk.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+    ],
+    "virtual-machines-unattached-disks-encrypted-cmk.json": [
+        {
+            "enabled": true,
+            "level": "warning"
+        }
+    ],
+    "rbac-custom-subscription-owner-role-not-allowed.json": [
+        {
+            "enabled": true,
+            "level": "danger"
+        }
+    ],
+    "rbac-administering-resource-locks-assigned.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
     "sqldatabase-databases-no-auditing.json": [
       {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-databases-no-transparent-data-encryption.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-databases-threat-detection-low-retention.json": [
+      {
+        "args": [
+          "90"
+        ],
         "enabled": true,
         "level": "warning"
       }

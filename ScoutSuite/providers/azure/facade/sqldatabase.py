@@ -67,7 +67,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: list(client.server_azure_ad_administrators.list_by_server(resource_group_name, server_name))
+                lambda: client.server_azure_ad_administrators.get(resource_group_name, server_name, 'activeDirectory')
             )
         except Exception as e:
             print_exception(f'Failed to retrieve server azure ad administrators: {e}')
