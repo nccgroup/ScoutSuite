@@ -108,6 +108,12 @@
                 "level": "warning"
             }
         ],
+        "network-security-groups-rule-inbound-service-udp.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "network-watcher-not-enabled.json": [
             {
                 "enabled": true,
