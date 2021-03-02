@@ -13,6 +13,8 @@ class Roles(AzureResources):
             id, role = self._parse_role(raw_role)
             self[id] = role
 
+
+
     def _parse_role(self, raw_role):
         role_dict = {}
         role_dict['id'] = raw_role.name
