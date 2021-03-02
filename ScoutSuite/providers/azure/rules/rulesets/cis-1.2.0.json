@@ -1,6 +1,12 @@
 {
   "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.2.0.",
   "rules": {
+    "aad-users-create-security-groups-disabled.json": [
+          {
+              "enabled": true,
+              "level": "danger"
+          }
+      ],
     "storageaccount-encrypted-not-customer-managed.json": [
       {
         "enabled": true,
