@@ -92,7 +92,7 @@ class Instances(AzureResources):
             instance_dict['storage_profile']['OS Disk Size (GB)'] = raw_instance.storage_profile.os_disk.disk_size_gb
             instance_dict['storage_profile']['OS Disk Name'] = raw_instance.storage_profile.os_disk.name
             instance_dict['storage_profile']['OS Disk VHD'] = raw_instance.storage_profile.os_disk.vhd
-            if raw_instance.storage_profile.os_disk.managed_disk is not None:
+            if raw_instance.storage_profile.os_disk.managed_disk:
                 instance_dict['storage_profile'][
                     'OS Managed Disk ID'] = raw_instance.storage_profile.os_disk.managed_disk.id.split('/')[-1]
                 instance_dict['storage_profile'][
