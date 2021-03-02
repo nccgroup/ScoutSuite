@@ -18,6 +18,21 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "sqldatabase-databases-no-transparent-data-encryption.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-databases-threat-detection-low-retention.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
