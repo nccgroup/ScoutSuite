@@ -1,29 +1,35 @@
 {
-    "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.2.0.",
-    "rules": {
-        "storageaccount-encrypted-not-customer-managed.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "storageaccount-soft-delete-enabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "network-security-groups-rule-inbound-service-udp.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "virtual-machines-managed-disks.json": [
-             {
-                "enabled": true,
-                "level": "warning"
-            }
-        ]
-    }
+  "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.2.0.",
+  "rules": {
+      "storageaccount-encrypted-not-customer-managed.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "storageaccount-soft-delete-enabled.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "network-security-groups-rule-inbound-service-udp.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "virtual-machines-managed-disks.json": [
+           {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+    "rbac-administering-resource-locks-assigned.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ]
+  }
 }

@@ -7,6 +7,12 @@
                 "level": "warning"
             }
         ],
+         "rbac-administering-resource-locks-assigned.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "appservice-authentication-disabled.json": [
             {
                 "enabled": true,

@@ -75,6 +75,10 @@
         "roles": {
           "cols": 2,
           "path": "services.rbac.subscriptions.id.roles"
+        },
+        "custom_roles_report": {
+          "cols": 2,
+          "path": "services.rbac.subscriptions.id.custom_roles_report"
         }
       }
     },
