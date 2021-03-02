@@ -7,7 +7,7 @@
                 "level": "warning"
             }
         ],
-         "rbac-administering-resource-locks-assigned.json": [
+        "aad-users-create-security-groups-disabled.json": [
             {
                 "enabled": true,
                 "level": "danger"
@@ -130,6 +130,18 @@
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "rbac-custom-subscription-owner-role-not-allowed.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "rbac-administering-resource-locks-assigned.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "securitycenter-auto-provisioning-off.json": [
