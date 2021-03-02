@@ -24,3 +24,15 @@ class PostgreSQLDatabaseFacade:
         except Exception as e:
             print_exception(f'Failed to retrieve postgresSQL servers: {e}')
             return []
+
+    async def get_config(self, resource_group_name, server_name,
+                         subscription_id: str, configuration_name: str):
+        try:
+            client = self.get_client(subscription_id)
+            val = await run_concurrently(
+                lambda: client.configurations.get(resource_group_name, server_name, configuration_name)
+            )
+            return val
+        except Exception as e:
+            print_exception(f'Failed to retrieve server configuration: {e}')
+            return []
