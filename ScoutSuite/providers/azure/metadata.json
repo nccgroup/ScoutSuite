@@ -166,5 +166,15 @@
         }
       }
     }
+  },
+  "mysql": {
+    "mysqldatabase": {
+      "resources": {
+        "servers": {
+          "cols": 2,
+          "path": "services.mysqldatabase.subscriptions.id.servers"
+        }
+      }
+    }
   }
 }
