@@ -1,6 +1,6 @@
 {
     "description": "Short Auditing Retention Period for SQL Databases",
-    "rationale": "Auditing retention period should be greater than _ARG_0_ days.",
+    "rationale": "Auditing retention period should be greater than _ARG_0_ days. Audit Logs can be used to check for anomalies and give insight into suspected breaches or misuse of information and access.",
     "remediation":"From Azure Console:\n<ol>\n    <li>Go to <samp>SQL servers</samp></li>\n    <li>For each server instance</li>\n    <li>Click on <samp>Auditing</samp></li>\n    <li>Select <samp>Storage Details</samp> </li>\n    <li>Ensure <samp>Retention (days) </samp>setting <samp>greater than 90 days</samp></li>\n</ol>",
     "compliance": [
         {

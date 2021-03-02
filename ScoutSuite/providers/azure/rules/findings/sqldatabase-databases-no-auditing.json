@@ -1,6 +1,6 @@
 {
   "description": "Auditing Disabled for SQL Databases",
-  "rationale": "Enable auditing for all SQL databases.",
+  "rationale": "Auditing tracks database events and writes them to an audit log in the Azure storage account. It also helps to maintain regulatory compliance, understand database activity, and gain insight into discrepancies and anomalies that could indicate business concerns or suspected security violations.",
   "remediation": "From Azure Console:\n<ol>\n    <li>Go to <samp>SQL servers</samp></li>\n    <li>For each server instance</li>\n    <li>Click on <samp>Auditing</samp></li>\n    <li>Set <samp>Auditing</samp> to On</li>\n</ol>",
   "compliance": [
     {
