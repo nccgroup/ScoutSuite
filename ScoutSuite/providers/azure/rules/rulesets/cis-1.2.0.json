@@ -25,11 +25,17 @@
               "level": "warning"
           }
       ],
-    "rbac-administering-resource-locks-assigned.json": [
-      {
-        "enabled": true,
-        "level": "danger"
-      }
-    ]
+      "rbac-administering-resource-locks-assigned.json": [
+        {
+          "enabled": true,
+          "level": "danger"
+        }
+      ],
+      "rbac-custom-subscription-owner-role-not-allowed.json": [
+          {
+              "enabled": true,
+              "level": "danger"
+          }
+      ]
   }
 }
