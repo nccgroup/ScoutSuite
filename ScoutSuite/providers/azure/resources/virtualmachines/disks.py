@@ -45,3 +45,4 @@ class Disks(AzureResources):
 
         return disk_dict['id'], disk_dict
 
+

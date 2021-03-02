@@ -13,6 +13,24 @@
         "level": "warning"
       }
     ],
+    "network-security-groups-rule-inbound-service-udp.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "virtual-machines-managed-disks.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "rbac-administering-resource-locks-assigned.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
     "sqldatabase-databases-no-auditing.json": [
       {
         "enabled": true,
