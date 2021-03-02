@@ -108,6 +108,12 @@
                 "level": "warning"
             }
         ],
+        "network-security-groups-rule-inbound-service-udp.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "network-watcher-not-enabled.json": [
             {
                 "enabled": true,
@@ -311,6 +317,12 @@
         ],
         "virtual-machines-extensions-installed.json": [
             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "virtual-machines-managed-disks.json": [
+             {
                 "enabled": true,
                 "level": "warning"
             }
