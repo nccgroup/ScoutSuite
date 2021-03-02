@@ -9,6 +9,7 @@ from .configuration_log_connections import ConfigurationLogConnections
 from .configuration_log_disconnections import ConfigurationLogDisconnections
 from .configuration_log_duration import ConfigurationLogDuration
 from .configuration_log_retention_days import ConfigurationLogRetentionDays
+from .posgresql_firewall_rules import PostgreSQLFirewallRules
 
 
 class PostgreSQLServers(AzureCompositeResources):
@@ -18,7 +19,8 @@ class PostgreSQLServers(AzureCompositeResources):
         (ConfigurationLogDisconnections, 'log_disconnections'),
         (ConfigurationLogDuration, 'log_duration'),
         (ConfigurationConnectionThrottling, 'connection_throttling'),
-        (ConfigurationLogRetentionDays, 'log_retention_days')
+        (ConfigurationLogRetentionDays, 'log_retention_days'),
+        (PostgreSQLFirewallRules, 'postgresql_firewall_rules')
     ]
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
