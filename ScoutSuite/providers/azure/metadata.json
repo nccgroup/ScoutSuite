@@ -167,12 +167,27 @@
       }
     }
   },
+<<<<<<< HEAD
   "mysql": {
     "mysqldatabase": {
       "resources": {
         "servers": {
           "cols": 2,
           "path": "services.mysqldatabase.subscriptions.id.servers"
+        }
+      }
+    }
+  },
+ "logging": {
+    "loggingmonitoring": {
+      "resources": {
+        "diagnostic": {
+          "cols": 2,
+          "path": "services.loggingmonitoring.subscriptions.id.diagnostic"
+        },
+        "log_alerts": {
+          "cols": 2,
+          "path": "services.loggingmonitoring.subscriptions.id.log_alerts"
         }
       }
     }
