@@ -167,7 +167,6 @@
       }
     }
   },
-<<<<<<< HEAD
   "mysql": {
     "mysqldatabase": {
       "resources": {
