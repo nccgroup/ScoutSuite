@@ -58,6 +58,19 @@
             {{/each}}
         </div>
     </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Firewall Rules</h4>
+        <div class="list-group-item-text item-margin">
+            {{#each firewall_rules}}
+            <samp>{{name}}</samp>
+            <div class="list-group-item-text item-margin">
+                <div class="list-group-item-text item-margin">Firewall rule start IP: <span id="sqldatabase.subscriptions.{{@../../key}}.servers.{{@../key}}.firewall_rules.{{@key}}.start_ip">{{start_ip}}</span></div>
+                <div class="list-group-item-text item-margin">Firewall rule end IP: <span id="sqldatabase.subscriptions.{{@../../key}}.servers.{{@../key}}.firewall_rules.{{@key}}.end_ip">{{end_ip}}</span></div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
 </script>
 
 <script>
