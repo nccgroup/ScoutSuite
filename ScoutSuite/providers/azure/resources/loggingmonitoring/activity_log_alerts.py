@@ -15,28 +15,29 @@ class ActivityLogAlerts(AzureResources):
     def _parse_log_alerts(self, log_alerts):
         log_alerts_dict = {}
         log_alerts_dict['create_policy_assignment_exist'] = self.ensure_alert_exist(log_alerts,
-                                                                                    'microsoft.authorization'
-                                                                                    '/policyassignments/write')
+                                                                                    'Microsoft.Authorization'
+                                                                                    '/policyAssignments/write')
         log_alerts_dict['create_update_NSG_exist'] = self.ensure_alert_exist(log_alerts,
-                                                                             'microsoft.network/networksecuritygroups'
+                                                                             'Microsoft.Network/networkSecurityGroups'
                                                                              '/write')
         log_alerts_dict['delete_NSG_exist'] = self.ensure_alert_exist(log_alerts,
-                                                                      'microsoft.network/networksecuritygroups/delete')
+                                                                      'Microsoft.Network/networkSecurityGroups/delete')
         log_alerts_dict['create_update_NSG_rule_exist'] = self.ensure_alert_exist(log_alerts,
-                                                                                   'microsoft.network'
-                                                                                   '/networksecuritygroups '
-                                                                                   '/securityrules/write')
+                                                                                  'Microsoft.Network'
+                                                                                  '/networkSecurityGroups'
+                                                                                  '/securityRules/write')
         log_alerts_dict['delete_NSG_rule_exist'] = self.ensure_alert_exist(log_alerts,
-                                                                           'microsoft.network/networksecuritygroups'
-                                                                           '/securityrules/delete')
+                                                                           'Microsoft.Network/networkSecurityGroups'
+                                                                           '/securityRules/delete')
         log_alerts_dict['create_update_security_solution_exist'] = self.ensure_alert_exist(log_alerts,
-                                                                                           'microsoft.security'
-                                                                                           '/securitysolutions/write')
+                                                                                           'Microsoft.Security'
+                                                                                           '/securitySolutions/write')
         log_alerts_dict['delete_security_solution_exist'] = self.ensure_alert_exist(log_alerts,
-                                                                           'microsoft.security/securitysolutions/delete')
+                                                                                    'Microsoft.Security'
+                                                                                    '/securitySolutions/delete')
         log_alerts_dict['create_delete_firewall_rule_exist'] = self.ensure_alert_exist(log_alerts,
-                                                                                       'microsoft.sql/servers'
-                                                                                       '/firewallrules/write')
+                                                                                       'Microsoft.Sql/servers'
+                                                                                       '/firewallRules/write')
 
         return log_alerts_dict
 
