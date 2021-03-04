@@ -2,6 +2,7 @@ from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
+
 from .configuration_connection_throttling import ConfigurationConnectionThrottling
 
 from .configuration_log_checkpoints import ConfigurationLogCheckpoints
@@ -12,8 +13,10 @@ from .configuration_log_retention_days import ConfigurationLogRetentionDays
 from .posgresql_firewall_rules import PostgreSQLFirewallRules
 
 
+
 class PostgreSQLServers(AzureCompositeResources):
     _children = [
+
         (ConfigurationLogCheckpoints, 'log_checkpoints'),
         (ConfigurationLogConnections, 'log_connections'),
         (ConfigurationLogDisconnections, 'log_disconnections'),

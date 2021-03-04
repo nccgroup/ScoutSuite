@@ -11,6 +11,7 @@ from ScoutSuite.providers.azure.resources.virtualmachines.base import VirtualMac
 from ScoutSuite.providers.base.services import BaseServicesConfig
 from ScoutSuite.providers.azure.resources.appservice.base import AppServices
 from ScoutSuite.providers.azure.resources.postgresqldatabase.base import PostgreSQLServers
+from ScoutSuite.providers.azure.resources.loggingmonitoring.base import LoggingMonitoring
 
 # Try to import proprietary services
 try:
@@ -51,6 +52,7 @@ class AzureServicesConfig(BaseServicesConfig):
         self.virtualmachines = VirtualMachines(facade)
         self.appservice = AppServices(facade)
         self.postgresqldatabase = PostgreSQLServers(facade)
+        self.loggingmonitoring = LoggingMonitoring(facade)
 
         # Instantiate proprietary services
         try:

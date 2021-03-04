@@ -117,6 +117,13 @@
             "enabled": true,
             "level": "warning"
         }
+    ],
+     "sqldatabase-allow-any-ip.json": [
+
+        {
+            "enabled": true,
+            "level": "warning"
+        }
     ]
   }
 }
