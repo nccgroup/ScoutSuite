@@ -44,6 +44,7 @@ class PostgreSQLServers(AzureCompositeResources):
         server['name'] = raw_server.name
         server['resource_group_name'] = get_resource_group_name(raw_server.id)
         server['ssl_enforcement'] = raw_server.ssl_enforcement
+
         if raw_server.tags is not None:
             server['tags'] = ["{}:{}".format(key, value) for key, value in raw_server.tags.items()]
         else:
