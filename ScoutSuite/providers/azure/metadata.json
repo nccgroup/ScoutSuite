@@ -181,6 +181,10 @@
         "diagnostic_settings": {
           "cols": 2,
           "path": "services.loggingmonitoring.subscriptions.id.diagnostic_settings"
+        },
+        "log_profiles": {
+          "cols": 2,
+          "path": "services.loggingmonitoring.subscriptions.id.log_profiles"
         }
       }
     }

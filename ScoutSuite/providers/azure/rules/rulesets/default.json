@@ -164,6 +164,12 @@
                 "level": "warning"
             }
         ],
+        "logging-monitoring-profile-does-not-capture-all-activities.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "network-security-groups-rule-inbound-internet-all.json": [
             {
                 "enabled": true,
