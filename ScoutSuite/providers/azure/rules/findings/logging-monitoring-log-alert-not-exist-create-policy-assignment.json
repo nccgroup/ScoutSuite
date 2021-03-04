@@ -19,10 +19,15 @@
     "dashboard_name": "Alert Rules",
     "path": "loggingmonitoring.subscriptions.id.log_alerts.id",
     "conditions": [
-        "and",
+        "or",
         [
             "loggingmonitoring.subscriptions.id.log_alerts.id.create_policy_assignment_exist",
             "false",
+            ""
+        ],
+        [
+            "loggingmonitoring.subscriptions.id.log_alerts.id.create_policy_assignment_exist",
+            "null",
             ""
         ]
     ],

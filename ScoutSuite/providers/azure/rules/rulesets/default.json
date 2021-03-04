@@ -152,6 +152,18 @@
                 "level": "warning"
             }
         ],
+        "logging-monitoring-logging-key-vault-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-diagnostic-setting-does-not-exist.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "network-security-groups-rule-inbound-internet-all.json": [
             {
                 "enabled": true,

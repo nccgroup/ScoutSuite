@@ -3,6 +3,7 @@ from ScoutSuite.providers.azure.facade.aad import AADFacade
 from ScoutSuite.providers.azure.facade.rbac import RBACFacade
 from ScoutSuite.providers.azure.facade.keyvault import KeyVaultFacade
 from ScoutSuite.providers.azure.facade.network import NetworkFacade
+from ScoutSuite.providers.azure.facade.resourcemanagement import ResourceManagementFacade
 from ScoutSuite.providers.azure.facade.securitycenter import SecurityCenterFacade
 from ScoutSuite.providers.azure.facade.sqldatabase import SQLDatabaseFacade
 from ScoutSuite.providers.azure.facade.storageaccounts import StorageAccountsFacade
@@ -54,6 +55,7 @@ class AzureFacade:
         self.storageaccounts = StorageAccountsFacade(credentials)
         self.appservice = AppServiceFacade(credentials)
         self.loggingmonitoring = LoggingMonitoringFacade(credentials)
+        self.resourcemanagement = ResourceManagementFacade(credentials)
 
         # Instantiate facades for proprietary services
         try:
