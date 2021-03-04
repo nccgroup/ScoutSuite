@@ -1,7 +1,7 @@
 {
     "description": "Diagnostic Setting Does Not Exist",
     "rationale": "A diagnostic setting controls how a diagnostic log is exported. By default, logs are retained only for 90 days. Diagnostic settings should be defined so that logs can be exported and stored for a longer duration in order to analyze security activities within an Azure subscription.",
-    "remediation": "Follow Microsoft Azure documentation and setup Azure Key Vault Logging.",
+    "remediation": "In the Azure console: <ol> <li>Go to <samp>Diagnostic settings</samp></li> <li>Click on <samp>Add diagnostic setting</samp>.</li> <li></li> <li>Add rules to allow traffic from specific network.</li>Configure the setting including the export location (This may be Log Analytics/Storage account or Event Hub) <li>Click on <samp>Save</samp></li> </ol>",
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
