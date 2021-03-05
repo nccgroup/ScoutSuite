@@ -1,12 +1,25 @@
 {
     "description": "Azure Active Directory Admin Not Configured for SQL Servers",
-    "rationale": "Set an Azure Active Directory admin for every SQL server.",
+    "rationale": "Azure Active Directory authentication is a mechanism to connect to Microsoft Azure SQL Database and SQL Data Warehouse by using identities in Azure Active Directory (Azure AD). With Azure AD authentication, identities of database users and other Microsoft services can be managed in one central location. Central ID management provides a single place to manage database users and simplifies permission management.",
+    "remediation": "From Azure console:<ol><li>Go to <samp>SQL servers</samp></li><li>For each SQL server, click on <samp>Active Directory admin</samp></li><li>Click on <samp>Set admin</samp></li><li>Select an admin</li><li>Click <samp>Save</samp></li></ol>" ,
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.0.0",
             "reference": "4.1"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "4.4"
         }
+    ],
+    "references": [
+      "https://docs.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-configure?tabs=azure-powershell",
+      "https://docs.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-overview",
+      "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserveractivedirectoryadministrator?view=azurermps-6.13.0&viewFallbackFrom=azurermps-5.2.0",
+      "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserveractivedirectoryadministrator?view=azurermps-6.13.0&viewFallbackFrom=azurermps-5.2.0",
+      "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-1-standardize-azure-active-directory-as-the-central-identity-and-authentication-system"
     ],
     "dashboard_name": "SQL Databases",
     "display_path": "sqldatabase.subscriptions.id.servers.id",
