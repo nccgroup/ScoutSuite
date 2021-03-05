@@ -10,6 +10,7 @@
         <div class="list-group-item-text item-margin">Azure Active Directory Admin: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.ad_admin"><samp>{{value_or_none ad_admin.login}}</samp></span></div>
         <div class="list-group-item-text item-margin">Auditing: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_auditing_disabled">{{ convert_bool_to_enabled auditing.auditing_enabled }}</span></div>
         <div class="list-group-item-text item-margin">Auditing retention period: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_low_auditing_retention">{{ auditing.retention_days }}</span></div>
+
         <div class="list-group-item-text item-margin">Threat detection: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_threat_detection_disabled">{{ convert_bool_to_enabled threat_detection.threat_detection_enabled }}</span></div>
         <div class="list-group-item-text item-margin">Threat detection alerts: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.alerts_enabled }}</span></div>
         <div class="list-group-item-text item-margin">Send threat detection alerts: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_send_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.send_alerts_enabled }}</span></div>
@@ -18,6 +19,8 @@
         <div class="list-group-item-text item-margin">Send email notification to admins and subscription owners: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_vulnerability_email_subscription_admin">{{convert_bool_to_enabled server_vulnerability.email_subscription_admin }}</span></div>
         <div class="list-group-item-text item-margin">Periodic recurring scans: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_vulnerability_recurring_scans_enabled">{{convert_bool_to_enabled server_vulnerability.recurring_scans_enabled }}</span></div>
         <div class="list-group-item-text item-margin">Send scan report to is configured: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_vulnerability_send_scan_reports_to_not_empty">{{server_vulnerability.send_scan_reports_to_not_empty}}</span></div>
+
+        <div class="list-group-item-text item-margin">TDE server key type: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_encryption_protectors_TDE_protector_is_encrypted">{{ encryption_protectors.server_key_type }}</span></div>
 
         <div class="list-group-item-text item-margin">Tags:
             {{#each tags}}
@@ -56,6 +59,19 @@
                     {{/each}}
                 </div>
                 <div class="list-group-item-text item-margin">Resource group: <span id="sqldatabase.subscriptions.{{@../../key}}.servers.{{@../key}}.databases.{{@key}}.resource_group_name"><samp>{{value_or_none resource_group_name}}</samp></span></div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Firewall Rules</h4>
+        <div class="list-group-item-text item-margin">
+            {{#each firewall_rules}}
+            <samp>{{name}}</samp>
+            <div class="list-group-item-text item-margin">
+                <div class="list-group-item-text item-margin">Firewall rule start IP: <span id="sqldatabase.subscriptions.{{@../../key}}.servers.{{@../key}}.firewall_rules.{{@key}}.start_ip">{{start_ip}}</span></div>
+                <div class="list-group-item-text item-margin">Firewall rule end IP: <span id="sqldatabase.subscriptions.{{@../../key}}.servers.{{@../key}}.firewall_rules.{{@key}}.end_ip">{{end_ip}}</span></div>
             </div>
             {{/each}}
         </div>
