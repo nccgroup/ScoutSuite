@@ -103,13 +103,10 @@
                 ],
                 "enabled": true,
                 "level": "warning"
-            },
+            }
+        ],
+        "network-security-groups-rule-inbound-service-mssql.json": [
             {
-                "args": [
-                    "MsSQL",
-                    "1433",
-                    "6.3"
-                ],
                 "enabled": true,
                 "level": "warning"
             }
@@ -282,6 +279,18 @@
                 "level": "warning"
             }
         ],
+        "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-allow-any-ip.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "storageaccount-access-keys-not-rotated.json": [
             {
                 "args": [
@@ -388,6 +397,12 @@
             }
         ],
         "postgresql-database-servers-log-retention-days-less-than-4.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "mysql-database-servers-ssl-enforcement-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"

@@ -36,3 +36,4 @@ class PostgreSQLDatabaseFacade:
         except Exception as e:
             print_exception(f'Failed to retrieve server configuration: {e}')
             return []
+

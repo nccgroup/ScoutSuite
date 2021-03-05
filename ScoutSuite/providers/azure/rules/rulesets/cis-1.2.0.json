@@ -76,12 +76,24 @@
         "level": "warning"
       }
     ],
-    "postgresql-database-servers-log-checkpoints-not-on.json": [
+    "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+     ],
+     "sqldatabase-allow-any-ip.json": [
         {
             "enabled": true,
             "level": "warning"
         }
     ],
+    "postgresql-database-servers-log-checkpoints-not-on.json": [
+      {
+              "enabled": true,
+              "level": "warning"
+          }
+     ],
     "postgresql-database-servers-log-connections-not-on.json": [
         {
             "enabled": true,
@@ -107,6 +119,12 @@
         }
     ],
     "postgresql-database-servers-log-retention-days-less-than-4.json": [
+        {
+            "enabled": true,
+            "level": "warning"
+        }
+     ],
+    "mysql-database-servers-ssl-enforcement-disabled.json": [
         {
             "enabled": true,
             "level": "warning"

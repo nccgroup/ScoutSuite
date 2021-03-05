@@ -2,6 +2,7 @@ from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
+
 from .configuration_connection_throttling import ConfigurationConnectionThrottling
 
 from .configuration_log_checkpoints import ConfigurationLogCheckpoints
@@ -9,6 +10,7 @@ from .configuration_log_connections import ConfigurationLogConnections
 from .configuration_log_disconnections import ConfigurationLogDisconnections
 from .configuration_log_duration import ConfigurationLogDuration
 from .configuration_log_retention_days import ConfigurationLogRetentionDays
+
 
 
 class PostgreSQLServers(AzureCompositeResources):
@@ -19,6 +21,7 @@ class PostgreSQLServers(AzureCompositeResources):
         (ConfigurationLogDuration, 'log_duration'),
         (ConfigurationConnectionThrottling, 'connection_throttling'),
         (ConfigurationLogRetentionDays, 'log_retention_days')
+
     ]
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
