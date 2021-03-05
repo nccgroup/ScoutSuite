@@ -167,6 +167,16 @@
       }
     }
   },
+  "postgres": {
+    "postgresqldatabase": {
+      "resources": {
+        "servers": {
+          "cols": 2,
+          "path": "services.postgresqldatabase.subscriptions.id.servers"
+        }
+      }
+    }
+  },
  "logging": {
     "loggingmonitoring": {
       "resources": {

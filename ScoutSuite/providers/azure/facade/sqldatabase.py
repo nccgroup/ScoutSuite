@@ -1,3 +1,4 @@
+
 from azure.mgmt.sql import SqlManagementClient
 from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.core.console import print_exception
@@ -13,6 +14,7 @@ class SQLDatabaseFacade:
         client = SqlManagementClient(self.credentials.get_credentials(),
                                      subscription_id=subscription_id,
                                      user_agent=get_user_agent())
+
         return client
 
     async def get_database_blob_auditing_policies(self, resource_group_name, server_name, database_name,

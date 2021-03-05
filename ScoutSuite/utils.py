@@ -47,6 +47,7 @@ formatted_service_name = {
     'appservice': 'App Services',
     'loadbalancer': 'Load Balancer',
     'virtualmachines': 'Virtual Machines',
+    'postgresqldatabase': 'PostgresSQL Database',
     'loggingmonitoring': 'Logging Monitoring',
     # GCP
     'cloudstorage': 'Cloud Storage',
