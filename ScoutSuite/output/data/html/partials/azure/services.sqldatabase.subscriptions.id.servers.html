@@ -14,6 +14,9 @@
         <div class="list-group-item-text item-margin">Advanced Threat Protection (ATP) alerts: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.alerts_enabled }}</span></div>
         <div class="list-group-item-text item-margin">Send Advanced Threat Protection (ATP) alerts: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_send_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.send_alerts_enabled }}</span></div>
         <div class="list-group-item-text item-margin">Advanced Threat Protection (ATP) retention period: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_low_threat_detection_retention">{{ threat_detection.retention_days }}</span></div>
+
+        <div class="list-group-item-text item-margin">TDE server key type: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_encryption_protectors_TDE_protector_is_encrypted">{{ encryption_protectors.server_key_type }}</span></div>
+
         <div class="list-group-item-text item-margin">Tags:
             {{#each tags}}
             <div
