@@ -366,6 +366,42 @@
                 "level": "warning"
             }
         ],
+        "postgresql-database-servers-log-checkpoints-not-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-log-connections-not-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-log-disconnections-not-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-log-duration-not-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-connection-throttling-not-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-log-retention-days-less-than-4.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "mysql-database-servers-ssl-enforcement-disabled.json": [
             {
                 "enabled": true,
