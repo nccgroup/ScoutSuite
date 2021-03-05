@@ -76,6 +76,12 @@
         "level": "warning"
       }
     ],
+    "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+     ],
      "sqldatabase-allow-any-ip.json": [
         {
             "enabled": true,

@@ -103,13 +103,10 @@
                 ],
                 "enabled": true,
                 "level": "warning"
-            },
+            }
+        ],
+        "network-security-groups-rule-inbound-service-mssql.json": [
             {
-                "args": [
-                    "MsSQL",
-                    "1433",
-                    "6.3"
-                ],
                 "enabled": true,
                 "level": "warning"
             }
@@ -277,6 +274,12 @@
             }
         ],
         "sqldatabase-servers-threat-detection-send-alerts-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
             {
                 "enabled": true,
                 "level": "warning"
