@@ -3,20 +3,9 @@ from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
 
-from .databases import Databases
-from .server_azure_ad_administrators import ServerAzureAdAdministrators
-from .server_blob_auditing_policies import ServerBlobAuditingPolicies
-from .server_security_alert_policies import ServerSecurityAlertPolicies
-from .firewall_rules import FirewallRules
 
-
-class Servers(AzureCompositeResources):
+class PostgreSQLServers(AzureCompositeResources):
     _children = [
-        (Databases, 'databases'),
-        (ServerAzureAdAdministrators, None),
-        (ServerBlobAuditingPolicies, 'auditing'),
-        (ServerSecurityAlertPolicies, 'threat_detection'),
-        (FirewallRules, 'firewall_rules')
     ]
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
@@ -24,7 +13,7 @@ class Servers(AzureCompositeResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for raw_server in await self.facade.sqldatabase.get_servers(self.subscription_id):
+        for raw_server in await self.facade.postgresqldatabase.get_servers(self.subscription_id):
             id, server = self._parse_server(raw_server)
             self[id] = server
 
@@ -42,7 +31,7 @@ class Servers(AzureCompositeResources):
         server['name'] = raw_server.name
         server['resource_group_name'] = get_resource_group_name(raw_server.id)
         if raw_server.tags is not None:
-            server['tags'] = ["{}:{}".format(key, value) for key, value in  raw_server.tags.items()]
+            server['tags'] = ["{}:{}".format(key, value) for key, value in raw_server.tags.items()]
         else:
             server['tags'] = []
         return server['id'], server
