@@ -22,7 +22,12 @@ const Informations = (props) => {
     <div className="bucket-informations">
       <h4>Informations</h4>
       {informations.map(([key, value]) => (
-        <DetailedValue label={key} value={value} key={key} />
+        <DetailedValue 
+          label={key} 
+          value={value}
+          renderValue={isBoolean(value) ? value => value.toString() : undefined}
+          key={key} 
+        />
       ))}
     </div>
   );

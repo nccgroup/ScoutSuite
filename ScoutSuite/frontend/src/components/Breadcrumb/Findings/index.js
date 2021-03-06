@@ -25,11 +25,11 @@ const Findings = props => {
   return (
     <>
       <span><Link to={`/services/${service}/findings`}>Findings</Link></span>
+
       <ChevronRightIcon />
       <span>
         {pathname.endsWith('/items') ? dashboard_name : <Link to={`/services/${service}/findings/${finding}/items`}>{dashboard_name}</Link>}
       </span>
-
       <ChevronRightIcon />
 
       {pathname.endsWith('/items') && <span>All Items</span>}

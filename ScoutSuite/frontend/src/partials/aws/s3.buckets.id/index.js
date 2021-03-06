@@ -1,16 +1,14 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 
 import { Partial } from '../../../components/Partial';
-import BucketInformations from './BucketInformations';
+import { partialDataShape } from '../../../utils/Partials';
+import Informations from './Informations';
 import BucketPolicies from './BucketPolicies';
-import { PropTypes } from 'prop-types';
 
 
 const propTypes = {
-  data: PropTypes.shape({
-    item: PropTypes.object.isRequired,
-    path_to_issues: PropTypes.arrayOf(PropTypes.string).isRequired,
-  }).isRequired,
+  data: PropTypes.shape(partialDataShape).isRequired,
 };
 
 const Bucket = props => {
@@ -21,7 +19,7 @@ const Bucket = props => {
   return (
     <Partial data={data}>
       <div className="left-pane">
-        <BucketInformations />
+        <Informations />
       </div>
       <BucketPolicies />
     </Partial>
