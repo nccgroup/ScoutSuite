@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 
 import { PartialContext, PartialPathContext } from '../../../../../components/Partial/context';
-import { convertBoolToEnable } from '../../../../../utils/Partials';
 
 const propTypes = {
   columnName: PropTypes.string.isRequired,
@@ -40,7 +39,7 @@ const PoliciesAccessTable = props => {
                 {policy_id}
               </td>
               <td>
-                {convertBoolToEnable(policy.condition)}
+                {(get(policy, 'condition', null) != null).toString()}
               </td>
             </tr>
           ));
