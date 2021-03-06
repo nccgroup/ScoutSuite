@@ -37,10 +37,6 @@ const PartialValue = props => {
 
   const fullPath = concatPaths(basePath, path);
   const value = get(ctx.item, fullPath);
-
-  if (value === undefined || value === null) {
-    return null;
-  }
   
   const fullErrorPath = errorPath ? concatPaths(basePath, errorPath) : fullPath;
   const hasError = ctx.path_to_issues.includes(fullErrorPath);

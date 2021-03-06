@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-import PropTypes from 'prop-types';
 import { useParams } from '@reach/router';
 
 import { useAPI } from '../../../api/useAPI';
@@ -8,15 +7,11 @@ import { getItem } from '../../../api/paths';
 import './style.scss';
 import '../../../partials/style.scss';
 
-const propTypes = {
-  title: PropTypes.string.isRequired,
-};
-
-const SelectedItemContainer = props => {
-  const { title } = props;
+const SelectedItemContainer = () => {
 
   const path = (new URL(document.location)).searchParams.get('path');
   const params = useParams();
+  const { data: provider } = useAPI('provider');
   const { data: finding, loading: loading1 } = useAPI(`raw/services/${params.service}/findings/${params.finding}`);
   const { data, loading: loading2 } = useAPI(getItem(params.service, params.finding, params.item, path));
 
@@ -27,7 +22,7 @@ const SelectedItemContainer = props => {
   const DynamicPartial = React.lazy(async () => {
     let md = null;
     try {
-      md = await import('../../../partials/aws/' + partialPath + '/index.js'); // Can't use a string literal because of Babel bug
+      md = await import('../../../partials/' + provider.provider_code + '/' + partialPath + '/index.js'); // Can't use a string literal because of Babel bug
     } catch(e) {
       md = await import('../../../partials/Default');
     }
@@ -37,7 +32,7 @@ const SelectedItemContainer = props => {
   return (
     <div className="selected-item-container">
       <div className="header">
-        <h3>{title}</h3>
+        <h3>{data.item.name}</h3>
       </div>
       <div className="content">
         <Suspense fallback={<span>Loading...</span>}>
@@ -47,7 +42,5 @@ const SelectedItemContainer = props => {
     </div>
   );
 };
-
-SelectedItemContainer.propTypes = propTypes;
 
 export default SelectedItemContainer;

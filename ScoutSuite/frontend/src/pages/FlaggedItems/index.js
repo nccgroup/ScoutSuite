@@ -69,7 +69,7 @@ const FlaggedItems = () => {
           {!params.item ? (
             <span className="no-item">No selected item</span>
           ) : (
-            <SelectedItemContainer title={params.item} />
+            <SelectedItemContainer />
           )}
         </div>
       </div>
