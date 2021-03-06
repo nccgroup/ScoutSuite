@@ -4,7 +4,7 @@ import { PartialValue } from '../../../../components/Partial/index';
 import { convertBoolToEnable } from '../../../../utils/Partials';
 
 
-const BucketInformations = () => {
+const Informations = () => {
   return (
     <div className="partial-informations">
       <h4>Informations</h4>
@@ -46,4 +46,4 @@ const BucketInformations = () => {
   );
 };
 
-export default BucketInformations;
+export default Informations;

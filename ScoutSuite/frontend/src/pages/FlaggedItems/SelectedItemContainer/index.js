@@ -6,6 +6,7 @@ import { useAPI } from '../../../api/useAPI';
 import { getItem } from '../../../api/paths';
 
 import './style.scss';
+import '../../../partials/style.scss';
 
 const propTypes = {
   title: PropTypes.string.isRequired,
