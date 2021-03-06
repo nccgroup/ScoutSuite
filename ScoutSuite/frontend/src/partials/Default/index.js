@@ -3,6 +3,9 @@ import { PropTypes } from 'prop-types';
 
 import Informations from './Informations/index';
 
+import './style.scss';
+
+
 const propTypes = { data: PropTypes.object.isRequired };
 
 const DefaultPartial = (props) => {

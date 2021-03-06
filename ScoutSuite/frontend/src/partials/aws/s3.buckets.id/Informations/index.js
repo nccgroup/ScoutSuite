@@ -3,12 +3,10 @@ import React from 'react';
 import { PartialValue } from '../../../../components/Partial/index';
 import { convertBoolToEnable } from '../../../../utils/Partials';
 
-import './style.scss';
-
 
 const BucketInformations = () => {
   return (
-    <div className="bucket-informations">
+    <div className="partial-informations">
       <h4>Informations</h4>
       <PartialValue label="ARN" path="arn" />
       <PartialValue label="Region" path="region" />

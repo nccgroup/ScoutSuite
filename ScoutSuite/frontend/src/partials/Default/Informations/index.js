@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { isBoolean, isNumber } from 'lodash';
 
 import DetailedValue from '../../../components/DetailedValue';
 
-import './style.scss';
-import { isBoolean, isNumber } from 'lodash';
 
 const propTypes = {
   data: PropTypes.object.isRequired,
@@ -19,7 +18,7 @@ const Informations = (props) => {
   );
 
   return (
-    <div className="bucket-informations">
+    <div className="partial-informations">
       <h4>Informations</h4>
       {informations.map(([key, value]) => (
         <DetailedValue 
