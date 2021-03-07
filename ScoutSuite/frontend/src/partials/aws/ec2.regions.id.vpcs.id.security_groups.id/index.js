@@ -12,7 +12,7 @@ const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const Bucket = props => {
+const Ec2SecurityGroups = props => {
   const { data } = props;
 
   if (!data) return null;
@@ -39,6 +39,6 @@ const Bucket = props => {
   );
 };
 
-Bucket.propTypes = propTypes;
+Ec2SecurityGroups.propTypes = propTypes;
 
-export default Bucket;
+export default Ec2SecurityGroups;
