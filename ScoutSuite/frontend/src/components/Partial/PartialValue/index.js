@@ -47,6 +47,7 @@ const PartialValue = props => {
   
   const fullErrorPath = errorPath ? concatPaths(basePath, errorPath) : fullValuePath;
   const hasError = ctx.path_to_issues.includes(fullErrorPath);
+  const level = ctx.level;
 
   return (
     <div className="partial-value detailed-value"> 
@@ -55,7 +56,7 @@ const PartialValue = props => {
           {`${label}${separator}`}
         </span>
       )}
-      <span className={cx('value', hasError && 'error')}>
+      <span className={cx('value', hasError && level)}>
         {renderValue(value)}
       </span>
     </div>

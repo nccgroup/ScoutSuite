@@ -17,8 +17,6 @@ const Bucket = props => {
 
   if (!data) return null;
 
-  console.log(data);
-
   return (
     <Partial data={data}>
       <div className="left-pane">

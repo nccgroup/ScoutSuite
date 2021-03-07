@@ -12,8 +12,6 @@ const RulesList = () => {
   const basePath = useContext(PartialPathContext);
   const value = get(ctx.item, basePath);
 
-  console.log(ctx,basePath,value);
-
   return (
     <ul className="rules-list">
       {Object.entries(value.protocols).map(([name, { ports }], i) => (
