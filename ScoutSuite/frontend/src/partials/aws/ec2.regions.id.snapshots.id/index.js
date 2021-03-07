@@ -1,8 +1,9 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { Partial, PartialValue } from '../../../components/Partial';
 import { partialDataShape, convertBoolToEnable } from '../../../utils/Partials';
+
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,

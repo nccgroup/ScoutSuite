@@ -1,6 +1,6 @@
 import { Link, useParams } from '@reach/router';
 import React from 'react';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 
 const propTypes = {
   value: PropTypes.string.isRequired,
