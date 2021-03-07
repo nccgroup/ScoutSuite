@@ -7,7 +7,7 @@ import { PropTypes } from 'prop-types';
 import { useLocation } from '@reach/router';
 
 const propTypes = {
-  service: PropTypes.string.isRequied
+  service: PropTypes.string.isRequired
 };
 
 const Service = props => {

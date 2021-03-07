@@ -11,11 +11,11 @@ import './style.scss';
 
 const propTypes = {
   name: PropTypes.string.isRequired,
-  warnings: PropTypes.number.isRequired,
-  issues: PropTypes.number.isRequired,
-  resources: PropTypes.number.isRequired,
-  rules: PropTypes.number.isRequired,
-  checks: PropTypes.number.isRequired,
+  warnings: PropTypes.number,
+  issues: PropTypes.number,
+  resources_count: PropTypes.number.isRequired,
+  rules_count: PropTypes.number.isRequired,
+  checked_items: PropTypes.number.isRequired,
 };
 
 const ServiceCard = props => {
@@ -23,9 +23,9 @@ const ServiceCard = props => {
     name,
     warnings,
     issues,
-    resources,
-    rules,
-    checks,
+    resources_count,
+    rules_count,
+    checked_items,
   } = props;
   
   return (
@@ -46,9 +46,9 @@ const ServiceCard = props => {
       </div>
       <hr/>
       <div className="content">
-        <DetailedValue label="Resources" value={resources} />
-        <DetailedValue label="Rules" value={rules} />
-        <DetailedValue label="Checks" value={checks} />
+        <DetailedValue label="Resources" value={resources_count} separator="" />
+        <DetailedValue label="Rules" value={rules_count} separator="" />
+        <DetailedValue label="Checks" value={checked_items} separator="" />
       </div>
       <hr/>
       <div className="footer">

@@ -34,7 +34,7 @@ const Header = () => {
           checked={darkMode}
           onChange={handleChange}
           label="Dark Mode"
-          labelPlacement="start"
+          labelplacement="start"
         />
       </div>
     </div>

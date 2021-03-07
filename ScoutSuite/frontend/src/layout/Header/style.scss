@@ -1,10 +1,12 @@
 @import 'src/variables';
 
 .nav-header {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   background-color: $ncc-grey-dark;
+  z-index: 10;
 
   .content {
     display: flex;

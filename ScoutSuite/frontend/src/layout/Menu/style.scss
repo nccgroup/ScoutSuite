@@ -17,8 +17,9 @@
   padding: 0;
   margin: 0;
   background-color: $ncc-grey-dark;
+  overflow-y: auto;
 
-  div {
+  div, a {
     margin: 0.675rem 2rem 0.675rem 1.5rem;
   }
 
@@ -37,11 +38,14 @@
   }
 }
 
-.sub-menu, .menu-element {
+.menu-element,
+.sub-menu > .title {
   cursor: pointer;
 
-  &.is-selected {
-    cursor: default;
+  a, a:visited {
+    display: block;
+    color: $white;
+    text-decoration: none;
   }
 }
 
@@ -51,9 +55,21 @@
   .title {
     padding: 0.25rem 0;
     border-bottom: 1px solid $ncc-grey-dark;
+
+    &.lg {
+      font-size: 1rem;
+      font-weight: 900;
+    }
   }
 
   .menu-element {
     font-weight: 400;
+  }
+}
+
+.menu-element {
+  &.is-selected {
+    cursor: default;
+    font-weight: 900;
   }
 }

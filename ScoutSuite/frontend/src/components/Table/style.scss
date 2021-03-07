@@ -22,6 +22,8 @@
   }
 
   th {
+    padding-top: 0;
+    padding-bottom: 0;
     border-right: $default-grey-light solid 1px;
 
     * {
@@ -73,11 +75,29 @@
     width: 18rem;
     padding: 0.3125rem 1.5rem;
     border: 1px solid $default-grey-light;
-    border-radius: $border-radius;
     outline: none;
+    caret-color: $default-grey;
+    border-radius: $border-radius;
 
     &::placeholder {
       color: $default-grey;
+    }
+  }
+}
+
+.pagination {
+  padding: 0.75rem 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  .icon {
+    cursor: pointer;
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
     }
   }
 }

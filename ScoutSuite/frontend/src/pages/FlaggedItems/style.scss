@@ -2,13 +2,18 @@
 
 .flagged-items {
   .table-card, .selected-item {
-    margin-right: 2rem;
+    margin: 0 2rem 2rem 0;
     background: $white;
     border-radius: $border-radius;
   }
 
   .selected-item {
-    margin-top: 2rem;
-    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    min-height: 25rem;
+
+    .no-item {
+      align-self: center;
+    }
   }
 }

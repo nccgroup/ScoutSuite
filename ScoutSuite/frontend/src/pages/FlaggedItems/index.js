@@ -1,24 +1,25 @@
 import { useParams } from '@reach/router';
 import React from 'react';
 
-// import PropTypes from 'prop-types';
-
 import { useAPI } from '../../api/useAPI';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Layout from '../../layout';
 import Table from '../../components/Table';
+import Name from './formatters/Name/index';
+import SelectedItemContainer from './SelectedItemContainer';
+
+import { getItems } from '../../api/paths';
 
 import './style.scss';
-import Name from './formatters/Name/index';
-
-const propTypes = {};
 
 const FlaggedItems = () => {
   const params = useParams();
-  const { data: items, loading } = useAPI(`services.${params.service}.findings.${params.finding}.items`);
+  const { data: items, loading } = useAPI(getItems(params.service, params.finding), []);
 
   if (loading) return (
-    <Layout />
+    <Layout> 
+      <div/>
+    </Layout>
   );
 
   const columns = [
@@ -26,21 +27,23 @@ const FlaggedItems = () => {
     { name: 'Name', key: 'name' },
   ];
 
-  for (let [key,value] of Object.entries(items[0].extra)) {
-    columns.push({ name: value.name, key });
+  for (let [key] of Object.entries(items[0])) {
+    if (key !== 'item') columns.push({ name: key, key });
   }
 
   const data = items.map((item) => {
-    let newItem = item;
+    let newItem = item.item;
 
-    for (let [key, extra] of Object.entries(item.extra)) {
-      newItem[key] = extra.value;
+    for (let [key, value] of Object.entries(item)) {
+      if (key !== 'item') newItem[key] = value.id;
     }
 
     return newItem;
   });
 
-  const initialState = {};
+  const initialState = {
+    pageSize: 5
+  };
 
   const formatters = {
     name: Name
@@ -63,13 +66,15 @@ const FlaggedItems = () => {
         </div>
 
         <div className="selected-item">
-          {!params.item ? 'No selected item.' : params.item}
+          {!params.item ? (
+            <span className="no-item">No selected item</span>
+          ) : (
+            <SelectedItemContainer title={params.item} />
+          )}
         </div>
       </div>
     </Layout>
   );
 };
-
-FlaggedItems.propTypes = propTypes;
 
 export default FlaggedItems;

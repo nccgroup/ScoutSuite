@@ -12,5 +12,4 @@ export const severityLevel = (code) => {
   };
 
   return severities[code];
-
 };
