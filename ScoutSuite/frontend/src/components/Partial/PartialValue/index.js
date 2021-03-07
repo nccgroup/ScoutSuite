@@ -9,9 +9,10 @@ import { concatPaths } from '../../../utils/Partials';
 import './style.scss';
 
 const propTypes = {
-  path: PropTypes.string.isRequired,
   label: PropTypes.string,
   separator: PropTypes.string,
+  value: PropTypes.any,
+  valuePath: PropTypes.string,
   errorPath: PropTypes.string,
   renderValue: PropTypes.func,
 };
@@ -19,15 +20,17 @@ const propTypes = {
 const defaultProps = {
   label: null,
   separator: ': ',
+  value: null,
+  valuePath: null,
   errorPath: null,
   renderValue: value => value,
 };
 
 const PartialValue = props => {
   const {
-    path,
     label,
     separator,
+    valuePath,
     errorPath,
     renderValue,
   } = props;
@@ -35,14 +38,14 @@ const PartialValue = props => {
   const ctx = useContext(PartialContext);
   const basePath = useContext(PartialPathContext);
 
-  const fullPath = concatPaths(basePath, path);
-  const value = get(ctx.item, fullPath);
+  const fullValuePath = concatPaths(basePath, valuePath);
+  const value = props.value || get(ctx.item, fullValuePath);
 
   if (value === undefined || value === null) {
     return null;
   }
   
-  const fullErrorPath = errorPath ? concatPaths(basePath, errorPath) : fullPath;
+  const fullErrorPath = errorPath ? concatPaths(basePath, errorPath) : fullValuePath;
   const hasError = ctx.path_to_issues.includes(fullErrorPath);
 
   return (
