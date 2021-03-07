@@ -29,8 +29,6 @@ const PartialTable = props => {
 
   const data = itemsList;
 
-  console.log('PARTIIAL TABLE', data);
-
   return (
     <div className="partial-table"> 
       <Table
