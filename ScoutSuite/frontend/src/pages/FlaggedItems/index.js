@@ -3,7 +3,6 @@ import React from 'react';
 
 import { useAPI } from '../../api/useAPI';
 import { sortBySeverity } from '../../utils/Severity/sort';
-import Layout from '../../layout';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
 import SelectedItemContainer from './SelectedItemContainer';
@@ -17,11 +16,9 @@ const FlaggedItems = () => {
   const params = useParams();
   const { data: items, loading } = useAPI(getItems(params.service, params.finding), []);
 
-  if (loading) return (
-    <Layout> 
-      <div/>
-    </Layout>
-  );
+  if (loading) return <>
+    <Breadcrumb />
+  </>;
 
   const columns = [
     { name: 'ID', key: 'id' },
