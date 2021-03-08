@@ -12,11 +12,19 @@
     color: $success-color;
   }
 
-  &.issues {
+  &.critical {
+    color: $ncc-red;
+  }
+
+  &.high {
     color: $issue-color;
   }
 
-  &.warnings {
+  &.medium {
     color: $warning-color;
+  }
+
+  &.low {
+    color: $scoutsuite-blue;
   }
 }
