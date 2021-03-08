@@ -9,3 +9,15 @@
     margin: 0;
   }
 }
+
+.default-with-rules {
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  margin-top: 1.5rem;
+  
+  svg {
+    font-size: 1.25rem;
+    margin-right: 0.5rem;
+  }
+}
