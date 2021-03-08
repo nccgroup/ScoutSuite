@@ -6,6 +6,7 @@ import { partialDataShape } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import Informations from './Informations';
 import RulesList from './RulesList';
+import Usage from './Usage';
 
 
 const propTypes = {
@@ -34,6 +35,12 @@ const Ec2SecurityGroups = props => {
             <RulesList />
           </PartialSection>
         </TabPane>
+        <TabPane title="Usage">
+          <PartialSection path="used_by">
+            <Usage />
+          </PartialSection>
+        </TabPane>
+        
       </TabsMenu>
     </Partial>
   );
