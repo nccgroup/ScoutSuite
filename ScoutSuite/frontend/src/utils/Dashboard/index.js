@@ -12,6 +12,7 @@ export const getDashboardName = (dashboard) => {
     'external attack surface': 'External Attack Surface',
     password_policy: 'Password Policy',
     permissions: 'Permissions',
+    statistics: 'Statistics'
   };
 
   return names[dashboard];

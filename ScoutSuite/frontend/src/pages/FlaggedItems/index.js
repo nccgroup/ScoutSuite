@@ -7,6 +7,7 @@ import Layout from '../../layout';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
 import SelectedItemContainer from './SelectedItemContainer';
+import Breadcrumb from '../../components/Breadcrumb/index';
 
 import { getItems } from '../../api/paths';
 
@@ -54,7 +55,8 @@ const FlaggedItems = () => {
   };
 
   return (
-    <Layout>
+    <>
+      <Breadcrumb />
       <div className="flagged-items">
         <div className="table-card">
           <Table
@@ -73,7 +75,7 @@ const FlaggedItems = () => {
           )}
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 
