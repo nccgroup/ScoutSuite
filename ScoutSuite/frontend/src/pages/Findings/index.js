@@ -7,11 +7,11 @@ import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlin
 import { useAPI } from '../../api/useAPI';
 import { getFindings } from '../../api/paths';
 import { sortBySeverity } from '../../utils/Severity/sort';
-import Layout from '../../layout';
 import Table from '../../components/Table';
 import Name from './formatters/Name';
 import Description from './formatters/Description/index';
 import Severity from './formatters/Severity/index';
+import Breadcrumb from '../../components/Breadcrumb/index';
 
 import './style.scss';
 
@@ -36,6 +36,8 @@ const Findings = () => {
     name: item.description,
     flagged: `${item.flagged_items}/${item.checked_items}`,
     description: item.rationale,
+    references: item.references,
+    remediation: item.remediation,
     flagged_items: item.flagged_items,
   }));
 
@@ -61,18 +63,19 @@ const Findings = () => {
 
   if (findings.length === 0) {
     return (
-      <Layout>
+      <>
+        <Breadcrumb />
         <div className="findings">
           <div className="table-card no-items">
             <CheckCircleOutlineOutlinedIcon /> <b>All good!</b> No findings for this service.
           </div>
         </div>
-      </Layout>
+      </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <div className="findings">
         <div className="table-card">
           <Table
@@ -84,7 +87,7 @@ const Findings = () => {
           />
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

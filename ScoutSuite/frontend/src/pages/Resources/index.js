@@ -1,7 +1,8 @@
 import { Link, useParams } from '@reach/router';
 import React from 'react';
-import Layout from '../../layout';
 // import PropTypes from 'prop-types';
+
+import Breadcrumb from '../../components/Breadcrumb/index';
 
 import './style.scss';
 
@@ -11,7 +12,8 @@ const Resources = () => {
   const params = useParams();
 
   return (
-    <Layout>
+    <>
+      <Breadcrumb />
       <div>
         <h3>Resources page</h3>
         <ul>
@@ -21,7 +23,7 @@ const Resources = () => {
           {params.item && <li>Item: {params.item}</li>}
         </ul>
       </div>
-    </Layout>
+    </>
     
   );
 };

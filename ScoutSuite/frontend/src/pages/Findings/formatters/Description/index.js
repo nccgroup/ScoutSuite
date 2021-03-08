@@ -12,7 +12,7 @@ const propTypes = {
 };
 
 const Description = (props) => {
-  const { value } = props;
+  const { value, row: { original } } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handlePopoverOpen = (event) => {
@@ -35,14 +35,29 @@ const Description = (props) => {
         <InfoOutlinedIcon fontSize="inherit" />  Finding description.
       </span>
 
-      {open && <div className="desc-overlay">
-        <div className="desc-header">
-          <b>Finding Description</b>
-          <CloseOutlinedIcon onClick={handlePopoverClose} />
+      {open && <>
+        <div className="desc-bg" onClick={handlePopoverClose}></div>
+        <div className="desc-overlay">
+          <div className="desc-header">
+            <h4>Finding Description</h4>
+            <CloseOutlinedIcon onClick={handlePopoverClose} />
+          </div>
+          
+          <div dangerouslySetInnerHTML={{ __html: value }}></div>
+
+          {original.remediation && <>
+            <h4>Remediation</h4>
+            <div dangerouslySetInnerHTML={{ __html: original.remediation }}></div>
+          </>}
+
+          {original.references && <>
+            <h4>References</h4>
+            <ul>
+              {original.references.map((ref, i) => (<li key={i}><a href={ref} target="_blank" rel="noreferrer" >{ref}</a></li>))}
+            </ul>
+          </>}
         </div>
-        
-        <div dangerouslySetInnerHTML={{ __html: value }}></div>
-      </div>}
+      </>}
     </>
   );
 };
