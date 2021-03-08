@@ -93,7 +93,9 @@
   justify-content: flex-end;
 
   .icon {
+    position: relative;
     cursor: pointer;
+    z-index: 0;
 
     &.disabled {
       cursor: not-allowed;

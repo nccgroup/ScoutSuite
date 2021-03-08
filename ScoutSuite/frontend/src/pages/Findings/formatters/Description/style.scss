@@ -10,16 +10,39 @@
   cursor: pointer;
 }
 
+.desc-bg {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+
+  background-color: rgba(0,0,0,0.24);
+  cursor: pointer;
+}
+
 .desc-overlay {
   position: absolute;
+  z-index: 10;
   background-color: $white;
   box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-  right: -1rem;
-  max-width: 60%;
+  right: 0;
+  max-width: 80%;
 
-  margin-top: 0.25rem;
+  margin-top: -1.25rem;
 
   padding: 0.625rem 1rem;
+
+  ul {
+    padding-left: 1rem;
+    list-style: disc;
+    font-size: 0.9rem;
+  }
+
+  h4 {
+    margin: 0.75rem 0;
+  }
 
   .desc-header {
     display: flex;
