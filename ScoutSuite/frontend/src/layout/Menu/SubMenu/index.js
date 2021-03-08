@@ -8,7 +8,7 @@ const propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
-  isOpened: PropTypes.bool.isRequired,
+  opened: PropTypes.string.isRequired,
   setOpened: PropTypes.func.isRequired,
 };
 
@@ -16,15 +16,20 @@ const SubMenu = props => {
   const { 
     title,
     children,
-    isOpened,
+    opened,
     setOpened,
   } = props;
 
+  const isOpened = opened === title;
   const className = cx('sub-menu', {'is-selected': isOpened});
+
+  const toggle = () => {
+    setOpened(opened !== title ? title : null);
+  };
 
   return (
     <li className={className}>
-      <div className="title" onClick={() => setOpened(title)}>
+      <div className="title" onClick={toggle}>
         {title}
       </div>
       {isOpened && (

@@ -42,7 +42,7 @@ const Layout = (props) => {
           return (
             <SubMenu
               title={category.name}
-              isOpened={opened === category.name}
+              opened={opened}
               setOpened={setOpened}
               key={category.id}
             >
