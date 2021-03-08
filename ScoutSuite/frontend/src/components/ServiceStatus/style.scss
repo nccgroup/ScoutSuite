@@ -9,22 +9,22 @@
   }
 
   &.good {
-    color: $success-color;
+    color: $good-color;
   }
 
   &.critical {
-    color: $ncc-red;
+    color: $critical-color;
   }
 
   &.high {
-    color: $issue-color;
+    color: $high-color;
   }
 
   &.medium {
-    color: $warning-color;
+    color: $medium-color;
   }
 
   &.low {
-    color: $scoutsuite-blue;
+    color: $low-color;
   }
 }
