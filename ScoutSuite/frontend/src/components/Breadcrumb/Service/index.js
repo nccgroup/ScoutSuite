@@ -3,7 +3,7 @@ import React from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 //import { Link } from '@reach/router';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useLocation } from '@reach/router';
 
 const propTypes = {

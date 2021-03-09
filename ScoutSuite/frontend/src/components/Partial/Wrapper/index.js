@@ -2,12 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { PartialContext } from '../context';
+import { partialDataShape } from '../../../utils/Partials';
 
 const propTypes = {
-  data: PropTypes.shape({
-    item: PropTypes.object.isRequired,
-    path_to_issues: PropTypes.arrayOf(PropTypes.string).isRequired,
-  }).isRequired,
+  data: PropTypes.shape(partialDataShape).isRequired,
   children: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),

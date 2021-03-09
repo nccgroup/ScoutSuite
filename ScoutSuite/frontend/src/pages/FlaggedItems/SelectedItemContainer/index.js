@@ -34,6 +34,11 @@ const SelectedItemContainer = props => {
     return md;
   }); 
 
+  const partialData = {
+    level: finding.level,
+    ...data,
+  };
+
   return (
     <div className="selected-item-container">
       <div className="header">
@@ -41,7 +46,7 @@ const SelectedItemContainer = props => {
       </div>
       <div className="content">
         <Suspense fallback={<span>Loading...</span>}>
-          <DynamicPartial data={data} />
+          <DynamicPartial data={partialData} />
         </Suspense>
       </div>
     </div>

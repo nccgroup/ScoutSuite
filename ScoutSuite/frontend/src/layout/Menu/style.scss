@@ -17,6 +17,7 @@
   padding: 0;
   margin: 0;
   background-color: $ncc-grey-dark;
+  user-select: none;
   overflow-y: auto;
 
   a {
@@ -73,7 +74,6 @@
 }
 
 .menu-element {
-
   a {
     display: flex;
     align-items: center;
@@ -99,6 +99,4 @@
       cursor: not-allowed;
     }
   }
-
-  
 }
