@@ -1,0 +1,27 @@
+@import 'src/variables';
+
+.issues-charts {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: -2rem;
+
+  .pie-chart {
+    width: 33.5rem;
+    margin-right: 2rem;
+  }
+
+  .bar-chart {
+    width: 43.5rem;
+  }
+
+  .pie-chart, .bar-chart {
+    background-color: $white;
+    margin-bottom: 2rem;
+
+    h3 {
+      padding: 0.5rem 1rem;
+      margin: 0;
+      border-bottom: 1px solid $default-grey-subtle;
+    }
+  }
+}

@@ -9,24 +9,27 @@
     margin-right: 0.5rem;
   }
 
+  &.critical {
+    color: $critical-color;
+  }
+
   &.high, &.danger {
-    color: $ncc-red;
+    color: $high-color;
   }
 
   &.medium, &.warning {
-    color: $scoutsuite-orange;
+    color: $medium-color;
   }
 
   &.low {
-    color: $scoutsuite-blue;
+    color: $low-color;
+  }
+
+  &.success {
+    color: $good-color;
   }
 
   &.info {
     color: $text-muted;
   }
-
-  &.success {
-    color: $scoutsuite-green;
-  }
-
 }
