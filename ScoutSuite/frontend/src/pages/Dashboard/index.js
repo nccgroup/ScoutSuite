@@ -11,7 +11,7 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 import './style.scss';
 
 const Dashboard = () => {
-  const { data: services, loading } = useAPI('raw/last_run/summary');
+  const { data: services, loading } = useAPI('dashboard');
 
   if (loading) return null;
 

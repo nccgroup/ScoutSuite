@@ -76,6 +76,7 @@ const Findings = () => {
 
   return (
     <>
+      <Breadcrumb />
       <div className="findings">
         <div className="table-card">
           <Table
