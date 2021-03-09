@@ -23,6 +23,12 @@
   --success-color: #3fbd50;
   --warning-color: #fdbe00;
   --issue-color: #fc6464;
+
+  --good-color: #3fbd50;
+  --critical-color: #C41230;
+  --high-color: #fc6464;
+  --medium-color: #fdbe00;
+  --low-color: #4099ff;
 }
 
 body.dark-mode {
@@ -60,6 +66,12 @@ $text-muted: var(--text-muted);
 $success-color: var(--success-color);
 $warning-color: var(--warning-color);
 $issue-color: var(--issue-color);
+
+$good-color: var(--good-color);
+$critical-color: var(--critical-color);
+$high-color: var(--high-color);
+$medium-color: var(--medium-color);
+$low-color: var(--low-color);
 
 $border-radius: 5px;
 $nav-header-height: 5rem;
