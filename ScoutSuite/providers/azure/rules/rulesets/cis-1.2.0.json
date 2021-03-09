@@ -2,11 +2,17 @@
   "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.2.0.",
   "rules": {
     "aad-users-create-security-groups-disabled.json": [
-          {
-              "enabled": true,
-              "level": "danger"
-          }
-      ],
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "keyvault-not-recoverable.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "storageaccount-encrypted-not-customer-managed.json": [
       {
         "enabled": true,
@@ -32,22 +38,22 @@
       }
     ],
     "virtual-machines-os-data-encrypted-cmk.json": [
-          {
-              "enabled": true,
-              "level": "warning"
-          }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "virtual-machines-unattached-disks-encrypted-cmk.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "rbac-custom-subscription-owner-role-not-allowed.json": [
-        {
-            "enabled": true,
-            "level": "danger"
-        }
+      {
+        "enabled": true,
+        "level": "danger"
+      }
     ],
     "rbac-administering-resource-locks-assigned.json": [
       {
@@ -77,58 +83,58 @@
       }
     ],
     "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
-          {
-              "enabled": true,
-              "level": "warning"
-          }
-     ],
-     "sqldatabase-allow-any-ip.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-allow-any-ip.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "postgresql-database-servers-log-checkpoints-not-on.json": [
       {
-              "enabled": true,
-              "level": "warning"
-          }
-     ],
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "postgresql-database-servers-log-connections-not-on.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "postgresql-database-servers-log-disconnections-not-on.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "postgresql-database-servers-log-duration-not-on.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "postgresql-database-servers-connection-throttling-not-on.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "postgresql-database-servers-log-retention-days-less-than-4.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
-     ],
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "mysql-database-servers-ssl-enforcement-disabled.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }

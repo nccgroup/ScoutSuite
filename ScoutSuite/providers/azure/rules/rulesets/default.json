@@ -79,6 +79,12 @@
                 "level": "warning"
             }
         ],
+        "keyvault-not-recoverable.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "network-security-groups-rule-inbound-internet-all.json": [
             {
                 "enabled": true,
