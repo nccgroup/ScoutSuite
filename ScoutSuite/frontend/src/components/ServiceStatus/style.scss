@@ -9,14 +9,22 @@
   }
 
   &.good {
-    color: $success_color;
+    color: $good-color;
   }
 
-  &.issues {
-    color: $issue_color;
+  &.critical {
+    color: $critical-color;
   }
 
-  &.warnings {
-    color: $warning_color;
+  &.high {
+    color: $high-color;
+  }
+
+  &.medium {
+    color: $medium-color;
+  }
+
+  &.low {
+    color: $low-color;
   }
 }

@@ -1,0 +1,59 @@
+[
+  {
+    "id": "sg-001d97901591b23e0",
+    "name": "Security Group 12345678",
+    "dispaly_path": "ec2.regions.{region}.vpcs.{vpc}.security_groups.{id}",
+    "extra": {
+      "region": {
+        "id": "region",
+        "name": "Region",
+        "value": "us-west-1",
+        "path": "ec2.regions.{id}"
+      },
+      "vpc": {
+        "id": "vpc",
+        "name": "VPC",
+        "value": "vpc-12345769",
+        "path": "ec2.regions.{region}.vpcs.{id}"
+      }
+    }
+  },
+  {
+    "id": "sg-00e277654e0656da8",
+    "name": "Security Group 12345678",
+    "dispaly_path": "ec2.regions.{region}.vpcs.{vpc}.security_groups.{id}",
+    "extra": {
+      "region": {
+        "id": "region",
+        "name": "Region",
+        "value": "eu-west-1",
+        "path": "ec2.regions.{id}"
+      },
+      "vpc": {
+        "id": "vpc",
+        "name": "VPC",
+        "value": "vpc-12345769",
+        "path": "ec2.regions.{region}.vpcs.{id}"
+      }
+    }
+  },
+  {
+    "id": "sg-02874b34158c83e44",
+    "name": "Security Group 12345678",
+    "dispaly_path": "ec2.regions.{region}.vpcs.{vpc}.security_groups.{id}",
+    "extra": {
+      "region": {
+        "id": "region",
+        "name": "Region",
+        "value": "ca-central-1",
+        "path": "ec2.regions.{id}"
+      },
+      "vpc": {
+        "id": "vpc",
+        "name": "VPC",
+        "value": "vpc-12345769",
+        "path": "ec2.regions.{region}.vpcs.{id}"
+      }
+    }
+  }
+]

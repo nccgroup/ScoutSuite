@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import * as API from './api';
+import * as Cache from './cache';
 
 /**
  * React Hook to fetch API data and re-render the component
  * @param {*} path
  */
-export const useAPI = (path) => {
-  const [data, setData] = useState({});
-  const [loading, setLoading] = useState(true);
+export const useAPI = (path, defaultValue) => {
+  const [data, setData] = useState(defaultValue);
+  const [loading, setLoading] = useState(!Cache.has(path));
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -29,5 +30,5 @@ export const useAPI = (path) => {
     // TODO: Load more content when the content is paginated
   };
 
-  return {data, loading, error, loadMore};
+  return {data: Cache.has(path) ? Cache.get(path) : data, loading, error, loadMore};
 };

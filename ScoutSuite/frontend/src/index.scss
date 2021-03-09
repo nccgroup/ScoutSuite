@@ -1,12 +1,13 @@
 @import 'src/variables';
 
-html {
-  background: $background_color;
-}
-
 body {
   margin: 0;
+  background: $background-color;
   font-family: 'Quicksand', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a, a:visited {
+  color: $link-color;
 }

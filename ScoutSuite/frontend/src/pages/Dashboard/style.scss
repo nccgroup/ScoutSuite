@@ -1,3 +1,13 @@
 .dashboard {
-  margin: 2rem 3rem;
+  .tabs-menu {
+    font-size: 1.75rem;
+
+    .tab-pane {
+      margin-right: 1.5rem;
+
+      &.is-selected {
+        border-bottom-width: 3px;
+      }
+    }
+  }
 }

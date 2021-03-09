@@ -1,0 +1,18 @@
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+
+  .provider-logo {
+    height: 1.1rem;
+  }
+
+  span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
