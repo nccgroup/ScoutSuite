@@ -16,6 +16,52 @@ const RulesList = () => {
 
   const isDefault = get(ctx.item, 'name') === 'default';
 
+  const renderIpAddresses = (addresses, path) => (
+    <li>
+      IP addresses:
+      <ul>
+        {addresses.map((address, i) => (
+          <li key={i}>
+            <PartialValue
+              value={address.CIDR}
+              errorPath={path}
+            />
+          </li>
+        ))}
+      </ul>
+    </li>
+  );
+
+  const renderIpv6Addresses = addresses => (
+    <li>
+      IPv6 addresses:
+      <ul>
+        {addresses.map((address, i) => (
+          <li key={i}>
+            {/* TODO: actual value for IPv6*/}
+            {address}
+          </li>
+        ))}
+      </ul>
+    </li>
+  );
+
+  const renderSecurityGroups = (groups, path) => (
+    <li>
+      EC2 security groups:
+      <ul>
+        {groups.map((group, i) => (
+          <li key={i}>
+            <PartialValue
+              value={`${group.GroupName}\xa0\xa0(${group.GroupId})`}
+              errorPath={path}
+            />
+          </li>
+        ))}
+      </ul>
+    </li>
+  );
+
   return (
     <>
       <ul className="rules-list">
@@ -36,47 +82,19 @@ const RulesList = () => {
                       </li>
                       <ul>
                         {port.cidrs && (
-                          <li>
-                            IP addresses:
-                            <ul>
-                              {port.cidrs.map((address, i) => (
-                                <li key={i}>
-                                  <PartialValue
-                                    value={address.CIDR}
-                                    errorPath={`protocols.${name}.ports.${port_name}.cidrs.${i}.CIDR`}
-                                  />
-                                </li>
-                              ))}
-                            </ul>
-                          </li>
+                          renderIpAddresses(
+                            port.cidrs, 
+                            `protocols.${name}.ports.${port_name}.cidrs.${i}.CIDR`,
+                          )
                         )}
                         {port.Ipv6Ranges && (
-                          <li>
-                            IPv6 addresses:
-                            <ul>
-                              {port.Ipv6Ranges.map((address, i) => (
-                                <li key={i}>
-                                  {/* TODO: actual value for IPv6*/}
-                                  {address}
-                                </li>
-                              ))}
-                            </ul>
-                          </li>
+                          renderIpv6Addresses(port.Ipv6Ranges)
                         )}
                         {port.security_groups && (
-                          <li>
-                            EC2 security groups:
-                            <ul>
-                              {port.security_groups.map((group, i) => (
-                                <li key={i}>
-                                  <PartialValue
-                                    value={`${group.GroupName}\xa0\xa0(${group.GroupId})`}
-                                    errorPath={`protocols.${name}.ports.${port_name}.security_groups.${i}`}
-                                  />
-                                </li>
-                              ))}
-                            </ul>
-                          </li>
+                          renderSecurityGroups(
+                            port.security_groups,
+                            `protocols.${name}.ports.${port_name}.security_groups.${i}`,
+                          )
                         )}
                       </ul>
                     </div>
