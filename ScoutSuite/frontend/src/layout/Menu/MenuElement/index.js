@@ -4,10 +4,13 @@ import { Link } from '@reach/router';
 import cx from 'classnames';
 
 const propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.array,
+  ]).isRequired,
   link: PropTypes.string,
   disabled: PropTypes.bool,
-  selected: PropTypes.bool,
+  selected: PropTypes.string,
   setSelected: PropTypes.func,
 };
 

@@ -41,13 +41,12 @@ const Usage = () => {
       {value && (
         <ul>
           {Object.entries(value).map(([service, { resource_type }]) => (
-            Object.entries(resource_type).map(([type, resources]) => (
+            Object.entries(resource_type).map(([type, resources], i) => (
               <>
-                <li key={`${service}-${type}`}>
+                <li key={`title-${i}`}>
                   <h4>{`${makeTitle(service)} ${makeTitle(type)}`}</h4>
                 </li>
-                <ul>
-                  {console.log(resources)}
+                <ul key={`list-${i}`}>
                   {renderResourcesList(resources)}
                 </ul> 
               </>
