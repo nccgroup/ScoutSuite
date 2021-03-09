@@ -39,7 +39,7 @@ const PartialValue = props => {
   const basePath = useContext(PartialPathContext);
 
   const fullValuePath = concatPaths(basePath, valuePath);
-  const value = props.value || get(ctx.item, fullValuePath);
+  const value = renderValue(props.value || get(ctx.item, fullValuePath));
 
   if (value === undefined || value === null) {
     return null;
@@ -57,7 +57,7 @@ const PartialValue = props => {
         </span>
       )}
       <span className={cx('value', hasError && level)}>
-        {renderValue(value)}
+        {value}
       </span>
     </div>
   );

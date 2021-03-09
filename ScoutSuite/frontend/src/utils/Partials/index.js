@@ -21,6 +21,19 @@ export const convertBoolToEnable = value => value ? 'enabled' : 'disabled';
 export const convertBoolToCheckmark = value => value ? '✔' : '✖';
 
 /**
+ * Return the value or the string 'None' if it doesn't
+ * @param value
+ * @returns {any}
+ */
+export const valueOrNone = value => {
+  if (value === undefined || value === null || value === '' || value === [] || value === {}) {
+    return 'None';
+  }
+
+  return value;
+};
+
+/**
  * Return the concatenation of 2 paths
  * @param pathA
  * @param pathB

@@ -2,7 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Partial, PartialValue } from '../../../components/Partial';
-import { partialDataShape, convertBoolToEnable } from '../../../utils/Partials';
+import { 
+  partialDataShape, 
+  convertBoolToEnable,
+  valueOrNone,
+} from '../../../utils/Partials';
 
 
 const propTypes = {
@@ -20,34 +24,41 @@ const Ec2Snapshots = props => {
         <PartialValue
           label="ID"
           valuePath="id"
+          renderValue={valueOrNone}
         />
         <PartialValue
           label="ARN"
           valuePath="arn"
+          renderValue={valueOrNone}
         />
         <PartialValue
           label="Description"
           valuePath="description"
+          renderValue={valueOrNone}
         />
         <PartialValue
           label="State"
           valuePath="state"
+          renderValue={valueOrNone}
         />
         <PartialValue
           label="Progress"
           valuePath="progress"
+          renderValue={valueOrNone}
         />
         <PartialValue
           label="Start Time"
           valuePath="start_time"
+          renderValue={valueOrNone}
         />
         <PartialValue
           label="Volume"
-          valuePath=""
+          valuePath="volume"
         />
         <PartialValue
           label="Owner ID"
           valuePath="owner_id"
+          renderValue={valueOrNone}
         />
         <PartialValue
           label="Encryption"
@@ -57,6 +68,7 @@ const Ec2Snapshots = props => {
         <PartialValue
           label="KMS Key ID"
           valuePath="kms_key_id"
+          renderValue={valueOrNone}
         />
       </div>
     </Partial>

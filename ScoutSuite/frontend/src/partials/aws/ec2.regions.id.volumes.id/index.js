@@ -17,10 +17,13 @@ const Ec2Volumes = props => {
   if (!data) return null;
 
   return (
-    <GenericObject
-      className="partial-informations ec2-volumes"
-      data={data.item}
-    />
+    <div className="ec2-volume">
+      <h3>Attributes</h3>
+      <GenericObject
+        className="partial-informations"
+        data={data.item}
+      />
+    </div>
   );
 };
 
