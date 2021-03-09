@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from '@reach/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import cx from 'classnames';
 
 import ServiceStatus from '../ServiceStatus';
 import DetailedValue from '../DetailedValue';
@@ -24,6 +25,9 @@ const ServiceCard = props => {
     resources,
     rules,
   } = props;
+
+  const hasFindings = rules > 0;
+  const findingsPath = hasFindings ? `/services/${name.toLowerCase()}/findings` : '/';
   
   return (
     <div className="service-card">
@@ -56,8 +60,15 @@ const ServiceCard = props => {
       </div>
       <hr/>
       <div className="footer">
-        <Link className="link" to={`/services/${name.toLowerCase()}/findings`}>
-          View report <FontAwesomeIcon icon={faChevronRight}/>
+        <Link 
+          className={cx('link', { 'disabled': !hasFindings })} 
+          to={findingsPath}
+        >
+          {hasFindings ? (
+            <>
+              View report <FontAwesomeIcon icon={faChevronRight}/>
+            </>
+          ) : 'No findings'}
         </Link>
       </div>
     </div>

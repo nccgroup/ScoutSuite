@@ -46,10 +46,17 @@
 
     .link {
       color: $link-color;
+      font-weight: 500;
       display: flex;
       justify-content: space-between;
       align-items: center;
       text-decoration: none;
+      user-select: none;
+
+      &.disabled {
+        pointer-events: none;
+        color: $default-grey;
+      }
 
       &:hover {
         text-decoration: underline;
