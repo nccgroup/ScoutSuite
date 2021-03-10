@@ -1,29 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
 
 const propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
+    PropTypes.array,
   ]).isRequired,
-  type: PropTypes.string
 };
+
 
 const MenuGroup = props => {
   const {
     title,
     children,
-    type
   } = props;
 
   return (
     <li className="menu-group">
-      <div className={cx('title', type === 'parent' && 'lg')}>
+      <div className="title">
         {title}
       </div>
-      <ul className={cx(type !== 'parent' && 'child')}>
+      <ul>
         {children}
       </ul>
     </li>

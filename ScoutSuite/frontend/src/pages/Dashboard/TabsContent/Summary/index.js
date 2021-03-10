@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
 
-import ServiceStatus from '../../../../components/ServiceStatus';
 import ServiceCard from '../../../../components/ServiceCard';
+import IssuesCharts from './IssuesCharts';
 
 import './style.scss';
+
 
 const propTypes = {
   services: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -20,19 +21,13 @@ const Summary = (props) => {
     'issues.Good',
   ]).reverse();
 
-  //const issues_sum = services.map(service => service.issues).reduce((total, issues) => total + issues);
-  //const warnings_sum = services.map(service => service.warnings).reduce((total, warnings) => total + warnings);
-  const issues_sum = 10;
-  const warnings_sum = 27;
-
   return (
     <div className="dashboard-summary">
       <div className="overview">
         <h1>Overview</h1>
         <hr />
         <div className="summary">
-          <ServiceStatus status="issues" amount={issues_sum} />
-          <ServiceStatus status="warnings" amount={warnings_sum} />
+          <IssuesCharts services={services} />
         </div>
       </div>
 
