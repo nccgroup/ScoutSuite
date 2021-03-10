@@ -279,8 +279,33 @@
                 "level": "warning"
             }
         ],
-        "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+        "sqldatabase-servers-vulnerability-assessments-disabled.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-recurring-scans-disabled.json": [
             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-send-scan-reports-to-not-configured.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-email-notif-to-admins-owners-not-set.json": [
+                 {
                 "enabled": true,
                 "level": "warning"
             }
