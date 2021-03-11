@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
-import PropTypes from 'prop-types';
 import { useParams } from '@reach/router';
+import get from 'lodash/get';
 
 import { useAPI } from '../../../api/useAPI';
 import { getItem } from '../../../api/paths';
@@ -8,13 +8,8 @@ import { getItem } from '../../../api/paths';
 import './style.scss';
 import '../../../partials/style.scss';
 
-const propTypes = {
-  title: PropTypes.string.isRequired,
-};
 
-const SelectedItemContainer = props => {
-  const { title } = props;
-
+const SelectedItemContainer = () => {
   const path = (new URL(document.location)).searchParams.get('path');
   const params = useParams();
   const { data: finding, loading: loading1 } = useAPI(`raw/services/${params.service}/findings/${params.finding}`);
@@ -42,7 +37,7 @@ const SelectedItemContainer = props => {
   return (
     <div className="selected-item-container">
       <div className="header">
-        <h3>{title}</h3>
+        <h3>{get(data, ['item', 'name'])}</h3>
       </div>
       <div className="content">
         <Suspense fallback={<span>Loading...</span>}>
@@ -52,7 +47,5 @@ const SelectedItemContainer = props => {
     </div>
   );
 };
-
-SelectedItemContainer.propTypes = propTypes;
 
 export default SelectedItemContainer;

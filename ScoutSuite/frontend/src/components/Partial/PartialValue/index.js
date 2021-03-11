@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import get from 'lodash/get';
+import Tooltip from '@material-ui/core/Tooltip';
 import cx from 'classnames';
+import get from 'lodash/get';
 
 import { PartialContext, PartialPathContext } from '../context';
 import { concatPaths } from '../../../utils/Partials';
@@ -14,6 +15,8 @@ const propTypes = {
   value: PropTypes.any,
   valuePath: PropTypes.string,
   errorPath: PropTypes.string,
+  tooltip: PropTypes.bool,
+  tooltipProps: PropTypes.object,
   renderValue: PropTypes.func,
 };
 
@@ -23,6 +26,11 @@ const defaultProps = {
   value: null,
   valuePath: null,
   errorPath: null,
+  tooltip: false,
+  tooltipProps: {
+    enterDelay: 1000,
+    placement: 'top-start',
+  },
   renderValue: value => value,
 };
 
@@ -32,6 +40,8 @@ const PartialValue = props => {
     separator,
     valuePath,
     errorPath,
+    tooltip,
+    tooltipProps,
     renderValue,
   } = props;
 
@@ -49,6 +59,12 @@ const PartialValue = props => {
   const hasError = ctx.path_to_issues.includes(fullErrorPath);
   const level = ctx.level;
 
+  const content = (
+    <span className={cx('value', hasError && level)}>
+      {value}
+    </span>
+  );
+
   return (
     <div className="partial-value detailed-value"> 
       {label && (
@@ -56,9 +72,13 @@ const PartialValue = props => {
           {`${label}${separator}`}
         </span>
       )}
-      <span className={cx('value', hasError && level)}>
-        {value}
-      </span>
+      {tooltip ? (
+        <Tooltip title={value} {...tooltipProps}>
+          {content}
+        </Tooltip>
+      ) : 
+        content
+      }
     </div>
   );
 };

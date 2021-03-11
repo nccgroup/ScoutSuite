@@ -42,14 +42,14 @@ const Usage = () => {
         <ul>
           {Object.entries(value).map(([service, { resource_type }]) => (
             Object.entries(resource_type).map(([type, resources], i) => (
-              <>
-                <li key={`title-${i}`}>
+              <div key={i}>
+                <li>
                   <h4>{`${makeTitle(service)} ${makeTitle(type)}`}</h4>
                 </li>
-                <ul key={`list-${i}`}>
+                <ul>
                   {renderResourcesList(resources)}
                 </ul> 
-              </>
+              </div>
             ))
           ))}
         </ul>

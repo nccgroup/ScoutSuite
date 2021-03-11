@@ -15,10 +15,17 @@ export const convertBoolToEnable = value => value ? 'enabled' : 'disabled';
 
 /**
  * Convert a boolean to a checkmark or x
- * @param title
+ * @param value
  * @returns {string}
  */
 export const convertBoolToCheckmark = value => value ? '✔' : '✖';
+
+/**
+ * Convert a boolean to a 'yes' or 'no'
+ * @param value
+ * @returns {string}
+ */
+export const convertBoolToYesOrNo = value => value ? 'Yes' : 'No';
 
 /**
  * Return the value or the string 'None' if it doesn't
@@ -40,6 +47,24 @@ export const valueOrNone = value => {
  * @returns {string}
  */
 export const concatPaths = (pathA, pathB) => pathA.length > 0 ? `${pathA}.${pathB}` : pathB;
+
+/**
+ * Format Date
+ * @param time
+ * @returns {string}
+ */
+export const formatDate = time => {
+  if (!time || time === '') {
+    return 'No date available';
+  }
+  else if (typeof time === 'number') {
+    return new Date(time * 1000).toString();
+  } else if (typeof time === 'string') {
+    return new Date(time).toString();
+  } else {
+    return 'Invalid date format';
+  }
+};
 
 /**
  * Format title

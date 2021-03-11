@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { PartialValue } from '../../../../components/Partial/index';
-import { convertBoolToEnable } from '../../../../utils/Partials';
+import { convertBoolToEnable, formatDate } from '../../../../utils/Partials';
 
 
 const Informations = () => {
@@ -19,6 +19,7 @@ const Informations = () => {
       <PartialValue 
         label="Creation Date" 
         valuePath="CreationDate" 
+        renderValue={formatDate}
       />
       <PartialValue 
         label="Logging" 

@@ -16,7 +16,7 @@ const PoliciesAccessTable = props => {
   const value = get(ctx.item, basePath);
 
   return (
-    <table>
+    <table className="policies-table">
       <thead>
         <tr>
           <th>{columnName}</th>
