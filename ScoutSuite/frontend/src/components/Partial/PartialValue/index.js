@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import cx from 'classnames';
 import get from 'lodash/get';
+import isArray from 'lodash/isArray';
 
 import { PartialContext, PartialPathContext } from '../context';
 import { concatPaths } from '../../../utils/Partials';
@@ -14,7 +15,10 @@ const propTypes = {
   separator: PropTypes.string,
   value: PropTypes.any,
   valuePath: PropTypes.string,
-  errorPath: PropTypes.string,
+  errorPath: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
   tooltip: PropTypes.bool,
   tooltipProps: PropTypes.object,
   renderValue: PropTypes.func,
@@ -54,9 +58,16 @@ const PartialValue = props => {
   if (value === undefined || value === null) {
     return null;
   }
-  
-  const fullErrorPath = errorPath ? concatPaths(basePath, errorPath) : fullValuePath;
-  const hasError = ctx.path_to_issues.includes(fullErrorPath);
+
+  let fullErrorPaths;
+  if (errorPath) {
+    const paths = isArray(errorPath) ? errorPath : [errorPath];
+    fullErrorPaths = paths.map(path => concatPaths(basePath, path));
+  } else {
+    fullErrorPaths = [fullValuePath];
+  }
+
+  const hasError = fullErrorPaths.some(path => ctx.path_to_issues.includes(path));
   const level = ctx.level;
 
   const content = (

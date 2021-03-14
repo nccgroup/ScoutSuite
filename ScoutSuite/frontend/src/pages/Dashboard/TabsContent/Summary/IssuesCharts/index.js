@@ -85,7 +85,6 @@ const IssuesCharts = props => {
               labelLine={false}
               isAnimationActive={false}
             />
-            <Tooltip />
             <Legend verticalAlign="bottom" height={48}/>
           </PieChart>
         </ResponsiveContainer>
