@@ -3,10 +3,8 @@ import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlin
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 
-
 import { PartialContext, PartialPathContext } from '../../../../components/Partial/context';
 import { makeTitle } from '../../../../utils/Partials';
-// import { PartialValue } from '../../../../components/Partial';
 
 import './style.scss';
 

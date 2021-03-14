@@ -34,12 +34,23 @@
 
       &.left-pane {
         flex-grow: 0;
+        flex-shrink: 0;
         margin-right: 2.5rem;
-        padding: 1.5rem 1rem;
+        padding: 1rem;
         min-width: 13rem;
         max-width: 25rem;
         background: $background-color;
+
+        h4 {
+          font-size: 1.125rem;
+          font-weight: 700;
+          margin: 0 0 1rem 0;
+        }
       }
+    }
+
+    ul {
+      margin: 0;
     }
   }
 }

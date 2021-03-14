@@ -6,7 +6,7 @@ import { convertBoolToEnable, formatDate } from '../../../../utils/Partials';
 
 const Informations = () => {
   return (
-    <div className="partial-informations">
+    <>
       <h4>Informations</h4>
       <PartialValue 
         label="ARN" 
@@ -52,7 +52,7 @@ const Informations = () => {
         valuePath="web_hosting_enabled" 
         renderValue={convertBoolToEnable} 
       />
-    </div>
+    </>
   );
 };
 

@@ -18,7 +18,7 @@ const Informations = (props) => {
   );
 
   return (
-    <div className="partial-informations">
+    <>
       <h4>Informations</h4>
       {informations.map(([key, value]) => (
         <DetailedValue 
@@ -28,7 +28,7 @@ const Informations = (props) => {
           key={key} 
         />
       ))}
-    </div>
+    </>
   );
 };
 

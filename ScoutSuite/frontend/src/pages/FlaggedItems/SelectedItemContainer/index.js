@@ -6,7 +6,6 @@ import { useAPI } from '../../../api/useAPI';
 import { getItem } from '../../../api/paths';
 
 import './style.scss';
-import '../../../partials/style.scss';
 
 
 const SelectedItemContainer = () => {
@@ -33,6 +32,8 @@ const SelectedItemContainer = () => {
     level: finding.level,
     ...data,
   };
+
+  console.log(data, finding);
 
   return (
     <div className="selected-item-container">

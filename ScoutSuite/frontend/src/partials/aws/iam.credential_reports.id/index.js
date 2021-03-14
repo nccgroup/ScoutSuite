@@ -16,7 +16,7 @@ const IamCredentialReport = props => {
 
   return (
     <Partial data={data}>
-      <div className="partial-informations">
+      <div>
         <h3>Credentials</h3>
         <PartialValue
           label="Creation Date"
