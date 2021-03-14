@@ -1,12 +1,13 @@
 @import 'src/variables';
 
 .partial-value {
-  .label {
+  .warning {
+    color: $medium-color;
     font-weight: 700;
   }
 
-  .error {
-    color: $warning-color;
+  .danger {
+    color: $high-color;
     font-weight: 700;
   }
 }

@@ -8,7 +8,7 @@ import { convertBoolToCheckmark } from '../../../../../utils/Partials';
 const AccessControlList = () => {
   const ctx = useContext(PartialContext);
   const basePath = useContext(PartialPathContext);
-  const value = get(ctx.item, basePath);
+  const value = get(ctx.item, basePath);  
 
   return (
     <table>
@@ -25,32 +25,32 @@ const AccessControlList = () => {
         {Object.keys(value).map(id => (
           <tr key={id}>
             <td>
-              <PartialValue path={`${id}.DisplayName`}/>
+              <PartialValue valuePath={`${id}.DisplayName`}/>
             </td>
             <td>
               <PartialValue 
-                path={`${id}.permissions.read`}
+                valuePath={`${id}.permissions.read`}
                 errorPath={`${id}.read`}
                 renderValue={convertBoolToCheckmark}
               />
             </td>
             <td>
               <PartialValue 
-                path={`${id}.permissions.read_acp`}
+                valuePath={`${id}.permissions.read_acp`}
                 errorPath={`${id}.read_acp`}
                 renderValue={convertBoolToCheckmark}
               />
             </td>
             <td>
               <PartialValue 
-                path={`${id}.permissions.write`}
+                valuePath={`${id}.permissions.write`}
                 errorPath={`${id}.write`}
                 renderValue={convertBoolToCheckmark}
               />
             </td>
             <td>
               <PartialValue 
-                path={`${id}.permissions.write_acp`}
+                valuePath={`${id}.permissions.write_acp`}
                 errorPath={`${id}.write_acp`}
                 renderValue={convertBoolToCheckmark}
               />

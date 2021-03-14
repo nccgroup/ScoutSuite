@@ -20,9 +20,11 @@
   --link-color: #4990e2;
   --text-muted: #999999;
 
-  --success-color: #3fbd50;
-  --warning-color: #fdbe00;
-  --issue-color: #fc6464;
+  --good-color: #24bc74;
+  --critical-color: #C41230;
+  --high-color: #fc6464;
+  --medium-color: #ffb44c;
+  --low-color: #4099ff;
 }
 
 body.dark-mode {
@@ -57,9 +59,11 @@ $white: var(--white);
 $link-color: var(--link-color);
 $text-muted: var(--text-muted);
 
-$success-color: var(--success-color);
-$warning-color: var(--warning-color);
-$issue-color: var(--issue-color);
+$good-color: var(--good-color);
+$critical-color: var(--critical-color);
+$high-color: var(--high-color);
+$medium-color: var(--medium-color);
+$low-color: var(--low-color);
 
 $border-radius: 5px;
 $nav-header-height: 5rem;

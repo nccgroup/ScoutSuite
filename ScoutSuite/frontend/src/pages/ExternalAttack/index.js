@@ -1,6 +1,7 @@
 import React from 'react';
-import Layout from '../../layout';
 // import PropTypes from 'prop-types';
+
+import Breadcrumb from '../../components/Breadcrumb/index';
 
 import './style.scss';
 
@@ -9,11 +10,12 @@ const propTypes = {};
 const ExternalAttack = () => {
 
   return (
-    <Layout>
+    <>
+      <Breadcrumb />
       <div>
         External Attack Surface page
       </div>
-    </Layout>
+    </>
   );
 };
 

@@ -2,6 +2,7 @@
 
 .flagged-items {
   .table-card, .selected-item {
+    overflow: hidden;
     margin: 0 2rem 2rem 0;
     background: $white;
     border-radius: $border-radius;

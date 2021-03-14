@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from '@reach/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import cx from 'classnames';
 
 import ServiceStatus from '../ServiceStatus';
 import DetailedValue from '../DetailedValue';
@@ -11,49 +12,63 @@ import './style.scss';
 
 const propTypes = {
   name: PropTypes.string.isRequired,
-  warnings: PropTypes.number,
-  issues: PropTypes.number,
-  resources_count: PropTypes.number.isRequired,
-  rules_count: PropTypes.number.isRequired,
-  checked_items: PropTypes.number.isRequired,
+  resources: PropTypes.number.isRequired,
+  rules: PropTypes.number.isRequired,
+  'flagged-items': PropTypes.number.isRequired,
+  issues: PropTypes.object.isRequired,
 };
 
 const ServiceCard = props => {
   const {
     name,
-    warnings,
     issues,
-    resources_count,
-    rules_count,
-    checked_items,
+    resources,
+    rules,
   } = props;
+
+  const hasFindings = rules > 0;
+  const findingsPath = hasFindings ? `/services/${name.toLowerCase()}/findings` : '/';
   
   return (
     <div className="service-card">
       <div className="header">
         <h3>{name}</h3>
         <div className="status">
-          {!issues && !warnings && (
-            <ServiceStatus status="good"/>
+          {issues.Critical > 0 && (
+            <ServiceStatus status="critical" amount={issues.Critical} />
           )}
-          {issues > 0 && (
-            <ServiceStatus status="issues" amount={issues}/>
+          {issues.High > 0 && (
+            <ServiceStatus status="high" amount={issues.High} />
           )}
-          {warnings > 0 && (
-            <ServiceStatus status="warnings" amount={warnings}/>
+          {issues.Medium > 0 && (
+            <ServiceStatus status="medium" amount={issues.Medium} />
           )}
+          {issues.Low > 0 && (
+            <ServiceStatus status="low" amount={issues.Low} />
+          )}
+          {issues.Good > 0 && (
+            <ServiceStatus status="good" amount={issues.Good} />
+          )}
+          
         </div>
       </div>
       <hr/>
       <div className="content">
-        <DetailedValue label="Resources" value={resources_count} separator="" />
-        <DetailedValue label="Rules" value={rules_count} separator="" />
-        <DetailedValue label="Checks" value={checked_items} separator="" />
+        <DetailedValue label="Resources" value={resources} separator="" />
+        <DetailedValue label="Rules" value={rules} separator="" />
+        <DetailedValue label="Flagged Items" value={props['flagged-items']} separator="" />
       </div>
       <hr/>
       <div className="footer">
-        <Link className="link" to={`/services/${name.toLowerCase()}/findings`}>
-          View report <FontAwesomeIcon icon={faChevronRight}/>
+        <Link 
+          className={cx('link', { 'disabled': !hasFindings })} 
+          to={findingsPath}
+        >
+          {hasFindings ? (
+            <>
+              View report <FontAwesomeIcon icon={faChevronRight}/>
+            </>
+          ) : 'No findings'}
         </Link>
       </div>
     </div>

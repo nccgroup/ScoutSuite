@@ -3,10 +3,10 @@ import React from 'react';
 
 import { useAPI } from '../../api/useAPI';
 import { sortBySeverity } from '../../utils/Severity/sort';
-import Layout from '../../layout';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
 import SelectedItemContainer from './SelectedItemContainer';
+import Breadcrumb from '../../components/Breadcrumb/index';
 
 import { getItems } from '../../api/paths';
 
@@ -16,11 +16,9 @@ const FlaggedItems = () => {
   const params = useParams();
   const { data: items, loading } = useAPI(getItems(params.service, params.finding), []);
 
-  if (loading) return (
-    <Layout> 
-      <div/>
-    </Layout>
-  );
+  if (loading) return <>
+    <Breadcrumb />
+  </>;
 
   const columns = [
     { name: 'ID', key: 'id' },
@@ -54,7 +52,8 @@ const FlaggedItems = () => {
   };
 
   return (
-    <Layout>
+    <>
+      <Breadcrumb />
       <div className="flagged-items">
         <div className="table-card">
           <Table
@@ -73,7 +72,7 @@ const FlaggedItems = () => {
           )}
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

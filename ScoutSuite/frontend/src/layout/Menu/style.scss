@@ -17,10 +17,11 @@
   padding: 0;
   margin: 0;
   background-color: $ncc-grey-dark;
+  user-select: none;
   overflow-y: auto;
 
-  div, a {
-    margin: 0.675rem 2rem 0.675rem 1.5rem;
+  a {
+    padding: 0.275rem 2rem 0.275rem 1.5rem;
   }
 
   & > * {
@@ -36,6 +37,10 @@
   ul {
     margin-bottom: 1.25rem;
   }
+
+  & > .title {
+    padding: 0.675rem 2rem 0.675rem 1.5rem;
+  }
 }
 
 .menu-element,
@@ -50,16 +55,12 @@
 }
 
 .menu-group {
-  font-size: 0.825rem;
+  font-size: 0.9rem;
 
   .title {
-    padding: 0.25rem 0;
+    padding: 0.275rem 0;
+    margin: 0.275rem 2rem 0.275rem 1.5rem;
     border-bottom: 1px solid $ncc-grey-dark;
-
-    &.lg {
-      font-size: 1rem;
-      font-weight: 900;
-    }
   }
 
   .menu-element {
@@ -68,8 +69,29 @@
 }
 
 .menu-element {
+  a {
+    display: flex;
+    align-items: center;
+  }
+
+  svg {
+    margin-right: 0.5rem;
+  }
+  
   &.is-selected {
-    cursor: default;
     font-weight: 900;
+    cursor: default;
+
+    a {
+      background-color: rgba(0,0,0,0.5);
+    }
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    
+    a {
+      cursor: not-allowed;
+    }
   }
 }

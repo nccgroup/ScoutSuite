@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
@@ -8,25 +8,31 @@ const propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
-  isOpened: PropTypes.bool.isRequired,
+  opened: PropTypes.string.isRequired,
+  setOpened: PropTypes.func.isRequired,
 };
 
 const SubMenu = props => {
   const { 
     title,
     children,
-    isOpened,
+    opened,
+    setOpened,
   } = props;
 
-  const [isSelected, setIsSelected] = useState(isOpened);
-  const className = cx('sub-menu', {'is-selected': isSelected});
+  const isOpened = opened === title;
+  const className = cx('sub-menu', {'is-selected': isOpened});
+
+  const toggle = () => {
+    setOpened(opened !== title ? title : null);
+  };
 
   return (
     <li className={className}>
-      <div className="title" onClick={() => setIsSelected(!isSelected)}>
+      <div className="title" onClick={toggle}>
         {title}
       </div>
-      {isSelected && (
+      {isOpened && (
         <ul>
           {children}
         </ul>

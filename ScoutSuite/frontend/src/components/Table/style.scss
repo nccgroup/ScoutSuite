@@ -22,6 +22,7 @@
   }
 
   th {
+    white-space: nowrap;
     padding-top: 0;
     padding-bottom: 0;
     border-right: $default-grey-light solid 1px;
@@ -93,7 +94,9 @@
   justify-content: flex-end;
 
   .icon {
+    position: relative;
     cursor: pointer;
+    z-index: 0;
 
     &.disabled {
       cursor: not-allowed;
