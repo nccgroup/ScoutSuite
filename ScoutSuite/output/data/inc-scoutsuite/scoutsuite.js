@@ -1261,8 +1261,12 @@ function makeTitle(title) {
         return 'Azure RBAC'
     } else if (title === 'storageaccounts') {
         return 'Storage Accounts'
+    } else if (title === 'mysqldatabase') {
+        return 'MySQL Database'
     } else if (title === 'sqldatabase') {
         return 'SQL Database'
+    } else if (title === 'postgresqldatabase') {
+        return 'PostreSQL Database'
     } else if (title === 'virtualmachines') {
         return 'Virtual Machines'
     } else if (title === 'securitycenter') {
