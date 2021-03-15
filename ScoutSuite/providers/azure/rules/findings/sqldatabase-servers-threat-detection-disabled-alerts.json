@@ -1,23 +1,32 @@
 {
-    "description": "Threat Detection Alerts Disabled for SQL Servers",
-    "rationale": "Do not disable alerts related to threat detections.",
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "1.0.0",
-            "reference": "4.1"
-        }
-    ],
-    "dashboard_name": "SQL Servers",
-    "display_path": "sqldatabase.subscriptions.id.servers.id",
-    "path": "sqldatabase.subscriptions.id.servers.id",
-    "conditions": [
-        "and",
-        [
-            "sqldatabase.subscriptions.id.servers.id.threat_detection.alerts_enabled",
-            "false",
-            ""
-        ]
-    ],
-    "id_suffix": "server_threat_detection_alerts_disabled"
+  "description": "Advanced Threat Protection Disabled Types for SQL servers",
+  "rationale": "Enabling all threat protection types protects against SQL injection, database vulnerabilities, and any other anomalous activities.",
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.2.0",
+      "reference": "4.2.2"
+    },
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.0.0",
+      "reference": "4.1"
+    }
+  ],
+  "dashboard_name": "SQL Servers",
+  "display_path": "sqldatabase.subscriptions.id.servers.id",
+  "path": "sqldatabase.subscriptions.id.servers.id",
+    "references": [
+    "https://docs.microsoft.com/en-us/azure/sql-database/sql-advanced-threat-protection",
+    "https://docs.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql"
+  ],
+  "conditions": [
+    "and",
+    [
+      "sqldatabase.subscriptions.id.servers.id.threat_detection.alerts_enabled",
+      "false",
+      ""
+    ]
+  ],
+  "id_suffix": "server_threat_detection_alerts_disabled"
 }
