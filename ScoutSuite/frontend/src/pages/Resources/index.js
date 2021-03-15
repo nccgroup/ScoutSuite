@@ -1,33 +1,76 @@
-import { Link, useParams } from '@reach/router';
+import { useParams } from '@reach/router';
 import React from 'react';
-// import PropTypes from 'prop-types';
 
+import { useAPI } from '../../api/useAPI';
+import { sortBySeverity } from '../../utils/Severity/sort';
+import Table from '../../components/Table';
+import Name from './formatters/Name/index';
+// import SelectedItemContainer from './SelectedItemContainer';
 import Breadcrumb from '../../components/Breadcrumb/index';
+
+import { getResources } from '../../api/paths';
 
 import './style.scss';
 
-const propTypes = {};
-
 const Resources = () => {
   const params = useParams();
+  const { data: items, loading } = useAPI(getResources(params.service, params.resource), []);
+  const data = items.results;
+
+
+  if (loading) return <>
+    <Breadcrumb />
+  </>;
+
+  const keys = Object.keys(data[0]);
+
+  const columns = [
+    { name: 'Name', key: 'name' },
+  ];
+  
+  if (keys.includes('id')) columns.push({ name: 'ID', key: 'id' });
+
+  // AWS columns
+  if (keys.includes('AvailabilityZone')) columns.push({ name: 'Availability Zone', key: 'AvailabilityZone' });
+  if (keys.includes('DNSName')) columns.push({ name: 'DNS Name', key: 'DNSName' });
+  if (keys.includes('SubnetId')) columns.push({ name: 'SubnetId', key: 'SubnetId' });
+
+  // GCP columns
+  if (keys.includes('description')) columns.push({ name: 'Description', key: 'description' });
+  if (keys.includes('project_id')) columns.push({ name: 'Project ID', key: 'project_id' });
+  if (keys.includes('location')) columns.push({ name: 'Location', key: 'location' });
+
+  const initialState = {
+    pageSize: 5
+  };
+
+  const formatters = {
+    name: Name
+  };
+
+  const sortBy = {
+    severity: sortBySeverity
+  };
 
   return (
     <>
       <Breadcrumb />
-      <div>
-        <h3>Resources page</h3>
-        <ul>
-          <li>Service: {params.service}</li>
-          <li>Finding: <Link to={`/services/${params.service}/findings`}>{params.finding}</Link></li>
-          {!params.item && <li><Link to="an-item">Show Item detail</Link></li>}
-          {params.item && <li>Item: {params.item}</li>}
-        </ul>
+      <div className="flagged-items">
+        <div className="table-card">
+          <Table
+            columns={columns}
+            data={data}
+            initialState={initialState}
+            formatters={formatters}
+            sortBy={sortBy} />
+        </div>
+
+        <div className="selected-item">
+          <span className="no-item">No selected item</span>
+        </div>
       </div>
     </>
-    
   );
 };
-
-Resources.propTypes = propTypes;
 
 export default Resources;
