@@ -2,11 +2,11 @@
   "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.2.0.",
   "rules": {
     "aad-users-create-security-groups-disabled.json": [
-          {
-              "enabled": true,
-              "level": "danger"
-          }
-      ],
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
     "storageaccount-encrypted-not-customer-managed.json": [
       {
         "enabled": true,
@@ -32,22 +32,22 @@
       }
     ],
     "virtual-machines-os-data-encrypted-cmk.json": [
-          {
-              "enabled": true,
-              "level": "warning"
-          }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "virtual-machines-unattached-disks-encrypted-cmk.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "rbac-custom-subscription-owner-role-not-allowed.json": [
-        {
-            "enabled": true,
-            "level": "danger"
-        }
+      {
+        "enabled": true,
+        "level": "danger"
+      }
     ],
     "rbac-administering-resource-locks-assigned.json": [
       {
@@ -77,83 +77,142 @@
       }
     ],
     "sqldatabase-servers-vulnerability-assessments-disabled.json": [
-       {
-          "enabled": true,
-          "level": "warning"
+      {
+        "enabled": true,
+        "level": "warning"
       }
-     ],
-     "sqldatabase-servers-vulnerability-recurring-scans-disabled.json": [
-        {
-                "enabled": true,
-                "level": "warning"
-            }
-     ],
-    "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
-          {
-              "enabled": true,
-              "level": "warning"
-          }
-     ],
-     "sqldatabase-allow-any-ip.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
     ],
-
+    "sqldatabase-servers-vulnerability-recurring-scans-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-allow-any-ip.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "sqldatabase-servers-vulnerability-send-scan-reports-to-not-configured.json": [
-          {
-                "enabled": true,
-                "level": "warning"
-            }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "postgresql-database-servers-log-checkpoints-not-on.json": [
       {
-              "enabled": true,
-              "level": "warning"
-          }
-     ],
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "postgresql-database-servers-log-connections-not-on.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "postgresql-database-servers-log-disconnections-not-on.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "postgresql-database-servers-log-duration-not-on.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "sqldatabase-servers-vulnerability-email-notif-to-admins-owners-not-set.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-     ],
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "postgresql-database-servers-connection-throttling-not-on.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ],
     "postgresql-database-servers-log-retention-days-less-than-4.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
-     ],
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "mysql-database-servers-ssl-enforcement-disabled.json": [
-        {
-            "enabled": true,
-            "level": "warning"
-        }
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "appservice-authentication-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "appservice-client-certificates-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "appservice-http-2-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "appservice-http-allowed.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "appservice-managed-service-identities-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "appservice-outdated-version-dotnet.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "appservice-outdated-version-java.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "appservice-outdated-version-php.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "appservice-outdated-version-python.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "appservice-tls-v1-supported.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
