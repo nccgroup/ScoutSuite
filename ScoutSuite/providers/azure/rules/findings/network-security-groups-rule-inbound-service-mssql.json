@@ -1,0 +1,34 @@
+{
+    "description": "Security Group Rules Allowing Inbound MsSQL Access",
+    "rationale": "MsSQL (1433) inbound access should not be allowed to a network security group.",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.0.0",
+            "reference": "6.3"
+        }
+    ],
+
+    "dashboard_name": "NSGs",
+    "display_path": "network.subscriptions.id.security_groups.id",
+    "path": "network.subscriptions.id.security_groups.id.security_rules.id",
+    "conditions": [
+        "and",
+        [
+            "network.subscriptions.id.security_groups.id.security_rules.id.destination_ports",
+            "portsInPortList",
+            "1433"
+        ],
+        [
+            "_INCLUDE_(conditions/exposed-to-the-internet.json)",
+            "",
+            ""
+        ],
+        [
+            "_INCLUDE_(conditions/allow-tcp.json)",
+            "",
+            ""
+        ]
+    ],
+    "key": "network-security-groups-rule-inbound-MsSQL"
+}
