@@ -115,6 +115,26 @@ class SQLDatabaseFacade:
             print_exception(f'Failed to retrieve database transparent data encryptions: {e}')
             return []
 
+    async def get_server_vulnerability_assessments(self, resource_group_name, server_name,
+                                                   subscription_id: str):
+        try:
+            client = self.get_client(subscription_id)
+            return await run_concurrently(
+                lambda: client.server_vulnerability_assessments.get(resource_group_name, server_name, 'default')
+            )
+        except Exception as e:
+            print_exception(f'Failed to retrieve server vulnerability assessments: {e}')
+
+    async def get_server_encryption_protectors(self, resource_group_name, server_name, subscription_id: str):
+        try:
+            client = self.get_client(subscription_id)
+            return await run_concurrently(
+                lambda: client.encryption_protectors.get(resource_group_name, server_name, 'current')
+            )
+        except Exception as e:
+            print_exception(f'Failed to retrieve database transparent data encryptions: {e}')
+            return []
+
     async def get_firewall_rules(self, resource_group_name, server_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)

@@ -103,13 +103,10 @@
                 ],
                 "enabled": true,
                 "level": "warning"
-            },
+            }
+        ],
+        "network-security-groups-rule-inbound-service-mssql.json": [
             {
-                "args": [
-                    "MsSQL",
-                    "1433",
-                    "6.3"
-                ],
                 "enabled": true,
                 "level": "warning"
             }
@@ -282,6 +279,37 @@
                 "level": "warning"
             }
         ],
+        "sqldatabase-servers-vulnerability-assessments-disabled.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-recurring-scans-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-send-scan-reports-to-not-configured.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-email-notif-to-admins-owners-not-set.json": [
+                 {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "sqldatabase-allow-any-ip.json": [
             {
                 "enabled": true,
@@ -399,7 +427,14 @@
                 "level": "warning"
             }
         ],
+
         "postgresql-database-servers-allow-any-ip.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "mysql-database-servers-ssl-enforcement-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
