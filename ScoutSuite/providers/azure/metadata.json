@@ -115,6 +115,10 @@
         "regulatory_compliance_results": {
           "cols": 2,
           "path": "services.securitycenter.subscriptions.id.regulatory_compliance_results"
+        },
+        "settings": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.settings"
         }
       }
     }

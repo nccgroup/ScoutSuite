@@ -170,6 +170,18 @@
             "enabled": true,
             "level": "warning"
         }
+    ],
+    "securitycenter-settings-MCAS-integration-disabled.json": [
+        {
+            "enabled": true,
+            "level": "warning"
+        }
+    ],
+    "securitycenter-settings-WDATP-integration-disabled.json": [
+         {
+            "enabled": true,
+            "level": "warning"
+        }
     ]
   }
 }
