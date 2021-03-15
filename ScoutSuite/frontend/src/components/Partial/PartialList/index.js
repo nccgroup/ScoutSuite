@@ -7,6 +7,7 @@ import { PartialContext, PartialPathContext } from '../context';
 import { concatPaths } from '../../../utils/Partials';
 
 import './style.scss';
+import { PartialSection } from '..';
 
 const propTypes = {
   valuePath: PropTypes.string.isRequired,
@@ -26,18 +27,22 @@ const PartialList = (props) => {
     ? items.map((item, i) => ({ key: i, item }))
     : Object.entries(items).map(([key, item]) => ({ key, item }));
 
-  if (items.length === 0) return <span>None</span>;
+  if (!items || items.length === 0) return <ul><li>None</li></ul>;
 
   return (
-    <ul className="partial-list">
-      {list.map((item, i) => {
-        if (renderItem) return renderItem(item); 
+    <PartialSection path={valuePath}>
+      <ul className="partial-list">
+        {list.map((item, i) => {
+          if (renderItem) return renderItem(item); 
 
-        const path = item.key ? valuePath + '.' + item.key : valuePath;
+          const path = item.key ? item.key : '';
 
-        return <PartialValue key={i} valuePath={path} />;
-      })}
-    </ul>
+          console.log('PATH', )
+
+          return <li key={i}><PartialValue valuePath={path} /></li>;
+        })}
+      </ul>
+    </PartialSection>
   );
 };
 
