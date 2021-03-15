@@ -86,7 +86,7 @@ def get_items(service, finding):
     current_page = int(request.args.get('current_page')) if request.args.get('current_page') else 1
 
     # filtered_results = filter_results(item_list, filter_keywords)
-    sorted_results = sort_results(item_list, sort_by, direction)
+    sorted_results = sort_items(item_list, sort_by, direction)
     paginated_results = paginate_results(sorted_results, items_per_page, current_page)
     return jsonify(paginated_results)
 
@@ -224,6 +224,7 @@ def get_dashboard():
 @app.route('/api/services/<service>/resources/<resource>')
 def get_resource(service, resource):
     metadata = results['metadata']
+    resource_list = []
 
     for category in metadata:
         services = metadata[category]
@@ -233,14 +234,17 @@ def get_resource(service, resource):
                 for resource_metadata in resources:
                     if resource_metadata == resource:
                         resource_path = resources[resource]['path']
-                        
+
+                        all_resources = get_all_elements_from_path(resource_path)
+                        resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
+
                         sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
                         direction = request.args.get('direction') if request.args.get('direction') else 'asc'
                         items_per_page = int(request.args.get('items_per_page')) if request.args.get('items_per_page') else 10
                         current_page = int(request.args.get('current_page')) if request.args.get('current_page') else 1
 
                         # filtered_results = filter_results(item_list, filter_keywords)
-                        sorted_results = sort_results(get_all_elements_from_path(resource_path), sort_by, direction)
+                        sorted_results = sort_resources(resource_list, sort_by, direction)
                         paginated_results = paginate_results(sorted_results, items_per_page, current_page)
 
                         return jsonify(paginated_results)
@@ -276,6 +280,12 @@ def get_all_elements_from_path(path, report_location = results):
     subelement_list = []
 
     id_locations = [id_index for id_index, x in enumerate(path_keywords) if x == 'id'] # [3, 5]
+    
+    if not id_locations:
+        elements = get_element_from_path(path)
+        element_list = [{element: elements[element]} for element in elements]
+
+        return element_list
 
     for id_idx in range(len(id_locations)):
         subelement_list.append([])
@@ -299,7 +309,12 @@ def get_all_elements_from_path(path, report_location = results):
                 element = subelement
                 for path_keyword_idx in range(id_locations[id_idx] + 1, len(path_keywords)):
                     element = element[path_keywords[path_keyword_idx]]
-                if element: element_list.append(element)
+                if element: 
+                    if len(element) > 1:
+                        for individual_element in element: element_list.append({individual_element: element[individual_element]})
+                    else: element_list.append(element)
+
+        print(element_list)
     
     return element_list
 
@@ -318,9 +333,13 @@ def get_element_from_path(path, report_location = results):
 def filter_results(results, filter_keyword):
     return results
 
-def sort_results(results, sort_by, direction):
-    descending = direction == 'desc'
-    return sorted(results, reverse=descending) if not sort_by else sorted(results, key=lambda k: k['item'][sort_by], reverse=descending)
+def sort_items(items, sort_by, direction):
+    descending = (direction == 'desc')
+    return sorted(items, key=lambda k: k[sort_by]['name'], reverse=descending)
+
+def sort_resources(resources, sort_by, direction):
+    descending = (direction == 'desc')
+    return sorted(resources, key=lambda k: k[sort_by], reverse=descending)
 
 def paginate_results(results, elements_per_page, page_number):
     paginated_results = [results[i:i+elements_per_page] for i in range(0, len(results), elements_per_page)]
