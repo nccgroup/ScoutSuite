@@ -427,6 +427,13 @@
                 "level": "warning"
             }
         ],
+
+        "postgresql-database-servers-ssl-enforcement-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "mysql-database-servers-ssl-enforcement-disabled.json": [
             {
                 "enabled": true,
