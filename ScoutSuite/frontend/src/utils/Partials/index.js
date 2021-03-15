@@ -16,6 +16,13 @@ export const convertBoolToEnable = value => value ? 'enabled' : 'disabled';
 export const convertBoolToCheckmark = value => value ? '✔' : '✖';
 
 /**
+ * Convert a boolean to a readable boolean
+ * @param title
+ * @returns {string}
+ */
+export const convertBoolToString = value => value ? 'true' : 'false';
+
+/**
  * Convert value to never if invalid
  * @param {*} value 
  * @returns 

@@ -10,27 +10,27 @@ const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const renderIAM = (mb) => {
+const renderIAM = (iam) => {
   return <li>
-    <PartialValue valuePath={mb.key} value={mb.key} />
-    <ul>{mb.item.map((item) => <li key={item}>{item}</li> )}</ul>
+    <PartialValue errorPath={iam.key} baseErrorPath="" value={iam.key} />
+    <ul>{iam.item.map((item) => <li key={item}>{item}</li> )}</ul>
   </li>;
 };
 
-const renderACL = (mb) => {
+const renderACL = (acl) => {
   return <li>
-    <PartialValue valuePath={mb.key + '.entity'} />
+    <PartialValue valuePath={acl.key + '.entity'} />
     <ul>
-      <li><PartialValue valuePath={mb.key + '.role'} /></li>
+      <li><PartialValue valuePath={acl.key + '.role'} /></li>
     </ul>
   </li>;
 };
 
-const renderObjACL = (mb) => {
+const renderObjACL = (acl) => {
   return <li>
-    <PartialValue valuePath={mb.key + '.' + mb.entity} />
+    <PartialValue valuePath={acl.key + '.entity'} />
     <ul>
-      <li><PartialValue valuePath={mb.key + '.role'} /></li>
+      <li><PartialValue valuePath={acl.key + '.role'} /></li>
     </ul>
   </li>;
 };
@@ -64,6 +64,12 @@ const Buckets = (props) => {
         <PartialValue
           label="Versioning"
           valuePath="versioning_enabled"
+          renderValue={convertBoolToEnable}
+        />
+
+        <PartialValue
+          label="Uniform Bucket-Level Access"
+          valuePath="uniform_bucket_level_access"
           renderValue={convertBoolToEnable}
         />
       </div>

@@ -15,6 +15,7 @@ const propTypes = {
   valuePath: PropTypes.string,
   errorPath: PropTypes.string,
   renderValue: PropTypes.func,
+  baseErrorPath: PropTypes.string,
 };
 
 const defaultProps = {
@@ -33,21 +34,24 @@ const PartialValue = props => {
     valuePath,
     errorPath,
     renderValue,
+    baseErrorPath
   } = props;
 
   const ctx = useContext(PartialContext);
-  const basePath = useContext(PartialPathContext);
+  const basePathCtx = useContext(PartialPathContext);
 
-  const fullValuePath = concatPaths(basePath, valuePath);
+  const fullValuePath = concatPaths(typeof baseErrorPath !== 'undefined' ? baseErrorPath  : basePathCtx, valuePath);
   const value = renderValue(props.value || get(ctx.item, fullValuePath));
 
   if (value === undefined || value === null) {
     return null;
   }
   
-  const fullErrorPath = errorPath ? concatPaths(basePath, errorPath) : fullValuePath;
+  const fullErrorPath = errorPath ? concatPaths(typeof baseErrorPath !== 'undefined' ? baseErrorPath : basePathCtx, errorPath) : fullValuePath;
   const hasError = ctx.path_to_issues.includes(fullErrorPath);
   const level = ctx.level;
+
+  console.info('error path', fullErrorPath, !!baseErrorPath);
 
   return (
     <div className="partial-value detailed-value"> 
