@@ -427,6 +427,12 @@
                 "level": "warning"
             }
         ],
+        "postgresql-database-servers-allow-any-ip.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
 
         "postgresql-database-servers-ssl-enforcement-disabled.json": [
             {
