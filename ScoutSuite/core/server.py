@@ -233,8 +233,17 @@ def get_resource(service, resource):
                 for resource_metadata in resources:
                     if resource_metadata == resource:
                         resource_path = resources[resource]['path']
+                        
+                        sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
+                        direction = request.args.get('direction') if request.args.get('direction') else 'asc'
+                        items_per_page = int(request.args.get('items_per_page')) if request.args.get('items_per_page') else 10
+                        current_page = int(request.args.get('current_page')) if request.args.get('current_page') else 1
 
-                        return jsonify(get_all_elements_from_path(resource_path))
+                        # filtered_results = filter_results(item_list, filter_keywords)
+                        sorted_results = sort_results(get_all_elements_from_path(resource_path), sort_by, direction)
+                        paginated_results = paginate_results(sorted_results, items_per_page, current_page)
+                        
+                        return jsonify(paginated_results)
     return {}
 
 @app.route('/api/raw/<path:path_to_element>', methods=['GET'])
