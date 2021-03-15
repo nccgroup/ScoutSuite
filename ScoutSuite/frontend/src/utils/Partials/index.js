@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
@@ -45,6 +46,14 @@ export const valueOrNone = value => {
 
   return value;
 };
+
+
+/**
+ * Format a date to a string format
+ * @param {*} date 
+ * @returns 
+ */
+export const formatDate = date => new Date(date).toString();
 
 /**
  * Return the concatenation of 2 paths

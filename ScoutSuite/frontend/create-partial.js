@@ -15,6 +15,7 @@ const parseFile = async (provider, filename) => {
   let regexpNames = /class="list-group-item-heading">(?<sectionName>.*?)<\/h4>(?<sectionContent>.*?)(?:<h4|$)/gs;
   let match = regexpNames.exec(listGroup.groups.list);
   do {
+    console.log('SECTION', match.groups.sectionName);
     sections.push({
       name: match.groups.sectionName,
       content: match.groups.sectionContent,
@@ -32,12 +33,14 @@ const parseFile = async (provider, filename) => {
     let match = regexpNames.exec(content);
     do {
 
-      sectionsParsed[index].values.push({
-        name: match.groups.name,
-        id: match.groups.id,
-        value: match.groups.value,
-        content: match.groups.content,
-      });
+      if (match) {
+        sectionsParsed[index].values.push({
+          name: match.groups.name,
+          id: match.groups.id,
+          value: match.groups.value,
+          content: match.groups.content,
+        });
+      }
     } while ((match = regexpNames.exec(content)) !== null);
 
     index++;
@@ -63,7 +66,7 @@ import {
   partialDataShape,
   ${renderers ? renderers.join(', \n  ') : renderers}
 } from '../../../utils/Partials';
-${tabs.length > 0 ? 'import { TabsMenu, TabPane } from \'../../../../components/Tabs\';' : ''}
+${tabs.length > 0 ? 'import { TabsMenu, TabPane } from \'../../../components/Tabs\';' : ''}
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -125,6 +128,8 @@ const getRendererName = (name) => {
     return 'valueOrNone';
   case 'convert_bool_to_enabled':
     return 'convertBoolToEnable';
+  case 'format_date':
+    return 'formatDate';
   default:
     return 'DOESNOTEXIST';
   }
