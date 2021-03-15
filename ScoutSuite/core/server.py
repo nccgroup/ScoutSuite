@@ -242,7 +242,7 @@ def get_resource(service, resource):
                         # filtered_results = filter_results(item_list, filter_keywords)
                         sorted_results = sort_results(get_all_elements_from_path(resource_path), sort_by, direction)
                         paginated_results = paginate_results(sorted_results, items_per_page, current_page)
-                        
+
                         return jsonify(paginated_results)
     return {}
 
@@ -331,7 +331,7 @@ def paginate_results(results, elements_per_page, page_number):
             'prev_page': page_number - 1 if page_number > 1 else None,
             'total_pages': len(paginated_results),
         },
-        'results': paginated_results[page_number - 1]
+        'results': paginated_results[page_number - 1] if paginated_results else []
     }
 
     return page_results
