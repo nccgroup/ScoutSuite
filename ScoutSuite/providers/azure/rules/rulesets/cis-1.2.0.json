@@ -170,6 +170,12 @@
             "enabled": true,
             "level": "warning"
         }
+    ],
+    "appservice-ftp-deployment-enabled.json": [
+        {
+            "enabled": true,
+            "level": "warning"
+        }
     ]
   }
 }
