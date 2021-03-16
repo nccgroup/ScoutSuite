@@ -29,6 +29,10 @@
     padding-top: 1rem;
     padding-bottom: 2rem;
 
+    h3, h4 {
+      margin: 0 0 1rem 0;
+    }
+
     & > div {
       flex-grow: 1;
 
@@ -39,6 +43,7 @@
         padding: 1rem;
         min-width: 13rem;
         max-width: 25rem;
+        word-break: break-word;
         background: $background-color;
 
         h4 {
@@ -48,9 +53,10 @@
         }
       }
     }
+  }
 
-    ul {
-      margin: 0;
-    }
+  ul {
+    margin: 0;
+    padding-left: 1rem;
   }
 }

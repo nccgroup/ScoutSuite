@@ -42,7 +42,9 @@ const Usage = () => {
             Object.entries(resource_type).map(([type, resources], i) => (
               <div key={i}>
                 <li>
-                  <h4>{`${makeTitle(service)} ${makeTitle(type)}`}</h4>
+                  <h4 className="resource-title">
+                    {`${makeTitle(service)} ${makeTitle(type)}`}
+                  </h4>
                 </li>
                 <ul>
                   {renderResourcesList(resources)}

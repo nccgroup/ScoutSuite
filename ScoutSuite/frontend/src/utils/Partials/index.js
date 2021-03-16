@@ -1,4 +1,6 @@
+import React from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash/get';
 
 
 export const partialDataShape = {
@@ -65,6 +67,17 @@ export const formatDate = time => {
     return 'Invalid date format';
   }
 };
+
+export const renderResourcesAsList = (resources, accessor) => (
+  <ul>
+    {Object.values(resources).map((resource, i) => (
+      <li key={i}>
+        {/* TODO: link to resource */}
+        {get(resource, accessor, resource)}
+      </li>
+    ))}
+  </ul>
+);
 
 /**
  * Format title

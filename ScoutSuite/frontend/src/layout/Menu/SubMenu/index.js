@@ -8,7 +8,7 @@ const propTypes = {
     PropTypes.element,
     PropTypes.arrayOf(PropTypes.element),
   ]).isRequired,
-  opened: PropTypes.string.isRequired,
+  opened: PropTypes.string,
   setOpened: PropTypes.func.isRequired,
 };
 
