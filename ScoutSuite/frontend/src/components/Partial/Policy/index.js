@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import size from 'lodash/size';
 
 import PartialValue from '../PartialValue';
+import { renderWithInnerHtml } from '../../../utils/Partials';
 
 import './style.scss';
 
@@ -40,10 +41,10 @@ const Policy = props => {
                     value={displayJson(object)}
                     errorPath={`Statement.${i}`}
                     renderValue={value => (
-                      <div
-                        className="inner-code"
-                        dangerouslySetInnerHTML={{ __html: value}}
-                      />
+                      renderWithInnerHtml(
+                        value, 
+                        { className: 'inner-code' },
+                      )
                     )}
                   />
                 ))}

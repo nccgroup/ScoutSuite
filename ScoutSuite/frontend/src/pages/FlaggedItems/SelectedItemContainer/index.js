@@ -33,8 +33,6 @@ const SelectedItemContainer = () => {
     ...data,
   };
 
-  console.log(data, finding);
-
   return (
     <div className="selected-item-container">
       <div className="header">

@@ -68,6 +68,24 @@ export const formatDate = time => {
   }
 };
 
+/**
+ * @param innerHtml 
+ * @param props 
+ * @returns {HTMLDivElement}
+ */
+export const renderWithInnerHtml = (innerHtml, props) => (
+  <div
+    dangerouslySetInnerHTML={{ __html: innerHtml }}
+    {...props}
+  />
+);
+
+/**
+ * Render the resources in an object as an unordered list
+ * @param resources 
+ * @param accessor 
+ * @returns {HTMLUListElement}
+ */
 export const renderResourcesAsList = (resources, accessor) => (
   <ul>
     {Object.values(resources).map((resource, i) => (
@@ -86,7 +104,6 @@ export const renderResourcesAsList = (resources, accessor) => (
  */
 export const makeTitle = title => {
   if (typeof (title) !== 'string') {
-    console.log('Error: received title ' + title + ' (string expected).');
     return title.toString();
   }
   title = title.toLowerCase();
