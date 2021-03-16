@@ -313,8 +313,6 @@ def get_all_elements_from_path(path, report_location = results):
                     if len(element) > 1:
                         for individual_element in element: element_list.append({individual_element: element[individual_element]})
                     else: element_list.append(element)
-
-        print(element_list)
     
     return element_list
 
