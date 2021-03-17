@@ -27,7 +27,7 @@ const Resources = () => {
   const columns = [
     { name: 'Name', key: 'name' },
   ];
-  
+
   if (keys.includes('id')) columns.push({ name: 'ID', key: 'id' });
 
   // AWS columns
@@ -41,7 +41,7 @@ const Resources = () => {
   if (keys.includes('location')) columns.push({ name: 'Location', key: 'location' });
 
   const initialState = {
-    pageSize: 5
+    pageSize: 10
   };
 
   const formatters = {

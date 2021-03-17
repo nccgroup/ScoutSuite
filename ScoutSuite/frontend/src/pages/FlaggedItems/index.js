@@ -40,7 +40,7 @@ const FlaggedItems = () => {
   });
 
   const initialState = {
-    pageSize: 5
+    pageSize: 10
   };
 
   const formatters = {
