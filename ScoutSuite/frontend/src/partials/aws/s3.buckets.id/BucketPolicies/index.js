@@ -12,12 +12,12 @@ const BucketPolicies = () => {
     <TabsMenu className="bucket-policies">
       <TabPane title="Bucket ACLs">
         <PartialSection path="grantees">
-          <AccessControlList columnName="Groups name"/>
+          <AccessControlList />
         </PartialSection>
       </TabPane>
       <TabPane title="Groups">
         <PartialSection path="groups">
-          <PoliciesAccessTable />
+          <PoliciesAccessTable columnName="Groups name"/>
         </PartialSection>
       </TabPane>
       <TabPane title="Roles">

@@ -11,7 +11,13 @@ import Tooltip from '@material-ui/core/Tooltip';
 import './style.scss';
 
 const propTypes = {
-  status: PropTypes.oneOf(['issues', 'warnings', 'good']).isRequired,
+  status: PropTypes.oneOf([
+    'critical', 
+    'high', 
+    'medium', 
+    'low', 
+    'good',
+  ]).isRequired,
   amount: PropTypes.number,
 };
 
