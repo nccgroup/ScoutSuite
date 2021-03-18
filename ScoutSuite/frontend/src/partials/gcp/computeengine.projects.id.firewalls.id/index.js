@@ -5,8 +5,7 @@ import { Partial, PartialValue } from '../../../components/Partial';
 import { partialDataShape, formatDate } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import { convertBoolToString } from '../../../utils/Partials/index';
-import PartialConditional from '../../../components/Partial/PartialConditional/index';
-import PartialList from '../../../components/Partial/PartialList';
+import get from 'lodash/get';
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -14,7 +13,7 @@ const propTypes = {
 
 const renderTraffic = (item, i) => (
   <li key={i}>
-    <PartialValue errorPath='' value={item.key} />
+    <PartialValue errorPath="" value={item.key} />
     <ul>
       {item.item.map((port, index) => (
         <li key={index}>
@@ -29,10 +28,20 @@ const renderTraffic = (item, i) => (
   </li>
 );
 
+const renderList = (items) => (
+  <ul>
+    {items.map((item, key) => (
+      <li key={key}>{item}</li>
+    ))}
+  </ul>
+);
+
 const Firewalls = (props) => {
   const { data } = props;
 
   if (!data) return null;
+
+  const item = get(data, ['item'], {});
 
   return (
     <Partial data={data}>
@@ -66,50 +75,53 @@ const Firewalls = (props) => {
             <PartialValue label="Direction" valuePath="direction" />
             <PartialValue label="Action" valuePath="action" />
 
-            <PartialConditional valuePath="source_ranges">
-              <PartialValue errorPath="source_ranges" value="Source Ranges:" />
-              <PartialList valuePath="source_ranges" />
-            </PartialConditional>
+            {item.source_ranges && (
+              <>
+                <PartialValue
+                  errorPath="source_ranges"
+                  value="Source Ranges:"
+                />
+                {renderList(item.source_ranges)}
+              </>
+            )}
 
-            <PartialConditional valuePath="destination_ranges">
-              <PartialValue
-                errorPath="destination_ranges"
-                value="Destination Ranges:"
-              />
-              <PartialList valuePath="destination_ranges" />
-            </PartialConditional>
+            {item.destination_ranges && (
+              <>
+                <PartialValue
+                  errorPath="destination_ranges"
+                  value="Destination Ranges:"
+                />
+                {renderList(item.source_ranges)}
+              </>
+            )}
 
-            <PartialConditional valuePath="source_tags">
-              <PartialValue errorPath="source_tags" value="Source Tags:" />
-              <PartialList valuePath="source_tags" />
-            </PartialConditional>
+            {item.source_tags && (
+              <>
+                <PartialValue errorPath="source_tags" value="Source Tags:" />
+                {renderList(item.source_tags)}
+              </>
+            )}
 
-            <PartialConditional valuePath="target_tags">
-              <PartialValue errorPath="target_tags" value="Target Tags:" />
-              <PartialList valuePath="target_tags" />
-            </PartialConditional>
+            {item.target_tags && (
+              <>
+                <PartialValue errorPath="target_tags" value="Target Tags:" />
+                {renderList(item.target_tags)}
+              </>
+            )}
           </div>
         </TabPane>
 
-        <TabPane
-          title="Allowed Traffic"
-          condition={{ valuePath: 'action', eq: 'allowed' }}
-        >
-          <PartialList
-            valuePath="allowed_traffic"
-            renderItem={renderTraffic}
-          />
-        </TabPane>
+        {item.action === 'allowed' && (
+          <TabPane title="Allowed Traffic">
+            {renderTraffic(item.allowed_traffic)}
+          </TabPane>
+        )}
 
-        <TabPane
-          title="Denied Traffic"
-          condition={{ valuePath: 'action', neq: 'allowed' }}
-        >
-          <PartialList
-            valuePath="denied_traffic"
-            renderItem={renderTraffic}
-          />
-        </TabPane>
+        {item.action !== 'allowed' && (
+          <TabPane title="Denied Traffic">
+            {renderTraffic(item.denied_traffic)}
+          </TabPane>
+        )}
       </TabsMenu>
     </Partial>
   );
