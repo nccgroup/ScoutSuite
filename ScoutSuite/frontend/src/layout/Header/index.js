@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Switch from '@material-ui/core/Switch';
-import { Link } from '@reach/router';
+import { Link } from 'react-router-dom';
 
 import Logo from './ScoutSuiteLogo/logo.png'; 
 

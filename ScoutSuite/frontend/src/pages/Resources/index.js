@@ -1,4 +1,4 @@
-import { useParams } from '@reach/router';
+import { useParams } from 'react-router-dom';
 import React from 'react';
 
 import { useAPI } from '../../api/useAPI';
@@ -14,40 +14,54 @@ import './style.scss';
 
 const Resources = () => {
   const params = useParams();
-  const { data: items, loading } = useAPI(getResourcesEndpoint(params.service, params.resource), []);
-  const data = items.results;
+  const { data: response, loading, loadPage } = useAPI(
+    getResourcesEndpoint(params.service, params.resource),
+    [],
+    { pagination: true },
+  );
+  const data = response.results;
 
+  const fetchData = React.useCallback(({ pageIndex, sortBy, direction }) => {
+    loadPage(pageIndex + 1, sortBy, direction);
+  }, []);
 
-  if (loading) return <>
-    <Breadcrumb />
-  </>;
+  if (loading || !data)
+    return (
+      <>
+        <Breadcrumb />
+      </>
+    );
 
   const keys = Object.keys(data[0]);
 
-  const columns = [
-    { name: 'Name', key: 'name' },
-  ];
+  const columns = [{ name: 'Name', key: 'name' }];
 
   // AWS columns
-  if (keys.includes('AvailabilityZone')) columns.push({ name: 'Availability Zone', key: 'AvailabilityZone' });
-  if (keys.includes('DNSName')) columns.push({ name: 'DNS Name', key: 'DNSName' });
-  if (keys.includes('SubnetId')) columns.push({ name: 'SubnetId', key: 'SubnetId' });
+  if (keys.includes('AvailabilityZone'))
+    columns.push({ name: 'Availability Zone', key: 'AvailabilityZone' });
+  if (keys.includes('DNSName'))
+    columns.push({ name: 'DNS Name', key: 'DNSName' });
+  if (keys.includes('SubnetId'))
+    columns.push({ name: 'SubnetId', key: 'SubnetId' });
 
   // GCP columns
-  if (keys.includes('description')) columns.push({ name: 'Description', key: 'description' });
-  if (keys.includes('project_id')) columns.push({ name: 'Project ID', key: 'project_id' });
-  if (keys.includes('location')) columns.push({ name: 'Location', key: 'location' });
+  if (keys.includes('description'))
+    columns.push({ name: 'Description', key: 'description' });
+  if (keys.includes('project_id'))
+    columns.push({ name: 'Project ID', key: 'project_id' });
+  if (keys.includes('location'))
+    columns.push({ name: 'Location', key: 'location' });
 
-  const initialState = {
-    pageSize: 10
-  };
+  // const initialState = {
+  //   pageSize: 10
+  // };
 
   const formatters = {
-    name: Name
+    name: Name,
   };
 
   const sortBy = {
-    severity: sortBySeverity
+    severity: sortBySeverity,
   };
 
   return (
@@ -58,9 +72,12 @@ const Resources = () => {
           <Table
             columns={columns}
             data={data}
-            initialState={initialState}
             formatters={formatters}
-            sortBy={sortBy} />
+            sortBy={sortBy}
+            fetchData={fetchData}
+            manualPagination={true}
+            pageCount={response.meta.total_pages}
+          />
         </div>
 
         <div className="selected-item">

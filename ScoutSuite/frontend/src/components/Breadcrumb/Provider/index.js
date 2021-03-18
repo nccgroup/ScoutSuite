@@ -3,7 +3,7 @@ import { useAPI } from '../../../api/useAPI';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import AWSLogo from './Logos/aws.png';
-import { Link, useParams } from '@reach/router';
+import { Link, useParams } from 'react-router-dom';
 
 const getProviderLogo = (providerCode) => {
   if (providerCode === 'azure') return AWSLogo;
