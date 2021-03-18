@@ -2,7 +2,6 @@ import React from 'react';
 import { useAPI } from '../../../api/useAPI';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
-//import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { getFindingsEndpoint } from '../../../api/paths';

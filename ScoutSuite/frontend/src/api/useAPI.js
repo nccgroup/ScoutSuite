@@ -1,4 +1,3 @@
-// import { navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import * as API from './api';
 import * as Cache from './cache';
@@ -8,11 +7,17 @@ import * as Cache from './cache';
  * @param {*} path
  */
 export const useAPI = (defaultPath, defaultValue, settings = {}) => {
-  const [data, setData] = useState(Cache.has(defaultPath) ? Cache.get(defaultPath) : defaultValue);
+  const [data, setData] = useState(
+    Cache.has(defaultPath) ? Cache.get(defaultPath) : defaultValue,
+  );
   const [path, setPath] = useState(defaultPath);
   const [loading, setLoading] = useState(!Cache.has(path));
   const [error, setError] = useState(null);
-  const [queryParams, setQueryParams] = useState({ page: 1, sortBy: 'name', direction: 'asc' });
+  const [queryParams, setQueryParams] = useState({
+    page: 1,
+    sortBy: 'name',
+    direction: 'asc',
+  });
 
   useEffect(() => {
     const asyncAPI = async () => {
@@ -40,9 +45,11 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
       urlQueryParams.set('direction', queryParams.direction);
     }
 
-    // navigate(window.location.pathname + '?' + urlQueryParams.toString());
-
-    setPath(urlQueryParams.toString().length > 0 ? `${defaultPath}?${urlQueryParams.toString()}` : defaultPath);
+    setPath(
+      urlQueryParams.toString().length > 0
+        ? `${defaultPath}?${urlQueryParams.toString()}`
+        : defaultPath,
+    );
   }, [defaultPath, queryParams]);
 
   const loadPage = (page, sortBy, direction) => {

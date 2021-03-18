@@ -52,9 +52,9 @@ const Resources = () => {
   if (keys.includes('location'))
     columns.push({ name: 'Location', key: 'location' });
 
-  // const initialState = {
-  //   pageSize: 10
-  // };
+  const initialState = {
+    pageSize: 10
+  };
 
   const formatters = {
     name: Name,
@@ -77,6 +77,7 @@ const Resources = () => {
             fetchData={fetchData}
             manualPagination={true}
             pageCount={response.meta.total_pages}
+            initialState={initialState}
           />
         </div>
 
