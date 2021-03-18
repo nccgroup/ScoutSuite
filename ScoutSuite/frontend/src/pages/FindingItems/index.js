@@ -17,7 +17,7 @@ const FlaggedItems = () => {
   const params = useParams();
   const { data: items, loading } = useAPI(getItemsEndpoint(params.service, params.finding), []);
 
-  if (isEmpty(items)) {
+  if (isEmpty(items) || isEmpty(items.results)) {
     return (
       <>
         <Breadcrumb />
@@ -80,7 +80,7 @@ const FlaggedItems = () => {
           {!params.item ? (
             <span className="no-item">No selected item</span>
           ) : (
-            <SelectedItemContainer title={params.item} />
+            <SelectedItemContainer />
           )}
         </div>
       </div>

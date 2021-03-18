@@ -11,6 +11,7 @@ import './style.scss';
 const SelectedItemContainer = () => {
   const path = (new URL(document.location)).searchParams.get('path');
   const params = useParams();
+  const { data: provider } = useAPI('provider');
   const { data: finding, loading: loading1 } = useAPI(`raw/services/${params.service}/findings/${params.finding}`);
   const { data, loading: loading2 } = useAPI(getItemEndpoint(params.service, params.finding, params.item, path));
 
@@ -21,7 +22,7 @@ const SelectedItemContainer = () => {
   const DynamicPartial = React.lazy(async () => {
     let md = null;
     try {
-      md = await import('../../../partials/aws/' + partialPath + '/index.js'); // Can't use a string literal because of Babel bug
+      md = await import('../../../partials/' + provider.provider_code + '/' + partialPath + '/index.js'); // Can't use a string literal because of Babel bug
     } catch(e) {
       md = await import('../../../partials/Default');
     }

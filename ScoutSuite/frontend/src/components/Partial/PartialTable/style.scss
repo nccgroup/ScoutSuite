@@ -1,0 +1,12 @@
+@import 'src/variables';
+
+.partial-value {
+  .label {
+    font-weight: 700;
+  }
+
+  .error {
+    color: $high-color;
+    font-weight: 700;
+  }
+}

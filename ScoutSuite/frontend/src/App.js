@@ -5,7 +5,7 @@ import Findings from './pages/Findings';
 import Resources from './pages/Resources';
 import Dashboard from './pages/Dashboard';
 import ExternalAttack from './pages/ExternalAttack/index';
-import FlaggedItems from './pages/FlaggedItems/index';
+import FindingItems from './pages/FindingItems/index';
 import Layout from './layout/index';
 
 function App() {
@@ -15,10 +15,10 @@ function App() {
         <Dashboard path="/" />
         <Findings path="/services/:service/findings" />
         <ExternalAttack path="/services/:service/external-attacks" />
-        <FlaggedItems path="/services/:service/findings/:finding/items" />
-        <FlaggedItems path="/services/:service/findings/:finding/items/:item" />
-        <Resources path="/services/:service/resources/:resource" />
-        <Resources path="/services/:service/resources/:resource/:id" />
+        <FindingItems path="/services/:service/findings/:finding/items" />
+        <FindingItems path="/services/:service/findings/:finding/items/:item" />
+        <Resources path="/services/:service/resources/:resources" />
+        <Resources path="/services/:service/resources/:resources/:id" />
       </Router>
     </Layout>
   );
