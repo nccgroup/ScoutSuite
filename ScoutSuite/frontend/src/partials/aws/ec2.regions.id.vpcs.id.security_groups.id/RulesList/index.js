@@ -1,10 +1,9 @@
 import React, { useContext }  from 'react';
-import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import get from 'lodash/get';
-
 
 import { PartialContext, PartialPathContext } from '../../../../components/Partial/context';
 import { PartialValue } from '../../../../components/Partial';
+import WarningMessage from '../../../../components/WarningMessage';
 
 import './style.scss';
 
@@ -110,9 +109,7 @@ const RulesList = () => {
           value="Default security groups should have no rules."
           errorPath="default_with_rules"
           renderValue={value => (
-            <span className="default-with-rules">
-              <ReportProblemOutlinedIcon fontSize="inherit"/> {value}
-            </span>
+            <WarningMessage message={value} />
           )}
         />
       )}

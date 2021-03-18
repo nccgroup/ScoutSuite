@@ -3,6 +3,7 @@
 .issues-charts {
   display: flex;
   flex-wrap: wrap;
+  margin-right: -2rem;
   margin-bottom: -2rem;
 
   .pie-chart {
@@ -15,6 +16,8 @@
   }
 
   .pie-chart, .bar-chart {
+    flex-grow: 1;
+    max-width: 52rem;
     background-color: $white;
     margin-bottom: 2rem;
 

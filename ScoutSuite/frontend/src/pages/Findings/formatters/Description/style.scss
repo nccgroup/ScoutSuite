@@ -5,9 +5,15 @@
 }
 
 .findings-desc {
+  display: flex;
+  align-items: center;
   color: $link-color;
   font-weight: 600;
   cursor: pointer;
+
+  svg {
+    margin-right: 0.5rem;
+  }
 }
 
 .desc-bg {

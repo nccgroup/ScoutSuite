@@ -20,57 +20,55 @@ const Ec2Snapshots = props => {
 
   return (
     <Partial data={data}>
-      <div className="partial-informations">
-        <PartialValue
-          label="ID"
-          valuePath="id"
-          renderValue={valueOrNone}
-        />
-        <PartialValue
-          label="ARN"
-          valuePath="arn"
-          renderValue={valueOrNone}
-        />
-        <PartialValue
-          label="Description"
-          valuePath="description"
-          renderValue={valueOrNone}
-        />
-        <PartialValue
-          label="State"
-          valuePath="state"
-          renderValue={valueOrNone}
-        />
-        <PartialValue
-          label="Progress"
-          valuePath="progress"
-          renderValue={valueOrNone}
-        />
-        <PartialValue
-          label="Start Time"
-          valuePath="start_time"
-          renderValue={valueOrNone}
-        />
-        <PartialValue
-          label="Volume"
-          valuePath="volume"
-        />
-        <PartialValue
-          label="Owner ID"
-          valuePath="owner_id"
-          renderValue={valueOrNone}
-        />
-        <PartialValue
-          label="Encryption"
-          valuePath="encrypted"
-          renderValue={convertBoolToEnable}
-        />
-        <PartialValue
-          label="KMS Key ID"
-          valuePath="kms_key_id"
-          renderValue={valueOrNone}
-        />
-      </div>
+      <PartialValue
+        label="ID"
+        valuePath="id"
+        renderValue={valueOrNone}
+      />
+      <PartialValue
+        label="ARN"
+        valuePath="arn"
+        renderValue={valueOrNone}
+      />
+      <PartialValue
+        label="Description"
+        valuePath="description"
+        renderValue={valueOrNone}
+      />
+      <PartialValue
+        label="State"
+        valuePath="state"
+        renderValue={valueOrNone}
+      />
+      <PartialValue
+        label="Progress"
+        valuePath="progress"
+        renderValue={valueOrNone}
+      />
+      <PartialValue
+        label="Start Time"
+        valuePath="start_time"
+        renderValue={valueOrNone}
+      />
+      <PartialValue
+        label="Volume"
+        valuePath="volume"
+      />
+      <PartialValue
+        label="Owner ID"
+        valuePath="owner_id"
+        renderValue={valueOrNone}
+      />
+      <PartialValue
+        label="Encryption"
+        valuePath="encrypted"
+        renderValue={convertBoolToEnable}
+      />
+      <PartialValue
+        label="KMS Key ID"
+        valuePath="kms_key_id"
+        renderValue={valueOrNone}
+      />
     </Partial>
   );
 };

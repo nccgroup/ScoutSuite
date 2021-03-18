@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import get from 'lodash/get';
+import Tooltip from '@material-ui/core/Tooltip';
 import cx from 'classnames';
+import get from 'lodash/get';
+import isArray from 'lodash/isArray';
 
 import { PartialContext, PartialPathContext } from '../context';
 import { concatPaths } from '../../../utils/Partials';
@@ -13,7 +15,12 @@ const propTypes = {
   separator: PropTypes.string,
   value: PropTypes.any,
   valuePath: PropTypes.string,
-  errorPath: PropTypes.string,
+  errorPath: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
+  tooltip: PropTypes.bool,
+  tooltipProps: PropTypes.object,
   renderValue: PropTypes.func,
 };
 
@@ -23,6 +30,11 @@ const defaultProps = {
   value: null,
   valuePath: null,
   errorPath: null,
+  tooltip: false,
+  tooltipProps: {
+    enterDelay: 1000,
+    placement: 'top-start',
+  },
   renderValue: value => value,
 };
 
@@ -32,6 +44,8 @@ const PartialValue = props => {
     separator,
     valuePath,
     errorPath,
+    tooltip,
+    tooltipProps,
     renderValue,
   } = props;
 
@@ -44,10 +58,23 @@ const PartialValue = props => {
   if (value === undefined || value === null) {
     return null;
   }
-  
-  const fullErrorPath = errorPath ? concatPaths(basePath, errorPath) : fullValuePath;
-  const hasError = ctx.path_to_issues.includes(fullErrorPath);
+
+  let fullErrorPaths;
+  if (errorPath) {
+    const paths = isArray(errorPath) ? errorPath : [errorPath];
+    fullErrorPaths = paths.map(path => concatPaths(basePath, path));
+  } else {
+    fullErrorPaths = [fullValuePath];
+  }
+
+  const hasError = fullErrorPaths.some(path => ctx.path_to_issues.includes(path));
   const level = ctx.level;
+
+  const content = (
+    <span className={cx('value', hasError && level)}>
+      {value}
+    </span>
+  );
 
   return (
     <div className="partial-value detailed-value"> 
@@ -56,9 +83,13 @@ const PartialValue = props => {
           {`${label}${separator}`}
         </span>
       )}
-      <span className={cx('value', hasError && level)}>
-        {value}
-      </span>
+      {tooltip ? (
+        <Tooltip title={value} {...tooltipProps}>
+          {content}
+        </Tooltip>
+      ) : 
+        content
+      }
     </div>
   );
 };

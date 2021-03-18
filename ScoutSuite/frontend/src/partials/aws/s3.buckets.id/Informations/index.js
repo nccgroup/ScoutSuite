@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { PartialValue } from '../../../../components/Partial/index';
-import { convertBoolToEnable } from '../../../../utils/Partials';
+import { convertBoolToEnable, formatDate } from '../../../../utils/Partials';
 
 
 const Informations = () => {
   return (
-    <div className="partial-informations">
+    <>
       <h4>Informations</h4>
       <PartialValue 
         label="ARN" 
@@ -19,6 +19,7 @@ const Informations = () => {
       <PartialValue 
         label="Creation Date" 
         valuePath="CreationDate" 
+        renderValue={formatDate}
       />
       <PartialValue 
         label="Logging" 
@@ -51,7 +52,7 @@ const Informations = () => {
         valuePath="web_hosting_enabled" 
         renderValue={convertBoolToEnable} 
       />
-    </div>
+    </>
   );
 };
 

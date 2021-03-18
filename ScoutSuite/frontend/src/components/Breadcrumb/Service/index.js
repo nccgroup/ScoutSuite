@@ -1,10 +1,10 @@
 import React from 'react';
-//import { useAPI } from '../../../api/useAPI';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-
-//import { Link } from '@reach/router';
-import PropTypes from 'prop-types';
 import { useLocation } from '@reach/router';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import PropTypes from 'prop-types';
+
+import { makeTitle } from '../../../utils/Partials';
+
 
 const propTypes = {
   service: PropTypes.string.isRequired
@@ -17,7 +17,7 @@ const Service = props => {
   return (
     <>
       <ChevronRightIcon />
-      <span>{service}</span>
+      <span>{makeTitle(service)}</span>
       <ChevronRightIcon />
 
       {pathname.endsWith('/findings') && <span>Findings</span>}

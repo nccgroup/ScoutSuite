@@ -5,13 +5,14 @@ import { PartialContext, PartialPathContext } from '../../../../../components/Pa
 import { PartialValue } from '../../../../../components/Partial';
 import { convertBoolToCheckmark } from '../../../../../utils/Partials';
 
+
 const AccessControlList = () => {
   const ctx = useContext(PartialContext);
   const basePath = useContext(PartialPathContext);
   const value = get(ctx.item, basePath);  
 
   return (
-    <table>
+    <table className="acl-table">
       <thead>
         <tr>
           <th/>
@@ -25,7 +26,10 @@ const AccessControlList = () => {
         {Object.keys(value).map(id => (
           <tr key={id}>
             <td>
-              <PartialValue valuePath={`${id}.DisplayName`}/>
+              <PartialValue 
+                valuePath={`${id}.DisplayName`} 
+                tooltip
+              />
             </td>
             <td>
               <PartialValue 

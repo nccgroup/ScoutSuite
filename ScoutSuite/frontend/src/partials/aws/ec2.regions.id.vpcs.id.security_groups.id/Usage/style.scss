@@ -1,12 +1,12 @@
 .security-group-usage {
-  h4 {
-    margin: 0 0 0.5rem 0;
-  }
-
   & > ul {
     list-style-type: square;
     margin: 0;
     padding-left: 1rem;
+
+    .resource-title {
+      margin: 0 0 0.5rem 0;
+    }  
 
     ul {
       list-style-type: initial;
