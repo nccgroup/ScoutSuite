@@ -190,13 +190,21 @@
  "logging": {
     "loggingmonitoring": {
       "resources": {
-        "diagnostic": {
+        "resources_logging": {
           "cols": 2,
-          "path": "services.loggingmonitoring.subscriptions.id.diagnostic"
+          "path": "services.loggingmonitoring.subscriptions.id.resources_logging"
         },
         "log_alerts": {
           "cols": 2,
           "path": "services.loggingmonitoring.subscriptions.id.log_alerts"
+        },
+        "diagnostic_settings": {
+          "cols": 2,
+          "path": "services.loggingmonitoring.subscriptions.id.diagnostic_settings"
+        },
+        "log_profiles": {
+          "cols": 2,
+          "path": "services.loggingmonitoring.subscriptions.id.log_profiles"
         }
       }
     }

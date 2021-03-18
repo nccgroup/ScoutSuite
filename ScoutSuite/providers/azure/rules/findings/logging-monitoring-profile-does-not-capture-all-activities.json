@@ -1,0 +1,27 @@
+{
+    "description": "Audit Profile Does Not Capture All Activities",
+    "rationale": "A log profile controls how the activity log is exported. Configuring the log profile to collect logs for the categories \"write\", \"delete\" and \"action\" ensures that all the control/management plane activities performed on the subscription are exported.",
+    "remediation": "On Azure portal there is no provision to check or set categories.",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "5.1.2"
+        }
+    ],
+    "references": [
+      "https://docs.microsoft.com/en-us/cli/azure/monitor/log-profiles?view=azure-cli-latest#az-monitor-log-profiles-update",
+      "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+    ],
+    "dashboard_name": "Profile",
+    "path": "loggingmonitoring.subscriptions.id.log_profiles.id" ,
+    "conditions": [
+        "and",
+        [
+            "loggingmonitoring.subscriptions.id.log_profiles.id.captures_all_activities",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "captures_all_activities"
+}
