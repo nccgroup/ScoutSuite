@@ -11,7 +11,7 @@ azure = '/scoutsuite-report/scoutsuite-results/scoutsuite_results_azure-tenant-0
 gcp = '/scoutsuite-report/scoutsuite-results/scoutsuite_results_gcp-poly-project-1.json'
 
 # REPORT (aws, azure or gcp)
-provider = gcp
+provider = aws
 
 with open(f'{scout_suite_directory}{provider}') as json_file:
     results = json.load(json_file)
@@ -52,7 +52,7 @@ def get_items(service, finding):
         item_path_kw = item_path.split('.') # [storageaccounts, subscriptions, c4596cb7-805b-49aa-9a04-ed74e9f5c789, storage_accounts, e21374e58a7142b3bc563467ac097f66345454fd, blob_containers, test, public_access_allowed]
         if 'id_suffix' in finding and item_path_kw[-1] == finding['id_suffix']: item_path_kw = item_path_kw[:-1]
 
-        item_to_display = get_element_from_path_kw(item_path_kw, results['services'])
+        item_to_display = get_element_from_path_kw(item_path_kw[:len(path.split('.'))], results['services'])
         item = {
             'id': item_to_display['id'],
             'name': item_to_display['name'],
@@ -327,10 +327,10 @@ def get_all_elements_from_path(path, report_location = results):
 def format_title(title):
     return title[0].upper() + ' '.join(title[1:].lower().split('_'))
 
-def get_element_from_path(path, report_location = results):
+def get_element_from_path(path, report_location=results):
     return get_element_from_path_kw(path.split('.'), report_location)
 
-def get_element_from_path_kw(path, report_location = results):
+def get_element_from_path_kw(path, report_location=results):
     element = report_location
     for idx in range(len(path)):
         element = element[path[idx]]
