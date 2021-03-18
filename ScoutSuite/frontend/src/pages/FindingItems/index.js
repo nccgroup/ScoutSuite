@@ -12,7 +12,6 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 
 import './style.scss';
 
-
 const FlaggedItems = () => {
   const params = useParams();
   const { data: items, loading } = useAPI(getItemsEndpoint(params.service, params.finding), []);

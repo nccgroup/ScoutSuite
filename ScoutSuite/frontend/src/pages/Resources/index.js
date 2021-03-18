@@ -5,7 +5,7 @@ import { useAPI } from '../../api/useAPI';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
-// import ResourcePartialWrapper from './ResourcePartialWrapper';
+import ResourcePartialWrapper from './ResourcePartialWrapper';
 import Breadcrumb from '../../components/Breadcrumb/index';
 
 import { getResourcesEndpoint } from '../../api/paths';
@@ -67,8 +67,7 @@ const Resources = () => {
           {!params.id ? (
             <span className="no-item">No selected resource</span>
           ) : (
-            <span className="no-item">Selected {params.id}</span>
-            // <ResourcePartialWrapper title={params.id} />
+            <ResourcePartialWrapper title={params.id} />
           )}
         </div>
       </div>
