@@ -11,7 +11,7 @@ azure = '/scoutsuite-report/scoutsuite-results/scoutsuite_results_azure-tenant-0
 gcp = '/scoutsuite-report/scoutsuite-results/scoutsuite_results_gcp-poly-project-1.json'
 
 # REPORT (aws, azure or gcp)
-provider = aws
+provider = gcp
 
 with open(f'{scout_suite_directory}{provider}') as json_file:
     results = json.load(json_file)
@@ -342,6 +342,7 @@ def filter_results(results, filter_keyword):
 
 def sort_items(items, sort_by, direction):
     descending = (direction == 'desc')
+    if sort_by == 'name': sort_by = 'item'
     return sorted(items, key=lambda k: k[sort_by]['name'], reverse=descending)
 
 def sort_resources(resources, sort_by, direction):
