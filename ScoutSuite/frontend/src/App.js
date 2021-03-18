@@ -17,8 +17,8 @@ function App() {
         <ExternalAttack path="/services/:service/external-attacks" />
         <FindingItems path="/services/:service/findings/:finding/items" />
         <FindingItems path="/services/:service/findings/:finding/items/:item" />
-        <Resources path="/services/:service/resources/:resources" />
-        <Resources path="/services/:service/resources/:resources/:id" />
+        <Resources path="/services/:service/resources/:resource" />
+        <Resources path="/services/:service/resources/:resource/:id" />
       </Router>
     </Layout>
   );
