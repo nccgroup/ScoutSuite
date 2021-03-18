@@ -1,19 +1,19 @@
 import React, { Suspense } from 'react';
 import { useParams } from '@reach/router';
+import get from 'lodash/get';
 
 import { useAPI } from '../../../api/useAPI';
-import { getItem } from '../../../api/paths';
+import { getItemEndpoint } from '../../../api/paths';
 
 import './style.scss';
-import '../../../partials/style.scss';
+
 
 const SelectedItemContainer = () => {
-
   const path = (new URL(document.location)).searchParams.get('path');
   const params = useParams();
   const { data: provider } = useAPI('provider');
   const { data: finding, loading: loading1 } = useAPI(`raw/services/${params.service}/findings/${params.finding}`);
-  const { data, loading: loading2 } = useAPI(getItem(params.service, params.finding, params.item, path));
+  const { data, loading: loading2 } = useAPI(getItemEndpoint(params.service, params.finding, params.item, path));
 
   if (loading1 || loading2 || !data) return null;
 
@@ -37,7 +37,7 @@ const SelectedItemContainer = () => {
   return (
     <div className="selected-item-container">
       <div className="header">
-        <h3>{data.item.name}</h3>
+        <h3>{get(data, ['item', 'name'])}</h3>
       </div>
       <div className="content">
         <Suspense fallback={<span>Loading...</span>}>

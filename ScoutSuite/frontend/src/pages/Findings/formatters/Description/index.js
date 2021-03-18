@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
+import { renderWithInnerHtml } from '../../../../utils/Partials';
 
 import './style.scss';
 
@@ -43,17 +44,23 @@ const Description = (props) => {
             <CloseOutlinedIcon onClick={handlePopoverClose} />
           </div>
           
-          <div dangerouslySetInnerHTML={{ __html: value }}></div>
+          {renderWithInnerHtml(value)}
 
           {original.remediation && <>
             <h4>Remediation</h4>
-            <div dangerouslySetInnerHTML={{ __html: original.remediation }}></div>
+            {renderWithInnerHtml(original.remediation)}
           </>}
 
           {original.references && <>
             <h4>References</h4>
             <ul>
-              {original.references.map((ref, i) => (<li key={i}><a href={ref} target="_blank" rel="noreferrer" >{ref}</a></li>))}
+              {original.references.map((ref, i) => (
+                <li key={i}>
+                  <a href={ref} target="_blank" rel="noreferrer" >
+                    {ref}
+                  </a>
+                </li>)
+              )}
             </ul>
           </>}
         </div>

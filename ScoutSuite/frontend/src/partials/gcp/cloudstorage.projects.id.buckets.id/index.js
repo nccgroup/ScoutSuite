@@ -2,43 +2,85 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Partial, PartialValue } from '../../../components/Partial';
-import { partialDataShape, convertBoolToEnable, formatDate } from '../../../utils/Partials';
+import {
+  partialDataShape,
+  convertBoolToEnable,
+  formatDate,
+} from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
-import PartialList from '../../../components/Partial/PartialList';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import PartialSection from '../../../components/Partial/PartialSection/index';
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const renderIAM = (iam) => {
-  return <li>
-    <PartialValue errorPath={iam.key} baseErrorPath="" value={iam.key} />
-    <ul>{iam.item.map((item) => <li key={item}>{item}</li> )}</ul>
-  </li>;
+const renderIAM = (iams) => {
+  return (
+    <ul>
+      {iams.map(([key, iam]) => (
+        <li key={key}>
+          <PartialValue valuePath={key} value={key} />
+          <ul>
+            {iam.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  );
 };
 
-const renderACL = (acl) => {
-  return <li>
-    <PartialValue valuePath={acl.key + '.entity'} />
-    <ul>
-      <li><PartialValue valuePath={acl.key + '.role'} /></li>
-    </ul>
-  </li>;
+const renderACL = (acls) => {
+  return (
+    <PartialSection path="acls">
+      <ul>
+        {acls.map((_, key) => (
+          <li key={key}>
+            <PartialValue valuePath={key + '.entity'} />
+            <ul>
+              <li>
+                <PartialValue valuePath={key + '.role'} />
+              </li>
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </PartialSection>
+  );
 };
 
-const renderObjACL = (acl) => {
-  return <li>
-    <PartialValue valuePath={acl.key + '.entity'} />
-    <ul>
-      <li><PartialValue valuePath={acl.key + '.role'} /></li>
-    </ul>
-  </li>;
+const renderObjACL = (acls) => {
+  return (
+    <PartialSection path="default_object_acl">
+      <ul>
+        {acls.map((acl, key) => (
+          <li key={key}>
+            <PartialValue valuePath={key + '.' + acl.entity} />
+            <ul>
+              <li>
+                <PartialValue valuePath={key + '.role'} />
+              </li>
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </PartialSection>
+  );
 };
 
 const Buckets = (props) => {
   const { data } = props;
 
   if (!data) return null;
+
+  const member_bindings = get(data, ['item', 'member_bindings']);
+  const acls = get(data, ['item', 'acls']);
+  const default_object_acl = get(data, ['item', 'default_object_acl']);
+
+  console.log(member_bindings, acls, default_object_acl);
 
   return (
     <Partial data={data}>
@@ -66,33 +108,29 @@ const Buckets = (props) => {
           valuePath="versioning_enabled"
           renderValue={convertBoolToEnable}
         />
-
-        <PartialValue
-          label="Uniform Bucket-Level Access"
-          valuePath="uniform_bucket_level_access"
-          renderValue={convertBoolToEnable}
-        />
       </div>
 
       <TabsMenu>
-
         {/*TODO: Tab error highlight */}
+
         <TabPane title="IAM Permissions">
-          <PartialList
-            valuePath="member_bindings"
-            renderItem={renderIAM} />
+          {!isEmpty(member_bindings) ? (
+            renderIAM(Object.entries(member_bindings))
+          ) : (
+            <span>None</span>
+          )}
         </TabPane>
 
         <TabPane title="ACL Permissions">
-          <PartialList
-            valuePath="acls"
-            renderItem={renderACL} />
+          {!isEmpty(acls) ? renderACL(acls) : <span>None</span>}
         </TabPane>
 
         <TabPane title="Default Object ACL Permissions">
-          <PartialList
-            valuePath="default_object_acl"
-            renderItem={renderObjACL} />
+          {!isEmpty(default_object_acl) ? (
+            renderObjACL(default_object_acl)
+          ) : (
+            <span>None</span>
+          )}
         </TabPane>
       </TabsMenu>
     </Partial>

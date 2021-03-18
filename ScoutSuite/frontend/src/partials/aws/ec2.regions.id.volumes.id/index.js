@@ -20,7 +20,6 @@ const Ec2Volumes = props => {
     <div className="ec2-volume">
       <h3>Attributes</h3>
       <GenericObject
-        className="partial-informations"
         data={data.item}
       />
     </div>

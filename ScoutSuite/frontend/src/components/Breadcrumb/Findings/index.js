@@ -5,7 +5,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 //import { Link } from '@reach/router';
 import PropTypes from 'prop-types';
 import { Link, useLocation, useParams } from '@reach/router';
-import { getFindings } from '../../../api/paths';
+import { getFindingsEndpoint } from '../../../api/paths';
 
 const propTypes = {
   service: PropTypes.string.isRequired,
@@ -14,7 +14,7 @@ const propTypes = {
 
 const Findings = props => {
   const { service, finding } = props;
-  const { data: findings, loading } = useAPI(getFindings(service), []);
+  const { data: findings, loading } = useAPI(getFindingsEndpoint(service), []);
   const { pathname } = useLocation();
   const params = useParams();
 

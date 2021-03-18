@@ -37,8 +37,6 @@ const PartialList = (props) => {
 
           const path = item.key ? item.key : '';
 
-          console.log('PATH', )
-
           return <li key={i}><PartialValue valuePath={path} /></li>;
         })}
       </ul>

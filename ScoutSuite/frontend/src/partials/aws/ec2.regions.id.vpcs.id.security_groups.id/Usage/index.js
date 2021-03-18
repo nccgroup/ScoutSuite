@@ -3,10 +3,8 @@ import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlin
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 
-
 import { PartialContext, PartialPathContext } from '../../../../components/Partial/context';
 import { makeTitle } from '../../../../utils/Partials';
-// import { PartialValue } from '../../../../components/Partial';
 
 import './style.scss';
 
@@ -42,14 +40,16 @@ const Usage = () => {
         <ul>
           {Object.entries(value).map(([service, { resource_type }]) => (
             Object.entries(resource_type).map(([type, resources], i) => (
-              <>
-                <li key={`title-${i}`}>
-                  <h4>{`${makeTitle(service)} ${makeTitle(type)}`}</h4>
+              <div key={i}>
+                <li>
+                  <h4 className="resource-title">
+                    {`${makeTitle(service)} ${makeTitle(type)}`}
+                  </h4>
                 </li>
-                <ul key={`list-${i}`}>
+                <ul>
                   {renderResourcesList(resources)}
                 </ul> 
-              </>
+              </div>
             ))
           ))}
         </ul>
