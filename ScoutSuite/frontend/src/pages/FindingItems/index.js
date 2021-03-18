@@ -3,7 +3,7 @@ import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../api/useAPI';
-import { getItems } from '../../api/paths';
+import { getItemsEndpoint } from '../../api/paths';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
@@ -15,7 +15,7 @@ import './style.scss';
 
 const FlaggedItems = () => {
   const params = useParams();
-  const { data: items, loading } = useAPI(getItems(params.service, params.finding), []);
+  const { data: items, loading } = useAPI(getItemsEndpoint(params.service, params.finding), []);
 
   if (isEmpty(items) || isEmpty(items.results)) {
     return (
@@ -52,7 +52,7 @@ const FlaggedItems = () => {
   });
 
   const initialState = {
-    pageSize: 5
+    pageSize: 10
   };
 
   const formatters = {

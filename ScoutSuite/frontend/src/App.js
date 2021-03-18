@@ -18,6 +18,7 @@ function App() {
         <FindingItems path="/services/:service/findings/:finding/items" />
         <FindingItems path="/services/:service/findings/:finding/items/:item" />
         <Resources path="/services/:service/resources/:resources" />
+        <Resources path="/services/:service/resources/:resources/:id" />
       </Router>
     </Layout>
   );
