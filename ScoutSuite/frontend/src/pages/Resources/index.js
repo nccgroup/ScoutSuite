@@ -5,7 +5,7 @@ import { useAPI } from '../../api/useAPI';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
-// import SelectedItemContainer from './SelectedItemContainer';
+// import ResourcePartialWrapper from './ResourcePartialWrapper';
 import Breadcrumb from '../../components/Breadcrumb/index';
 
 import { getResources } from '../../api/paths';
@@ -27,8 +27,6 @@ const Resources = () => {
   const columns = [
     { name: 'Name', key: 'name' },
   ];
-
-  if (keys.includes('id')) columns.push({ name: 'ID', key: 'id' });
 
   // AWS columns
   if (keys.includes('AvailabilityZone')) columns.push({ name: 'Availability Zone', key: 'AvailabilityZone' });
@@ -66,7 +64,12 @@ const Resources = () => {
         </div>
 
         <div className="selected-item">
-          <span className="no-item">No selected item</span>
+          {!params.id ? (
+            <span className="no-item">No selected resource</span>
+          ) : (
+            <span className="no-item">Selected {params.id}</span>
+            // <ResourcePartialWrapper title={params.id} />
+          )}
         </div>
       </div>
     </>

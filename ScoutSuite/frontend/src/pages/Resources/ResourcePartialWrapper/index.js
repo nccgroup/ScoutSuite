@@ -6,13 +6,12 @@ import { useAPI } from '../../../api/useAPI';
 import { getItem } from '../../../api/paths';
 
 import './style.scss';
-import '../../../partials/style.scss';
 
 const propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-const SelectedItemContainer = props => {
+const ResourcePartialWrapper = props => {
   const { title } = props;
 
   const path = (new URL(document.location)).searchParams.get('path');
@@ -53,6 +52,6 @@ const SelectedItemContainer = props => {
   );
 };
 
-SelectedItemContainer.propTypes = propTypes;
+ResourcePartialWrapper.propTypes = propTypes;
 
-export default SelectedItemContainer;
+export default ResourcePartialWrapper;
