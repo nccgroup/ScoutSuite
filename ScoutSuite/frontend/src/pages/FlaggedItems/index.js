@@ -1,24 +1,36 @@
 import { useParams } from '@reach/router';
 import React from 'react';
+import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../api/useAPI';
+import { getItems } from '../../api/paths';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
 import SelectedItemContainer from './SelectedItemContainer';
 import Breadcrumb from '../../components/Breadcrumb/index';
 
-import { getItems } from '../../api/paths';
-
 import './style.scss';
+
 
 const FlaggedItems = () => {
   const params = useParams();
   const { data: items, loading } = useAPI(getItems(params.service, params.finding), []);
 
-  if (loading) return <>
-    <Breadcrumb />
-  </>;
+  if (isEmpty(items)) {
+    return (
+      <>
+        <Breadcrumb />
+        <div>Server request failed</div>
+      </>
+    );
+  }
+
+  if (loading) {
+    return (
+      <Breadcrumb />
+    );
+  }
 
   const columns = [
     { name: 'ID', key: 'id' },

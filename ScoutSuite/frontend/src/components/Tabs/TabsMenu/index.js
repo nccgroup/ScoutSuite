@@ -9,7 +9,7 @@ import './style.scss';
 const propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
+    PropTypes.array,
   ]).isRequired,
   className: PropTypes.string,
 };
@@ -20,7 +20,8 @@ const defaultProps = {
 
 const TabsMenu = props => {
   const { className } = props;
-  const children = isArray(props.children) ? props.children : [props.children];
+  let children = isArray(props.children) ? props.children : [props.children];
+  children = children.filter(x => x);
 
   const [ selectedTab, setSelectedTab ] = useState(0);
   const content = get(children[selectedTab], ['props', 'children']);

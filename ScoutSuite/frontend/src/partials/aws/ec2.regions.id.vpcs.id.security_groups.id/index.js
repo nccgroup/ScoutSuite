@@ -40,7 +40,6 @@ const Ec2SecurityGroups = props => {
             <Usage />
           </PartialSection>
         </TabPane>
-        
       </TabsMenu>
     </Partial>
   );

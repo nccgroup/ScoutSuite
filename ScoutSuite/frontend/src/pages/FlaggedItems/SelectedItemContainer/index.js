@@ -1,14 +1,14 @@
 import React, { Suspense } from 'react';
 import { useParams } from '@reach/router';
+import get from 'lodash/get';
 
 import { useAPI } from '../../../api/useAPI';
 import { getItem } from '../../../api/paths';
 
 import './style.scss';
-import '../../../partials/style.scss';
+
 
 const SelectedItemContainer = () => {
-
   const path = (new URL(document.location)).searchParams.get('path');
   const params = useParams();
   const { data: provider } = useAPI('provider');
@@ -37,7 +37,7 @@ const SelectedItemContainer = () => {
   return (
     <div className="selected-item-container">
       <div className="header">
-        <h3>{data.item.name}</h3>
+        <h3>{get(data, ['item', 'name'])}</h3>
       </div>
       <div className="content">
         <Suspense fallback={<span>Loading...</span>}>
