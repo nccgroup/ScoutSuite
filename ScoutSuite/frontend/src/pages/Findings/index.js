@@ -5,7 +5,7 @@ import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlin
 // import PropTypes from 'prop-types';
 
 import { useAPI } from '../../api/useAPI';
-import { getFindings } from '../../api/paths';
+import { getFindingsEndpoint } from '../../api/paths';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Table from '../../components/Table';
 import Name from './formatters/Name';
@@ -19,7 +19,7 @@ const propTypes = {};
 
 const Findings = () => {
   const params = useParams();
-  const { data: findings, loading } = useAPI(getFindings(params.service));
+  const { data: findings, loading } = useAPI(getFindingsEndpoint(params.service));
 
   if (loading) return null;
 

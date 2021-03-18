@@ -1,4 +1,4 @@
-import { getFindings, getPasswordPolicy, getExternalAttachService, getPermissions } from '../../api/paths';
+import { getFindingsEndpoint, getPasswordPolicyEndpoint, getExternalAttachServiceEndpoint, getPermissionsEndpoint } from '../../api/paths';
 
 export const TAB_NAMES = {
   SUMMARY: 'Summary',
@@ -20,10 +20,10 @@ export const getDashboardName = (dashboard) => {
 
 export const getDashboardLink = (dashboard, service) => {
   const links = {
-    findings: getFindings(service),
-    'external attack surface': getExternalAttachService(service),
-    password_policy: getPasswordPolicy(service),
-    permissions: getPermissions(service),
+    findings: getFindingsEndpoint(service),
+    'external attack surface': getExternalAttachServiceEndpoint(service),
+    password_policy: getPasswordPolicyEndpoint(service),
+    permissions: getPermissionsEndpoint(service),
   };
 
   return links[dashboard];

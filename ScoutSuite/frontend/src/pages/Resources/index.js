@@ -8,13 +8,13 @@ import Name from './formatters/Name/index';
 // import ResourcePartialWrapper from './ResourcePartialWrapper';
 import Breadcrumb from '../../components/Breadcrumb/index';
 
-import { getResources } from '../../api/paths';
+import { getResourcesEndpoint } from '../../api/paths';
 
 import './style.scss';
 
 const Resources = () => {
   const params = useParams();
-  const { data: items, loading } = useAPI(getResources(params.service, params.resource), []);
+  const { data: items, loading } = useAPI(getResourcesEndpoint(params.service, params.resource), []);
   const data = items.results;
 
 
