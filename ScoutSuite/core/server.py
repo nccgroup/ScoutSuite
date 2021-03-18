@@ -19,7 +19,6 @@ with open(f'{scout_suite_directory}{provider}') as json_file:
 # def start_api(results):
 app = Flask(__name__)
 CORS(app)
-# app.config["DEBUG"] = True
 
 @app.route('/', methods=['GET'])
 def home():
@@ -50,32 +49,29 @@ def get_items(service, finding):
 
     for item_path in finding['items']:
         item_object = {}
-        words = item_path.split('.') # [storageaccounts, subscriptions, c4596cb7-805b-49aa-9a04-ed74e9f5c789, storage_accounts, e21374e58a7142b3bc563467ac097f66345454fd, blob_containers, test, public_access_allowed]
-        words = words[:-1] if 'id_suffix' in finding and words[-1] == finding['id_suffix'] else words
-        item_path_with_brackets = results['services']
+        item_path_kw = item_path.split('.') # [storageaccounts, subscriptions, c4596cb7-805b-49aa-9a04-ed74e9f5c789, storage_accounts, e21374e58a7142b3bc563467ac097f66345454fd, blob_containers, test, public_access_allowed]
+        if 'id_suffix' in finding and item_path_kw[-1] == finding['id_suffix']: item_path_kw = item_path_kw[:-1]
 
-        for idx in range(len(path.split('.'))):
-            item_path_with_brackets = item_path_with_brackets[words[idx]]
+        item_to_display = get_element_from_path_kw(item_path_kw, results['services'])
         item = {
-            'id': item_path_with_brackets['id'],
-            'name': item_path_with_brackets['name'],
-            'display_path': '.'.join(words[:len(path.split('.'))])
+            'id': item_to_display['id'],
+            'name': item_to_display['name'],
+            'display_path': '.'.join(item_path_kw[:len(path.split('.'))])
         }
         item_object['item'] = item
     
         for attribute in attributes: # regions
             attribute_path = []
-            for idx, word in enumerate(words):
-                if word == attribute:
-                    attribute_path = words[:idx + 2]
-            attribute_path_with_brackets = results['services']
-            for idx in range(len(attribute_path)):
-                attribute_path_with_brackets = attribute_path_with_brackets[attribute_path[idx]]
+            for idx, kw in enumerate(item_path_kw):
+                if kw == attribute:
+                    attribute_path = item_path_kw[:idx + 2]
+
+            attribute_path_kw = get_element_from_path_kw(attribute_path, results['services'])
             attribute_object = {
                 'path': '.'.join(attribute_path)
             }
-            if 'id' in attribute_path_with_brackets: attribute_object['id'] = attribute_path_with_brackets['id']
-            if 'name' in attribute_path_with_brackets: attribute_object['name'] = attribute_path_with_brackets['name']
+            if 'id' in attribute_path_kw: attribute_object['id'] = attribute_path_kw['id']
+            if 'name' in attribute_path_kw: attribute_object['name'] = attribute_path_kw['name']
             item_object[attribute] = attribute_object
         
         item_list.append(item_object)
@@ -280,39 +276,51 @@ def get_all_elements_from_path(path, report_location = results):
     subelement_list = []
 
     id_locations = [id_index for id_index, x in enumerate(path_keywords) if x == 'id'] # [3, 5]
-    
+
     if not id_locations:
         elements = get_element_from_path(path)
-        element_list = [{element: elements[element]} for element in elements]
-
+        for element in elements:
+            new_element = {element: elements[element]}
+            new_element[element]['path'] = path + f'.{element}'
+            element_list.append(new_element)
         return element_list
 
     for id_idx in range(len(id_locations)):
         subelement_list.append([])
         if id_idx == 0:
-            for path_keyword_idx in range(id_locations[id_idx]):
-                element_path_with_brackets = element_path_with_brackets[path_keywords[path_keyword_idx]] # [services, ec2, regions]
-            for subelement in element_path_with_brackets:
-                if element_path_with_brackets[subelement]:
-                    subelement_list[id_idx].append(element_path_with_brackets[subelement])
+            path_to_element = path_keywords[:id_locations[id_idx]]
+            element = get_element_from_path_kw(path_to_element, report_location)
+            for subelement in element:
+                if element[subelement]:
+                    subelement_list[id_idx].append(element[subelement])
+                    subelement_list[id_idx][-1]['path'] = path_keywords[0:id_locations[id_idx]] + [subelement]
 
         else:
             for idx, element in enumerate(subelement_list[id_idx - 1]):
-                for path_keyword_idx in range(id_locations[id_idx - 1] + 1, id_locations[id_idx]):
-                    subelement_list[id_idx - 1][idx] = element[path_keywords[path_keyword_idx]]
+                path_to_element = path_keywords[id_locations[id_idx - 1] + 1:id_locations[id_idx]]
+                new_element = get_element_from_path_kw(path_to_element, element)
+                for element_dict in new_element: new_element[element_dict]['path'] = subelement_list[id_idx - 1][idx]['path'] + path_to_element
+                subelement_list[id_idx - 1][idx] = new_element
+
                 for subelement in subelement_list[id_idx - 1][idx]:
                     if subelement_list[id_idx - 1][idx][subelement]:
                         subelement_list[id_idx].append(subelement_list[id_idx - 1][idx][subelement])
+                        subelement_list[id_idx][-1]['path'] = subelement_list[id_idx - 1][idx][subelement]['path'] + [subelement]
 
         if id_idx == len(id_locations) - 1:
             for subelement in subelement_list[id_idx]:
-                element = subelement
-                for path_keyword_idx in range(id_locations[id_idx] + 1, len(path_keywords)):
-                    element = element[path_keywords[path_keyword_idx]]
+                path_to_element = path_keywords[id_locations[id_idx] + 1:len(path_keywords)]
+                element = get_element_from_path_kw(path_to_element, subelement)
                 if element: 
                     if len(element) > 1:
-                        for individual_element in element: element_list.append({individual_element: element[individual_element]})
-                    else: element_list.append(element)
+                        for individual_element in element:
+                            print(individual_element)
+                            element_list.append({individual_element: element[individual_element]})
+                            element_list[-1][individual_element]['path'] = '.'.join(subelement['path'] + path_to_element + [individual_element])
+                    else:
+                        element_list.append(element)
+                        for element_dict in element:
+                            element_list[-1][element_dict]['path'] = '.'.join(subelement['path'] + path_to_element + [element_dict])
     
     return element_list
 
@@ -320,13 +328,14 @@ def format_title(title):
     return title[0].upper() + ' '.join(title[1:].lower().split('_'))
 
 def get_element_from_path(path, report_location = results):
-    path_keywords = path.split('.')
-    element_path_with_brackets = report_location
+    return get_element_from_path_kw(path.split('.'), report_location)
 
-    for idx in range(len(path_keywords)):
-        element_path_with_brackets = element_path_with_brackets[path_keywords[idx]]
+def get_element_from_path_kw(path, report_location = results):
+    element = report_location
+    for idx in range(len(path)):
+        element = element[path[idx]]
     
-    return element_path_with_brackets
+    return element
 
 def filter_results(results, filter_keyword):
     return results
