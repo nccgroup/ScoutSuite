@@ -13,7 +13,7 @@ export const getFindingsEndpoint = (service) => `services/${service}/findings`;
  * Get external attach service link
  * @param {*} service
  */
-export const getExternalAttachServiceEndpoint = (service) =>
+export const getExternalAttackServiceEndpoint = (service) =>
   `services/${service}/external-attack-surface`;
 
 /**
