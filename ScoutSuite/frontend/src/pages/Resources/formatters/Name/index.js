@@ -1,4 +1,4 @@
-import { Link, useParams } from '@reach/router';
+import { Link, useParams } from 'react-router-dom';
 import React from 'react';
 import PropTypes from 'prop-types';
 

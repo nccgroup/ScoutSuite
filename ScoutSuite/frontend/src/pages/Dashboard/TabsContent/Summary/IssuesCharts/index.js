@@ -115,7 +115,14 @@ const IssuesCharts = props => {
               tick={<CustomizedAxisTick />}
             />
             <YAxis />
-            <Tooltip />
+            <Tooltip 
+              labelStyle={{
+                fontWeight: 700,
+              }}
+              itemStyle={{
+                fontWeight: 600,
+              }}
+            />
             <Bar dataKey="Good" stackId="a" fill={fillColors[0]} />
             <Bar dataKey="Low" stackId="a" fill={fillColors[1]} />
             <Bar dataKey="Medium" stackId="a" fill={fillColors[2]} />
