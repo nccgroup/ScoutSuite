@@ -1,7 +1,8 @@
 @import 'src/variables.scss';
 
 .service-card {
-  width: 25rem;
+  width: 27%;
+  min-width: $min-width-service-card;
   margin: 0 2rem 2rem 0;
   background: $white;
   border-radius: $border-radius;

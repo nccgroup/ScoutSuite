@@ -26,9 +26,7 @@ const Summary = (props) => {
       <div className="overview">
         <h1>Overview</h1>
         <hr />
-        <div className="summary">
-          <IssuesCharts services={services} />
-        </div>
+        <IssuesCharts services={services} />
       </div>
 
       <div className="services">

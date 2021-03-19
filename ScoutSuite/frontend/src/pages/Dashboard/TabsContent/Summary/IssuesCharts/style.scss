@@ -3,22 +3,24 @@
 .issues-charts {
   display: flex;
   flex-wrap: wrap;
-  margin-right: -2rem;
+  padding-right: 5rem;
   margin-bottom: -2rem;
 
   .pie-chart {
-    width: 33.5rem;
-    margin-right: 2rem;
+    flex-grow: 1;
+    width: 30%;
+    min-width: calc(0.4 * (3 * #{$min-width-service-card} - 3rem));
   }
 
   .bar-chart {
-    width: 43.5rem;
+    flex-grow: 2;
+    width: 45%;
+    min-width: calc(0.6 * (3 * #{$min-width-service-card} - 3rem));
   }
 
   .pie-chart, .bar-chart {
-    flex-grow: 1;
-    max-width: 52rem;
     background-color: $white;
+    margin-right: 2rem;
     margin-bottom: 2rem;
 
     h3 {
