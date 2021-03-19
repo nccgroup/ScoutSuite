@@ -13,7 +13,7 @@
       border: 1px solid $default-grey-light;
       text-align: center;
 
-      div {
+      &, div {
         overflow: hidden;
         text-overflow: ellipsis;
       }

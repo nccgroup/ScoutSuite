@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PartialValue } from '../../../../components/Partial/index';
+import { PartialValue, PartialSection } from '../../../../components/Partial/index';
 import { convertBoolToEnable, formatDate } from '../../../../utils/Partials';
 
 
@@ -52,6 +52,31 @@ const Informations = () => {
         valuePath="web_hosting_enabled" 
         renderValue={convertBoolToEnable} 
       />
+
+      <PartialSection path="public_access_block_configuration">
+        <h4>Public Access Block Configuration</h4>
+        <PartialValue 
+          label="Ignore Public ACLs" 
+          valuePath="IgnorePublicAcls" 
+          renderValue={convertBoolToEnable} 
+        />
+        <PartialValue 
+          label="Block Public Policies" 
+          valuePath="BlockPublicPolicy" 
+          renderValue={convertBoolToEnable} 
+        />
+        <PartialValue 
+          label="Block Public ACLs" 
+          valuePath="BlockPublicAcls" 
+          renderValue={convertBoolToEnable} 
+        />
+        <PartialValue 
+          label="Restrict Public Buckets" 
+          valuePath="RestrictPublicBuckets" 
+          renderValue={convertBoolToEnable} 
+        />
+      </PartialSection>
+
     </>
   );
 };
