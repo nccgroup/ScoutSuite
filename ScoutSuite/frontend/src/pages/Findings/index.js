@@ -1,4 +1,4 @@
-import { useParams } from '@reach/router';
+import { useParams } from 'react-router-dom';
 import React from 'react';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 
