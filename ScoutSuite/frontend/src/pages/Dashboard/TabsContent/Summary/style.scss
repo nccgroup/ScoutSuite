@@ -2,7 +2,7 @@
 
 .dashboard-summary {
   .overview, .services {
-    margin-right: -2rem;
+    width: 100%;
     margin-bottom: 2rem;
 
     & > hr {
@@ -17,32 +17,11 @@
     margin: 0;
   }
 
-  .overview {
-    .summary {
-      display: flex;
-      align-items: center;
-
-      .service-status {
-        font-size: 2.5rem;
-        width: 25rem;
-        padding: 1rem 1.5rem;
-        margin-left: 0;
-        margin-right: 3rem;
-        border-radius: $border-radius;
-        background-color: $white;
-
-        svg {
-          font-size: 3rem;
-          margin-right: 2rem;
-        }
-      }
-    }
-  }
-
   .services {
     .cards {
       display: flex;
       flex-wrap: wrap;
+      margin-right: -1rem;
     }
   }
 }
