@@ -26,13 +26,24 @@ const Findings = props => {
       <span><Link to={`/services/${service}/findings`}>Findings</Link></span>
 
       <ChevronRightIcon />
-      <span>
-        {pathname.endsWith('/items') ? description : <Link to={`/services/${service}/findings/${finding}/items`}>{description}</Link>}
+      <span className="finding">
+        {pathname.endsWith('/items') 
+          ? description 
+          : (
+            <Link to={`/services/${service}/findings/${finding}/items`}>
+              {description}
+            </Link>
+          )
+        }
       </span>
       <ChevronRightIcon />
 
       {pathname.endsWith('/items') && <span>All Items</span>}
-      {!pathname.endsWith('/items') && <span>{params.item}</span>}
+      {!pathname.endsWith('/items') && (
+        <span className="finding">
+          {params.item}
+        </span>
+      )}
     </>
   );
 };

@@ -2,9 +2,9 @@ import React from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import { useAPI } from '../../../api/useAPI';
-import PropTypes from 'prop-types';
-import { Link, useParams, useLocation } from '@reach/router';
 import { getServicesEndpoint } from '../../../api/paths';
+import PropTypes from 'prop-types';
+import { Link, useParams, useLocation } from 'react-router-dom';
 
 const propTypes = {
   service: PropTypes.string.isRequired,
