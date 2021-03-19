@@ -3,7 +3,6 @@
 .dashboard-summary {
   .overview, .services {
     width: 100%;
-    margin-right: -2rem;
     margin-bottom: 2rem;
 
     & > hr {
@@ -22,6 +21,7 @@
     .cards {
       display: flex;
       flex-wrap: wrap;
+      margin-right: -1rem;
     }
   }
 }
