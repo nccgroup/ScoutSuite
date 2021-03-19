@@ -11,6 +11,8 @@ const propTypes = {
   initialState: PropTypes.object,
   formatters: PropTypes.object,
   sortBy: PropTypes.object,
+  disableSearch: PropTypes.bool,
+  disablePagination: PropTypes.bool,
 };
 
 const Table = (props) => {
@@ -20,6 +22,8 @@ const Table = (props) => {
     initialState = {},
     formatters = {},
     sortBy = {},
+    disableSearch = false,
+    disablePagination = false
   } = props;
 
   const cols = columns.map((item) => {
@@ -39,6 +43,8 @@ const Table = (props) => {
       data={data}
       initialState={initialState}
       hasPagination={!!initialState.pageCount}
+      disableSearch={disableSearch}
+      disablePagination={disablePagination}
     />
   );
 };

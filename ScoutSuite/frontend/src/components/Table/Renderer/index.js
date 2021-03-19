@@ -7,21 +7,28 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import cx from 'classnames';
 
-
 const propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   hasPagination: PropTypes.bool.isRequired,
   initialState: PropTypes.object,
+  disableSearch: PropTypes.bool,
+  disablePagination: PropTypes.bool,
 };
 
 const TableRender = (props) => {
-  const { columns, data, initialState } = props;
+  const {
+    columns,
+    data,
+    initialState,
+    disableSearch,
+    disablePagination,
+  } = props;
 
   const columnsMemo = React.useMemo(() => columns);
   const dataMemo = React.useMemo(() => data);
 
-  const tableInstance = useTable(
+  const useTableParams = [
     {
       columns: columnsMemo,
       data: dataMemo,
@@ -30,13 +37,17 @@ const TableRender = (props) => {
       disableSortRemove: true,
     },
     useSortBy,
-    usePagination,
-  );
+  ];
+
+  if (!disablePagination) useTableParams.push(usePagination);
+
+  const tableInstance = useTable(...useTableParams);
 
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
+    rows,
     page,
     prepareRow,
     canPreviousPage,
@@ -49,9 +60,9 @@ const TableRender = (props) => {
 
   return (
     <>
-      <div className="search-bar">
+      {!disableSearch && <div className="search-bar">
         <input placeholder="Search in this table" />
-      </div>
+      </div>}
 
       <table className="table" {...getTableProps()}>
         <thead>
@@ -89,7 +100,7 @@ const TableRender = (props) => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map((row, rowKey) => {
+          {(page || rows).map((row, rowKey) => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()} key={rowKey}>
@@ -106,11 +117,17 @@ const TableRender = (props) => {
         </tbody>
       </table>
 
-      <div className="pagination">
-        <ChevronLeftIcon onClick={previousPage} className={cx('icon', !canPreviousPage && 'disabled')} />
+      {!disablePagination && <div className="pagination">
+        <ChevronLeftIcon
+          onClick={previousPage}
+          className={cx('icon', !canPreviousPage && 'disabled')}
+        />
         {pageIndex + 1} / {pageCount}
-        <ChevronRightIcon onClick={nextPage} className={cx('icon', !canNextPage && 'disabled')}  />
-      </div>
+        <ChevronRightIcon
+          onClick={nextPage}
+          className={cx('icon', !canNextPage && 'disabled')}
+        />
+      </div>}
     </>
   );
 };

@@ -1,48 +1,74 @@
-
 /**
  * Get a list of all the services
  */
-export const getServices = () => '/services';
+export const getServicesEndpoint = () => '/services';
 
 /**
- * Get findings for a service 
- * @param {*} service 
+ * Get findings for a service
+ * @param {*} service
  */
-export const getFindings = (service) => `services/${service}/findings`;
+export const getFindingsEndpoint = (service) => `services/${service}/findings`;
 
 /**
  * Get external attach service link
- * @param {*} service 
+ * @param {*} service
  */
-export const getExternalAttachService = (service) => `services/${service}/external-attack-surface`;
+export const getExternalAttackServiceEndpoint = (service) =>
+  `services/${service}/external-attack-surface`;
 
 /**
  * Get password policy link
- * @param {*} service 
+ * @param {*} service
  */
-export const getPasswordPolicy = (service) => `services/${service}/password-policy`;
+export const getPasswordPolicyEndpoint = (service) =>
+  `services/${service}/password-policy`;
 
 /**
  * Get password policy link
- * @param {*} service 
+ * @param {*} service
  */
-export const getPermissions = (service) => `services/${service}/permissions`;
+export const getPermissionsEndpoint = (service) => `services/${service}/permissions`;
 
 /**
  * Get items from a findings
- * @param {*} service 
- * @param {*} finding 
+ * @param {*} service
+ * @param {*} finding
  */
-export const getItems = (service, finding) => `${getFindings(service)}/${finding}/items`;
+export const getItemsEndpoint = (service, finding) =>
+  `${getFindingsEndpoint(service)}/${finding}/items`;
 
 /**
  * Get details for an item
- * @param {*} service 
- * @param {*} finding 
- * @param {*} id 
- * @param {*} path 
+ * @param {*} service
+ * @param {*} finding
+ * @param {*} id
+ * @param {*} path
  */
-export const getItem = (service, finding, id, path) => 
-  `${getFindings(service)}/${finding}/items/${id}?path=${path}`;
+export const getItemEndpoint = (service, finding, id, path) =>
+  `${getFindingsEndpoint(service)}/${finding}/items/${id}?path=${path}`;
 
-export const getResource = (service) => `resources/${service}`;
+/**
+ * Get a list of resources
+ * @param {*} service 
+ * @param {*} resource 
+ * @returns 
+ */
+export const getResourcesEndpoint = (service, resource) =>
+  `/services/${service}/resources/${resource}`;
+
+/**
+ * Enpoint for getting a resource
+ * @param {*} service 
+ * @param {*} resource 
+ * @param {*} id 
+ * @returns 
+ */
+export const getResourceEndpoint = (service, resource, id) =>
+  `/services/${service}/resources/${resource}/${id}`;
+
+/**
+ * RAW access to the JSON report
+ * @param {*} raw 
+ * @returns 
+ */
+export const getRAWEndpoint = (raw) => `raw/${raw.replace(/\./g, '/')}`;

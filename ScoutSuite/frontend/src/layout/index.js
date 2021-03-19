@@ -4,7 +4,7 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
 
 import { useAPI } from '../api/useAPI';
-import { getServices } from '../api/paths';
+import { getServicesEndpoint } from '../api/paths';
 import Header from './Header';
 import { MenuBar, SubMenu, MenuGroup, MenuElement } from './Menu';
 
@@ -19,7 +19,7 @@ const propTypes = {
 const Layout = (props) => {
   const [opened, setOpened] = useState(null);
   const [selected, setSelected] = useState(null);
-  const { data: categories, loading } = useAPI(getServices());
+  const { data: categories, loading } = useAPI(getServicesEndpoint());
   const { children } = props;
 
   useEffect(() => {
