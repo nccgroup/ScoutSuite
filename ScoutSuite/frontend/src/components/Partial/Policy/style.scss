@@ -12,12 +12,41 @@
     font-size: 0.75rem;
   }
 
+  .Collapsible {
+    .Collapsible__trigger {
+      display: flex;
+      cursor: pointer;
+
+      &.is-closed {
+        align-items: center;
+      }
+
+      h4 {
+        margin: 0;
+      }
+
+      svg {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
   code {
     display: block;
-    padding: 1rem;
-    margin-top: -1rem;
+    padding-left: 0.5rem;
 
-    .inner-code {
+    .Collapsible {
+      display: flex;
+
+      .Collapsible__trigger {
+        svg {
+          font-size: 1.125rem;
+        }
+      }
+    }
+
+    & > div, 
+    .Collapsible {
       margin-left: 1rem;
     }
   }

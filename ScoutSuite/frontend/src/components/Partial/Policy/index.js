@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Collapsible from 'react-collapsible';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import size from 'lodash/size';
 
 import PartialValue from '../PartialValue';
@@ -21,45 +24,79 @@ const Policy = props => {
       .replace(/ /g, '&nbsp;')
       .replace(/\n/g, '<br/>');
 
-  return (
-    <div className="policy">
-      {name && (
-        <h4 className="policy-name">
-          {name}
-        </h4>
-      )}
-      <code> 
-        {Object.entries(policy).map(([key, value], i) => (
-          <div key={i}>
-            {`"${key}":\xa0`}
-            {key === 'Statement' ? (
-              <>
-                [<br/>
-                {value.map((object, i) => (
+  const policyContent = (
+    <code>
+      {'{'}
+      {Object.entries(policy).map(([key, value], i) => (
+        <div key={i}>
+          {`"${key}":\xa0`}
+          {key === 'Statement' ? (
+            <>
+              [<br/>
+              {value.map((object, i) => (
+                <Collapsible
+                  key={i}
+                  trigger={
+                    <>
+                      <ExpandMoreIcon fontSize="inherit"/>
+                      <span>{'{}'}</span>
+                    </>
+                  }
+                  triggerWhenOpen={
+                    <ExpandLessIcon fontSize="inherit"/>
+                  }
+                  transitionTime={1}
+                  open={true}
+                >
                   <PartialValue 
-                    key={i}
                     value={displayJson(object)}
                     errorPath={`Statement.${i}`}
                     renderValue={value => (
                       renderWithInnerHtml(
-                        value, 
-                        { className: 'inner-code' },
+                        value,
                       )
                     )}
                   />
-                ))}
-                ]
-              </>
-            ) : (
-              <>
-                {displayJson(value)}
-              </>
-            )}
-            {i !== size(policy) - 1 && ','}
-            <br/>
-          </div>    
-        ))}
-      </code>
+                </Collapsible>
+              ))}
+              ]
+            </>
+          ) : (
+            <>
+              {displayJson(value)}
+            </>
+          )}
+          {i !== size(policy) - 1 && ','}
+          <br/>
+        </div>    
+      ))}
+      {'}'}
+    </code>
+  );
+
+  return (
+    <div className="policy">
+      {name ? (
+        <Collapsible
+          trigger={
+            <>
+              <h4>{name}</h4>
+              <ExpandMoreIcon fontSize="inherit"/>
+            </>
+          }
+          triggerWhenOpen={
+            <>
+              <h4>{name}</h4>
+              <ExpandLessIcon fontSize="inherit"/>
+            </>
+          }
+          transitionTime={1}
+        >
+          {policyContent}
+        </Collapsible>
+      ) : (
+        policyContent
+      )}
     </div>
   );
 };

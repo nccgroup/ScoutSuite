@@ -35,7 +35,7 @@ const LazyPartial = (props) => {
   return (
     <div className="selected-item-container">
       <div className="header">
-        <h3>{data.name}</h3>
+        <h3>{data.item.name}</h3>
       </div>
       <div className="content">
         <Suspense fallback={<span>Loading...</span>}>

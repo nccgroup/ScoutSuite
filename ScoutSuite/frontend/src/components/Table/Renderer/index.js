@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useTable, useSortBy, usePagination } from 'react-table';
+import {
+  useTable,
+  useSortBy,
+  usePagination,
+  useAsyncDebounce,
+} from 'react-table';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -14,15 +19,21 @@ const propTypes = {
   initialState: PropTypes.object,
   disableSearch: PropTypes.bool,
   disablePagination: PropTypes.bool,
+  pageCount: PropTypes.number,
+  fetchData: PropTypes.func,
+  manualPagination: PropTypes.bool,
 };
 
 const TableRender = (props) => {
   const {
     columns,
     data,
-    initialState,
     disableSearch,
     disablePagination,
+    pageCount: controlledPageCount,
+    fetchData,
+    manualPagination,
+    initialState
   } = props;
 
   const columnsMemo = React.useMemo(() => columns);
@@ -32,14 +43,26 @@ const TableRender = (props) => {
     {
       columns: columnsMemo,
       data: dataMemo,
-      initialState,
+      initialState: {
+        pageIndex: 0,
+        ...initialState
+      },
       disableMultiSort: true,
       disableSortRemove: true,
+      autoResetPage: false,
     },
     useSortBy,
   ];
 
-  if (!disablePagination) useTableParams.push(usePagination);
+  if (!disablePagination) {
+    useTableParams.push(usePagination);
+  }
+
+  if (manualPagination) {
+    useTableParams[0].manualPagination = true;
+    useTableParams[0].manualSortBy = true;
+    useTableParams[0].pageCount = controlledPageCount;
+  }
 
   const tableInstance = useTable(...useTableParams);
 
@@ -55,14 +78,30 @@ const TableRender = (props) => {
     previousPage,
     nextPage,
     pageCount,
-    state: { pageIndex },
+    state: { pageIndex, sortBy },
   } = tableInstance;
+
+  const onFetchDataDebounced = useAsyncDebounce(fetchData, 100);
+
+  useEffect(() => {
+    if (manualPagination) {
+      const sortField = sortBy && sortBy[0] ? sortBy[0].id : 'name';
+      const sortDir = sortBy && sortBy[0] && sortBy[0].desc ? 'desc' : 'asc';
+      onFetchDataDebounced({
+        pageIndex,
+        sortBy: sortField,
+        direction: sortDir,
+      });
+    }
+  }, [pageIndex, sortBy]);
 
   return (
     <>
-      {!disableSearch && <div className="search-bar">
-        <input placeholder="Search in this table" />
-      </div>}
+      {!disableSearch && (
+        <div className="search-bar">
+          <input placeholder="Search in this table" />
+        </div>
+      )}
 
       <table className="table" {...getTableProps()}>
         <thead>
@@ -117,21 +156,25 @@ const TableRender = (props) => {
         </tbody>
       </table>
 
-      {!disablePagination && <div className="pagination">
-        <ChevronLeftIcon
-          onClick={previousPage}
-          className={cx('icon', !canPreviousPage && 'disabled')}
-        />
-        {pageIndex + 1} / {pageCount}
-        <ChevronRightIcon
-          onClick={nextPage}
-          className={cx('icon', !canNextPage && 'disabled')}
-        />
-      </div>}
+      {!disablePagination && (
+        <div className="pagination">
+          <ChevronLeftIcon
+            onClick={previousPage}
+            className={cx('icon', !canPreviousPage && 'disabled')}
+          />
+          {pageIndex + 1} / {pageCount}
+          <ChevronRightIcon
+            onClick={nextPage}
+            className={cx('icon', !canNextPage && 'disabled')}
+          />
+        </div>
+      )}
     </>
   );
 };
 
 TableRender.propTypes = propTypes;
 
-export default TableRender;
+const TableRenderMemo = React.memo(TableRender);
+
+export default TableRenderMemo;
