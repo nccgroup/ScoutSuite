@@ -20,7 +20,7 @@ const Findings = props => {
 
   if (loading) return null;
 
-  const { dashboard_name } = findings.find(({ name }) => name === finding);
+  const { description } = findings.find(({ name }) => name === finding);
 
   return (
     <>
@@ -28,7 +28,7 @@ const Findings = props => {
 
       <ChevronRightIcon />
       <span>
-        {pathname.endsWith('/items') ? dashboard_name : <Link to={`/services/${service}/findings/${finding}/items`}>{dashboard_name}</Link>}
+        {pathname.endsWith('/items') ? description : <Link to={`/services/${service}/findings/${finding}/items`}>{description}</Link>}
       </span>
       <ChevronRightIcon />
 
