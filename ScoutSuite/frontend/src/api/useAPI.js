@@ -23,7 +23,6 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
     const asyncAPI = async () => {
       try {
         const response = await API.get(path);
-        console.log('RESPONSE', response);
         setData(response);
       } catch (e) {
         setError(

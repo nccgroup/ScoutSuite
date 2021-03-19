@@ -44,7 +44,6 @@ const TableRender = (props) => {
       columns: columnsMemo,
       data: dataMemo,
       initialState: {
-        pageCount: 10,
         pageIndex: 0,
         ...initialState
       },
