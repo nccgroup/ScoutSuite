@@ -76,14 +76,10 @@ def get_items(service, finding):
         
         item_list.append(item_object)
 
-    sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
-    direction = request.args.get('direction') if request.args.get('direction') else 'asc'
-    items_per_page = int(request.args.get('items_per_page')) if request.args.get('items_per_page') else 10
-    current_page = int(request.args.get('current_page')) if request.args.get('current_page') else 1
+    filtered_results = filter_results(item_list)
+    sorted_results = sort_items(filtered_results)
+    paginated_results = paginate_results(sorted_results)
 
-    # filtered_results = filter_results(item_list, filter_keywords)
-    sorted_results = sort_items(item_list, sort_by, direction)
-    paginated_results = paginate_results(sorted_results, items_per_page, current_page)
     return jsonify(paginated_results)
 
 @app.route('/api/services/<service>/findings/<finding>/items/<item_id>', methods=['GET'])
@@ -217,6 +213,7 @@ def get_dashboard():
 
     return jsonify(service_list)
 
+# Paginated
 @app.route('/api/services/<service>/resources/<resource>')
 def get_resource(service, resource):
     metadata = results['metadata']
@@ -234,14 +231,9 @@ def get_resource(service, resource):
                         all_resources = get_all_elements_from_path(resource_path)
                         resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
 
-                        sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
-                        direction = request.args.get('direction') if request.args.get('direction') else 'asc'
-                        items_per_page = int(request.args.get('items_per_page')) if request.args.get('items_per_page') else 10
-                        current_page = int(request.args.get('current_page')) if request.args.get('current_page') else 1
-
-                        # filtered_results = filter_results(item_list, filter_keywords)
-                        sorted_results = sort_resources(resource_list, sort_by, direction)
-                        paginated_results = paginate_results(sorted_results, items_per_page, current_page)
+                        filtered_results = filter_results(resource_list)
+                        sorted_results = sort_resources(filtered_results)
+                        paginated_results = paginate_results(sorted_results)
 
                         return jsonify(paginated_results)
     return {}
@@ -337,28 +329,40 @@ def get_element_from_path_kw(path, report_location=results):
     
     return element
 
-def filter_results(results, filter_keyword):
+def filter_results(results,):
+    filter_kw = request.args.getlist('remove') if request.args.get('remove') else []
+    for element in results:
+        for kw in filter_kw: del element[kw]
+    
     return results
 
-def sort_items(items, sort_by, direction):
+def sort_items(items):
+    sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'item'
+    direction = request.args.get('direction') if request.args.get('direction') else 'asc'
     descending = (direction == 'desc')
-    if sort_by == 'name': sort_by = 'item'
+
     return sorted(items, key=lambda k: k[sort_by]['name'], reverse=descending)
 
-def sort_resources(resources, sort_by, direction):
+def sort_resources(resources):
+    sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
+    direction = request.args.get('direction') if request.args.get('direction') else 'asc'
     descending = (direction == 'desc')
+
     return sorted(resources, key=lambda k: k[sort_by], reverse=descending)
 
-def paginate_results(results, elements_per_page, page_number):
-    paginated_results = [results[i:i+elements_per_page] for i in range(0, len(results), elements_per_page)]
+def paginate_results(results):
+    items_per_page = int(request.args.get('items_per_page')) if request.args.get('items_per_page') else 10
+    current_page = int(request.args.get('current_page')) if request.args.get('current_page') else 1
+
+    paginated_results = [results[i:i + items_per_page] for i in range(0, len(results), items_per_page)]
     page_results = {
         'meta': {
-            'current_page': page_number,
-            'next_page': page_number + 1 if page_number < len(paginated_results) else None,
-            'prev_page': page_number - 1 if page_number > 1 else None,
+            'current_page': current_page,
+            'next_page': current_page + 1 if current_page < len(paginated_results) else None,
+            'prev_page': current_page - 1 if current_page > 1 else None,
             'total_pages': len(paginated_results),
         },
-        'results': paginated_results[page_number - 1] if paginated_results else []
+        'results': paginated_results[current_page - 1] if paginated_results else []
     }
 
     return page_results
