@@ -88,6 +88,12 @@
         "level": "warning"
       }
     ],
+    "postgresql-database-servers-allow-any-ip.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "postgresql-database-servers-log-connections-not-on.json": [
       {
         "enabled": true,
@@ -118,14 +124,13 @@
         "level": "warning"
       }
     ],
-
-    "postgresql-database-servers-allow-any-ip.json": [
+    "postgresql-database-servers-ssl-enforcement-disabled.json": [
       {
         "enabled": true,
         "level": "warning"
       }
     ],
-    "postgresql-database-servers-ssl-enforcement-disabled.json": [
+    "appservice-authentication-disabled.json": [
       {
         "enabled": true,
         "level": "warning"
@@ -161,13 +166,37 @@
         "level": "warning"
       }
     ],
+    "appservice-client-certificates-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "sqldatabase-servers-vulnerability-email-notif-to-admins-owners-not-set.json": [
       {
         "enabled": true,
         "level": "warning"
       }
     ],
+    "appservice-http-2-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "mysql-database-servers-ssl-enforcement-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "appservice-http-allowed.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "appservice-managed-service-identities-disabled.json": [
       {
         "enabled": true,
         "level": "warning"
@@ -238,49 +267,79 @@
         "level": "warning"
       }
     ],
-    "logging-monitoring-log-alert-not-exist-security-solution.json": [
-      {
-        "args": [
-          "Create/Update Security Solution",
-          "5.2.6",
-          "create_update_security_solution_exist"
-        ],
-        "enabled": true,
-        "level": "warning"
-      },
-      {
-        "args": [
-          "Delete Security Solution",
-          "5.2.7",
-          "delete_security_solution_exist"
-        ],
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "logging-monitoring-logging-key-vault-disabled.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "logging-monitoring-diagnostic-setting-does-not-exist.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "logging-monitoring-profile-does-not-capture-all-activities.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "appservice-ftp-deployment-enabled.json": [
+    "appservice-outdated-version-dotnet.json": [
       {
         "enabled": true,
         "level": "warning"
       }
     ]
-  }
+  },
+  "logging-monitoring-log-alert-not-exist-security-solution.json": [
+    {
+      "args": [
+        "Create/Update Security Solution",
+        "5.2.6",
+        "create_update_security_solution_exist"
+      ],
+      "enabled": true,
+      "level": "warning"
+    },
+    {
+      "args": [
+        "Delete Security Solution",
+        "5.2.7",
+        "delete_security_solution_exist"
+      ],
+      "enabled": true,
+      "level": "warning"
+    }
+  ],
+  "appservice-outdated-version-java.json": [
+    {
+      "enabled": true,
+      "level": "warning"
+    }
+  ],
+  "logging-monitoring-logging-key-vault-disabled.json": [
+    {
+      "enabled": true,
+      "level": "warning"
+    }
+  ],
+  "appservice-outdated-version-php.json": [
+    {
+      "enabled": true,
+      "level": "warning"
+    }
+  ],
+  "logging-monitoring-diagnostic-setting-does-not-exist.json": [
+    {
+      "enabled": true,
+      "level": "warning"
+    }
+  ],
+  "appservice-outdated-version-python.json": [
+    {
+      "enabled": true,
+      "level": "warning"
+    }
+  ],
+  "logging-monitoring-profile-does-not-capture-all-activities.json": [
+    {
+      "enabled": true,
+      "level": "warning"
+    }
+  ],
+  "appservice-tls-v1-supported.json": [
+    {
+      "enabled": true,
+      "level": "warning"
+    }
+  ],
+  "appservice-ftp-deployment-enabled.json": [
+    {
+      "enabled": true,
+      "level": "warning"
+    }
+  ]
 }
