@@ -1,11 +1,5 @@
 .policy {
-  &:not(:last-of-type) {
-    margin-bottom: 1rem;
-  }
-
-  .policy-name {
-    font-size: 0.875rem;
-  }
+  margin-bottom: 1rem;
 
   .inner-code,
   code {
@@ -21,7 +15,8 @@
         align-items: center;
       }
 
-      h4 {
+      .policy-title {
+        font-size: 1rem;
         margin: 0;
       }
 

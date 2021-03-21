@@ -6,7 +6,7 @@ import { useAPI } from '../../api/useAPI';
 import './style.scss';
 
 const propTypes = {
-  data: PropTypes.objectOf({
+  data: PropTypes.shape({
     item: PropTypes.object,
     path_to_issues: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
@@ -30,7 +30,7 @@ const LazyPartial = (props) => {
     }
 
     return md;
-  }); 
+  });
 
   return (
     <div className="selected-item-container">

@@ -20,6 +20,8 @@ const SelectedItemContainer = () => {
 
   const partialPath = finding.display_path || finding.path;
 
+  console.log(finding, data);
+
   const partialData = {
     level: finding.level,
     ...data,

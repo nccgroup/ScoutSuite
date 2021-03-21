@@ -5,6 +5,7 @@ import isArray from 'lodash/isArray';
 
 import { PartialContext, PartialPathContext } from '../../../../components/Partial/context';
 import { makeTitle } from '../../../../utils/Partials';
+import WarningMessage from '../../../../components/WarningMessage';
 
 import './style.scss';
 
@@ -42,9 +43,9 @@ const Usage = () => {
             Object.entries(resource_type).map(([type, resources], i) => (
               <div key={i}>
                 <li>
-                  <h4 className="resource-title">
+                  <h5 className="resource-title">
                     {`${makeTitle(service)} ${makeTitle(type)}`}
-                  </h4>
+                  </h5>
                 </li>
                 <ul>
                   {renderResourcesList(resources)}
@@ -55,9 +56,10 @@ const Usage = () => {
         </ul>
       )}
       {!value && (
-        <span className="not-in-use">
-          <CheckCircleOutlineOutlinedIcon fontSize="inherit" /> This security group is not in use.
-        </span>
+        <WarningMessage
+          message="This security group is not in use."
+          icon={<CheckCircleOutlineOutlinedIcon fontSize="inherit" />}
+        />
       )}
     </div>
   );

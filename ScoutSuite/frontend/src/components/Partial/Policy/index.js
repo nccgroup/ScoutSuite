@@ -24,6 +24,12 @@ const Policy = props => {
       .replace(/ /g, '&nbsp;')
       .replace(/\n/g, '<br/>');
 
+  const policyTitle = (
+    <h4 className="policy-title">
+      {name}
+    </h4>
+  );
+
   const policyContent = (
     <code>
       {'{'}
@@ -80,13 +86,13 @@ const Policy = props => {
         <Collapsible
           trigger={
             <>
-              <h4>{name}</h4>
+              {policyTitle}
               <ExpandMoreIcon fontSize="inherit"/>
             </>
           }
           triggerWhenOpen={
             <>
-              <h4>{name}</h4>
+              {policyTitle}
               <ExpandLessIcon fontSize="inherit"/>
             </>
           }

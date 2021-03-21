@@ -18,7 +18,7 @@ const Ec2Volumes = props => {
 
   return (
     <div className="ec2-volume">
-      <h3>Attributes</h3>
+      <h4>Attributes</h4>
       <GenericObject
         data={data.item}
       />

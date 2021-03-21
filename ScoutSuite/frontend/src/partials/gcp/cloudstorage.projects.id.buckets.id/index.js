@@ -84,7 +84,7 @@ const Buckets = (props) => {
 
   return (
     <Partial data={data}>
-      <div className="partial-informations">
+      <div>
         <PartialValue label="Project ID" valuePath="project_id" />
 
         <PartialValue

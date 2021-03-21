@@ -7,20 +7,30 @@ import './style.scss';
 const propTypes = {
   title: PropTypes.string.isRequired,
   isSelected: PropTypes.bool,
-  onClick: PropTypes.func
+  disabled: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 
 const TabPane = props => {
   const {
     title,
     isSelected,
+    disabled,
     onClick,
   } = props;
 
-  const className = cx('tab-pane', {'is-selected': isSelected});
+  const className = cx(
+    'tab-pane', 
+    {
+      'is-selected': isSelected,
+      'disabled': disabled
+    }
+  );
+
+  const tabOnClick = disabled ? null : onClick;
 
   return (
-    <span className={className} onClick={onClick}>
+    <span className={className} onClick={tabOnClick}>
       {title}
     </span>
   );

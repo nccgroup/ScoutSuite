@@ -1,0 +1,35 @@
+@import 'src/variables';
+
+.rules-table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+
+  thead {
+    border-bottom: 1px solid $default-grey-light;
+
+    tr {
+      background-color: $default-grey-subtle;
+    }
+
+    th {
+      width: 20%;
+      padding: 0.5rem;
+    }
+  }
+
+  tbody {
+    tr:nth-child(2n) {
+      background-color: $background-color;
+    }
+
+    td {
+      padding: 0.375rem;
+    }
+  }
+
+  th, td {
+    font-size: 0.875rem;
+    text-align: center;
+  }
+}

@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import cx from 'classnames';
 
 import ServiceStatus from '../ServiceStatus';
@@ -66,7 +65,7 @@ const ServiceCard = props => {
         >
           {hasFindings ? (
             <>
-              View report <FontAwesomeIcon icon={faChevronRight}/>
+              View report <ChevronRightIcon />
             </>
           ) : 'No findings'}
         </Link>
