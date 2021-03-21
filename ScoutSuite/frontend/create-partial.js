@@ -78,7 +78,7 @@ const ${CompName} = props => {
 
   return (
     <Partial data={data}>
-      <div className="partial-informations">
+      <div className="left-pane">
 ${informations}
       </div>
 

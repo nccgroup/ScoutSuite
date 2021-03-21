@@ -49,7 +49,7 @@ const Firewalls = (props) => {
 
   return (
     <Partial data={data}>
-      <div className="partial-informations">
+      <div className="left-pane">
         <PartialValue label="Firewall name" valuePath="name" />
 
         <PartialValue label="Project ID" valuePath="project_id" />
