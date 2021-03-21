@@ -65,3 +65,10 @@ export const getResourcesEndpoint = (service, resource) =>
  */
 export const getResourceEndpoint = (service, resource, id) =>
   `/services/${service}/resources/${resource}/${id}`;
+
+/**
+ * RAW access to the JSON report
+ * @param {*} raw 
+ * @returns 
+ */
+export const getRAWEndpoint = (raw) => `raw/${raw.replace(/\./g, '/')}`;

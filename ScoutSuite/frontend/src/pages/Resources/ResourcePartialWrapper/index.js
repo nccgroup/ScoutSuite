@@ -1,10 +1,10 @@
-import React, { Suspense } from 'react';
-import { useParams } from '@reach/router';
-
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import merge from 'lodash/merge';
+import get from 'lodash/get';
 import { useAPI } from '../../../api/useAPI';
-import { getItemEndpoint } from '../../../api/paths';
-
-import './style.scss';
+import { getRAWEndpoint } from '../../../api/paths';
+import LazyPartial from '../../../components/LazyPartial/index';
 
 const propTypes = {};
 
@@ -12,40 +12,26 @@ const ResourcePartialWrapper = () => {
 
   const path = (new URL(document.location)).searchParams.get('path');
   const params = useParams();
-  const { data: provider } = useAPI('provider');
-  const { data: finding, loading: loading1 } = useAPI(`raw/services/${params.service}/findings/${params.finding}`);
-  const { data, loading: loading2 } = useAPI(getItemEndpoint(params.service, params.finding, params.item, path));
 
-  if (loading1 || loading2 || !data) return null;
+  const { data: metadata, loading: l1 } = useAPI(getRAWEndpoint('metadata'));
+  const { data, loading: l2 } = useAPI(getRAWEndpoint(path));
 
-  const partialPath = finding.display_path || finding.path;
+  if (l1 || l2 || !data) return null;
 
-  const DynamicPartial = React.lazy(async () => {
-    let md = null;
-    try {
-      md = await import('../../../partials/' + provider.provider_code + '/' + partialPath + '/index.js'); // Can't use a string literal because of Babel bug
-    } catch(e) {
-      md = await import('../../../partials/Default');
-    }
-    return md;
-  }); 
+ 
+  // TEMPORATY WHILE WAITING FOR THE BACKEND API
+  const services = merge(...Object.values(metadata));
+  const resourceMeta = get(services, [params.service, 'resources', params.resource]);
+
+  const partialPath = resourceMeta.path.replace('services.', '') + '.id';
 
   const partialData = {
-    level: finding.level,
-    ...data,
+    item: data,
+    path_to_issues: []
   };
-
+ 
   return (
-    <div className="selected-item-container">
-      <div className="header">
-        <h3>{data.item.name}</h3>
-      </div>
-      <div className="content">
-        <Suspense fallback={<span>Loading...</span>}>
-          <DynamicPartial data={partialData} />
-        </Suspense>
-      </div>
-    </div>
+    <LazyPartial data={partialData} partial={partialPath} />
   );
 };
 
