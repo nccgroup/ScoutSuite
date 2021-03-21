@@ -10,6 +10,8 @@ from .configuration_log_connections import ConfigurationLogConnections
 from .configuration_log_disconnections import ConfigurationLogDisconnections
 from .configuration_log_duration import ConfigurationLogDuration
 from .configuration_log_retention_days import ConfigurationLogRetentionDays
+from .posgresql_firewall_rules import PostgreSQLFirewallRules
+
 
 
 
@@ -20,8 +22,9 @@ class PostgreSQLServers(AzureCompositeResources):
         (ConfigurationLogDisconnections, 'log_disconnections'),
         (ConfigurationLogDuration, 'log_duration'),
         (ConfigurationConnectionThrottling, 'connection_throttling'),
+        (ConfigurationLogRetentionDays, 'log_retention_days'),
+        (PostgreSQLFirewallRules, 'postgresql_firewall_rules'),
         (ConfigurationLogRetentionDays, 'log_retention_days')
-
     ]
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
@@ -46,6 +49,8 @@ class PostgreSQLServers(AzureCompositeResources):
         server['id'] = get_non_provider_id(raw_server.id)
         server['name'] = raw_server.name
         server['resource_group_name'] = get_resource_group_name(raw_server.id)
+        server['ssl_enforcement'] = raw_server.ssl_enforcement
+
         if raw_server.tags is not None:
             server['tags'] = ["{}:{}".format(key, value) for key, value in raw_server.tags.items()]
         else:

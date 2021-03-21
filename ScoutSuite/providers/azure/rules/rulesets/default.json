@@ -37,6 +37,12 @@
                 "level": "danger"
             }
         ],
+        "appservice-ftp-deployment-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "appservice-managed-service-identities-disabled.json": [
             {
                 "enabled": true,
@@ -80,6 +86,97 @@
             }
         ],
         "keyvault-not-recoverable.json": [
+                      {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-log-alert-not-exist-create-policy-assignment.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-log-alert-not-exist-nsg.json": [
+            {
+                "args": [
+                    "Create/Update Network Security Group",
+                    "5.2.2",
+                    "create_update_NSG_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "Delete Network Security Group",
+                    "5.2.3",
+                    "delete_NSG_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "Create/Update Network Security Group Rule",
+                    "5.2.4",
+                    "create_update_NSG_rule_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "Delete Network Security Group Rule",
+                    "5.2.5",
+                    "delete_NSG_rule_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+             {
+                "args": [
+                    "Create/Update/Delete SQL Server Firewall Rule",
+                    "5.2.8",
+                    "create_delete_firewall_rule_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-log-alert-not-exist-security-solution.json": [
+            {
+                "args": [
+                    "Create/Update Security Solution",
+                    "5.2.6",
+                    "create_update_security_solution_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "Delete Security Solution",
+                    "5.2.7",
+                    "delete_security_solution_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-logging-key-vault-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-diagnostic-setting-does-not-exist.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-profile-does-not-capture-all-activities.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -189,6 +286,18 @@
                 "level": "warning"
             }
         ],
+        "securitycenter-settings-MCAS-integration-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "securitycenter-settings-WDATP-integration-disabled.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "sqldatabase-databases-auditing-low-retention.json": [
             {
                 "args": [
@@ -285,8 +394,33 @@
                 "level": "warning"
             }
         ],
-        "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+        "sqldatabase-servers-vulnerability-assessments-disabled.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-recurring-scans-disabled.json": [
             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-send-scan-reports-to-not-configured.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
+
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-email-notif-to-admins-owners-not-set.json": [
+                 {
                 "enabled": true,
                 "level": "warning"
             }
@@ -403,6 +537,19 @@
             }
         ],
         "postgresql-database-servers-log-retention-days-less-than-4.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-allow-any-ip.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+
+        "postgresql-database-servers-ssl-enforcement-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
