@@ -16,4 +16,8 @@ class Settings(AzureResources):
 
     def _parse_settings(self, settings):
         settings_dict = {}
+        settings_dict['id'] = settings.id
+        settings_dict['name'] = settings.name
+        settings_dict['kind'] = settings.kind
+        settings_dict['enabled'] = settings.enabled
         return settings_dict['id'], settings_dict
