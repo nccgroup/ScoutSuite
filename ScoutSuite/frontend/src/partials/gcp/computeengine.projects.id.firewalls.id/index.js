@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Partial, PartialSection, PartialValue } from '../../../components/Partial';
+import {
+  Partial,
+  PartialSection,
+  PartialValue,
+} from '../../../components/Partial';
 import { partialDataShape, formatDate } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import { convertBoolToString } from '../../../utils/Partials/index';
@@ -11,28 +15,34 @@ const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const renderTraffic = (items) => {
+const renderTraffic = items => {
   const traffic = Object.entries(items);
 
-  return <ul>
-    {traffic.map(([key, value]) => <li key={key}>
-      <PartialValue errorPath={key} value={key} />
-      <ul>
-        {value.map((port, index) => (
-          <li key={index}>
-            <PartialValue
-              errorPath={`${key}.${index}.permissive_ports`}
-              value={port}
-            />
-          </li>
-        ))}
-        {value.length === 0 && <li>None</li>}
-      </ul>
-    </li>)}
-  </ul>;
+  return (
+    <ul>
+      {traffic.map(([key, value]) => (
+        <li key={key}>
+          <PartialValue
+            errorPath={key}
+            value={key} />
+          <ul>
+            {value.map((port, index) => (
+              <li key={index}>
+                <PartialValue
+                  errorPath={`${key}.${index}.permissive_ports`}
+                  value={port}
+                />
+              </li>
+            ))}
+            {value.length === 0 && <li>None</li>}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  );
 };
 
-const renderList = (items) => (
+const renderList = items => (
   <ul>
     {items.map((item, key) => (
       <li key={key}>{item}</li>
@@ -40,7 +50,7 @@ const renderList = (items) => (
   </ul>
 );
 
-const Firewalls = (props) => {
+const Firewalls = props => {
   const { data } = props;
 
   if (!data) return null;
@@ -50,13 +60,21 @@ const Firewalls = (props) => {
   return (
     <Partial data={data}>
       <div className="left-pane">
-        <PartialValue label="Firewall name" valuePath="name" />
+        <PartialValue
+          label="Firewall name"
+          valuePath="name" />
 
-        <PartialValue label="Project ID" valuePath="project_id" />
+        <PartialValue
+          label="Project ID"
+          valuePath="project_id" />
 
-        <PartialValue label="Description" valuePath="description" />
+        <PartialValue
+          label="Description"
+          valuePath="description" />
 
-        <PartialValue label="Network" valuePath="network" />
+        <PartialValue
+          label="Network"
+          valuePath="network" />
 
         <PartialValue
           label="Creation Date"
@@ -64,7 +82,9 @@ const Firewalls = (props) => {
           renderValue={formatDate}
         />
 
-        <PartialValue label="Priority" valuePath="priority" />
+        <PartialValue
+          label="Priority"
+          valuePath="priority" />
 
         <PartialValue
           label="Disabled"
@@ -76,8 +96,12 @@ const Firewalls = (props) => {
       <TabsMenu>
         <TabPane title="Configuration">
           <div>
-            <PartialValue label="Direction" valuePath="direction" />
-            <PartialValue label="Action" valuePath="action" />
+            <PartialValue
+              label="Direction"
+              valuePath="direction" />
+            <PartialValue
+              label="Action"
+              valuePath="action" />
 
             {item.source_ranges && (
               <>
@@ -101,14 +125,18 @@ const Firewalls = (props) => {
 
             {item.source_tags && (
               <>
-                <PartialValue errorPath="source_tags" value="Source Tags:" />
+                <PartialValue
+                  errorPath="source_tags"
+                  value="Source Tags:" />
                 {renderList(item.source_tags)}
               </>
             )}
 
             {item.target_tags && (
               <>
-                <PartialValue errorPath="target_tags" value="Target Tags:" />
+                <PartialValue
+                  errorPath="target_tags"
+                  value="Target Tags:" />
                 {renderList(item.target_tags)}
               </>
             )}
