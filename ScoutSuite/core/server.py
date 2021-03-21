@@ -215,27 +215,21 @@ def get_dashboard():
 
 # Paginated
 @app.route('/api/services/<service>/resources/<resource>')
-def get_resource(service, resource):
-    metadata = results['metadata']
-    resource_list = []
+def get_resources(service, resource):
+    all_resources = get_all_resources(service, resource)
+    resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
+    filtered_results = filter_results(resource_list)
+    sorted_results = sort_resources(filtered_results)
+    paginated_results = paginate_results(sorted_results)
 
-    for category in metadata:
-        services = metadata[category]
-        for service_metadata in services:
-            if service_metadata == service:
-                resources = services[service]['resources']
-                for resource_metadata in resources:
-                    if resource_metadata == resource:
-                        resource_path = resources[resource]['path']
+    return jsonify(paginated_results)
 
-                        all_resources = get_all_elements_from_path(resource_path)
-                        resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
-
-                        filtered_results = filter_results(resource_list)
-                        sorted_results = sort_resources(filtered_results)
-                        paginated_results = paginate_results(sorted_results)
-
-                        return jsonify(paginated_results)
+@app.route('/api/services/<service>/resources/<resource>/<resource_id>')
+def get_resource(service, resource, resource_id):
+    all_resources = get_all_resources(service,resource)
+    for retrieved_resource in all_resources:
+        if list(retrieved_resource.values())[0]['id'] == resource_id:
+            return jsonify(list(retrieved_resource.values())[0])
     return {}
 
 @app.route('/api/services/<service>/<policy_type>')
@@ -320,7 +314,6 @@ def get_all_elements_from_path(path, report_location = results):
                 if element: 
                     if len(element) > 1:
                         for individual_element in element:
-                            print(individual_element)
                             element_list.append({individual_element: element[individual_element]})
                             element_list[-1][individual_element]['path'] = '.'.join(subelement['path'] + path_to_element + [individual_element])
                     else:
@@ -329,6 +322,20 @@ def get_all_elements_from_path(path, report_location = results):
                             element_list[-1][element_dict]['path'] = '.'.join(subelement['path'] + path_to_element + [element_dict])
     
     return element_list
+
+def get_all_resources(service, resource):
+    metadata = results['metadata']
+
+    for category in metadata:
+        services = metadata[category]
+        for service_metadata in services:
+            if service_metadata == service:
+                resources = services[service]['resources']
+                for resource_metadata in resources:
+                    if resource_metadata == resource:
+                        resource_path = resources[resource]['path']
+                        return get_all_elements_from_path(resource_path)
+    return []
 
 def format_title(title):
     return title[0].upper() + ' '.join(title[1:].lower().split('_'))
