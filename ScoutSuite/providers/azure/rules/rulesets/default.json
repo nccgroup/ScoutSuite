@@ -37,6 +37,12 @@
                 "level": "danger"
             }
         ],
+        "appservice-ftp-deployment-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "appservice-managed-service-identities-disabled.json": [
             {
                 "enabled": true,
