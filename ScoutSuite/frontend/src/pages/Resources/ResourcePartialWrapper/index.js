@@ -18,7 +18,6 @@ const ResourcePartialWrapper = () => {
 
   if (l1 || l2 || !data) return null;
 
- 
   // TEMPORATY WHILE WAITING FOR THE BACKEND API
   const services = merge(...Object.values(metadata));
   const resourceMeta = get(services, [params.service, 'resources', params.resource]);

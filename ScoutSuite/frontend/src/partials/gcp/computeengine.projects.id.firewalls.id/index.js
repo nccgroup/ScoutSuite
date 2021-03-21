@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Partial, PartialValue } from '../../../components/Partial';
+import { Partial, PartialSection, PartialValue } from '../../../components/Partial';
 import { partialDataShape, formatDate } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import { convertBoolToString } from '../../../utils/Partials/index';
@@ -11,22 +11,26 @@ const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const renderTraffic = (item, i) => (
-  <li key={i}>
-    <PartialValue errorPath="" value={item.key} />
-    <ul>
-      {item.item.map((port, index) => (
-        <li key={index}>
-          <PartialValue
-            errorPath={`${item.key}.${index}.permissive_ports`}
-            value={port}
-          />
-        </li>
-      ))}
-      {item.item.length === 0 && <li>None</li>}
-    </ul>
-  </li>
-);
+const renderTraffic = (items) => {
+  const traffic = Object.entries(items);
+
+  return <ul>
+    {traffic.map(([key, value]) => <li key={key}>
+      <PartialValue errorPath={key} value={key} />
+      <ul>
+        {value.map((port, index) => (
+          <li key={index}>
+            <PartialValue
+              errorPath={`${key}.${index}.permissive_ports`}
+              value={port}
+            />
+          </li>
+        ))}
+        {value.length === 0 && <li>None</li>}
+      </ul>
+    </li>)}
+  </ul>;
+};
 
 const renderList = (items) => (
   <ul>
@@ -113,13 +117,17 @@ const Firewalls = (props) => {
 
         {item.action === 'allowed' && (
           <TabPane title="Allowed Traffic">
-            {renderTraffic(item.allowed_traffic)}
+            <PartialSection path="allowed_traffic">
+              {renderTraffic(item.allowed_traffic)}
+            </PartialSection>
           </TabPane>
         )}
 
         {item.action !== 'allowed' && (
           <TabPane title="Denied Traffic">
-            {renderTraffic(item.denied_traffic)}
+            <PartialSection path="denied_traffic">
+              {renderTraffic(item.denied_traffic)}
+            </PartialSection>
           </TabPane>
         )}
       </TabsMenu>
