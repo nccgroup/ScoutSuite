@@ -7,6 +7,12 @@
         "level": "danger"
       }
     ],
+    "keyvault-not-recoverable.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "storageaccount-encrypted-not-customer-managed.json": [
       {
         "enabled": true,
@@ -112,6 +118,7 @@
         "level": "warning"
       }
     ],
+
     "postgresql-database-servers-allow-any-ip.json": [
       {
         "enabled": true,
