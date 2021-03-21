@@ -5,6 +5,8 @@ import { useAPI } from '../../../api/useAPI';
 import { getServicesEndpoint } from '../../../api/paths';
 import PropTypes from 'prop-types';
 import { Link, useParams, useLocation } from 'react-router-dom';
+// import merge from 'lodash/merge';
+import flatten from 'lodash/flatten';
 
 const propTypes = {
   service: PropTypes.string.isRequired,
@@ -19,15 +21,9 @@ const Resources = (props) => {
 
   if (loading) return null;
 
-  let resourceName = '';
-
-  for (let category of categories) {
-    for (let service of category.services) {
-      for (let res of service.resources) {
-        if (res.id === params.resource) resourceName = res.name;
-      }
-    }
-  }
+  const services = flatten(categories.map(c => c.services));
+  const resources = flatten(services.map(s => s.resources));
+  const resource = resources.find((res) => res.id === params.resource);
 
   return (
     <>
@@ -37,10 +33,10 @@ const Resources = (props) => {
 
       <span>
         {pathname.endsWith(params.resource) ? (
-          resourceName
+          resource.name
         ) : (
           <Link to={`/services/${service}/resources/${params.resource}`}>
-            {resourceName}
+            {resource.name}
           </Link>
         )}
       </span>
