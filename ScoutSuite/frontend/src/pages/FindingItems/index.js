@@ -38,7 +38,6 @@ const FlaggedItems = () => {
   }
 
   const columns = [
-    { name: 'ID', key: 'id' },
     { name: 'Name', key: 'name' },
   ];
 
