@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import isEmtpy from 'lodash/isEmpty';
 
-import { partialDataShape } from '../../../utils/Partials';
+import { 
+  partialDataShape,
+  renderResourcesAsList,
+} from '../../../utils/Partials';
 import { 
   Partial, 
   PartialValue,
@@ -56,14 +59,7 @@ const RegionDomain = props => {
         </TabPane>
         <TabPane title="Associated Subnets">
           {!isEmtpy(subnets) ? (
-            <ul>
-              {subnets.map((net, i) => (
-                <li key={i}>
-                  {/* TODO: Link to resource */}
-                  {net.SubnetId}
-                </li>
-              ))}
-            </ul>
+            renderResourcesAsList(subnets, 'SubnetId')
           ) : (
             <PartialValue 
               valuePath="IsDefault"

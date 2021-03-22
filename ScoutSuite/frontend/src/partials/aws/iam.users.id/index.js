@@ -45,7 +45,7 @@ const IamUsers = props => {
         </TabPane>
         {!isEmpty(groups) && (
           <TabPane title="Groups">
-            {renderResourcesAsList(groups)}
+            {renderResourcesAsList(Object.values(groups))}
           </TabPane>
         )}
         {!isEmpty(inline_policies) && (
@@ -63,7 +63,7 @@ const IamUsers = props => {
         )}
         {!isEmpty(policies) && (
           <TabPane title="Managed Policies">
-            {renderResourcesAsList(policies)}
+            {renderResourcesAsList(Object.values(policies))}
           </TabPane>
         )}
         {!isEmpty(tags) && (

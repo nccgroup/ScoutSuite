@@ -9,14 +9,11 @@
   .Collapsible {
     .Collapsible__trigger {
       display: flex;
+      align-items: center;
       cursor: pointer;
 
-      &.is-closed {
-        align-items: center;
-      }
-
       .policy-title {
-        font-size: 1rem;
+        font-size: 0.875rem;
         margin: 0;
       }
 
@@ -34,6 +31,10 @@
       display: flex;
 
       .Collapsible__trigger {
+        &:not(.is-closed) {
+          align-items: flex-start;
+        }
+
         svg {
           font-size: 1.125rem;
         }

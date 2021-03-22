@@ -5,9 +5,10 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
 import { 
+  partialDataShape,
   convertBoolToEnable,
-  partialDataShape, 
-  valueOrNone 
+  valueOrNone,
+  renderResourcesAsList,
 } from '../../../utils/Partials';
 import { 
   Partial, 
@@ -68,13 +69,7 @@ const RegionDomain = props => {
       <TabsMenu>
         {!isEmpty(instances) &&(
           <TabPane title="Instances">
-            <ul>
-              {instances.map((instance, i) => (
-                <li key={i}>
-                  {instance.name}
-                </li>
-              ))}
-            </ul>
+            {renderResourcesAsList(instances, 'name')}
           </TabPane>
         )}
         <TabPane title="Flow Logs">

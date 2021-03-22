@@ -3,8 +3,14 @@ import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlin
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 
-import { PartialContext, PartialPathContext } from '../../../../components/Partial/context';
-import { makeTitle } from '../../../../utils/Partials';
+import { 
+  PartialContext, 
+  PartialPathContext 
+} from '../../../../components/Partial/context';
+import { 
+  makeTitle,
+  renderResourcesAsList,
+} from '../../../../utils/Partials';
 import WarningMessage from '../../../../components/WarningMessage';
 
 import './style.scss';
@@ -15,25 +21,19 @@ const Usage = () => {
   const basePath = useContext(PartialPathContext);
   const value = get(ctx.item, basePath);
 
-  // TODO: `resource.name` should be rendered as a link.
-  const renderResourcesList = resources => {
-    if (isArray(resources)) {
-      return resources.map(resource => (
-        <li key={resource.id}>
-          {resource.name} 
-        </li>
-      ));
-    } else {
-      return Object.entries(resources).map(([name, list], i) => (
-        <li key={i}>
-          {makeTitle(name)}
-          <ul>
-            {renderResourcesList(list)}
+  const renderUsageList = resources => 
+    isArray(resources) 
+      ? renderResourcesAsList(resources, 'name')
+      : (
+        Object.entries(resources).map(([name, list], i) => (
+          <ul key={i}>
+            <li>
+              {makeTitle(name)}
+              {renderUsageList(list)}
+            </li>
           </ul>
-        </li>
-      ));
-    }
-  };
+        ))
+      );
 
   return (
     <div className="security-group-usage">
@@ -47,9 +47,7 @@ const Usage = () => {
                     {`${makeTitle(service)} ${makeTitle(type)}`}
                   </h5>
                 </li>
-                <ul>
-                  {renderResourcesList(resources)}
-                </ul> 
+                {renderUsageList(resources)}
               </div>
             ))
           ))}
