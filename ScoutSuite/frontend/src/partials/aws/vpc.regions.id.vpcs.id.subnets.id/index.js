@@ -27,6 +27,7 @@ const RegionDomain = props => {
 
   if (!data) return null;
 
+  const id = get(data, ['item', 'id']);
   const instances = get(data, ['item', 'instances']);
   const flowLogs = get(data, ['item', 'flow_logs']);
 
@@ -37,6 +38,9 @@ const RegionDomain = props => {
         <PartialValue
           label="Name"
           valuePath="name"
+          renderValue={
+            name => name === id ? 'None' : name
+          }
         />
         <PartialValue
           label="ID"
