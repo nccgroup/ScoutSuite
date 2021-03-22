@@ -79,6 +79,10 @@
         "instances": {
           "cols": 2,
           "path": "services.cloudsql.projects.id.instances"
+        },
+        "postgresql_instances": {
+          "cols": 2,
+          "path": "services.cloudsql.projects.id.postgresql_instances"
         }
       }
     },

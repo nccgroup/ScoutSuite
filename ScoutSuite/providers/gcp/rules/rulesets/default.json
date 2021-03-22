@@ -37,6 +37,48 @@
                 "level": "warning"
             }
         ],
+        "cloudsql-postgresql-instances-log-checkpoints-off.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-connections-off.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-disconnections-off.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-lock-waits-off.json": [
+           {
+                "enabled": true,
+                "level": "warning"
+           }
+        ],
+        "cloudsql-postgresql-instances-log-min-messages-not-set.json": [
+           {
+                "enabled": true,
+                "level": "warning"
+           }
+        ],
+        "cloudsql-postgresql-instances-log-temp-files-not-set-0.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-min-duration-not-set-1.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudstorage-bucket-member.json": [
             {
                 "args": [

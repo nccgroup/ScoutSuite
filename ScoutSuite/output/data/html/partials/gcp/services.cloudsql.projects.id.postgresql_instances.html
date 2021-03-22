@@ -1,0 +1,52 @@
+<!-- Cloud Storage postgres instances partial -->
+<script id="services.cloudsql.projects.id.postgresql_instances.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Project ID: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.project_id"><samp>{{project_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Automatic Backups: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.automatic_backup_enabled">{{convert_bool_to_enabled automatic_backup_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Last Backup: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.last_backup_timestamp">{{format_date last_backup_timestamp}}</span></div>
+        <div class="list-group-item-text item-margin">Logs: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.log_enabled">{{convert_bool_to_enabled log_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">SSL Required: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.ssl_required">{{convert_bool_to_enabled ssl_required}}</span></div>
+        <div class="list-group-item-text item-margin">Public IP Address: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.public_ip"><samp>{{value_or_none public_ip}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Private IP Address: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.private_ip"><samp>{{value_or_none private_ip}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Log Checkpoints Flag is On: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.log_checkpoints_on"><samp>{{value_or_none log_checkpoints_on}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Log Connections Flag is On: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.log_connections_on"><samp>{{value_or_none log_connections_on}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Log Disconnections Flag is On: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.log_disconnections_on"><samp>{{value_or_none log_disconnections_on}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Log Lock Waits Flag is On: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.log_lock_waits_on"><samp>{{value_or_none log_lock_waits_on}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Log min Messages Flag set Appropriately: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.log_min_messages"><samp>{{value_or_none log_min_messages}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Log Temp Files Flag set to 0: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.log_temp_files_0"><samp>{{value_or_none log_temp_files_0}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Log Min Duration Statement Flag set to -1: <span id="cloudsql.projects.{{@../key}}.postgresql_instances.{{@key}}.log_min_duration_statement_-1"><samp>{{value_or_none log_min_duration_statement_-1}}</samp></span></div>
+
+        {{#if authorized_networks}}
+        <div class="list-group-item-text item-margin">Authorized Networks:</div>
+        <ul>
+            {{#each authorized_networks }}
+                <li><span id="cloudsql.projects.{{@../../key}}.postgresql_instances.{{@../key}}.authorized_networks.{{@key}}.open_to_the_world">{{ value }}</span></li>
+            {{/each}}
+        </ul>
+        {{else}}
+        <div class="list-group-item-text item-margin">Authorized Networks: <samp>None</samp></div>
+        {{/if}}
+        <div class="list-group-item-text item-margin">Users:</div>
+        <ul>
+            {{#each users }}
+            <li><span id="cloudsql.projects.{{@../../key}}.postgresql_instances.{{@../key}}.root_access_from_any_host"><samp>{{ name }}</samp>{{#if host}} (host: <samp>{{host}}</samp>){{/if}}</span></li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.cloudsql.projects.id.postgresql_instances", $("#services\\.cloudsql\\.projects\\.id\\.postgresql_instances\\.partial").html());
+</script>
+
+<!-- Single postgresql_instances instance template -->
+<script id="single_cloudsql_postgresql_instances-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.cloudsql.projects.id.postgresql_instances'}}
+</script>
+<script>
+    var single_cloudsql_postgresql_instances_template = Handlebars.compile($("#single_cloudsql_postgresql_instances-template").html());
+</script>
