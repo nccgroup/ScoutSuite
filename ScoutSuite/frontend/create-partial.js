@@ -98,15 +98,12 @@ const createValue = (label, valuePath, renderer, addTab) => {
   let extra = '';
 
   if (renderer) {
-    extra += `renderValue={${renderer}}`;
+    extra += `\n${addTab ? '  ' : ''}        renderValue={${renderer}}`;
   }
-
-  if (extra.length > 0) extra += `\n${addTab ? '  ' : ''}        `;
 
   return `${addTab ? '  ' : ''}      <PartialValue
 ${addTab ? '  ' : ''}        label="${label}"
-${addTab ? '  ' : ''}        valuePath="${valuePath}"
-${addTab ? '  ' : ''}        ${extra}/>
+${addTab ? '  ' : ''}        valuePath="${valuePath}"${extra ? extra : ''} />
 
 `;
 };
