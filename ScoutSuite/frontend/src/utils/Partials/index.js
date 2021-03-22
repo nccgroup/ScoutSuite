@@ -101,7 +101,7 @@ export const renderWithInnerHtml = (innerHtml, props) => (
  */
 export const renderResourcesAsList = (resources, accessor) => (
   <ul>
-    {Object.values(resources).map((resource, i) => (
+    {resources.map((resource, i) => (
       <li key={i}>
         {/* TODO: link to resource */}
         {get(resource, accessor, resource)}

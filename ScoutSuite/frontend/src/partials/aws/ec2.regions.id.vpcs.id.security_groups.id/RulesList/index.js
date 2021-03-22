@@ -105,11 +105,13 @@ const RulesList = () => {
         ))}
       </ul>
       {isDefault && (
-        <PartialValue 
-          value="Default security groups should have no rules."
+        <PartialValue
           errorPath="default_with_rules"
-          renderValue={value => (
-            <WarningMessage message={value} />
+          renderValue={() => (
+            <WarningMessage
+              className="rules-list__warning-message"
+              message="Default security groups should have no rules."
+            />
           )}
         />
       )}

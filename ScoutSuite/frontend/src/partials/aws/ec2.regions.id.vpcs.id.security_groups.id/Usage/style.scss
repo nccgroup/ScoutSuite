@@ -5,23 +5,13 @@
     padding-left: 1rem;
 
     .resource-title {
-      margin: 0 0 0.5rem 0;
+      margin: 0;
     }  
 
     ul {
       list-style-type: initial;
       padding-left: 1.5rem;
       margin-bottom: 1rem;
-    }
-  }
-
-  .not-in-use {
-    display: flex;
-    align-items: center;
-
-    svg {
-      font-size: 1.25rem;
-      margin-right: 0.5rem;
     }
   }
 }

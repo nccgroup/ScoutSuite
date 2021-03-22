@@ -78,7 +78,7 @@ const AuthenticationMethods = props => {
         </ul>
       )}
 
-      <div>
+      <div className="warnings">
         {!isEmpty(loginProfile) && accessKeys.length > 0 && (
           <PartialValue
             errorPath="password_and_keys"
