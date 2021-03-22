@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import { partialDataShape, renderResourcesAsList } from '../../../utils/Partials';
+import { 
+  partialDataShape, 
+  renderResourcesAsList 
+} from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import Informations from '../iam.users.id/Informations';
