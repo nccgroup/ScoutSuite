@@ -12,7 +12,7 @@ const Name = props => {
   const { value, row: { original } } = props;
 
   return (
-    <Link to={`/services/${params.service}/resources/${params.resource}/${original.id || original.name}?path=${original.path}`}>{value}</Link>
+    <Link to={`/services/${params.service}/resources/${params.resource}/${original.id || original.name}`}>{value}</Link>
   );
 };
 
