@@ -14,9 +14,9 @@ const ResourcePartialWrapper = () => {
   const params = useParams();
 
   const { data: metadata, loading: l1 } = useAPI(getRAWEndpoint('metadata'));
-  const { data, loading: l2 } = useAPI(getResourceEndpoint(params.service, params.resource, params.id));
+  const { data, loading: l2, reloading } = useAPI(getResourceEndpoint(params.service, params.resource, params.id));
 
-  if (l1 || l2 || !data) return null;
+  if (l1 || l2 || !data || reloading) return null;
 
   // TEMPORATY WHILE WAITING FOR THE BACKEND API
   const services = merge(...Object.values(metadata));
