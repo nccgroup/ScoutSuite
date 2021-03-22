@@ -6,6 +6,18 @@
               "enabled": true,
               "level": "warning"
           }
+      ],
+      "kms-cryptokeys-anonymously-publicly-accessible.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "kms-encryption-keys-not-rotated.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
       ]
     }
 
