@@ -20,7 +20,7 @@ const propTypes = {
 
 const renderInstances = (items) => {
   if (!items || items.length === 0) return <span>None</span>;
-  
+
   return <ul>
     {items.map((item, i) => <li key={i}><Link to={`/services/computeengine/resources/instances/${item.id}`}>
       {item.name}
@@ -32,7 +32,7 @@ const Subnetworks = props => {
   const { data } = props;
   const item = get(data, ['item'], {});
 
-  const instanceList = useMemo(() => item.instances.map(({ instance_id }) => instance_id), [data]);
+  const instanceList = useMemo(() =>  item.instances ? item.instances.map(({ instance_id }) => instance_id) : [], [data]);
   const { data: instances , loading: instancesLoading } = useResources('computeengine', 'instances', instanceList);
 
   if (!data) return null;

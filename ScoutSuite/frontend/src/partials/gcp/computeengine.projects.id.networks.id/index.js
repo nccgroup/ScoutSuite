@@ -37,7 +37,7 @@ const Networks = props => {
   const item = get(data, ['item'], {});
 
   const { data: firewalls , loading: firewallLoading } = useResources('computeengine', 'firewalls', item.firewalls);
-  const instanceList = useMemo(() => item.instances.map(({ instance_id }) => instance_id), [data]);
+  const instanceList = useMemo(() => item.instances ? item.instances.map(({ instance_id }) => instance_id) : [], [item]);
   const { data: instances , loading: instancesLoading } = useResources('computeengine', 'instances', instanceList);
 
   if (!data) return null;
