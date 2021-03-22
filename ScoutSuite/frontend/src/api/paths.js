@@ -35,7 +35,7 @@ export const getPermissionsEndpoint = (service) => `services/${service}/permissi
  * @param {*} finding
  */
 export const getItemsEndpoint = (service, finding) =>
-  `${getFindingsEndpoint(service)}/${finding}/items?sort_by=name`;
+  `${getFindingsEndpoint(service)}/${finding}/items`;
 
 /**
  * Get details for an item
