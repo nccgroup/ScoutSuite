@@ -31,7 +31,10 @@ def api():
 @app.route('/api/services/<service>/findings', methods=['GET'])
 def get_findings(service):
     findings = results['services'][service]['findings']
-    for finding in findings: findings[finding]['name'] = finding
+    for finding in findings:
+        findings[finding]['name'] = finding
+        if findings[finding]['dashboard_name'] == 'Password policy':
+            findings[finding]['redirect_to'] = '/services/iam/password-policy'
     
     return jsonify(list(findings.values()))
 
@@ -89,7 +92,7 @@ def get_issue_paths(service, finding, item_id):
     issue_paths = []
     for item_path in items:
         if (path == item_path):
-            issue_paths.append('THE WHOLE PATH')
+            issue_paths.append('ALL')
         if (path in item_path):
             issue_path = item_path.split(path)[1][1:]
             issue_paths.append(issue_path)
@@ -228,7 +231,9 @@ def get_resources(service, resource):
 def get_resource(service, resource, resource_id):
     all_resources = get_all_resources(service,resource)
     for retrieved_resource in all_resources:
-        if list(retrieved_resource.values())[0]['id'] == resource_id:
+        if list(retrieved_resource.keys())[0] == resource_id:
+            if not list(retrieved_resource.values())[0]['id']:
+                retrieved_resource.values()[0]['id'] = resource_id
             return jsonify(list(retrieved_resource.values())[0])
     return {}
 
