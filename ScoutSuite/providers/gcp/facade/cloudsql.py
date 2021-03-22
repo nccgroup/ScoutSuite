@@ -22,7 +22,8 @@ class CloudSQLFacade(GCPBaseFacade):
             cloudsql_client = self._get_client()
             instances_group = cloudsql_client.instances()
             request = instances_group.list(project=project_id)
-            return await GCPFacadeUtils.get_all('items', request, instances_group)
+            val= await GCPFacadeUtils.get_all('items', request, instances_group)
+            return val
         except Exception as e:
             print_exception(f'Failed to retrieve database instances: {e}')
             return []

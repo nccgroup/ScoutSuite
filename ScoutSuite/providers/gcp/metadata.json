@@ -79,6 +79,10 @@
         "instances": {
           "cols": 2,
           "path": "services.cloudsql.projects.id.instances"
+        },
+        "sql_servers_instances": {
+          "cols": 2,
+          "path": "services.cloudsql.projects.id.sql_servers_instances"
         }
       }
     },
