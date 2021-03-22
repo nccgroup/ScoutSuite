@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { useAPI } from '../../api/useAPI';
@@ -18,10 +18,9 @@ const LazyPartial = (props) => {
     data,
     partial
   } = props;
-
   const { data: provider } = useAPI('provider');
 
-  const DynamicPartial = React.lazy(async () => {
+  const DynamicPartial = useMemo(() => React.lazy(async () => {
     let md = null;
     try {
       md = await import('../../partials/' + provider.provider_code + '/' + partial + '/index.js'); // Can't use a string literal because of Babel bug
@@ -30,7 +29,9 @@ const LazyPartial = (props) => {
     }
 
     return md;
-  }); 
+  }), [partial]); 
+
+
 
   return (
     <div className="selected-item-container">
