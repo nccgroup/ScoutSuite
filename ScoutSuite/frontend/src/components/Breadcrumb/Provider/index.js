@@ -3,11 +3,13 @@ import { useAPI } from '../../../api/useAPI';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import AWSLogo from './Logos/aws.png';
+import GCPLogo from './Logos/gcp.png';
+import AzureLogo from './Logos/azure.png';
 import { Link, useParams } from 'react-router-dom';
 
 const getProviderLogo = (providerCode) => {
-  if (providerCode === 'azure') return AWSLogo;
-  else if (providerCode === 'gcp') return AWSLogo;
+  if (providerCode === 'azure') return AzureLogo;
+  else if (providerCode === 'gcp') return GCPLogo;
   else return AWSLogo;
 };
 

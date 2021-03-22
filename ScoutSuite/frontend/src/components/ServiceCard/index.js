@@ -10,6 +10,7 @@ import DetailedValue from '../DetailedValue';
 import './style.scss';
 
 const propTypes = {
+  id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   resources: PropTypes.number.isRequired,
   rules: PropTypes.number.isRequired,
@@ -19,6 +20,7 @@ const propTypes = {
 
 const ServiceCard = props => {
   const {
+    id,
     name,
     issues,
     resources,
@@ -26,7 +28,7 @@ const ServiceCard = props => {
   } = props;
 
   const hasFindings = rules > 0;
-  const findingsPath = hasFindings ? `/services/${name.toLowerCase()}/findings` : '/';
+  const findingsPath = hasFindings ? `/services/${id}/findings` : '/';
   
   return (
     <div className="service-card">

@@ -2,16 +2,21 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-size: 1.125rem;
-  font-weight: 700;
-  margin-bottom: 2.5rem;
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.5px;
 
   .provider-logo {
-    height: 1.1rem;
+    height: 1.2rem;
+    margin-right: 0.2rem;
   }
 
   span {
     white-space: nowrap;
+  }
+
+  .finding {
     text-overflow: ellipsis;
     overflow: hidden;
   }
