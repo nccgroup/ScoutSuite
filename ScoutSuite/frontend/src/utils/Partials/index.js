@@ -117,6 +117,20 @@ export const renderResourcesAsList = (resources, accessor) => (
   </ul>
 );
 
+
+export const renderList = (items, accessor, renderValue) => {
+  if (!items || items.length === 0) return <span>None</span>;
+
+  return <ul>
+    {items.map((item, i) => {
+      const value = get(item, accessor, item);
+      return (<li key={i}>
+        {renderValue ? renderValue(value) : value}
+      </li>);
+    })}
+  </ul>;
+};
+
 /**
  * Format title
  * @param title
