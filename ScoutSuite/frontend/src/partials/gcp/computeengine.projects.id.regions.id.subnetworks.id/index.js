@@ -19,6 +19,8 @@ const propTypes = {
 };
 
 const renderInstances = (items) => {
+  if (!items || items.length === 0) return <span>None</span>;
+  
   return <ul>
     {items.map((item, i) => <li key={i}><Link to={`/services/computeengine/resources/instances/${item.id}`}>
       {item.name}
