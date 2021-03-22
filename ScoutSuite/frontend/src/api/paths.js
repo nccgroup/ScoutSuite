@@ -54,7 +54,7 @@ export const getItemEndpoint = (service, finding, id, path) =>
  * @returns 
  */
 export const getResourcesEndpoint = (service, resource) =>
-  `/services/${service}/resources/${resource}?sortBy=name`;
+  `/services/${service}/resources/${resource}`;
 
 /**
  * Enpoint for getting a resource

@@ -1,22 +1,21 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
-import { Link } from 'react-router-dom';
 import Skeleton from '@material-ui/lab/Skeleton';
+import {Link} from 'react-router-dom';
 
-import { Partial, PartialValue } from '../../../components/Partial';
-import { partialDataShape, formatDate } from '../../../utils/Partials';
-import { TabPane, TabsMenu } from '../../../components/Tabs';
-import PartialSection from '../../../components/Partial/PartialSection/index';
-import { useResources } from '../../../api/useResources';
+import { Partial, PartialSection, PartialValue } from '../../../components/Partial';
+import { TabsMenu, TabPane } from '../../../components/Tabs';
+import {
+  partialDataShape,
+  formatDate,
+  convertBoolToEnable,
+} from '../../../utils/Partials';
+import {useResources} from '../../../api/useResources';
 
 
-const renderFirewalls = (items) => {
-  return <ul>
-    {items.map((item, i) => <li key={i}><Link to={`/services/computeengine/resources/firewalls/${item.id}`}>
-      {item.name}
-    </Link></li>)}
-  </ul>;
+const propTypes = {
+  data: PropTypes.shape(partialDataShape).isRequired,
 };
 
 const renderInstances = (items) => {
@@ -27,16 +26,10 @@ const renderInstances = (items) => {
   </ul>;
 };
 
-
-const propTypes = {
-  data: PropTypes.shape(partialDataShape).isRequired,
-};
-
-const Networks = props => {
+const Subnetworks = props => {
   const { data } = props;
   const item = get(data, ['item'], {});
 
-  const { data: firewalls , loading: firewallLoading } = useResources('computeengine', 'firewalls', item.firewalls);
   const instanceList = useMemo(() => item.instances.map(({ instance_id }) => instance_id), [data]);
   const { data: instances , loading: instancesLoading } = useResources('computeengine', 'instances', instanceList);
 
@@ -58,24 +51,31 @@ const Networks = props => {
           valuePath="project_id" />
 
         <PartialValue
-          label="Description"
-          valuePath="description" />
+          label="Region"
+          valuePath="region" />
 
         <PartialValue
           label="Creation Date"
           valuePath="creation_timestamp"
           renderValue={formatDate}
         />
+
+        <PartialValue
+          label="IP Range"
+          valuePath="ip_range" />
+
+        <PartialValue
+          label="Gateway Address"
+          valuePath="gateway_address" />
+
+        <PartialValue
+          label="Private Google Access"
+          valuePath="private_ip_google_access"
+          renderValue={convertBoolToEnable}
+        />
       </div>
 
       <TabsMenu>
-        <TabPane title="Firewall Rules">
-          <PartialSection path="firewalls">
-            {renderFirewalls(firewalls)}
-            {firewallLoading && <Skeleton />}
-          </PartialSection>
-        </TabPane>
-
         <TabPane title="Compute Engine Instances">
           <PartialSection path="instances">
             {renderInstances(instances)}
@@ -87,6 +87,6 @@ const Networks = props => {
   );
 };
 
-Networks.propTypes = propTypes;
+Subnetworks.propTypes = propTypes;
 
-export default Networks;
+export default Subnetworks;
