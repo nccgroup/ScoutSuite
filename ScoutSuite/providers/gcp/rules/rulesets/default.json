@@ -65,6 +65,12 @@
                 "level": "warning"
             }
         ],
+        "cloudstorage-uniform-bucket-level-access-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "computeengine-firewall-default-rule-in-use.json": [
             {
                 "enabled": true,
