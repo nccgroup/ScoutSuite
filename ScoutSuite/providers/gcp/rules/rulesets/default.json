@@ -37,6 +37,12 @@
                 "level": "warning"
             }
         ],
+        "cloudsql-instances-public-ips.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudstorage-bucket-member.json": [
             {
                 "args": [
