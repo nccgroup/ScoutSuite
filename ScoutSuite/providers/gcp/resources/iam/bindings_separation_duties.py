@@ -22,6 +22,8 @@ class BindingsSeparationDuties(Resources):
         return binding_dict['id'], binding_dict
 
     def ensure_seperation_duties(self, raw_bindings):
+        # This function checks if a member has both the iam.serviceAccountAdmin role and iam.serviceAccountUser role.
+        # If the roles do have a common member the function returns False
         list_members_role_admin = []
         list_members_role_other = []
         for binding in raw_bindings:
@@ -37,6 +39,9 @@ class BindingsSeparationDuties(Resources):
         return True
 
     def ensure_KMS_seperation_duties(self, raw_bindings):
+        # This function checks if a member has both the cloudkms.admin role and either
+        # cloudkms.cryptoKeyEncrypterDecrypter, cloudkms.cryptoKeyEncrypter, cloudkms.cryptoKeyDecrypter role.
+        # If the roles do have a common member the function returns False
         list_members_role_admin = []
         list_members_role_others = {"cloudkms.cryptoKeyEncrypterDecrypter": [],
                                     "cloudkms.cryptoKeyEncrypter": [],
