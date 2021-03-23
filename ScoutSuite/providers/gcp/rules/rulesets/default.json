@@ -140,6 +140,60 @@
                 "level": "warning"
             }
         ],
+        "computeengine-instance-default-service-account.json": [
+           {
+                "enabled": true,
+                "level": "warning"
+           }
+        ],
+        "computeengine-instance-full-api-access.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-block-project-ssh-keys-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-os-login-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-connecting-serial-ports-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-ip-forwarding-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-shielded-vm-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-public-ip-adresses.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-disk-not-csek-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-gmail-accounts-used.json": [
             {
                 "enabled": true,
