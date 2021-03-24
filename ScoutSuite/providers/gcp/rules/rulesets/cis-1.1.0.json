@@ -12,6 +12,12 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+      "computeengine-network-legacy-in-use.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 
