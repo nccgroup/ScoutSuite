@@ -134,6 +134,12 @@
                 "level": "warning"
             }
         ],
+        "computeengine-network-default-in-use.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "computeengine-old-disk-snapshot.json": [
             {
                 "enabled": true,
