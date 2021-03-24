@@ -225,6 +225,18 @@ def get_resource(service, resource, resource_id):
             return jsonify(list(retrieved_resource.values())[0])
     return {}
 
+@app.route('/api/categories/<category>/<policy_type>')
+def get_category_policy_type(category, policy_type):
+    metadata = results['metadata']
+    if policy_type == 'external_attack_surface': policy_type = 'external attack surface'
+
+    for category_metadata in metadata:
+        if category_metadata == category:
+            summaries = metadata[category]['summaries']
+            policy_path = summaries[policy_type]['path']
+
+            return get_element_from_path(policy_path)
+
 @app.route('/api/services/<service>/<policy_type>')
 def get_service_policy_type(service, policy_type):
     metadata = results['metadata']
