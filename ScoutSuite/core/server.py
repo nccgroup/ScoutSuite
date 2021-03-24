@@ -207,8 +207,10 @@ def get_dashboard():
 # Paginated
 @app.route('/api/services/<service>/resources/<resource>')
 def get_resources(service, resource):
-    all_resources = get_all_resources(service, resource)
+    all_resources, resource_path = get_all_resources(service, resource)
     resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
+    for resource_data in resource_list: resource_data['display_path'] = resource_path
+    
     filtered_results = filter_results(resource_list)
     sorted_results = sort_results(filtered_results)
     paginated_results = paginate_results(sorted_results)
@@ -217,7 +219,7 @@ def get_resources(service, resource):
 
 @app.route('/api/services/<service>/resources/<resource>/<resource_id>')
 def get_resource(service, resource, resource_id):
-    all_resources = get_all_resources(service,resource)
+    all_resources = get_all_resources(service,resource)[0]
     for retrieved_resource in all_resources:
         if list(retrieved_resource.keys())[0] == resource_id:
             if not list(retrieved_resource.values())[0]['id']:
@@ -339,7 +341,7 @@ def get_all_resources(service, resource):
                 for resource_metadata in resources:
                     if resource_metadata == resource:
                         resource_path = resources[resource]['path']
-                        return get_all_elements_from_path(resource_path)
+                        return (get_all_elements_from_path(resource_path), resource_path)
     return []
 
 def format_title(title):
@@ -367,7 +369,7 @@ def sort_results(results):
     direction = request.args.get('direction') if request.args.get('direction') else 'asc'
     descending = (direction == 'desc')
 
-    return sorted(resources, key=lambda k: k[sort_by], reverse=descending)
+    return sorted(results, key=lambda k: k[sort_by], reverse=descending)
 
 def paginate_results(results):
     items_per_page = int(request.args.get('items_per_page')) if request.args.get('items_per_page') else 10
