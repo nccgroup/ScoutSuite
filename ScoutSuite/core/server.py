@@ -51,36 +51,24 @@ def get_items(service, finding):
     attributes = get_attributes_from_path(path)[:-1] # ['subscriptions']
 
     for item_path in finding['items']:
-        item_object = {}
         item_path_kw = item_path.split('.') # [storageaccounts, subscriptions, c4596cb7-805b-49aa-9a04-ed74e9f5c789, storage_accounts, e21374e58a7142b3bc563467ac097f66345454fd, blob_containers, test, public_access_allowed]
         if 'id_suffix' in finding and item_path_kw[-1] == finding['id_suffix']: item_path_kw = item_path_kw[:-1]
 
         item_to_display = get_element_from_path_kw(item_path_kw[:len(path.split('.'))], results['services'])
         item = {
-            'id': item_to_display['id'],
             'name': item_to_display['name'],
             'display_path': '.'.join(item_path_kw[:len(path.split('.'))])
         }
-        item_object['item'] = item
+        if 'id' in item_to_display: item['id'] = item_to_display['id']
     
-        for attribute in attributes: # regions
-            attribute_path = []
-            for idx, kw in enumerate(item_path_kw):
-                if kw == attribute:
-                    attribute_path = item_path_kw[:idx + 2]
-
-            attribute_path_kw = get_element_from_path_kw(attribute_path, results['services'])
-            attribute_object = {
-                'path': '.'.join(attribute_path)
-            }
-            if 'id' in attribute_path_kw: attribute_object['id'] = attribute_path_kw['id']
-            if 'name' in attribute_path_kw: attribute_object['name'] = attribute_path_kw['name']
-            item_object[attribute] = attribute_object
+        for attribute in attributes:
+            attribute_idx = item_path_kw.index(attribute)
+            item[attribute[:-1]] = item_path_kw[attribute_idx + 1]
         
-        item_list.append(item_object)
+        item_list.append(item)
 
     filtered_results = filter_results(item_list)
-    sorted_results = sort_items(filtered_results)
+    sorted_results = sort_results(filtered_results)
     paginated_results = paginate_results(sorted_results)
 
     return jsonify(paginated_results)
@@ -222,7 +210,7 @@ def get_resources(service, resource):
     all_resources = get_all_resources(service, resource)
     resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
     filtered_results = filter_results(resource_list)
-    sorted_results = sort_resources(filtered_results)
+    sorted_results = sort_results(filtered_results)
     paginated_results = paginate_results(sorted_results)
 
     return jsonify(paginated_results)
@@ -355,21 +343,14 @@ def get_element_from_path_kw(path, report_location=results):
     
     return element
 
-def filter_results(results,):
+def filter_results(results):
     filter_kw = request.args.getlist('remove') if request.args.get('remove') else []
     for element in results:
         for kw in filter_kw: del element[kw]
     
     return results
 
-def sort_items(items):
-    sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'item'
-    direction = request.args.get('direction') if request.args.get('direction') else 'asc'
-    descending = (direction == 'desc')
-
-    return sorted(items, key=lambda k: k[sort_by]['name'], reverse=descending)
-
-def sort_resources(resources):
+def sort_results(results):
     sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
     direction = request.args.get('direction') if request.args.get('direction') else 'asc'
     descending = (direction == 'desc')
