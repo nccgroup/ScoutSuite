@@ -4,10 +4,7 @@ import cx from 'classnames';
 
 const propTypes = {
   title: PropTypes.string.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
-  ]).isRequired,
+  children: PropTypes.node.isRequired,
   opened: PropTypes.string,
   setOpened: PropTypes.func.isRequired,
 };

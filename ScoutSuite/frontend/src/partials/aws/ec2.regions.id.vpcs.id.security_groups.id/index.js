@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Partial, PartialSection } from '../../../components/Partial';
 import { partialDataShape } from '../../../utils/Partials';
-import { TabsMenu, TabPane } from '../../../components/Tabs';
+import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import Informations from './Informations';
 import RulesList from './RulesList';
 import Usage from './Usage';

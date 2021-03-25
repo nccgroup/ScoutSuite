@@ -11,7 +11,7 @@ import {
   convertValueOrNever,
   convertListToChips,
 } from '../../../utils/Partials/index';
-import { TabPane, TabsMenu } from '../../../components/Tabs';
+import { TabPane, TabsMenu } from '../../../components/Partial/PartialTabs';
 import PartialTable from '../../../components/Partial/PartialTable/index';
 
 const propTypes = {

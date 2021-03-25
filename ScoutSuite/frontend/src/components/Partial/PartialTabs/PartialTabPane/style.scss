@@ -1,0 +1,44 @@
+@import 'src/variables.scss';
+
+.partial-tab-pane {
+  &.critical {
+    color: $critical-color;
+
+    &.is-selected {
+      border-bottom-color: $critical-color;
+    }
+  }
+
+  &.high, &.danger {
+    color: $high-color;
+
+    &.is-selected {
+      border-bottom-color: $high-color;
+    }
+  }
+
+  &.medium, &.warning {
+    color: $medium-color;
+
+    &.is-selected {
+      border-bottom-color: $medium-color;
+    }
+  }
+
+  &.low {
+    color: $low-color;
+
+    &.is-selected {
+      border-bottom-color: $low-color;
+    }
+  }
+
+  .tab-title {
+    display: inline-flex;
+    align-items: center;
+
+    svg {
+      margin-left: 0.25rem;
+    }
+  }
+}

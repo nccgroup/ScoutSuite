@@ -6,6 +6,10 @@
   margin-right: 1rem;
   cursor: pointer;
 
+  .tab-content {
+    display: none;
+  }
+
   &.is-selected {
     color: $font-color;
     padding-bottom: 0.125rem;

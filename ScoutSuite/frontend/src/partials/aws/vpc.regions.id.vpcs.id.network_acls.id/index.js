@@ -12,7 +12,7 @@ import {
   Partial, 
   PartialValue,
 } from '../../../components/Partial';
-import { TabsMenu, TabPane } from '../../../components/Tabs';
+import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import RulesTable from './RulesTable';
 import WarningMessage from '../../../components/WarningMessage';
 
