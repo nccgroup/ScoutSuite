@@ -17,6 +17,10 @@
         "bindings": {
           "cols": 2,
           "path": "services.iam.projects.id.bindings"
+        },
+        "bindings_separation_duties": {
+          "cols": 2,
+          "path": "services.iam.projects.id.bindings_separation_duties"
         }
       }
     },
