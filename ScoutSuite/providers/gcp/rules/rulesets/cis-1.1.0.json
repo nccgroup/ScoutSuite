@@ -18,7 +18,19 @@
                 "enabled": true,
                 "level": "warning"
             }
-        ]
+        ],
+      "iam-role-account-separation-duties-is-false.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "iam-role-kms-separation-duties-is-false.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ]
     }
 
 }
