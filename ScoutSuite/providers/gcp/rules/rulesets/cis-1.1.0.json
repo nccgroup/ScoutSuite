@@ -10,7 +10,7 @@
       "computeengine-network-default-in-use.json": [
             {
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             }
         ],
       "computeengine-network-legacy-in-use.json": [
