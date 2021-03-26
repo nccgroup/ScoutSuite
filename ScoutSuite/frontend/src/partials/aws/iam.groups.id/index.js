@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import { partialDataShape } from '../../../utils/Partials';
+import { 
+  partialDataShape, 
+  renderResourcesAsList 
+} from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
-import { TabsMenu, TabPane } from '../../../components/Tabs';
+import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import Informations from '../iam.users.id/Informations';
 import WarningMessage from '../../../components/WarningMessage';
 import Policy from '../../../components/Partial/Policy';
@@ -33,14 +36,7 @@ const IamGroups = props => {
       <TabsMenu>
         <TabPane title="Members">
           {!isEmpty(members) ? (
-            <ul>
-              {members.map((member, i) => (
-                <li key={i}>
-                  {/* TODO: link to resource */}
-                  {member}
-                </li>
-              ))}
-            </ul>
+            renderResourcesAsList(members)
           ) : (
             <WarningMessage message="This group has no members."/>
           )}
@@ -60,14 +56,7 @@ const IamGroups = props => {
         )}
         {!isEmpty(policies) && (
           <TabPane title="Managed Policies">
-            <ul>
-              {policies.map((policy,i) => (
-                <li key={i}>
-                  {/* TODO: link to resource */}
-                  {policy}
-                </li>
-              ))}
-            </ul>
+            {renderResourcesAsList(policies)}
           </TabPane>
         )}
       </TabsMenu>

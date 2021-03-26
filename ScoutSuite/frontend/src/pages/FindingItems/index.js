@@ -1,4 +1,4 @@
-import { useParams } from '@reach/router';
+import { useParams } from 'react-router-dom';
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 
@@ -14,7 +14,15 @@ import './style.scss';
 
 const FlaggedItems = () => {
   const params = useParams();
-  const { data: items, loading } = useAPI(getItemsEndpoint(params.service, params.finding), []);
+  const { data: items, loading, loadPage } = useAPI(
+    getItemsEndpoint(params.service, params.finding),
+    [],
+    { pagination: true },
+  );
+
+  const fetchData = React.useCallback(({ pageIndex, sortBy, direction }) => {
+    loadPage(pageIndex + 1, sortBy, direction);
+  }, []);
 
   if (isEmpty(items) || isEmpty(items.results)) {
     return (
@@ -26,13 +34,10 @@ const FlaggedItems = () => {
   }
 
   if (loading) {
-    return (
-      <Breadcrumb />
-    );
+    return <Breadcrumb />;
   }
 
   const columns = [
-    { name: 'ID', key: 'id' },
     { name: 'Name', key: 'name' },
   ];
 
@@ -51,15 +56,15 @@ const FlaggedItems = () => {
   });
 
   const initialState = {
-    pageSize: 10
+    pageSize: 10,
   };
 
   const formatters = {
-    name: Name
+    name: Name,
   };
 
   const sortBy = {
-    severity: sortBySeverity
+    severity: sortBySeverity,
   };
 
   return (
@@ -72,7 +77,11 @@ const FlaggedItems = () => {
             data={data}
             initialState={initialState}
             formatters={formatters}
-            sortBy={sortBy} />
+            sortBy={sortBy}
+            fetchData={fetchData}
+            manualPagination={true}
+            pageCount={items.meta.total_pages}
+          />
         </div>
 
         <div className="selected-item">

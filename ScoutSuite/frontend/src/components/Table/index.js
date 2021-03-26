@@ -13,6 +13,9 @@ const propTypes = {
   sortBy: PropTypes.object,
   disableSearch: PropTypes.bool,
   disablePagination: PropTypes.bool,
+  pageCount: PropTypes.number,
+  fetchData: PropTypes.func,
+  manualPagination: PropTypes.bool
 };
 
 const Table = (props) => {
@@ -23,7 +26,10 @@ const Table = (props) => {
     formatters = {},
     sortBy = {},
     disableSearch = false,
-    disablePagination = false
+    disablePagination = false,
+    fetchData = null,
+    pageCount = 0,
+    manualPagination = false
   } = props;
 
   const cols = columns.map((item) => {
@@ -45,10 +51,15 @@ const Table = (props) => {
       hasPagination={!!initialState.pageCount}
       disableSearch={disableSearch}
       disablePagination={disablePagination}
+      fetchData={fetchData}
+      pageCount={pageCount}
+      manualPagination={manualPagination}
     />
   );
 };
 
 Table.propTypes = propTypes;
 
-export default Table;
+const TableMemo = React.memo(Table);
+
+export default TableMemo;

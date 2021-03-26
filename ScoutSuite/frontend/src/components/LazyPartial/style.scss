@@ -37,6 +37,14 @@
       margin: 0 0 1rem 0;
     }
 
+    h4 {
+      font-size: 1.125rem;
+    }
+
+    h5 {
+      font-size: 1rem;
+    }
+
     & > div {
       flex-grow: 1;
 
@@ -50,10 +58,8 @@
         word-break: break-word;
         background: $background-color;
 
-        h4 {
-          font-size: 1.125rem;
-          font-weight: 700;
-          margin: 0 0 1rem 0;
+        .detailed-value {
+          margin-bottom: 0.25rem;
         }
       }
     }

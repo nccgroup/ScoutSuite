@@ -2,9 +2,8 @@ import React from 'react';
 import { useAPI } from '../../../api/useAPI';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
-//import { Link } from '@reach/router';
 import PropTypes from 'prop-types';
-import { Link, useLocation, useParams } from '@reach/router';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { getFindingsEndpoint } from '../../../api/paths';
 
 const propTypes = {
@@ -20,20 +19,31 @@ const Findings = props => {
 
   if (loading) return null;
 
-  const { dashboard_name } = findings.find(({ name }) => name === finding);
+  const { description } = findings.find(({ name }) => name === finding);
 
   return (
     <>
       <span><Link to={`/services/${service}/findings`}>Findings</Link></span>
 
       <ChevronRightIcon />
-      <span>
-        {pathname.endsWith('/items') ? dashboard_name : <Link to={`/services/${service}/findings/${finding}/items`}>{dashboard_name}</Link>}
+      <span className="finding">
+        {pathname.endsWith('/items') 
+          ? description 
+          : (
+            <Link to={`/services/${service}/findings/${finding}/items`}>
+              {description}
+            </Link>
+          )
+        }
       </span>
       <ChevronRightIcon />
 
       {pathname.endsWith('/items') && <span>All Items</span>}
-      {!pathname.endsWith('/items') && <span>{params.item}</span>}
+      {!pathname.endsWith('/items') && (
+        <span className="finding">
+          {params.item}
+        </span>
+      )}
     </>
   );
 };

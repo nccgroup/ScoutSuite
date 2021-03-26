@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 
 import './style.scss';
@@ -8,6 +9,7 @@ import './style.scss';
 const propTypes = {
   message: PropTypes.string.isRequired,
   icon: PropTypes.element,
+  className: PropTypes.string,
 };
 
 const defaultProps = {
@@ -15,10 +17,14 @@ const defaultProps = {
 };
 
 const WarningMessage = props => {
-  const { message, icon } = props;
+  const { 
+    message, 
+    icon,
+    className,
+  } = props;
 
   return (
-    <div className="warning-message">
+    <div className={cx('warning-message', className)}>
       {icon}
       {message}
     </div>

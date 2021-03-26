@@ -1,11 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCheckCircle,
-  faExclamationCircle,
-} from '@fortawesome/free-solid-svg-icons';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import './style.scss';
@@ -31,12 +28,14 @@ const ServiceStatus = (props) => {
   const classNames = cx('service-status', status);
 
   const hasIssues = status !== 'good';
-  const icon = hasIssues ? faExclamationCircle : faCheckCircle;
 
   return (
     <Tooltip title={status} placement="top" arrow>
       <div className={classNames}>
-        <FontAwesomeIcon icon={icon} size="sm" />
+        {hasIssues 
+          ? <ErrorIcon fontSize="inherit" /> 
+          : <CheckCircleIcon fontSize="inherit" />
+        }
         <span>{amount}</span>
       </div>
     </Tooltip>

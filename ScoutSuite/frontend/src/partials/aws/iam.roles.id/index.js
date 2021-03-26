@@ -8,7 +8,7 @@ import {
   renderResourcesAsList 
 } from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
-import { TabsMenu, TabPane } from '../../../components/Tabs';
+import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import Informations from './Informations';
 import DetailedValue from '../../../components/DetailedValue';
 import Policy from '../../../components/Partial/Policy';
@@ -44,12 +44,12 @@ const IamGroups = props => {
         </TabPane>
         {!isEmpty(instances) && (
           <TabPane title="Instances">
-            {renderResourcesAsList(instances, 'name')}
+            {renderResourcesAsList(Object.values(instances), 'name')}
           </TabPane>
         )}
         {!isEmpty(lambdas) && (
           <TabPane title="Lambda Functions">
-            {renderResourcesAsList(lambdas, 'name')}
+            {renderResourcesAsList(Object.values(lambdas), 'name')}
           </TabPane>
         )}
         {!isEmpty(inline_policies) && (
@@ -67,7 +67,7 @@ const IamGroups = props => {
         )}
         {!isEmpty(policies) && (
           <TabPane title="Managed Policies">
-            {renderResourcesAsList(policies)}
+            {renderResourcesAsList(Object.values(policies))}
           </TabPane>
         )}
         {!isEmpty(tags) && (

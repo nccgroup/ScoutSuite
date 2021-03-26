@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from '@reach/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import cx from 'classnames';
 
 import ServiceStatus from '../ServiceStatus';
@@ -11,6 +10,7 @@ import DetailedValue from '../DetailedValue';
 import './style.scss';
 
 const propTypes = {
+  id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   resources: PropTypes.number.isRequired,
   rules: PropTypes.number.isRequired,
@@ -20,6 +20,7 @@ const propTypes = {
 
 const ServiceCard = props => {
   const {
+    id,
     name,
     issues,
     resources,
@@ -27,7 +28,7 @@ const ServiceCard = props => {
   } = props;
 
   const hasFindings = rules > 0;
-  const findingsPath = hasFindings ? `/services/${name.toLowerCase()}/findings` : '/';
+  const findingsPath = hasFindings ? `/services/${id}/findings` : '/';
   
   return (
     <div className="service-card">
@@ -66,7 +67,7 @@ const ServiceCard = props => {
         >
           {hasFindings ? (
             <>
-              View report <FontAwesomeIcon icon={faChevronRight}/>
+              View report <ChevronRightIcon />
             </>
           ) : 'No findings'}
         </Link>

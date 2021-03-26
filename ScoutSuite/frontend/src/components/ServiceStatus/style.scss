@@ -1,11 +1,14 @@
 @import 'src/variables';
 
 .service-status {
+  display: flex;
+  align-items: center;
   font-weight: 600;
   margin-left: 1rem;
 
   svg {
-    margin-right: 0.5rem;
+    font-size: 1.125rem;
+    margin-right: 0.25rem;
   }
 
   &.good {

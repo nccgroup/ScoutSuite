@@ -6,7 +6,7 @@ import { useAPI } from '../../api/useAPI';
 import './style.scss';
 
 const propTypes = {
-  data: PropTypes.objectOf({
+  data: PropTypes.shape({
     item: PropTypes.object,
     path_to_issues: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
@@ -30,12 +30,12 @@ const LazyPartial = (props) => {
     }
 
     return md;
-  }); 
+  });
 
   return (
     <div className="selected-item-container">
       <div className="header">
-        <h3>{data.name}</h3>
+        <h3>{data.item.name}</h3>
       </div>
       <div className="content">
         <Suspense fallback={<span>Loading...</span>}>

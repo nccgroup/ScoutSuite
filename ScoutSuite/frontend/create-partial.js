@@ -65,7 +65,7 @@ import {
   partialDataShape,
   ${renderers ? renderers.join(', \n  ') : renderers}
 } from '../../../utils/Partials';
-${tabs.length > 0 ? 'import { TabsMenu, TabPane } from \'../../../components/Tabs\';' : ''}
+${tabs.length > 0 ? 'import { TabsMenu, TabPane } from \'../../../components/Partial/PartialTabs\';' : ''}
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -78,7 +78,7 @@ const ${CompName} = props => {
 
   return (
     <Partial data={data}>
-      <div className="partial-informations">
+      <div>
 ${informations}
       </div>
 

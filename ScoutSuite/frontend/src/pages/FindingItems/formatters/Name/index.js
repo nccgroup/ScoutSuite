@@ -1,4 +1,4 @@
-import { Link, useParams } from '@reach/router';
+import { Link, useParams } from 'react-router-dom';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -12,7 +12,7 @@ const Name = props => {
   const { value, row: { original } } = props;
 
   return (
-    <Link to={`/services/${params.service}/findings/${params.finding}/items/${original.id}?path=${original.display_path}`}>{value}</Link>
+    <Link to={`/services/${params.service}/findings/${params.finding}/items/${value}?path=${original.display_path}`}>{value}</Link>
   );
 };
 

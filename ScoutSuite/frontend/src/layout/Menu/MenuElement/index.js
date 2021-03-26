@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from '@reach/router';
+import { Link } from 'react-router-dom';
 import cx from 'classnames';
 
 const propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.array,
-  ]).isRequired,
+  children: PropTypes.node.isRequired,
   link: PropTypes.string,
   disabled: PropTypes.bool,
   selected: PropTypes.string,

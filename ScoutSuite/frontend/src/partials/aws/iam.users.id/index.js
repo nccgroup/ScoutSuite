@@ -8,7 +8,7 @@ import {
   renderResourcesAsList
 } from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
-import { TabsMenu, TabPane } from '../../../components/Tabs';
+import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import Informations from './Informations';
 import AuthenticationMethods from './AuthenticationMethods';
 import DetailedValue from '../../../components/DetailedValue';
@@ -45,7 +45,7 @@ const IamUsers = props => {
         </TabPane>
         {!isEmpty(groups) && (
           <TabPane title="Groups">
-            {renderResourcesAsList(groups)}
+            {renderResourcesAsList(Object.values(groups))}
           </TabPane>
         )}
         {!isEmpty(inline_policies) && (
@@ -63,18 +63,19 @@ const IamUsers = props => {
         )}
         {!isEmpty(policies) && (
           <TabPane title="Managed Policies">
-            {renderResourcesAsList(policies)}
+            {renderResourcesAsList(Object.values(policies))}
           </TabPane>
         )}
         {!isEmpty(tags) && (
           <TabPane title="Tags">
             <ul>
               {tags.map((tag, i) => (
-                <DetailedValue
-                  key={i}
-                  label={tag.Key}
-                  value={tag.Value}
-                />
+                <li key={i}>
+                  <DetailedValue
+                    label={tag.Key}
+                    value={tag.Value}
+                  />
+                </li>
               ))}
             </ul>
           </TabPane>

@@ -6,11 +6,9 @@ import isArray from 'lodash/isArray';
 
 import './style.scss';
 
+
 const propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.array,
-  ]).isRequired,
+  children: PropTypes.node.isRequired,
   className: PropTypes.string,
 };
 
