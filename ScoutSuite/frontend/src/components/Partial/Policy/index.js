@@ -14,10 +14,11 @@ import './style.scss';
 const propTypes = {
   name: PropTypes.string,
   policy: PropTypes.object.isRequired,
+  policyPath: PropTypes.string,
 };
 
 const Policy = props => {
-  const { name, policy } = props;
+  const { name, policy, policyPath } = props;
 
   const displayJson = object => 
     JSON.stringify(object, null, 2)
@@ -56,7 +57,7 @@ const Policy = props => {
                 >
                   <PartialValue 
                     value={displayJson(object)}
-                    errorPath={`Statement.${i}`}
+                    errorPath={`${policyPath}.PolicyDocument.Statement.${i}`}
                     renderValue={value => (
                       renderWithInnerHtml(
                         value,

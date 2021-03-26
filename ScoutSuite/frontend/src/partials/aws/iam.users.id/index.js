@@ -51,11 +51,12 @@ const IamUsers = props => {
         {!isEmpty(inline_policies) && (
           <TabPane title="Inline Policies">
             <>
-              {Object.values(inline_policies).map((policy, i) => (
+              {Object.entries(inline_policies).map(([id, policy], i) => (
                 <Policy
                   key={i}
                   name={policy.name}
                   policy={policy.PolicyDocument}
+                  policyPath={`inline_policies.${id}`}
                 />
               ))}
             </>
