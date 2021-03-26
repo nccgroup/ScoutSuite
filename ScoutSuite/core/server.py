@@ -67,7 +67,7 @@ def get_items(service, finding):
         
         item_list.append(item)
 
-    filtered_results = filter_results(item_list)
+    filtered_results = filter_results(item_list, ['name'])
     sorted_results = sort_results(filtered_results)
     paginated_results = paginate_results(sorted_results)
 
@@ -211,7 +211,7 @@ def get_resources(service, resource):
     resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
     for resource_data in resource_list: resource_data['display_path'] = resource_path
     
-    filtered_results = filter_results(resource_list)
+    filtered_results = filter_results(resource_list, ['name'])
     sorted_results = sort_results(filtered_results)
     paginated_results = paginate_results(sorted_results)
 
@@ -357,12 +357,13 @@ def get_element_from_path_kw(path, report_location=results):
     
     return element
 
-def filter_results(results):
-    filter_kw = request.args.getlist('remove') if request.args.get('remove') else []
+def filter_results(results, default_attributes):
+    filter_by = set(request.args.getlist('filter_by')) if request.args.get('filter_by') else set(results[0].keys())
+    filtered_results = []
+    for attribute in default_attributes: filter_by.add(attribute)
     for element in results:
-        for kw in filter_kw: del element[kw]
-    
-    return results
+        filtered_results.append({ prop: element[prop] for prop in filter_by })
+    return filtered_results
 
 def sort_results(results):
     sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
