@@ -5,11 +5,12 @@ import isEmpty from 'lodash/isEmpty';
 
 import { 
   partialDataShape,
-  renderResourcesAsList
+  formatDate,
+  valueOrNone,
+  renderResourcesAsList,
 } from '../../../utils/Partials';
-import { Partial } from '../../../components/Partial';
+import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
-import Informations from './Informations';
 import AuthenticationMethods from './AuthenticationMethods';
 import DetailedValue from '../../../components/DetailedValue';
 import Policy from '../../../components/Partial/Policy';
@@ -32,7 +33,17 @@ const IamUsers = props => {
   return (
     <Partial data={data}>
       <div className="left-pane">
-        <Informations />
+        <h4>Informations</h4>
+        <PartialValue 
+          label="ARN" 
+          valuePath="arn"
+          renderValue={valueOrNone}
+        />
+        <PartialValue 
+          label="Creation Date" 
+          valuePath="CreateDate"
+          renderValue={formatDate}
+        />
       </div>
 
       <TabsMenu>

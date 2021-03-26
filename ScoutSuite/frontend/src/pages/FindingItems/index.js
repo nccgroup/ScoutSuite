@@ -38,22 +38,13 @@ const FlaggedItems = () => {
   }
 
   const columns = [
-    { name: 'Name', key: 'name' },
   ];
 
-  for (let [key] of Object.entries(items.results[0])) {
-    if (key !== 'item') columns.push({ name: key, key });
+  for (let key of Object.keys(items.results[0])) {
+    if (key !== 'display_path') columns.push({ name: key, key });
   }
 
-  const data = items.results.map((item) => {
-    let newItem = item.item;
-
-    for (let [key, value] of Object.entries(item)) {
-      if (key !== 'item') newItem[key] = value.id;
-    }
-
-    return newItem;
-  });
+  const data = items.results;
 
   const initialState = {
     pageSize: 10,
