@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TabsMenu, TabPane } from '../../components/Tabs/';
+import { TabsMenu, TabPane } from '../../components/Tabs';
 import Summary from './TabsContent/Summary';
 import ExecutionDetails from './TabsContent/ExecutionDetails';
 import ResourcesDetails from './TabsContent/ResourcesDetails';

@@ -6,7 +6,7 @@ import { concatPaths } from '../../../utils/Partials';
 
 const propTypes = {
   path: PropTypes.string.isRequired,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 const PartialSection = (props) => {

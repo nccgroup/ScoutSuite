@@ -1,11 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import cx from 'classnames';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 
-import { PartialContext, PartialPathContext } from '../context';
+import { 
+  PartialContext, 
+  PartialPathContext,
+  PartialTabContext,
+} from '../context';
 import { concatPaths } from '../../../utils/Partials';
 
 import './style.scss';
@@ -51,6 +55,7 @@ const PartialValue = props => {
 
   const ctx = useContext(PartialContext);
   const basePath = useContext(PartialPathContext);
+  const setIssueLevel = useContext(PartialTabContext);
 
   const fullValuePath = concatPaths(basePath, valuePath);
   const value = renderValue(props.value || get(ctx.item, fullValuePath));
@@ -69,6 +74,15 @@ const PartialValue = props => {
 
   const hasError = fullErrorPaths.some(path => ctx.path_to_issues.includes(path));
   const level = ctx.level;
+
+  if (hasError) {
+    useEffect(
+      () => {
+        setIssueLevel(level);
+      },
+      [hasError],
+    );
+  }
 
   const content = (
     <span className={cx('value', hasError && level)}>
