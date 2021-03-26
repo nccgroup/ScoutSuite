@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TabsMenu, TabPane } from '../../../../components/Tabs';
+import { TabsMenu, TabPane } from '../../../../components/Partial/PartialTabs';
 import { PartialSection } from '../../../../components/Partial';
 import AccessControlList from './AccessControlList';
 import PoliciesAccessTable from './PoliciesAccessTable';

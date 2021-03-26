@@ -8,7 +8,7 @@ import {
   renderResourcesAsList 
 } from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
-import { TabsMenu, TabPane } from '../../../components/Tabs';
+import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import Informations from '../iam.users.id/Informations';
 import WarningMessage from '../../../components/WarningMessage';
 import Policy from '../../../components/Partial/Policy';
