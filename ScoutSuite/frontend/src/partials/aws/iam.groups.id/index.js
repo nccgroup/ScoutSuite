@@ -4,12 +4,13 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
 import { 
-  partialDataShape, 
-  renderResourcesAsList 
+  partialDataShape,
+  formatDate,
+  valueOrNone,
+  renderResourcesAsList,
 } from '../../../utils/Partials';
-import { Partial } from '../../../components/Partial';
+import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
-import Informations from '../iam.users.id/Informations';
 import WarningMessage from '../../../components/WarningMessage';
 import Policy from '../../../components/Partial/Policy';
 
@@ -30,7 +31,17 @@ const IamGroups = props => {
   return (
     <Partial data={data}>
       <div className="left-pane">
-        <Informations />
+        <h4>Informations</h4>
+        <PartialValue 
+          label="ARN" 
+          valuePath="arn"
+          renderValue={valueOrNone}
+        />
+        <PartialValue 
+          label="Creation Date" 
+          valuePath="CreateDate"
+          renderValue={formatDate}
+        />
       </div>
 
       <TabsMenu>
@@ -38,17 +49,23 @@ const IamGroups = props => {
           {!isEmpty(members) ? (
             renderResourcesAsList(members)
           ) : (
-            <WarningMessage message="This group has no members."/>
+            <PartialValue
+              errorPath="ALL"
+              renderValue={() => (
+                <WarningMessage message="This group has no members."/>
+              )}
+            />
           )}
         </TabPane>
         {!isEmpty(inline_policies) && (
           <TabPane title="Inline Policies">
             <>
-              {Object.values(inline_policies).map((policy, i) => (
+              {Object.entries(inline_policies).map(([id, policy], i) => (
                 <Policy
                   key={i}
                   name={policy.name}
                   policy={policy.PolicyDocument}
+                  policyPath={`inline_policies.${id}`}
                 />
               ))}
             </>

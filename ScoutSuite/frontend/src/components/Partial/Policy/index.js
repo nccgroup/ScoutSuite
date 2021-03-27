@@ -14,10 +14,21 @@ import './style.scss';
 const propTypes = {
   name: PropTypes.string,
   policy: PropTypes.object.isRequired,
+  policyPath: PropTypes.string,
+  defaultOpen: PropTypes.bool,
+};
+
+const defaultProps = {
+  defaultOpen: false,
 };
 
 const Policy = props => {
-  const { name, policy } = props;
+  const { 
+    name, 
+    policy, 
+    policyPath,
+    defaultOpen,
+  } = props;
 
   const displayJson = object => 
     JSON.stringify(object, null, 2)
@@ -45,7 +56,7 @@ const Policy = props => {
                   trigger={
                     <>
                       <ExpandMoreIcon fontSize="inherit"/>
-                      <span>{'{}'}</span>
+                      <span>{'{...}'}</span>
                     </>
                   }
                   triggerWhenOpen={
@@ -56,7 +67,7 @@ const Policy = props => {
                 >
                   <PartialValue 
                     value={displayJson(object)}
-                    errorPath={`Statement.${i}`}
+                    errorPath={`${policyPath}.PolicyDocument.Statement.${i}`}
                     renderValue={value => (
                       renderWithInnerHtml(
                         value,
@@ -97,6 +108,7 @@ const Policy = props => {
             </>
           }
           transitionTime={1}
+          open={defaultOpen}
         >
           {policyContent}
         </Collapsible>
@@ -108,5 +120,6 @@ const Policy = props => {
 };
 
 Policy.propTypes = propTypes;
+Policy.defaultProps = defaultProps;
 
 export default Policy;

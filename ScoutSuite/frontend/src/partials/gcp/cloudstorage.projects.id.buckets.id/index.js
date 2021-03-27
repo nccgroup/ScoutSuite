@@ -7,7 +7,7 @@ import {
   convertBoolToEnable,
   formatDate,
 } from '../../../utils/Partials';
-import { TabsMenu, TabPane } from '../../../components/Tabs';
+import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import PartialSection from '../../../components/Partial/PartialSection/index';
@@ -79,8 +79,6 @@ const Buckets = (props) => {
   const member_bindings = get(data, ['item', 'member_bindings']);
   const acls = get(data, ['item', 'acls']);
   const default_object_acl = get(data, ['item', 'default_object_acl']);
-
-  console.log(member_bindings, acls, default_object_acl);
 
   return (
     <Partial data={data}>
