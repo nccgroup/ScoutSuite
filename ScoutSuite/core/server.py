@@ -1,8 +1,8 @@
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, make_response, jsonify, abort
 from flask_cors import CORS
 from ScoutSuite.utils import format_service_name
 
-import json # TO REMOVE
+import csv, io, json
 
 # ROUTES TO REPORT
 scout_suite_directory = '/Users/noboruyoshida/code/ScoutSuite'
@@ -227,6 +227,18 @@ def get_resource(service, resource, resource_id):
             return jsonify(list(retrieved_resource.values())[0])
     return {}
 
+@app.route('/api/services/<service>/resources/<resource>/download')
+def download_resource(service, resource):
+    download_type = request.args.get('type') if request.args.get('type') else 'json'
+    
+    resource_list = [list(fetched_resource.values())[0] for fetched_resource in get_all_resources(service, resource)[0]]
+    data = (dict_to_csv(resource_list), 'csv', 'text/csv') if download_type == 'csv' else (jsonify(resource_list), 'json', 'application/json')
+    response = make_response(data[0])
+    response.headers['Content-Disposition'] = f'attachment; filename={resource}.{data[1]}'
+    response.mimetype = data[2]
+
+    return response
+
 @app.route('/api/categories/<category>/<policy_type>')
 def get_category_policy_type(category, policy_type):
     metadata = results['metadata']
@@ -346,6 +358,14 @@ def get_all_resources(service, resource):
 
 def format_title(title):
     return title[0].upper() + ' '.join(title[1:].lower().split('_'))
+
+def dict_to_csv(dict_list):
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=list(dict_list[0].keys()), delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
+    writer.writeheader()
+    writer.writerows(dict_list)
+    
+    return output.getvalue()
 
 def get_element_from_path(path, report_location=results):
     return get_element_from_path_kw(path.split('.'), report_location)
