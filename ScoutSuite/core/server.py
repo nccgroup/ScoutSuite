@@ -67,7 +67,7 @@ def get_items(service, finding):
         
         item_list.append(item)
 
-    filtered_results = filter_results(item_list, ['name'])
+    filtered_results = filter_results(item_list)
     sorted_results = sort_results(filtered_results)
     paginated_results = paginate_results(sorted_results)
 
@@ -211,7 +211,7 @@ def get_resources(service, resource):
     resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
     for resource_data in resource_list: resource_data['display_path'] = resource_path
     
-    filtered_results = filter_results(resource_list, ['name'])
+    filtered_results = filter_results(resource_list)
     sorted_results = sort_results(filtered_results)
     paginated_results = paginate_results(sorted_results)
 
@@ -357,23 +357,25 @@ def get_element_from_path_kw(path, report_location=results):
     
     return element
 
-def filter_results(results, default_attributes):
-    filter_by = set(request.args.getlist('filter_by')) if request.args.get('filter_by') else set(results[0].keys())
+def filter_results(results):
+    filter_by = json.loads(dict(request.args)['filter_by']) if request.args else {}
+    if not filter_by: return results
+
     filtered_results = []
-    for attribute in default_attributes: filter_by.add(attribute)
     for element in results:
-        filtered_results.append({ prop: element[prop] for prop in filter_by })
+        shared_items = {filter_param: filter_by[filter_param] for filter_param in filter_by if filter_param in element and filter_by[filter_param] == element[filter_param]}
+        if shared_items == filter_by: filtered_results.append(element)
+
     return filtered_results
 
 def sort_results(results):
     sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
-    direction = request.args.get('direction') if request.args.get('direction') else 'asc'
-    descending = (direction == 'desc')
+    order_by = request.args.get('order_by') if request.args.get('order_by') else 'asc'
 
-    return sorted(results, key=lambda k: k[sort_by], reverse=descending)
+    return sorted(results, key=lambda k: k[sort_by], reverse=(order_by=='desc'))
 
 def paginate_results(results):
-    items_per_page = int(request.args.get('items_per_page')) if request.args.get('items_per_page') else 10
+    items_per_page = int(request.args.get('limit')) if request.args.get('limit') else 10
     current_page = int(request.args.get('current_page')) if request.args.get('current_page') else 1
 
     paginated_results = [results[i:i + items_per_page] for i in range(0, len(results), items_per_page)]
