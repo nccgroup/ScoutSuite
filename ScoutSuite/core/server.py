@@ -67,11 +67,7 @@ def get_items(service, finding):
         
         item_list.append(item)
 
-    filtered_results = filter_results(item_list)
-    sorted_results = sort_results(filtered_results)
-    paginated_results = paginate_results(sorted_results)
-
-    return jsonify(paginated_results)
+    return jsonify(process_results(item_list))
 
 @app.route('/api/services/<service>/findings/<finding>/items/<item_id>', methods=['GET'])
 def get_issue_paths(service, finding, item_id):
@@ -210,12 +206,8 @@ def get_resources(service, resource):
     all_resources, resource_path = get_all_resources(service, resource)
     resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
     for resource_data in resource_list: resource_data['display_path'] = resource_path
-    
-    filtered_results = filter_results(resource_list)
-    sorted_results = sort_results(filtered_results)
-    paginated_results = paginate_results(sorted_results)
 
-    return jsonify(paginated_results)
+    return jsonify(process_results(resource_list))
 
 @app.route('/api/services/<service>/resources/<resource>/<resource_id>')
 def get_resource(service, resource, resource_id):
@@ -378,7 +370,7 @@ def get_element_from_path_kw(path, report_location=results):
     return element
 
 def filter_results(results):
-    filter_by = json.loads(dict(request.args)['filter_by']) if request.args else {}
+    filter_by = json.loads(dict(request.args)['filter_by']) if request.args.get('filter_by') else {}
     if not filter_by: return results
 
     filtered_results = []
@@ -387,6 +379,20 @@ def filter_results(results):
         if shared_items == filter_by: filtered_results.append(element)
 
     return filtered_results
+
+def search_results(results):
+    search_kw = request.args.get('search') if request.args.get('search') else ''
+    if not search_kw: return results
+
+    search_properties = ['name', 'id']
+    search_results = []
+    for element in results:
+        for search_property in search_properties:
+            if element[search_property] and search_kw in element[search_property]:
+                search_results.append(element)
+                break
+
+    return search_results
 
 def sort_results(results):
     sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
@@ -405,10 +411,19 @@ def paginate_results(results):
             'next_page': current_page + 1 if current_page < len(paginated_results) else None,
             'prev_page': current_page - 1 if current_page > 1 else None,
             'total_pages': len(paginated_results),
+            'limit': items_per_page
         },
         'results': paginated_results[current_page - 1] if paginated_results else []
     }
 
     return page_results
+
+def process_results(results):
+    filtered_results = filter_results(results)
+    searched_results = search_results(filtered_results)
+    sorted_results = sort_results(searched_results)
+    paginated_results = paginate_results(sorted_results)
+
+    return paginated_results
 
 app.run()
