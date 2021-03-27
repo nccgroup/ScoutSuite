@@ -1,6 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+
+
+export const partialDataShape = {
+  item: PropTypes.object.isRequired,
+  path_to_issues: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 /**
  * Convert a boolean to enabled or disabled
@@ -18,23 +25,21 @@ export const convertBoolToCheckmark = value => value ? '✔' : '✖';
 
 /**
  * Convert value to never if invalid
- * @param {*} value 
- * @returns 
+ * @param value 
+ * @returns {any|string}
  */
 export const convertValueOrNever = value => value ? value : 'Never';
 
 /**
  * Convert a list of value to a list of chips
- * @param {*} list 
- * @returns 
+ * @param list 
+ * @returns {array|string}
  */
-export const convertListToChips = list => list && list.length > 0 ? list.map((item, index) => <span className="chip" key={index}>{item}</span>) : 'None';
+export const convertListToChips = list => 
+  !isEmpty(list) 
+    ? list.map((item, index) => <span className="chip" key={index}>{item}</span>) 
+    : 'None';
 
-
-export const partialDataShape = {
-  item: PropTypes.object.isRequired,
-  path_to_issues: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
 /**
  * Convert a boolean to a 'yes' or 'no'
  * @param value
