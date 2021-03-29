@@ -19,7 +19,6 @@ const Informations = (props) => {
 
   return (
     <>
-      <h4>Informations</h4>
       {informations.map(([key, value]) => (
         <DetailedValue 
           key={key} 

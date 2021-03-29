@@ -1,0 +1,19 @@
+.stack-description {
+  margin-top: 1.5rem;
+}
+
+.role-icon.partial-value {
+  display: none;
+  margin: 0 !important;
+
+  &.issue {
+    display: inline-block;
+  }
+
+  svg {
+    font-size: 1rem;
+    margin-left: 0.25rem;
+    position: relative;
+    top: 2px;
+  }
+}

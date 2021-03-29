@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import InformationsWrapper from '../../components/InformationsWrapper';
 import Informations from './Informations/index';
 
 
@@ -11,9 +12,9 @@ const DefaultPartial = (props) => {
 
   return (
     <>
-      <div className="left-pane">
+      <InformationsWrapper>
         <Informations data={data.item} />
-      </div>
+      </InformationsWrapper>
 
       <b>THIS IS A DEFAULT FALLBACK PARTIAL.</b>
     </>
