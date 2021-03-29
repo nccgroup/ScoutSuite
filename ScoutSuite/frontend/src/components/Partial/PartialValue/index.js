@@ -11,6 +11,7 @@ import {
   PartialTabContext,
 } from '../context';
 import { concatPaths } from '../../../utils/Partials';
+import DetailedValue from '../../DetailedValue';
 
 import './style.scss';
 
@@ -23,13 +24,14 @@ const propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]),
+  className: PropTypes.string,
   tooltip: PropTypes.bool,
   tooltipProps: PropTypes.object,
   renderValue: PropTypes.func,
 };
 
 const defaultProps = {
-  label: null,
+  label: '',
   separator: ': ',
   value: null,
   valuePath: null,
@@ -48,6 +50,7 @@ const PartialValue = props => {
     separator,
     valuePath,
     errorPath,
+    className,
     tooltip,
     tooltipProps,
     renderValue,
@@ -85,26 +88,25 @@ const PartialValue = props => {
   }
 
   const content = (
-    <span className={cx('value', hasError && level)}>
+    <span className={cx(hasError && cx('issue', level))}>
       {value}
     </span>
   );
 
   return (
-    <div className="partial-value detailed-value"> 
-      {label && (
-        <span className="label">
-          {`${label}${separator}`}
-        </span>
-      )}
-      {tooltip ? (
-        <Tooltip title={value} {...tooltipProps}>
-          {content}
-        </Tooltip>
-      ) : 
-        content
+    <DetailedValue
+      className={cx(className, 'partial-value')}
+      label={label}
+      separator={separator}
+      value={
+        tooltip ? (
+          <Tooltip title={value} {...tooltipProps}>
+            {content}
+          </Tooltip>
+        ) : 
+          content
       }
-    </div>
+    />
   );
 };
 

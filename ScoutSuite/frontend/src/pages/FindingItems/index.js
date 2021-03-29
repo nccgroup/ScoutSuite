@@ -37,8 +37,7 @@ const FlaggedItems = () => {
     return <Breadcrumb />;
   }
 
-  const columns = [
-  ];
+  const columns = [];
 
   for (let key of Object.keys(items.results[0])) {
     if (key !== 'display_path') columns.push({ name: key, key });
