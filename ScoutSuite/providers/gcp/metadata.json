@@ -66,14 +66,13 @@
         }
       }
     }
-
   },
   "network": {
     "dns": {
       "resources": {
-        "zones": {
+        "managed_zones": {
           "cols": 2,
-          "path": "services.dns.projects.id.zones"
+          "path": "services.dns.projects.id.managed_zones"
         }
       }
   }},

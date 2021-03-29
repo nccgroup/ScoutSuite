@@ -22,13 +22,12 @@ class ManagedZones(Resources):
         zone_dict['name_servers'] = raw_zone.get('nameServers',None)
         zone_dict['visibility'] = raw_zone['visibility']
         zone_dict['creation_timestamp'] = raw_zone['creationTime']
-        zone_dict['to_remove'] = True
 
         dnssec_config = raw_zone['dnssecConfig']
         zone_dict['dnssec_enabled'] = True if dnssec_config['state'] == 'on' else False
         zone_dict['dnssec_keys'] = dnssec_config.get('defaultKeySpecs',None)
 
-        return zone_dict['id'], raw_zone
+        return zone_dict['id'], zone_dict
 
 
     def _get_description(self, raw_zone):
