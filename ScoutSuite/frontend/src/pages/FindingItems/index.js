@@ -60,7 +60,7 @@ const FlaggedItems = () => {
   return (
     <>
       <Breadcrumb />
-      <div className="flagged-items">
+      <div className="finding-items">
         <div className="table-card">
           <Table
             columns={columns}

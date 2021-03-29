@@ -13,6 +13,7 @@ import {
   PartialValue,
 } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import RulesTable from './RulesTable';
 import WarningMessage from '../../../components/WarningMessage';
 
@@ -31,8 +32,7 @@ const RegionDomain = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
-        <h4>Informations</h4>
+      <InformationsWrapper>
         <PartialValue
           label="ID"
           valuePath="id"
@@ -42,7 +42,7 @@ const RegionDomain = props => {
           valuePath="IsDefault"
           renderValue={value => value.toString()}
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Egress Rules">

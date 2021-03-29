@@ -4,6 +4,7 @@ import Collapsible from 'react-collapsible';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import size from 'lodash/size';
+import isEmpty from 'lodash/isEmpty';
 
 import PartialValue from '../PartialValue';
 import { renderWithInnerHtml } from '../../../utils/Partials';
@@ -29,6 +30,8 @@ const Policy = props => {
     policyPath,
     defaultOpen,
   } = props;
+
+  if (isEmpty(policy)) return null;
 
   const displayJson = object => 
     JSON.stringify(object, null, 2)

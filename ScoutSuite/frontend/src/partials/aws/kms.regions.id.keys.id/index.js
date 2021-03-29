@@ -6,6 +6,7 @@ import isEmpty from 'lodash/isEmpty';
 import { partialDataShape } from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import Informations from './Informations';
 import Policy from '../../../components/Partial/Policy';
 
@@ -24,9 +25,10 @@ const Keys = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <Informations />
-      </div>
+      </InformationsWrapper>
+
       <TabsMenu>
         <TabPane 
           title="Aliases"

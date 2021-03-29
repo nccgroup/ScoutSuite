@@ -11,7 +11,6 @@ import {
 const Informations = () => {
   return (
     <>
-      <h4>Informations</h4>
       <PartialValue 
         label="ID" 
         valuePath="id"

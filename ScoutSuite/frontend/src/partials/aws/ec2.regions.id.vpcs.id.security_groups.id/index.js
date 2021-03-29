@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Partial, PartialSection } from '../../../components/Partial';
 import { partialDataShape } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import Informations from './Informations';
 import RulesList from './RulesList';
 import Usage from './Usage';
@@ -20,9 +21,9 @@ const Ec2SecurityGroups = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <Informations />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Egress Rules">

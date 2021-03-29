@@ -7,6 +7,7 @@ import isEmpty from 'lodash/isEmpty';
 import { partialDataShape } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import PeeringConnection from './PeeringConnection';
 import DetailedValue from '../../../components/DetailedValue';
 
@@ -26,13 +27,12 @@ const RegionDomain = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
-        <h4>Informations</h4>
+      <InformationsWrapper>
         <PartialValue 
           label="Status"
           valuePath="Status.Message"
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Requester VPC">

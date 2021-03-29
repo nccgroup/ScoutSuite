@@ -11,6 +11,7 @@ import {
 } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import WarningMessage from '../../../components/WarningMessage';
 import Policy from '../../../components/Partial/Policy';
 
@@ -30,8 +31,7 @@ const IamGroups = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
-        <h4>Informations</h4>
+      <InformationsWrapper>
         <PartialValue 
           label="ARN" 
           valuePath="arn"
@@ -42,7 +42,7 @@ const IamGroups = props => {
           valuePath="CreateDate"
           renderValue={formatDate}
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Members">
