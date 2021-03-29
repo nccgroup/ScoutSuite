@@ -1,0 +1,14 @@
+{
+    "description": "DNSSEC is not enabled for Cloud DNS",
+    "rationale": "Maintaining unused resources increases risks of misconfigurations and increases the difficulty of audits.",
+    "dashboard_name": "Cloud DNS",
+    "path": "dns.projects.id.zones.id",
+    "conditions": [
+        "and",
+        [
+            "dns.projects.id.zones.id.to_remove",
+            "true",
+            ""
+        ]
+    ]
+}

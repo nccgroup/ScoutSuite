@@ -66,7 +66,17 @@
         }
       }
     }
+
   },
+  "network": {
+    "dns": {
+      "resources": {
+        "zones": {
+          "cols": 2,
+          "path": "services.dns.projects.id.zones"
+        }
+      }
+  }},
   "storage": {
     "cloudstorage": {
       "resources": {
@@ -77,6 +87,7 @@
       }
     }
   },
+
   "database": {
     "cloudsql": {
       "resources": {

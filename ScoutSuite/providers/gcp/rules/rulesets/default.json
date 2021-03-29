@@ -140,6 +140,12 @@
                 "level": "warning"
             }
         ],
+        "dns-zones-dnssec-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-gmail-accounts-used.json": [
             {
                 "enabled": true,
