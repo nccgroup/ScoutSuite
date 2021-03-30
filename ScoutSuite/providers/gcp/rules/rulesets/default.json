@@ -146,6 +146,18 @@
                 "level": "warning"
             }
         ],
+        "dns-zones-key-signing-key-using-rsasha1.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "dns-zones-zone-signing-key-using-rsasha1.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-gmail-accounts-used.json": [
             {
                 "enabled": true,

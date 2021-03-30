@@ -8,10 +8,26 @@
         <h4 class="list-group-item-heading">Information</h4>
         <div class="list-group-item-text item-margin">Name: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.name">{{name}}</span></div>
         <div class="list-group-item-text item-margin">ID: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.id">{{id}}</span></div>
-        <div class="list-group-item-text item-margin">Project ID: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.project_id">{{project_id}}</span></div>
         <div class="list-group-item-text item-margin">Description: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.description"><samp>{{description}}</samp></span></div>
         <div class="list-group-item-text item-margin">Creation Date: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.creation_timestamp">{{format_date creation_timestamp}}</span></div>
-        <div class="list-group-item-text item-margin">Creation Date: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.dnssec_enabled">{{convert_bool_to_enabled dnssec_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">DNSSEC: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.dnssec_enabled">{{convert_bool_to_enabled dnssec_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Visibility: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.visibility">{{ visibility}}</span></div>
+    <div class="list-group-item">
+        <h5  id="dns.projects.{{@../key}}.managed_zones.{{@key}}.dnssec_keys" class="list-group-item-heading">DNSSEC Keys:</h5>
+        <div class="accordion-inner">
+            <ul>
+                {{#each dnssec_keys}}
+                <li><samp>{{@key}}</samp></li>
+                <ul>
+                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.keys.{{@key}}.key_algorithm">Key Algorithm: <samp>{{key_algorithm}}</samp></li>
+                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.keys.{{@key}}.key_type">Key Type: <samp>{{key_type}}</samp></li>
+                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.keys.{{@key}}.length">Length: {{length}}</li>
+                </ul>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
     </div>
 </script>
 
