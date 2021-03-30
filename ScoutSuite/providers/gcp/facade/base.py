@@ -172,6 +172,8 @@ class GCPFacade(GCPBaseFacade):
             endpoint = 'monitoring'
         elif service == 'MemoryStore':
             endpoint = 'redis'
+        elif service =='DNS':
+            endpoint='dns'
         else:
             print_debug('Could not validate the state of the {} API for project \"{}\", '
                         'including it in the execution'.format(format_service_name(service.lower()), project_id))
