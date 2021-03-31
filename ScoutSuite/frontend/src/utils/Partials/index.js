@@ -14,7 +14,7 @@ export const partialDataShape = {
  * @param value
  * @returns {string}
  */
-export const convertBoolToEnable = value => value ? 'enabled' : 'disabled';
+export const convertBoolToEnable = value => value ? 'Enabled' : 'Disabled';
 
 /**
  * Convert a boolean to a checkmark or x

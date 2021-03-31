@@ -12,7 +12,9 @@ import {
   convertListToChips,
 } from '../../../utils/Partials/index';
 import { TabPane, TabsMenu } from '../../../components/Partial/PartialTabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import PartialTable from '../../../components/Partial/PartialTable/index';
+
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -40,8 +42,11 @@ const Bucket = (props) => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
-        <PartialValue label="Storage Account Name" path="name" />
+      <InformationsWrapper>
+        <PartialValue 
+          label="Storage Account Name" 
+          path="name" 
+        />
         <PartialValue
           label="Public Traffic"
           path="public_traffic_allowed"
@@ -72,7 +77,7 @@ const Bucket = (props) => {
           path="resource_group_name"
           renderValue={convertValueOrNever}
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Blob Containers">

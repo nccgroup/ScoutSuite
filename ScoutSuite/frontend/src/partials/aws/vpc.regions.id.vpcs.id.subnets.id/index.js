@@ -15,6 +15,7 @@ import {
   PartialValue,
 } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import FlowLogs from './FlowLogs';
 
 
@@ -33,8 +34,7 @@ const RegionDomain = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
-        <h4>Informations</h4>
+      <InformationsWrapper>
         <PartialValue
           label="Name"
           valuePath="name"
@@ -68,7 +68,7 @@ const RegionDomain = props => {
           valuePath="MapPublicIpOnLaunch"
           renderValue={convertBoolToEnable}
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         {!isEmpty(instances) &&(

@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 
 import './style.scss';
 
 
 const propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   value: PropTypes.any.isRequired,
   separator: PropTypes.string,
+  className: PropTypes.string,
   renderValue: PropTypes.func,
 };
 
@@ -21,6 +23,7 @@ const DetailedValue = props => {
     label,
     value,
     separator,
+    className,
     renderValue,
   } = props;
 
@@ -29,8 +32,12 @@ const DetailedValue = props => {
   }
 
   return (
-    <div className="detailed-value"> 
-      <span className="label">{`${label}${separator}`}</span>
+    <div className={cx(className, 'detailed-value')}>
+      {label && (
+        <span className="label">
+          {`${label}${separator}`}
+        </span>
+      )}
       <span className="value">{renderValue(value)}</span>
     </div>
   );

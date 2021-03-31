@@ -7,7 +7,6 @@ import { valueOrNone, formatDate } from '../../../../utils/Partials';
 const Informations = () => {
   return (
     <>
-      <h4>Informations</h4>
       <PartialValue
         label="Name"
         valuePath="name"

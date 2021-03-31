@@ -1,23 +1,23 @@
 @import 'src/variables';
 
 .partial-value {
+  .issue {
+    font-weight: 700;
+  }
+
   .critical {
     color: $critical-color;
-    font-weight: 700;
   }
 
   .high, .danger {
     color: $high-color;
-    font-weight: 700;
   }
 
   .medium, .warning {
     color: $medium-color;
-    font-weight: 700;
   }
 
   .low {
     color: $low-color;
-    font-weight: 700;
   }
 }

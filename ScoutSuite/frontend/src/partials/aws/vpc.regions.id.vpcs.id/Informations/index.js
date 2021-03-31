@@ -6,7 +6,6 @@ import { PartialValue } from '../../../../components/Partial/index';
 const Informations = () => {
   return (
     <>
-      <h4>Informations</h4>
       <PartialValue
         label="ID"
         valuePath="id"

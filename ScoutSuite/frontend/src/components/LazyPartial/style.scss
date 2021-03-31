@@ -12,6 +12,11 @@
     padding-right: 2.5rem;
   }
 
+  h4 {
+    font-size: 1.125rem;
+    margin: 0 0 0.5rem 0;
+  }
+
   .header {
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
@@ -29,39 +34,20 @@
     padding-top: 1rem;
     padding-bottom: 2rem;
 
+    & > div {
+      flex-grow: 1;
+    }
+
+    .informations-wrapper {
+      margin-right: 2.5rem;
+    }
+
     .tabs-menu {
       margin-bottom: 1.5rem;
     }
 
-    h3, h4 {
-      margin: 0 0 1rem 0;
-    }
-
-    h4 {
-      font-size: 1.125rem;
-    }
-
     h5 {
       font-size: 1rem;
-    }
-
-    & > div {
-      flex-grow: 1;
-
-      &.left-pane {
-        flex-grow: 0;
-        flex-shrink: 0;
-        margin-right: 2.5rem;
-        padding: 1rem;
-        min-width: 13rem;
-        max-width: 20rem;
-        word-break: break-word;
-        background: $background-color;
-
-        .detailed-value {
-          margin-bottom: 0.25rem;
-        }
-      }
     }
   }
 

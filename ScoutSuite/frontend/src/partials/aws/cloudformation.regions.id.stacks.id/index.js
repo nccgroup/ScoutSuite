@@ -1,27 +1,30 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import { partialDataShape } from '../../../utils/Partials';
+import { 
+  partialDataShape, 
+  renderResourcesAsList 
+} from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import Informations from './Informations';
-import DetailedValue from '../../../components/DetailedValue';
+import Policy from '../../../components/Partial/Policy';
 
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const RegionDomain = props => {
+const CloudtrailStack = props => {
   const { data } = props;
 
   if (!data) return null;
 
-  const tags = get(data, ['item', 'tags'], []);
+  const capabilities = get(data, ['item', 'Capabilities'], []);
+  const policy = get(data, ['item', 'policy']);
 
   return (
     <Partial data={data}>
@@ -30,26 +33,25 @@ const RegionDomain = props => {
       </InformationsWrapper>
 
       <TabsMenu>
-        <TabPane 
-          title="Tags"
-          disabled={isEmpty(tags)}
+        <TabPane
+          title="Capabilities"
+          disabled={isEmpty(capabilities)}
         >
-          <ul>
-            {tags.map((tag, i) => (
-              <li key={i}>
-                <DetailedValue
-                  label={tag.Key}
-                  value={tag.Value}
-                />
-              </li>
-            ))}
-          </ul>
+          {renderResourcesAsList(capabilities)}
+        </TabPane>
+        <TabPane
+          title="Stack Policy"
+          disabled={isEmpty(policy)}
+        >
+          <Policy
+            policy={policy}
+          />
         </TabPane>
       </TabsMenu>
     </Partial>
   );
 };
 
-RegionDomain.propTypes = propTypes;
+CloudtrailStack.propTypes = propTypes;
 
-export default RegionDomain;
+export default CloudtrailStack;
