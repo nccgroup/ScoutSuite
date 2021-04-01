@@ -49,6 +49,7 @@
     "enquirer": "^2.3.6",
     "eslint": "^7.19.0",
     "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^5.0.9"
   }
 }

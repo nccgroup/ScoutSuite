@@ -11,34 +11,25 @@ import './style.scss';
 const RulesList = () => {
   const ctx = useContext(PartialContext);
   const basePath = useContext(PartialPathContext);
-  const value = get(ctx.item, basePath);
+  const rules = get(ctx.item, basePath);
 
   const isDefault = get(ctx.item, 'name') === 'default';
 
-  const renderIpAddresses = (addresses, path) => (
+  const renderIpAddresses = (title, addresses, path) => (
     <li>
-      IP addresses:
+      {`${title}:`}
       <ul>
         {addresses.map((address, i) => (
           <li key={i}>
             <PartialValue
-              value={address.CIDR}
+              value={address}
               errorPath={path}
+              renderValue={value =>
+                value.CIDRName 
+                  ? `${value.CIDR} (${value.CIDRName})`
+                  : value.CIDR
+              }
             />
-          </li>
-        ))}
-      </ul>
-    </li>
-  );
-
-  const renderIpv6Addresses = addresses => (
-    <li>
-      IPv6 addresses:
-      <ul>
-        {addresses.map((address, i) => (
-          <li key={i}>
-            {/* TODO: actual value for IPv6*/}
-            {address}
           </li>
         ))}
       </ul>
@@ -52,8 +43,13 @@ const RulesList = () => {
         {groups.map((group, i) => (
           <li key={i}>
             <PartialValue
-              value={`${group.GroupName}\xa0\xa0(${group.GroupId})`}
+              value={group}
               errorPath={path}
+              renderValue={value =>
+                value.GroupName
+                  ? `${value.GroupName} (${value.GroupId})`   //TODO: Link groupId resource
+                  : `${value.GroupId} (AWS Account ID: ${value.UserId})`
+              }
             />
           </li>
         ))}
@@ -64,7 +60,7 @@ const RulesList = () => {
   return (
     <>
       <ul className="rules-list">
-        {Object.entries(value.protocols).map(([name, { ports }], i) => (
+        {Object.entries(rules.protocols).map(([name, { ports }], i) => (
           <div key={i}>
             <li>{name}</li>
             <ul>
@@ -82,12 +78,17 @@ const RulesList = () => {
                       <ul>
                         {port.cidrs && (
                           renderIpAddresses(
+                            'IP adresses',
                             port.cidrs, 
                             `protocols.${name}.ports.${port_name}.cidrs.${i}.CIDR`,
                           )
                         )}
                         {port.Ipv6Ranges && (
-                          renderIpv6Addresses(port.Ipv6Ranges)
+                          renderIpAddresses(
+                            'IPv6 addresses',
+                            port.Ipv6Ranges,
+                            `protocols.${name}.ports.${port_name}.cidrs.${i}.CIDR`,
+                          )
                         )}
                         {port.security_groups && (
                           renderSecurityGroups(

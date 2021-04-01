@@ -71,4 +71,4 @@ export const getResourceEndpoint = (service, resource, id) =>
  * @param {*} raw 
  * @returns 
  */
-export const getRAWEndpoint = (raw) => `raw/${raw.replace(/\./g, '/')}`;
+export const getRawEndpoint = (raw) => `raw/${raw.replace(/\./g, '/')}`;

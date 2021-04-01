@@ -63,10 +63,6 @@ const PartialValue = props => {
   const fullValuePath = concatPaths(basePath, valuePath);
   const value = renderValue(props.value || get(ctx.item, fullValuePath));
 
-  if (value === undefined || value === null) {
-    return null;
-  }
-
   let fullErrorPaths;
   if (errorPath) {
     const paths = isArray(errorPath) ? errorPath : [errorPath];
@@ -78,13 +74,17 @@ const PartialValue = props => {
   const hasError = fullErrorPaths.some(path => ctx.path_to_issues.includes(path));
   const level = ctx.level;
 
-  if (hasError) {
-    useEffect(
-      () => {
+  useEffect(
+    () => {
+      if (hasError) {
         setIssueLevel(level);
-      },
-      [hasError],
-    );
+      }
+    },
+    [level],
+  );
+
+  if (value === undefined || value === null) {
+    return null;
   }
 
   const content = (

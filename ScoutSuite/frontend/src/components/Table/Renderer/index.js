@@ -36,8 +36,8 @@ const TableRender = (props) => {
     initialState
   } = props;
 
-  const columnsMemo = React.useMemo(() => columns);
-  const dataMemo = React.useMemo(() => data);
+  const columnsMemo = React.useMemo(() => columns, [columns]);
+  const dataMemo = React.useMemo(() => data, [data]);
 
   const useTableParams = [
     {
