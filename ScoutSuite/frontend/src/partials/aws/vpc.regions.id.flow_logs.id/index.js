@@ -4,12 +4,11 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import { partialDataShape } from '../../../utils/Partials';
+import { partialDataShape, renderTags } from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import Informations from './Informations';
-import DetailedValue from '../../../components/DetailedValue';
 
 
 const propTypes = {
@@ -30,21 +29,11 @@ const RegionDomain = props => {
       </InformationsWrapper>
 
       <TabsMenu>
-        <TabPane 
-          title="Tags"
-          disabled={isEmpty(tags)}
-        >
-          <ul>
-            {tags.map((tag, i) => (
-              <li key={i}>
-                <DetailedValue
-                  label={tag.Key}
-                  value={tag.Value}
-                />
-              </li>
-            ))}
-          </ul>
-        </TabPane>
+        {!isEmpty(tags) && (
+          <TabPane title="Tags">
+            {renderTags(tags)}
+          </TabPane>
+        )}
       </TabsMenu>
     </Partial>
   );

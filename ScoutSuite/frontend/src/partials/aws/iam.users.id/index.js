@@ -8,12 +8,12 @@ import {
   formatDate,
   valueOrNone,
   renderResourcesAsList,
+  renderTags,
 } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import AuthenticationMethods from './AuthenticationMethods';
-import DetailedValue from '../../../components/DetailedValue';
 import Policy from '../../../components/Partial/Policy';
 
 
@@ -80,16 +80,7 @@ const IamUsers = props => {
         )}
         {!isEmpty(tags) && (
           <TabPane title="Tags">
-            <ul>
-              {tags.map((tag, i) => (
-                <li key={i}>
-                  <DetailedValue
-                    label={tag.Key}
-                    value={tag.Value}
-                  />
-                </li>
-              ))}
-            </ul>
+            {renderTags(tags)}
           </TabPane>
         )}
       </TabsMenu>

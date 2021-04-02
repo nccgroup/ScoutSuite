@@ -5,13 +5,13 @@ import isEmpty from 'lodash/isEmpty';
 
 import { 
   partialDataShape, 
-  renderResourcesAsList 
+  renderResourcesAsList, 
+  renderTags,
 } from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import Informations from './Informations';
-import DetailedValue from '../../../components/DetailedValue';
 import Policy from '../../../components/Partial/Policy';
 
 
@@ -75,15 +75,7 @@ const IamGroups = props => {
         )}
         {!isEmpty(tags) && (
           <TabPane title="Tags">
-            <ul>
-              {tags.map((tag, i) => (
-                <DetailedValue
-                  key={i}
-                  label={tag.Key}
-                  value={tag.Value}
-                />
-              ))}
-            </ul>
+            {renderTags(tags)}
           </TabPane>
         )}
       </TabsMenu>
