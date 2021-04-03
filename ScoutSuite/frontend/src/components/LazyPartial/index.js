@@ -18,6 +18,7 @@ const LazyPartial = (props) => {
     data,
     partial
   } = props;
+  //const [lastPartial, setLastPartial] = useState();
 
   const { data: provider } = useAPI('provider');
 
@@ -28,7 +29,8 @@ const LazyPartial = (props) => {
     } catch(e) {
       md = await import('../../partials/Default');
     }
-
+    console.log('PARTIAL NAME', partial);
+    //setLastPartial(partial);
     return md;
   });
 

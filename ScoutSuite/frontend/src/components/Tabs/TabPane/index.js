@@ -4,48 +4,20 @@ import cx from 'classnames';
 
 import './style.scss';
 
-
 const propTypes = {
-  title: PropTypes.node.isRequired,
-  className: PropTypes.string,
+  title: PropTypes.string.isRequired,
   isSelected: PropTypes.bool,
-  disabled: PropTypes.bool,
   onClick: PropTypes.func,
-  children: PropTypes.any.isRequired,
 };
 
-const TabPane = props => {
-  const {
-    title,
-    className,
-    isSelected,
-    disabled,
-    onClick,
-    children,
-  } = props;
+const TabPane = (props) => {
+  const { title, isSelected, onClick } = props;
 
-  const classNames = cx(
-    className,
-    'tab-pane', 
-    {
-      'is-selected': isSelected,
-      'disabled': disabled
-    }
-  );
-
-  const tabOnClick = disabled ? null : onClick;
+  const className = cx('tab-pane', { 'is-selected': isSelected });
 
   return (
-    <span 
-      className={classNames} 
-      onClick={tabOnClick}
-    >
-      <span className="tab-title">
-        {title}
-      </span>
-      <div className="tab-content">
-        {children}
-      </div>
+    <span className={className} onClick={onClick}>
+      {title}
     </span>
   );
 };

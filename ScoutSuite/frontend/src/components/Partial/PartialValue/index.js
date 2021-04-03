@@ -28,6 +28,7 @@ const propTypes = {
   tooltip: PropTypes.bool,
   tooltipProps: PropTypes.object,
   renderValue: PropTypes.func,
+  baseErrorPath: PropTypes.string,
 };
 
 const defaultProps = {
@@ -54,13 +55,14 @@ const PartialValue = props => {
     tooltip,
     tooltipProps,
     renderValue,
+    baseErrorPath
   } = props;
 
   const ctx = useContext(PartialContext);
   const basePath = useContext(PartialPathContext);
   const setIssueLevel = useContext(PartialTabContext);
 
-  const fullValuePath = concatPaths(basePath, valuePath);
+  const fullValuePath = concatPaths(typeof baseErrorPath !== 'undefined' ? baseErrorPath  : basePath, valuePath);
   const value = renderValue(props.value || get(ctx.item, fullValuePath));
 
   if (value === undefined || value === null) {

@@ -22,6 +22,12 @@ module.exports = {
     'react/jsx-uses-vars': 'error',
     'react/jsx-uses-react': 1,
     'no-debugger': 0,
+    'react/jsx-first-prop-new-line': [1, 'multiline'],
+    'react/jsx-max-props-per-line': [1,
+      {
+        'maximum': 2
+      }
+    ]
   },
   'settings': {
     'react': {

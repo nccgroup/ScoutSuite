@@ -12,14 +12,16 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
   );
   const [path, setPath] = useState(defaultPath);
   const [loading, setLoading] = useState(!Cache.has(path));
+  const [reloading, setReloading]= useState(false);
   const [error, setError] = useState(null);
   const [queryParams, setQueryParams] = useState({
     page: 1,
-    sortBy: 'name',
-    direction: 'asc',
+    sortBy: null,
+    direction: null,
   });
 
   useEffect(() => {
+    setReloading(true);
     const asyncAPI = async () => {
       try {
         const response = await API.get(path);
@@ -31,6 +33,7 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
         console.error(e.message);
       }
       setLoading(false);
+      setReloading(false);
     };
     asyncAPI();
   }, [path]);
@@ -40,8 +43,8 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
 
     if (settings.pagination) {
       urlQueryParams.set('current_page', queryParams.page);
-      urlQueryParams.set('sort_by', queryParams.sortBy);
-      urlQueryParams.set('direction', queryParams.direction);
+      if (queryParams.sortBy) urlQueryParams.set('sort_by', queryParams.sortBy);
+      if (queryParams.sortBy && queryParams.direction) urlQueryParams.set('direction', queryParams.direction);
     }
 
     setPath(
@@ -52,7 +55,7 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
   }, [defaultPath, queryParams]);
 
   const loadPage = (page, sortBy, direction) => {
-    setQueryParams({ page, sortBy, direction });
+    setQueryParams({ page, sortBy: sortBy || null, direction: direction || null });
   };
 
   return {
@@ -60,5 +63,6 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
     loading,
     error,
     loadPage,
+    reloading,
   };
 };

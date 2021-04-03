@@ -36,7 +36,7 @@ const TabsMenu = props => {
         }))}
       </div>
       <div className="tab-content">
-        {React.isValidElement(content) && content}
+        {content}
       </div>
     </div>
   );
