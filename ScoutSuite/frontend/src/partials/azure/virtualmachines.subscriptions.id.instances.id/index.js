@@ -1,10 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash/get';
+// import Skeleton from '@material-ui/lab/Skeleton';
 
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import { Partial, PartialValue } from '../../../components/Partial';
-import { partialDataShape, valueOrNone } from '../../../utils/Partials';
+import {
+  partialDataShape,
+  valueOrNone,
+  renderList,
+} from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+//import { useResources } from '../../../api/useResources';
+// import { Link } from 'react-router-dom';
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -12,13 +20,18 @@ const propTypes = {
 
 const Instances = props => {
   const { data } = props;
+  const item = get(data, ['item'], {});
+
+  //const { data: network_interfaces , loading } = useResources('networking', 'network_interfaces', item.network_interfaces);
 
   if (!data) return null;
 
   return (
     <Partial data={data}>
       <InformationsWrapper>
-        <PartialValue label="Name" valuePath="name" renderValue={valueOrNone} />
+        <PartialValue
+          label="Name" valuePath="name"
+          renderValue={valueOrNone} />
 
         <PartialValue
           label="VM ID"
@@ -51,7 +64,9 @@ const Instances = props => {
           renderValue={valueOrNone}
         />
 
-        <PartialValue label="Plan" valuePath="plan" renderValue={valueOrNone} />
+        <PartialValue
+          label="Plan" valuePath="plan"
+          renderValue={valueOrNone} />
 
         <PartialValue
           label="Zones"
@@ -86,7 +101,8 @@ const Instances = props => {
         <PartialValue
           label="Tags"
           valuePath="tags"
-          renderValue={} />
+          renderValue={tags => renderList(tags, valueOrNone)}
+        />
 
         <PartialValue
           label="Resource group"
@@ -96,9 +112,14 @@ const Instances = props => {
       </InformationsWrapper>
 
       <TabsMenu>
-        <TabPane title="Network Interfaces"></TabPane>
+        <TabPane title="Network Interfaces">
+          {/* {loading && <Skeleton />}
+          {renderList(network_interfaces, '', (ni) => <Link to={`/services/network/resources/network/${ni.id}`}>{ni.name}</Link>)} */}
+        </TabPane>
 
-        <TabPane title="Extensions"></TabPane>
+        <TabPane title="Extensions">
+          {renderList(item.extensions)}
+        </TabPane>
       </TabsMenu>
     </Partial>
   );
