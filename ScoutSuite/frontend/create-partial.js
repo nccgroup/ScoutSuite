@@ -60,6 +60,7 @@ const template = (CompName, informations, tabs, renderers) => {
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { 
   partialDataShape,
@@ -78,9 +79,9 @@ const ${CompName} = props => {
 
   return (
     <Partial data={data}>
-      <div>
+      <InformationsWrapper>
 ${informations}
-      </div>
+      </InformationsWrapper>
 
       ${tabsRender ? `<TabsMenu>
         ${tabsRender}
