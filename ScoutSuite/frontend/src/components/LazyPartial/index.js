@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash/get';
 
 import { useAPI } from '../../api/useAPI';
 
@@ -28,11 +29,14 @@ const LazyPartial = (props) => {
       md = await import('../../partials/' + provider.provider_code + '/' + partial + '/index.js'); // Can't use a string literal because of Babel bug
     } catch(e) {
       md = await import('../../partials/Default');
-    }
+    };
+
     console.log('PARTIAL NAME', partial);
     //setLastPartial(partial);
     return md;
   });
+
+  const item = get(data, ['item'], {});
 
   return (
     <div className="selected-item-container">
@@ -41,7 +45,7 @@ const LazyPartial = (props) => {
       </div>
       <div className="content">
         <Suspense fallback={<span>Loading...</span>}>
-          <DynamicPartial data={data} />
+          <DynamicPartial data={data} item={item} />
         </Suspense>
       </div>
     </div>

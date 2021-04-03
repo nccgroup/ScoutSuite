@@ -28,7 +28,7 @@ const parseFile = async (provider, filename) => {
   for (const { name, content } of sections) {
     sectionsParsed.push({ name, values: [] });
 
-    let regexpNames = /<div class="list-group-item-text item-margin">(?:\n[\t ]*)?(?<name>[\w ]+):(?<content>(?: |\n\t*)<span id="(?<id>.*?)">(?:.*?){{(?<value>.*?)}}(?:.*?))<\/div>/gms;
+    let regexpNames = /<div class="list-group-item-text item-margin">(?:\n[\t ]*)?(?<name>[\w1-9.- ]+):(?<content>(?: |\n\t*)<span id="(?<id>.*?)">(?:.*?){{(?<value>.*?)}}(?:.*?))<\/div>/gms;
     let match = regexpNames.exec(content);
     do {
 
