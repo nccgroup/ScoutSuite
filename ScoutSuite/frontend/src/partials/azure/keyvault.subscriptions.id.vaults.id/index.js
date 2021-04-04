@@ -7,6 +7,7 @@ import { Partial, PartialValue } from '../../../components/Partial';
 import { 
   partialDataShape,
   valueOrNone, 
+  convertBoolToEnable, 
   renderList
 } from '../../../utils/Partials';
 
@@ -15,7 +16,7 @@ const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const Watchers = props => {
+const Vaults = props => {
   const { data } = props;
 
   if (!data) return null;
@@ -24,19 +25,18 @@ const Watchers = props => {
     <Partial data={data}>
       <InformationsWrapper>
         <PartialValue
-          label="Name"
-          valuePath="name"
-          renderValue={valueOrNone} />
-
-        <PartialValue
-          label="Provisioning State"
-          valuePath="provisioning_state"
-          renderValue={valueOrNone} />
+          label="ID"
+          valuePath="id" />
 
         <PartialValue
           label="Location"
           valuePath="location"
           renderValue={valueOrNone} />
+
+        <PartialValue
+          label="Public Access"
+          valuePath="public_access_allowed"
+          renderValue={convertBoolToEnable} />
 
         <PartialValue
           label="Tags"
@@ -48,12 +48,14 @@ const Watchers = props => {
           valuePath="resource_group_name"
           renderValue={valueOrNone} />
 
+
       </InformationsWrapper>
+
       
     </Partial>
   );
 };
 
-Watchers.propTypes = propTypes;
+Vaults.propTypes = propTypes;
 
-export default Watchers;
+export default Vaults;
