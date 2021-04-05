@@ -79,10 +79,6 @@
         "instances": {
           "cols": 2,
           "path": "services.cloudsql.projects.id.instances"
-        },
-        "mysql_instances": {
-          "cols": 2,
-          "path": "services.cloudsql.projects.id.mysql_instances"
         }
       }
     },
