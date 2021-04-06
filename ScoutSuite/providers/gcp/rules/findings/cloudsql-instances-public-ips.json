@@ -15,7 +15,7 @@
         "https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints",
         "https://console.cloud.google.com/iam-admin/orgpolicies/sql-restrictPublicIp"
     ],
-    "dashboard_name": "SQL Instances",
+    "dashboard_name": "Instances",
     "path": "cloudsql.projects.id.instances.id",
     "conditions": [
         "and",
