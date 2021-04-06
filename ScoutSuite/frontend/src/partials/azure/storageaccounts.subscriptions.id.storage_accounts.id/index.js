@@ -13,39 +13,48 @@ import {
 } from '../../../utils/Partials/index';
 import { TabPane, TabsMenu } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
-import PartialTable from '../../../components/Partial/PartialTable/index';
 
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
+const renderBlobContainer = data => {
+  return (<div key={data.id}>
+    <h2>{data.id}</h2>
+    <ul>
+      <li>
+        Public Access: {convertBoolToEnable(data.public_access_allowed)}
+      </li>
+    </ul>
+  </div>)
+}
+const renderBlobService = data => {
+  return (<div key={data.id}>
+    <h2>{data.name}</h2>
+    <ul>
+      <li>
+        Soft Delete: {convertBoolToEnable(data.soft_delete_enabled)}
+      </li>
+    </ul>
+  </div>)
+}
+
 const Bucket = (props) => {
   const { data } = props;
 
   if (!data) return null;
 
-  const blobColumns = [
-    {
-      name: 'Key',
-      key: 'key',
-    },
-    {
-      name: 'Public Access',
-      key: 'public_access_allowed',
-    },
-  ];
-
-  const blobRenderers = { public_access_allowed: convertBoolToEnable };
 
   const blob_containers = get(data, ['item', 'blob_containers']);
+  const blob_services = get(data, ['item', 'blob_services']);
 
   return (
     <Partial data={data}>
       <InformationsWrapper>
-        <PartialValue 
-          label="Storage Account Name" 
-          path="name" 
+        <PartialValue
+          label="Storage Account Name"
+          path="name"
         />
         <PartialValue
           label="Public Traffic"
@@ -68,6 +77,11 @@ const Bucket = (props) => {
           renderValue={convertValueOrNever}
         />
         <PartialValue
+          label="Storage encrypted with Customer Managed Key"
+          path="encryption_key_customer_managed"
+          renderValue={convertBoolToEnable}
+        />
+        <PartialValue
           label="Tags"
           path="tags"
           renderValue={convertListToChips}
@@ -82,17 +96,24 @@ const Bucket = (props) => {
       <TabsMenu>
         <TabPane title="Blob Containers">
           {!isEmpty(blob_containers) ? (
-            <PartialTable
-              columns={blobColumns}
-              path="blob_containers"
-              formatters={blobRenderers}
-            />
+            Object.values(blob_containers).map((value) =>
+              renderBlobContainer(value)
+            )
+          ) : (
+            <span>None</span>
+          )}
+        </TabPane>
+        <TabPane title="Blob Services">
+          {!isEmpty(blob_services) ? (
+            Object.values(blob_services).map((value) =>
+              renderBlobService(value)
+            )
           ) : (
             <span>None</span>
           )}
         </TabPane>
       </TabsMenu>
-    </Partial>
+    </Partial >
   );
 };
 
