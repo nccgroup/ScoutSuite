@@ -41,7 +41,7 @@ const IamGroups = props => {
         <TabPane title="Role Trust Policy">
           <Policy
             policy={role_policy.PolicyDocument}
-            policyPath="assume_role_policy"
+            policyPath="assume_role_policy.PolicyDocument"
           />
         </TabPane>
         {!isEmpty(instances) && (
@@ -62,7 +62,7 @@ const IamGroups = props => {
                   key={i}
                   name={policy.name}
                   policy={policy.PolicyDocument}
-                  policyPath={`inline_policies.${id}`}
+                  policyPath={`inline_policies.${id}.PolicyDocument`}
                 />
               ))}
             </>

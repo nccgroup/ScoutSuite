@@ -6,6 +6,7 @@ import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 
 import { useAPI } from '../../../api/useAPI';
+import { getVpcFromPath, getRegionFromPath } from '../../../utils/Api';
 import { getRawEndpoint } from '../../../api/paths';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { 
@@ -26,13 +27,18 @@ const ELBs = props => {
   const { data } = props;
 
   const path = get(data, ['item', 'path'], '');
-  const { data: vpc, loading } = useAPI(getRawEndpoint(path.replace(/\.elbs.*/, '')));
+  const region = getRegionFromPath(path);
+  const vpcId = getVpcFromPath(path);
+
+  const { data: vpc, loading } = useAPI(
+    getRawEndpoint(`services.elb.regions.${region}.vpcs.${vpcId}`)
+  );
 
   if (!data || loading) return null;
 
   if (!isEmpty(vpc)) {
     data.item.arn = vpc.arn;
-    data.item.vpc = `${vpc.name} (${vpc.id})`;
+    data.item.vpc = `${vpc.name} (${vpcId})`;
   }
 
   const listeners = get(data, ['item', 'listeners']);
@@ -58,7 +64,7 @@ const ELBs = props => {
   
     if (isArray(attribute)) {
       return (
-        <li>
+        <li key={label}>
           <PartialValue
             label={label}
             value={attribute}

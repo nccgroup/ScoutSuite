@@ -5,6 +5,7 @@ import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../../api/useAPI';
 import { getRawEndpoint } from '../../../api/paths';
+import { getRegionFromPath, getVpcFromPath } from '../../../utils/Api';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { 
   partialDataShape,
@@ -24,12 +25,17 @@ const ElbV2 = props => {
   const { data } = props;
 
   const path = get(data, ['item', 'path'], '');
-  const { data: vpc, loading } = useAPI(getRawEndpoint(path.replace(/\.lbs.*/, '')));
+  const region = getRegionFromPath(path);
+  const vpcId = getVpcFromPath(path);
+
+  const { data: vpc, loading } = useAPI(
+    getRawEndpoint(`services.elbv2.regions.${region}.vpcs.${vpcId}.name`)
+  );
 
   if (!data || loading) return null;
 
   if (!isEmpty(vpc)) {
-    data.item.vpc = `${vpc.name} (${vpc.id})`;
+    data.item.vpc = `${vpc} (${vpcId})`;
   }
 
   const listeners = get(data, ['item', 'listeners']);
