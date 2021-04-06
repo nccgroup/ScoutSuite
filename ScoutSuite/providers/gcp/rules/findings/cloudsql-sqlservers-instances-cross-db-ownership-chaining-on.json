@@ -13,12 +13,12 @@
         "https://cloud.google.com/sql/docs/sqlserver/flags",
         "https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/cross-db-ownership-chaining-server-configuration-option?view=sql-server-ver15"
     ],
-    "dashboard_name": "SQL Servers Instances",
-    "path": "cloudsql.projects.id.sql_servers_instances.id",
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
     "conditions": [
         "and",
         [
-            "cloudsql.projects.id.sql_servers_instances.id.cross_db_ownership_chaining_off",
+            "cloudsql.projects.id.instances.id.cross_db_ownership_chaining_off",
             "false",
             ""
         ]

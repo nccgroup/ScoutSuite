@@ -39,6 +39,19 @@ class DatabaseInstances(GCPCompositeResources):
         instance_dict['ssl_required'] = self._is_ssl_required(raw_instance)
         instance_dict['authorized_networks'] = raw_instance['settings']['ipConfiguration']['authorizedNetworks']
 
+        if raw_instance['settings'].get('databaseFlags', None):
+            instance_dict['local_infile_off'] = self._mysql_local_infile_flag_off(raw_instance)
+
+            instance_dict['cross_db_ownership_chaining_off'] = self._sqlservers_cross_db_ownership_chaining_flag_off(
+                raw_instance, 'cross db ownership chaining')
+            instance_dict['contained_database_authentication_off'] = self._sqlservers_cross_db_ownership_chaining_flag_off(
+                raw_instance, 'contained database authentication')
+        else:
+            instance_dict['local_infile_off'] = True
+
+            instance_dict['cross_db_ownership_chaining_off'] = True
+            instance_dict['contained_database_authentication_off'] = True
+
         # check if is or has a failover replica
         instance_dict['has_failover_replica'] = raw_instance.get('failoverReplica', []) != []
         instance_dict['is_failover_replica'] = raw_instance.get('masterInstanceName', '') != ''
@@ -73,3 +86,18 @@ class DatabaseInstances(GCPCompositeResources):
         last_backup_id = max(backups.keys(), key=(
             lambda k: backups[k]['creation_timestamp']))
         return backups[last_backup_id]['creation_timestamp']
+
+
+    def _mysql_local_infile_flag_off(self, raw_instance):
+        if 'MYSQL' in raw_instance['databaseVersion']:
+            for flag in raw_instance['settings']['databaseFlags']:
+                if flag['name'] == 'local_infile' and flag['value'] == 'on':
+                    return False
+        return True
+
+    def _sqlservers_cross_db_ownership_chaining_flag_off(self, raw_instance, flag_name: str):
+        if 'SQLSERVER' in raw_instance['databaseVersion']:
+            for flag in raw_instance['settings']['databaseFlags']:
+                if flag['name'] == flag_name and flag['value'] == 'on':
+                    return False
+        return True
