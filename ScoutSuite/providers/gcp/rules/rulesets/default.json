@@ -37,6 +37,12 @@
                 "level": "warning"
             }
         ],
+        "cloudsql-mysql-instances-local-infile-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudstorage-bucket-member.json": [
             {
                 "args": [
