@@ -23,10 +23,15 @@ const GenericObject = props => {
     return data.toString();
   }
 
+  const invalidKeys = [
+    'path',
+    'display_path',
+  ];
+
   return (
     <ul className={className}>
       {Object.entries(data).map(([key, value], i) => (
-        value !== null && (
+        value !== null && !invalidKeys.includes(key) && (
           <li key={i}>
             <DetailedValue 
               label={key} 

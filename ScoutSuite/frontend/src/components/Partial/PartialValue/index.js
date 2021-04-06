@@ -24,6 +24,7 @@ const propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]),
+  inline: PropTypes.bool,
   className: PropTypes.string,
   tooltip: PropTypes.bool,
   tooltipProps: PropTypes.object,
@@ -36,6 +37,7 @@ const defaultProps = {
   value: null,
   valuePath: null,
   errorPath: null,
+  inline: false,
   tooltip: false,
   tooltipProps: {
     enterDelay: 1000,
@@ -51,6 +53,7 @@ const PartialValue = props => {
     valuePath,
     errorPath,
     className,
+    inline,
     tooltip,
     tooltipProps,
     renderValue,
@@ -61,11 +64,9 @@ const PartialValue = props => {
   const setIssueLevel = useContext(PartialTabContext);
 
   const fullValuePath = concatPaths(basePath, valuePath);
-  const value = renderValue(props.value || get(ctx.item, fullValuePath));
-
-  if (value === undefined || value === null) {
-    return null;
-  }
+  const value = renderValue(
+    props.value || get(ctx.item, fullValuePath, props.value)
+  );
 
   let fullErrorPaths;
   if (errorPath) {
@@ -78,13 +79,17 @@ const PartialValue = props => {
   const hasError = fullErrorPaths.some(path => ctx.path_to_issues.includes(path));
   const level = ctx.level;
 
-  if (hasError) {
-    useEffect(
-      () => {
+  useEffect(
+    () => {
+      if (hasError) {
         setIssueLevel(level);
-      },
-      [hasError],
-    );
+      }
+    },
+    [level],
+  );
+
+  if (value === undefined || value === null) {
+    return null;
   }
 
   const content = (
@@ -95,7 +100,7 @@ const PartialValue = props => {
 
   return (
     <DetailedValue
-      className={cx(className, 'partial-value')}
+      className={cx(className, 'partial-value', { inline })}
       label={label}
       separator={separator}
       value={

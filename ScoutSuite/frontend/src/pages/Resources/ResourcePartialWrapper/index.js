@@ -4,7 +4,7 @@ import merge from 'lodash/merge';
 import get from 'lodash/get';
 
 import { useAPI } from '../../../api/useAPI';
-import { getRAWEndpoint } from '../../../api/paths';
+import { getRawEndpoint } from '../../../api/paths';
 import LazyPartial from '../../../components/LazyPartial/index';
 
 const propTypes = {};
@@ -14,8 +14,8 @@ const ResourcePartialWrapper = () => {
   const path = (new URL(document.location)).searchParams.get('path');
   const params = useParams();
 
-  const { data: metadata, loading: l1 } = useAPI(getRAWEndpoint('metadata'));
-  const { data, loading: l2 } = useAPI(getRAWEndpoint(path));
+  const { data: metadata, loading: l1 } = useAPI(getRawEndpoint('metadata'));
+  const { data, loading: l2 } = useAPI(getRawEndpoint(path));
 
   if (l1 || l2 || !data) return null;
 

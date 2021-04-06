@@ -1,10 +1,6 @@
 .ec2-volume {
-  & > ul {
+  ul {
     margin: 0;
     padding-left: 1rem;
-
-    ul {
-      padding-left: 1.5rem;
-    }
   }
 }

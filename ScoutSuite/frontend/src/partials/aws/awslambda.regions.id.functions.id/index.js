@@ -1,26 +1,29 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import { partialDataShape, renderAwsTags } from '../../../utils/Partials';
+import { 
+  partialDataShape,
+} from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import Informations from './Informations';
+import Policy from '../../../components/Partial/Policy';
 
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const RegionDomain = props => {
+const LambdaFunctions = props => {
   const { data } = props;
 
   if (!data) return null;
 
-  const tags = get(data, ['item', 'tags'], []);
+  const policy = get(data, ['item', 'access_policy']);
+  const variables = get(data, ['item', 'env_variables']);
 
   return (
     <Partial data={data}>
@@ -29,16 +32,23 @@ const RegionDomain = props => {
       </InformationsWrapper>
 
       <TabsMenu>
-        {!isEmpty(tags) && (
-          <TabPane title="Tags">
-            {renderAwsTags(tags)}
-          </TabPane>
-        )}
+        <TabPane 
+          title="Resource-Based Policy"
+          disabled={isEmpty(policy)}
+        >
+          <Policy policy={policy} />
+        </TabPane>
+        <TabPane 
+          title="Environment Variables"
+          disabled={isEmpty(variables)}
+        >
+          <Policy policy={variables} />
+        </TabPane>
       </TabsMenu>
     </Partial>
   );
 };
 
-RegionDomain.propTypes = propTypes;
+LambdaFunctions.propTypes = propTypes;
 
-export default RegionDomain;
+export default LambdaFunctions;
