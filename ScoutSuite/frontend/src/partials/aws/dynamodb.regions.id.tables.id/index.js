@@ -9,7 +9,7 @@ import {
   valueOrNone,
   formatDate,
   convertBoolToEnable,
-  renderTags,
+  renderAwsTags,
 } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
@@ -67,7 +67,7 @@ const DynamoDbTables = props => {
           title="Tags"
           disabled={isEmpty(tags)}
         >
-          {renderTags(tags)}
+          {renderAwsTags(tags)}
         </TabPane>
       </TabsMenu> 
     </Partial>
