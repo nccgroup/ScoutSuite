@@ -17,6 +17,10 @@
         "bindings": {
           "cols": 2,
           "path": "services.iam.projects.id.bindings"
+        },
+        "bindings_separation_duties": {
+          "cols": 2,
+          "path": "services.iam.projects.id.bindings_separation_duties"
         }
       }
     },
@@ -63,6 +67,15 @@
       }
     }
   },
+  "network": {
+    "dns": {
+      "resources": {
+        "managed_zones": {
+          "cols": 2,
+          "path": "services.dns.projects.id.managed_zones"
+        }
+      }
+  }},
   "storage": {
     "cloudstorage": {
       "resources": {
@@ -73,16 +86,13 @@
       }
     }
   },
+
   "database": {
     "cloudsql": {
       "resources": {
         "instances": {
           "cols": 2,
           "path": "services.cloudsql.projects.id.instances"
-        },
-        "postgresql_instances": {
-          "cols": 2,
-          "path": "services.cloudsql.projects.id.postgresql_instances"
         }
       }
     },

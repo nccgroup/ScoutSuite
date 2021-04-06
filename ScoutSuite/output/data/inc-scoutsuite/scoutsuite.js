@@ -1211,7 +1211,7 @@ function makeTitle(title) {
         return title.toString()
     }
     title = title.toLowerCase()
-    if (['acm', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
+    if (['acm', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr','dns'].indexOf(title) !== -1) {
         return title.toUpperCase()
     } else if (title === 'cloudtrail') {
         return 'CloudTrail'

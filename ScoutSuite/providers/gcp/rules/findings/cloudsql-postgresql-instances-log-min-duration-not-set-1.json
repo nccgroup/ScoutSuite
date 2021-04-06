@@ -13,12 +13,12 @@
         "https://www.postgresql.org/docs/current/runtime-config-logging.html#RUNTIME-CONFIG-LOGGING-WHAT",
         "https://cloud.google.com/sql/docs/postgres/flags"
     ],
-    "dashboard_name": "PostgreSQL Instances",
-    "path": "cloudsql.projects.id.postgresql_instances.id",
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
     "conditions": [
         "and",
         [
-            "cloudsql.projects.id.postgresql_instances.id.log_min_duration_statement_-1",
+            "cloudsql.projects.id.instances.id.log_min_duration_statement_-1",
             "false",
             ""
         ]
