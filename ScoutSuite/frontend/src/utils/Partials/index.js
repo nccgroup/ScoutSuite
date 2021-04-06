@@ -122,7 +122,7 @@ export const renderResourcesAsList = (resources, accessor) => (
  * @param tags 
  * @returns {HTMLUListElement}
  */
-export const renderTags = tags => (
+export const renderAwsTags = tags => (
   <ul>
     {tags.map((tag, i) => (
       <li key={i}>

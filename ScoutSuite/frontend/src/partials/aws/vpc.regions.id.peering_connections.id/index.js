@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
-import { partialDataShape, renderTags } from '../../../utils/Partials';
+import { partialDataShape, renderAwsTags } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
@@ -42,7 +42,7 @@ const RegionDomain = props => {
         </TabPane>
         {!isEmpty(tags) && (
           <TabPane title="Tags">
-            {renderTags(tags)}
+            {renderAwsTags(tags)}
           </TabPane>
         )}
       </TabsMenu>
