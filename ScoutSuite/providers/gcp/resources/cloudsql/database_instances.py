@@ -54,13 +54,13 @@ class DatabaseInstances(GCPCompositeResources):
         else:
             instance_dict['local_infile_off'] = True
 
-            instance_dict['log_checkpoints_on'] = self._is_database_not_postgresql(raw_instance)
-            instance_dict['log_connections_on'] = self._is_database_not_postgresql(raw_instance)
-            instance_dict['log_disconnections_on'] = self._is_database_not_postgresql(raw_instance)
-            instance_dict['log_lock_waits_on'] = self._is_database_not_postgresql(raw_instance)
-            instance_dict['log_min_messages'] = self._is_database_not_postgresql(raw_instance)
-            instance_dict['log_temp_files_0'] = self._is_database_not_postgresql(raw_instance)
-            instance_dict['log_min_duration_statement_-1'] = self._is_database_not_postgresql(raw_instance)
+            instance_dict['log_checkpoints_on'] = self._check_database_type(raw_instance)
+            instance_dict['log_connections_on'] = self._check_database_type(raw_instance)
+            instance_dict['log_disconnections_on'] = self._check_database_type(raw_instance)
+            instance_dict['log_lock_waits_on'] = self._check_database_type(raw_instance)
+            instance_dict['log_min_messages'] = self._check_database_type(raw_instance)
+            instance_dict['log_temp_files_0'] = self._check_database_type(raw_instance)
+            instance_dict['log_min_duration_statement_-1'] = self._check_database_type(raw_instance)
 
         # check if is or has a failover replica
         instance_dict['has_failover_replica'] = raw_instance.get('failoverReplica', []) != []
@@ -105,7 +105,7 @@ class DatabaseInstances(GCPCompositeResources):
                     return False
         return True
 
-    def _is_database_not_postgresql(self, raw_instance):
+    def _check_database_type(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             return False
         return True
