@@ -16,7 +16,7 @@ import DetailedValue from '../../DetailedValue';
 import './style.scss';
 
 const propTypes = {
-  label: PropTypes.string,
+  label: PropTypes.node,
   separator: PropTypes.string,
   value: PropTypes.any,
   valuePath: PropTypes.string,
@@ -64,9 +64,13 @@ const PartialValue = props => {
   const setIssueLevel = useContext(PartialTabContext);
 
   const fullValuePath = concatPaths(basePath, valuePath);
-  const value = renderValue(
+  let value = renderValue(
     props.value || get(ctx.item, fullValuePath, props.value)
   );
+
+  if (typeof value === 'boolean') {
+    value = String(value);
+  }
 
   let fullErrorPaths;
   if (errorPath) {

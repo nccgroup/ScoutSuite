@@ -9,7 +9,7 @@ const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const Ec2Volumes = props => {
+const Clusters = props => {
   const { data } = props;
 
   if (!data) return null;
@@ -24,6 +24,6 @@ const Ec2Volumes = props => {
   );
 };
 
-Ec2Volumes.propTypes = propTypes;
+Clusters.propTypes = propTypes;
 
-export default Ec2Volumes;
+export default Clusters;

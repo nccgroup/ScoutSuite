@@ -40,7 +40,6 @@ const RegionDomain = props => {
         <PartialValue
           label="Default"
           valuePath="IsDefault"
-          renderValue={value => value.toString()}
         />
       </InformationsWrapper>
 

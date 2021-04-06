@@ -29,7 +29,7 @@ const ELBs = props => {
         <DetailedValue
           key={i}
           label={key}
-          value={value.toString()}
+          value={value}
         />
       ))}
     </div>

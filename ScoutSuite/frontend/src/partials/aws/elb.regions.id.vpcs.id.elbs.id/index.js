@@ -49,7 +49,7 @@ const ELBs = props => {
         <li key={label}>
           <PartialValue
             label={label}
-            value={attribute.toString()}
+            value={attribute}
             errorPath={`attributes.${label}`}
           />
         </li>
