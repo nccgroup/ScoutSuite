@@ -55,7 +55,6 @@ const IamCredentialReport = props => {
         <PartialValue
           label="Hardware MFA Active"
           valuePath="mfa_active_hardware"
-          renderValue={value => value.toString()}
         />
         <PartialValue
           label="Access Key 1 Active"

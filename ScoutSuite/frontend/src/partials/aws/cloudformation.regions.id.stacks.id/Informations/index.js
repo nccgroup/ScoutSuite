@@ -45,19 +45,16 @@ const Informations = () => {
         label="Termination protection enabled"
         valuePath="EnableTerminationProtection"
         errorPath="cloudformation_stack_no_termination_protection"
-        renderValue={value => value.toString()}
       />
       <PartialValue
         label="Configuration has drifted"
         valuePath="drifted"
         errorPath="cloudformation_stack_drifted"
-        renderValue={value => value.toString()}
       />
       <PartialValue
         label="Deletion policy"
         valuePath="deletion_policy"
         errorPath="cloudformation_stack_no_deletion_policy"
-        renderValue={value => value.toString()}
       />
       <PartialValue
         label="Notification ARNs"

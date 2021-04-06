@@ -6,7 +6,7 @@ import './style.scss';
 
 
 const propTypes = {
-  label: PropTypes.string,
+  label: PropTypes.node,
   value: PropTypes.any.isRequired,
   separator: PropTypes.string,
   className: PropTypes.string,
@@ -19,9 +19,9 @@ const defaultProps = {
 };
 
 const DetailedValue = props => {
+  let { value } = props;
   const {
     label,
-    value,
     separator,
     className,
     renderValue,
@@ -31,11 +31,19 @@ const DetailedValue = props => {
     return null;
   }
 
+  if (typeof value === 'boolean') {
+    value = String(value);
+  }
+
   return (
     <div className={cx(className, 'detailed-value')}>
       {label && (
         <span className="label">
-          {`${label}${separator}`}
+          {typeof(label) === 'string' ? (
+            `${label}${separator}`
+          ) : (
+            label
+          )}
         </span>
       )}
       <span className="value">{renderValue(value)}</span>
