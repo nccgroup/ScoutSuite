@@ -251,7 +251,7 @@
         "kms-cryptokeys-anonymously-publicly-accessible.json": [
             {
                 "enabled": true,
-                "level": "warning"
+                "level": "danger"
             }
         ],
         "kms-encryption-keys-not-rotated.json": [
