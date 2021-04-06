@@ -97,7 +97,6 @@ class DatabaseInstances(GCPCompositeResources):
             lambda k: backups[k]['creation_timestamp']))
         return backups[last_backup_id]['creation_timestamp']
 
-
     def _mysql_local_infile_flag_off(self, raw_instance):
         if 'MYSQL' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings']['databaseFlags']:
