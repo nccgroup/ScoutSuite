@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty';
 import { 
   partialDataShape, 
   renderResourcesAsList, 
-  renderTags,
+  renderAwsTags,
 } from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
@@ -75,7 +75,7 @@ const IamGroups = props => {
         )}
         {!isEmpty(tags) && (
           <TabPane title="Tags">
-            {renderTags(tags)}
+            {renderAwsTags(tags)}
           </TabPane>
         )}
       </TabsMenu>

@@ -9,7 +9,7 @@ import { Partial, PartialValue } from '../../../components/Partial';
 import { 
   partialDataShape,
   renderResourcesAsList,
-  renderTags,
+  renderAwsTags,
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
@@ -96,7 +96,7 @@ const ElbV2 = props => {
           )}
           {!isEmpty(tags) && (
             <TabPane title="Tags">
-              {renderTags(tags)}
+              {renderAwsTags(tags)}
             </TabPane>
           )}
         </TabsMenu>

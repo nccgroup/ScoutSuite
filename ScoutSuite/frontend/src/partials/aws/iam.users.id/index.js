@@ -8,7 +8,7 @@ import {
   formatDate,
   valueOrNone,
   renderResourcesAsList,
-  renderTags,
+  renderAwsTags,
 } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
@@ -80,7 +80,7 @@ const IamUsers = props => {
         )}
         {!isEmpty(tags) && (
           <TabPane title="Tags">
-            {renderTags(tags)}
+            {renderAwsTags(tags)}
           </TabPane>
         )}
       </TabsMenu>
