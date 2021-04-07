@@ -56,3 +56,15 @@ class KMSFacade(GCPBaseFacade):
         except Exception as e:
             print_exception(f'Failed to retrieve KMS keys for key ring {keyring_name}: {e}')
             return []
+
+    async def keys_iam_policy(self, project_id: str, location: str, keyring_name: str, key_name: str):
+
+        try:
+            parent = self.cloud_client.crypto_key_path(project_id, location, keyring_name, key_name)
+            kms_client = self._get_client()
+            cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
+            request = cryptokeys.getIamPolicy(resource=parent)
+            return await GCPFacadeUtils.get_all('bindings', request, cryptokeys)
+        except Exception as e:
+            print_exception(f'Failed to retrieve KMS binding policy for key {key_name}: {e}')
+            return []

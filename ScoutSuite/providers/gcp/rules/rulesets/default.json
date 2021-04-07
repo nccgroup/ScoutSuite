@@ -37,6 +37,24 @@
                 "level": "warning"
             }
         ],
+        "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
+           {
+                "enabled": true,
+                "level": "warning"
+           }
+        ],
+        "cloudsql-sqlservers-instances-contained-database-authentication-on.json": [
+           {
+                "enabled": true,
+                "level": "warning"
+           }
+        ],
+        "cloudsql-mysql-instances-local-infile-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudstorage-bucket-member.json": [
             {
                 "args": [
@@ -134,6 +152,18 @@
                 "level": "warning"
             }
         ],
+        "computeengine-network-default-in-use.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-network-legacy-in-use.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "computeengine-old-disk-snapshot.json": [
             {
                 "enabled": true,
@@ -194,6 +224,24 @@
                 "level": "warning"
             }
         ],
+        "dns-zones-dnssec-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "dns-zones-key-signing-key-using-rsasha1.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "dns-zones-zone-signing-key-using-rsasha1.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-gmail-accounts-used.json": [
             {
                 "enabled": true,
@@ -249,6 +297,30 @@
             }
         ],
         "iam-user-has-sa-user-role.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-role-account-separation-duties-is-false.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-role-kms-separation-duties-is-false.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kms-cryptokeys-anonymously-publicly-accessible.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "kms-encryption-keys-not-rotated.json": [
             {
                 "enabled": true,
                 "level": "warning"
