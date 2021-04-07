@@ -7,6 +7,7 @@ import { partialDataShape } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import PartialSection from '../../../components/Partial/PartialSection/index';
 import { formatDate, renderList } from '../../../utils/Partials/index';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const renderKeys = keys => {
   if (!keys || keys.length === 0) return <span>None</span>;
@@ -79,7 +80,7 @@ const ServiceAccounts = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue
           label="ID"
           valuePath="id" />
@@ -100,7 +101,7 @@ const ServiceAccounts = props => {
           label="Default Service Account"
           valuePath="default_service_account"
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Keys">{renderKeys(item.keys)}</TabPane>

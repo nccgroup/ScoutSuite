@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Partial, PartialValue } from '../../../components/Partial';
 import { partialDataShape, formatDate } from '../../../utils/Partials';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -15,7 +16,7 @@ const Snapshots = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue
           label="Name"
           valuePath="name" />
@@ -37,7 +38,7 @@ const Snapshots = props => {
         <PartialValue
           label="Status"
           valuePath="status" />
-      </div>
+      </InformationsWrapper>
     </Partial>
   );
 };

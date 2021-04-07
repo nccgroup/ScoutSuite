@@ -7,6 +7,7 @@ import { partialDataShape } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import PartialSection from '../../../components/Partial/PartialSection/index';
 import { formatDate, valueOrNone } from '../../../utils/Partials/index';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const renderKeys = keys => {
   if (!keys || keys.length === 0) return <span>None</span>;
@@ -89,7 +90,7 @@ const Keyrings = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue
           label="Name"
           valuePath="name" />
@@ -102,7 +103,7 @@ const Keyrings = props => {
         <PartialValue
           label="Location"
           valuePath="location" />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Keys">

@@ -10,6 +10,7 @@ import {
   valueOrNone,
 } from '../../../utils/Partials';
 import { TabPane, TabsMenu } from '../../../components/Tabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const renderAuthorizedNetworks = items => {
   if (!items || items.length === 0) return <span>None</span>;
@@ -42,7 +43,7 @@ const SQLInstances = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue label="Project ID" valuePath="project_id" />
 
         <PartialValue
@@ -86,7 +87,7 @@ const SQLInstances = props => {
           valuePath="authorized_networks"
           renderValue={valueOrNone}
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Authorized Networks">

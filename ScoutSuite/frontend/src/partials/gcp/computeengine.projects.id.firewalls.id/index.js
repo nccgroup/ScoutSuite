@@ -10,6 +10,7 @@ import { partialDataShape, formatDate } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import { convertBoolToString } from '../../../utils/Partials/index';
 import get from 'lodash/get';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -59,7 +60,7 @@ const Firewalls = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue
           label="Firewall name"
           valuePath="name" />
@@ -91,7 +92,7 @@ const Firewalls = props => {
           valuePath="disabled"
           renderValue={convertBoolToString}
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Configuration">

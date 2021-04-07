@@ -12,7 +12,7 @@ import {
   convertBoolToEnable,
 } from '../../../utils/Partials';
 import {useResources} from '../../../api/useResources';
-
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -39,7 +39,7 @@ const Subnetworks = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue
           label="Name"
           valuePath="name" />
@@ -75,7 +75,7 @@ const Subnetworks = props => {
           valuePath="private_ip_google_access"
           renderValue={convertBoolToEnable}
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Compute Engine Instances">

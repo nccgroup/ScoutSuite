@@ -9,7 +9,7 @@ import { partialDataShape, formatDate } from '../../../utils/Partials';
 import { TabPane, TabsMenu } from '../../../components/Tabs';
 import PartialSection from '../../../components/Partial/PartialSection/index';
 import { useResources } from '../../../api/useResources';
-
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const renderFirewalls = (items) => {
   return <ul>
@@ -44,7 +44,7 @@ const Networks = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue
           label="Name"
           valuePath="name" />
@@ -66,7 +66,7 @@ const Networks = props => {
           valuePath="creation_timestamp"
           renderValue={formatDate}
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Firewall Rules">

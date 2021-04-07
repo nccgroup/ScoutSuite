@@ -5,6 +5,7 @@ import { Partial, PartialValue } from '../../../components/Partial';
 import { partialDataShape } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import { renderList } from '../../../utils/Partials/index';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -17,7 +18,7 @@ const Groups = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue
           label="Group"
           valuePath="name" />
@@ -26,7 +27,7 @@ const Groups = props => {
           label="Project ID"
           errorPath="project_id"
           valuePath="project" />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Bindings">

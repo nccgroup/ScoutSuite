@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { partialDataShape, valueOrNone, renderList } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -16,7 +17,7 @@ const Bindings = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue
           label="Title"
           valuePath="title" />
@@ -37,7 +38,7 @@ const Bindings = props => {
           label="Custom Role"
           valuePath="custom_role"
           renderValue={valueOrNone} />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Permissions"></TabPane>

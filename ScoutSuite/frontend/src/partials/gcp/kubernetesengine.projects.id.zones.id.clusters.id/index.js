@@ -10,6 +10,7 @@ import {
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import { renderList, valueOrNone } from '../../../utils/Partials/index';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const renderCIRBlock = ({ displayName, cidrBlock }) =>
   `${displayName}: ${cidrBlock}`;
@@ -56,7 +57,7 @@ const K8SClusters = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue
           label="Name"
           valuePath="name" />
@@ -166,7 +167,7 @@ const K8SClusters = props => {
             renderValue={convertListToChips}
           />
         )}
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Master Authorized Networks">

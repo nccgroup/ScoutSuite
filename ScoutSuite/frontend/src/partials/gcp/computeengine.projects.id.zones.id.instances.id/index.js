@@ -11,6 +11,7 @@ import {
 import { TabsMenu, TabPane } from '../../../components/Tabs';
 import { valueOrNone } from '../../../utils/Partials/index';
 import ResourceLink from '../../../components/ResourceLink';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const renderTags = tags => {
   if (!tags || tags.length === 0) return <span>None</span>;
@@ -117,7 +118,7 @@ const Instances = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <PartialValue label="Instance Name" valuePath="name" />
 
         <PartialValue label="Project ID" valuePath="project_id" />
@@ -163,7 +164,7 @@ const Instances = props => {
         />
 
         {renderTags(item.tags)}
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Network Interfaces">
