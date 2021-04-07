@@ -18,6 +18,7 @@ export const useResources = (service, resource, ids) => {
             API.get(`services/${service}/resources/${resource}/${id}`),
           );
           const response = await Promise.all(requests);
+          console.info('useResources response', service, resource, ids, response);
           setData(response);
         } catch (e) {
           console.error(e.message);
