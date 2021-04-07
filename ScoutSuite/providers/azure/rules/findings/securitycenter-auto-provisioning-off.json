@@ -24,7 +24,6 @@
         "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-posture-vulnerability-management#pv-6-perform-software-vulnerability-assessments"
     ],
     "dashboard_name": "Security Center",
-    "display_path": "securitycenter.subscriptions.id.auto_provisioning_settings",
     "path": "securitycenter.subscriptions.id.auto_provisioning_settings.id",
     "conditions": [
         "and",

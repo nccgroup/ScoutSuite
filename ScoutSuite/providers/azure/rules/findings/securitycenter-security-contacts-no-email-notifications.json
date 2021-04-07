@@ -20,7 +20,6 @@
         "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-3-define-security-posture-management-strategy"
     ],
     "dashboard_name": "Security contacts",
-    "display_path": "securitycenter.subscriptions.id.security_contacts",
     "path": "securitycenter.subscriptions.id.security_contacts.id",
     "conditions": [
         "and",
