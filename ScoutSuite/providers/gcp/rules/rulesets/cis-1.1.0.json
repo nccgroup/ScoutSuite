@@ -1,11 +1,23 @@
 {
   "about": "This ruleset attempts to cover as many recommendations from the CIS Google Cloud Platform Foundation v1.1.0.",
     "rules": {
+      "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
+         {
+            "enabled": true,
+            "level": "warning"
+         }
+      ],
       "cloudsql-mysql-instances-local-infile-on.json": [
           {
               "enabled": true,
               "level": "warning"
           }
+      ],
+      "cloudsql-sqlservers-instances-contained-database-authentication-on.json": [
+         {
+              "enabled": true,
+              "level": "warning"
+         }
       ],
       "cloudstorage-uniform-bucket-level-access-disabled.json": [
           {
