@@ -22,6 +22,7 @@ const propTypes = {
   pageCount: PropTypes.number,
   fetchData: PropTypes.func,
   manualPagination: PropTypes.bool,
+  headerRight: PropTypes.element,
 };
 
 const TableRender = (props) => {
@@ -33,7 +34,8 @@ const TableRender = (props) => {
     pageCount: controlledPageCount,
     fetchData,
     manualPagination,
-    initialState
+    initialState,
+    headerRight
   } = props;
 
   const columnsMemo = React.useMemo(() => columns, [columns]);
@@ -98,8 +100,13 @@ const TableRender = (props) => {
   return (
     <>
       {!disableSearch && (
-        <div className="search-bar">
-          <input placeholder="Search in this table" />
+        <div className="table-header">
+          <div className="search-bar">
+            <input placeholder="Search in this table" />
+          </div>
+          <div className="table-header-right">
+            {headerRight}
+          </div>
         </div>
       )}
 
