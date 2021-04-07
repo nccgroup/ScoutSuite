@@ -51,6 +51,11 @@ class DatabaseInstances(GCPCompositeResources):
             instance_dict['log_min_duration_statement_-1'] = self._postgres_log_min_duration_statement_flags_1(
                 raw_instance)
 
+            instance_dict['cross_db_ownership_chaining_off'] = self._sqlservers_cross_db_ownership_chaining_flag_off(
+                raw_instance, 'cross db ownership chaining')
+            instance_dict['contained_database_authentication_off'] = self._sqlservers_cross_db_ownership_chaining_flag_off(
+                raw_instance, 'contained database authentication')
+
         else:
             instance_dict['local_infile_off'] = True
 
@@ -61,6 +66,9 @@ class DatabaseInstances(GCPCompositeResources):
             instance_dict['log_min_messages'] = self._check_database_type(raw_instance)
             instance_dict['log_temp_files_0'] = self._check_database_type(raw_instance)
             instance_dict['log_min_duration_statement_-1'] = self._check_database_type(raw_instance)
+
+            instance_dict['cross_db_ownership_chaining_off'] = True
+            instance_dict['contained_database_authentication_off'] = True
 
         # check if is or has a failover replica
         instance_dict['has_failover_replica'] = raw_instance.get('failoverReplica', []) != []
@@ -134,5 +142,12 @@ class DatabaseInstances(GCPCompositeResources):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings']['databaseFlags']:
                 if flag['name'] == 'log_min_duration_statement' and flag['value'] != -1:
+                    return False
+        return True
+
+    def _sqlservers_cross_db_ownership_chaining_flag_off(self, raw_instance, flag_name: str):
+        if 'SQLSERVER' in raw_instance['databaseVersion']:
+            for flag in raw_instance['settings']['databaseFlags']:
+                if flag['name'] == flag_name and flag['value'] == 'on':
                     return False
         return True
