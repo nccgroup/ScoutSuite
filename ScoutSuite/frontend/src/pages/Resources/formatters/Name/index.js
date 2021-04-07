@@ -13,7 +13,9 @@ const Name = props => {
   const { value, row: { original } } = props;
 
   return (
-    <ResourceLink service={params.service} resource={params.resource} id={original.id} name={value} />
+    <ResourceLink
+      service={params.service} resource={params.resource}
+      id={original.id} name={value} />
   );
 };
 

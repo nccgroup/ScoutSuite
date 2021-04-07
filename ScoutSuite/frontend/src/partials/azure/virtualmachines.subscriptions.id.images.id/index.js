@@ -17,7 +17,9 @@ const Images = props => {
   return (
     <Partial data={data}>
       <InformationsWrapper>
-        <PartialValue label="Name" valuePath="name" renderValue={valueOrNone} />
+        <PartialValue
+          label="Name" valuePath="name"
+          renderValue={valueOrNone} />
 
         <PartialValue
           label="Provisioning State"

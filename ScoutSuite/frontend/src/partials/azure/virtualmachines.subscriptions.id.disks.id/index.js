@@ -21,7 +21,9 @@ const Disks = props => {
   return (
     <Partial data={data}>
       <InformationsWrapper>
-        <PartialValue label="Name" valuePath="name" renderValue={valueOrNone} />
+        <PartialValue
+          label="Name" valuePath="name"
+          renderValue={valueOrNone} />
 
         <PartialValue
           label="Unique ID"
