@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import React from 'react';
-import GetAppOutlinedIcon from '@material-ui/icons/GetAppOutlined';
 
 import { useAPI } from '../../api/useAPI';
 import { sortBySeverity } from '../../utils/Severity/sort';
@@ -12,7 +11,7 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 import { getResourcesEndpoint } from '../../api/paths';
 
 import './style.scss';
-import { Button } from '@material-ui/core';
+import DownloadButton from '../../components/DownloadButton/index';
 
 const Resources = () => {
   const params = useParams();
@@ -68,40 +67,16 @@ const Resources = () => {
 
   const downloadButtons = (
     <>
-      <form
-        method="get"
-        action={`http://localhost:5000/api/services/${params.service}/resources/${params.resource}/download`}
-      >
-        <input
-          type="hidden" name="type"
-          value="json" />
-        <Button
-          variant="outlined"
-          type="submit"
-          color="secondary"
-          size="small"
-          startIcon={<GetAppOutlinedIcon />}
-        >
-          JSON
-        </Button>
-      </form>
-      <form
-        method="get"
-        action={`http://localhost:5000/api/services/${params.service}/resources/${params.resource}/download`}
-      >
-        <input
-          type="hidden" name="type"
-          value="csv" />
-        <Button
-          variant="outlined"
-          type="submit"
-          color="secondary"
-          size="small"
-          startIcon={<GetAppOutlinedIcon />}
-        >
-          CSV
-        </Button>
-      </form>
+      <DownloadButton
+        service={params.service}
+        resource={params.resource}
+        type="json"
+      />
+      <DownloadButton
+        service={params.service}
+        resource={params.resource}
+        type="csv"
+      />
     </>
   );
 
