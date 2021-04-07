@@ -49,26 +49,20 @@ class ScoutResultEncoder:
 
 class JavaScriptEncoder(ScoutResultEncoder):
     """
-    Reader/Writer for JS and JSON files
+    Reader/Writer for JSON files
     """
 
-    def load_from_file(self, file_type, file_path=None, first_line=None):
+    def load_from_file(self, file_type, file_path=None):
         if not file_path:
-            file_path, first_line = get_filename(file_type, self.report_name, self.report_dir)
+            file_path = get_filename(file_type, self.report_name, self.report_dir)
         with open(file_path) as f:
-            json_payload = f.readlines()
-            if first_line:
-                json_payload.pop(0)
-            json_payload = ''.join(json_payload)
-        return json.loads(json_payload)
+            return json.load(f)
 
     def save_to_file(self, content, file_type, force_write, debug):
-        config_path, first_line = get_filename(file_type, self.report_name, self.report_dir)
+        config_path = get_filename(file_type, self.report_name, self.report_dir)
         print_info('Saving data to %s' % config_path)
         try:
             with self.__open_file(config_path, force_write) as f:
-                if first_line:
-                    print('%s' % first_line, file=f)
                 print('%s' % json.dumps(content, indent=4 if debug else None, separators=(',', ': '), sort_keys=True,
                                         cls=ScoutJsonEncoder), file=f)
         except AttributeError as e:

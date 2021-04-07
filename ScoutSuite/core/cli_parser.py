@@ -305,11 +305,21 @@ class ScoutSuiteArgumentParser:
                             default='default.json',
                             nargs='?',
                             help='Set of rules to be used during the analysis.')
-        parser.add_argument('--no-browser',
-                            dest='no_browser',
+        parser.add_argument('--server-only',
+                            dest='server_only',
+                            default=None,
+                            nargs=1,
+                            help='Start the server for the web interface with an existing results file.')
+        parser.add_argument('--report-only',
+                            dest='report_only',
                             default=False,
                             action='store_true',
-                            help='Do not automatically open the report in the browser.')
+                            help='Generate the JSON report but don''t start the web interface.')
+        # parser.add_argument('--no-browser',
+        #                     dest='no_browser',
+        #                     default=False,
+        #                     action='store_true',
+        #                     help='Do not automatically open the report in the browser.')
         parser.add_argument('--max-workers',
                             dest='max_workers',
                             type=int,

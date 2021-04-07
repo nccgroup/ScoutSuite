@@ -10,7 +10,6 @@ from ScoutSuite import DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTOR
 from ScoutSuite import ERRORS_LIST
 from ScoutSuite.core.console import print_info, print_exception
 from ScoutSuite.output.result_encoder import JavaScriptEncoder
-from ScoutSuite.output.utils import get_filename, prompt_for_overwrite
 
 
 class HTMLReport:
@@ -93,37 +92,3 @@ class ScoutReport(HTMLReport):
         self.exceptions_encoder.save_to_file(exceptions, 'EXCEPTIONS', force_write, debug)
         if ERRORS_LIST:
             self.exceptions_encoder.save_to_file(ERRORS_LIST, 'ERRORS', force_write, debug=True)
-        return self.create_html_report(force_write)
-
-    def create_html_report(self, force_write):
-        contents = ''
-        # Use the script corresponding to the result format
-        contents += self.get_content_from_file('/json_format.html')
-        # Use all scripts under html/partials/
-        contents += self.get_content_from_folder('partials')
-        contents += self.get_content_from_folder('partials/%s' % self.provider)
-        # Use all scripts under html/summaries/
-        contents += self.get_content_from_folder('summaries')
-        contents += self.get_content_from_folder('summaries/%s' % self.provider)
-        new_file, first_line = get_filename('REPORT', self.report_name, self.report_dir)
-        print_info('Creating %s' % new_file)
-        if prompt_for_overwrite(new_file, force_write):
-            if os.path.exists(new_file):
-                os.remove(new_file)
-            with open(os.path.join(self.html_data_path, 'report.html')) as f:
-                with open(new_file, 'wt') as nf:
-                    for line in f:
-                        newline = line
-                        newline = newline.replace('<!-- CONTENTS PLACEHOLDER -->', contents)
-                        newline = newline.replace('<!-- RESULTS PLACEHOLDER -->',
-                                                  get_filename('RESULTS',
-                                                               self.report_name,
-                                                               self.report_dir,
-                                                               relative_path=True)[0])
-                        newline = newline.replace('<!-- EXCEPTIONS PLACEHOLDER -->',
-                                                  get_filename('EXCEPTIONS',
-                                                               self.report_name,
-                                                               self.report_dir,
-                                                               relative_path=True)[0])
-                        nf.write(newline)
-        return new_file
