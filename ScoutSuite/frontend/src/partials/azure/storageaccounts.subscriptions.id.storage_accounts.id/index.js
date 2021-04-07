@@ -23,22 +23,27 @@ const renderBlobContainer = data => {
   return (<div key={data.id}>
     <h2>{data.id}</h2>
     <ul>
-      <li>
-        Public Access: {convertBoolToEnable(data.public_access_allowed)}
-      </li>
+      <PartialValue
+        label="Soft Delete"
+        valuePath={`blob_services.${data.id}.public_access_allowed`}
+        renderValue={convertBoolToEnable}
+      />
     </ul>
-  </div>)
-}
+  </div>);
+};
 const renderBlobService = data => {
   return (<div key={data.id}>
     <h2>{data.name}</h2>
     <ul>
-      <li>
-        Soft Delete: {convertBoolToEnable(data.soft_delete_enabled)}
-      </li>
+      <PartialValue
+        label="Soft Delete"
+        valuePath={`blob_services.${data.id}.soft_delete_enabled`}
+        renderValue={convertBoolToEnable}
+      />
     </ul>
-  </div>)
-}
+
+  </div>);
+};
 
 const Bucket = (props) => {
   const { data } = props;
@@ -54,41 +59,41 @@ const Bucket = (props) => {
       <InformationsWrapper>
         <PartialValue
           label="Storage Account Name"
-          path="name"
+          valuePath="name"
         />
         <PartialValue
           label="Public Traffic"
-          path="public_traffic_allowed"
+          valuePath="public_traffic_allowed"
           renderValue={convertBoolToEnable}
         />
         <PartialValue
           label="HTTPS Required"
-          path="https_traffic_enabled"
+          valuePath="https_traffic_enabled"
           renderValue={convertBoolToEnable}
         />
         <PartialValue
           label="Microsoft Trusted Services"
-          path="trusted_microsoft_services_enabled"
+          valuePath="trusted_microsoft_services_enabled"
           renderValue={convertBoolToEnable}
         />
         <PartialValue
           label="Last Access Key Rotation"
-          path="access_keys_rotated"
+          valuePath="access_keys_rotated"
           renderValue={convertValueOrNever}
         />
         <PartialValue
           label="Storage encrypted with Customer Managed Key"
-          path="encryption_key_customer_managed"
+          valuePath="encryption_key_customer_managed"
           renderValue={convertBoolToEnable}
         />
         <PartialValue
           label="Tags"
-          path="tags"
+          valuePath="tags"
           renderValue={convertListToChips}
         />
         <PartialValue
           label="Resource group"
-          path="resource_group_name"
+          valuePath="resource_group_name"
           renderValue={convertValueOrNever}
         />
       </InformationsWrapper>
