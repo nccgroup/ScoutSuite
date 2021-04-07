@@ -24,13 +24,14 @@ const LazyPartial = (props) => {
 
   const DynamicPartial = React.lazy(async () => {
     let md = null;
+    console.info('PARTIAL NAME', partial);
+    
     try {
       md = await import('../../partials/' + provider.provider_code + '/' + partial + '/index.js'); // Can't use a string literal because of Babel bug
     } catch(e) {
       md = await import('../../partials/Default');
     }
 
-    console.log('PARTIAL NAME', partial);
     return md;
   });
 
