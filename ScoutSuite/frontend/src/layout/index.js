@@ -50,7 +50,9 @@ const Layout = (props) => {
               key={category.id}
             >
               {category.services.map((service) => (
-                <MenuGroup title={service.name} key={service.id} size="large">
+                <MenuGroup
+                  title={service.name} key={service.id}
+                  size="large">
                   {service.dashboards.map((dashboard) => (
                     <MenuElement
                       link={getDashboardLink(dashboard, service.id)}

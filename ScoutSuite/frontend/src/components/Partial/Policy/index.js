@@ -35,8 +35,8 @@ const Policy = props => {
 
   const displayJson = object => 
     JSON.stringify(object, null, 2)
-      .replace(/ /g, '&nbsp;')
-      .replace(/\n/g, '<br/>');
+      .replace(/ /gm, '&nbsp;')
+      .replace(/\n/gm, '<br/>');
 
   const policyTitle = (
     <h4 className="policy-title">
@@ -83,7 +83,7 @@ const Policy = props => {
             </>
           ) : (
             <>
-              {displayJson(value)}
+              {renderWithInnerHtml(displayJson(value))}
             </>
           )}
           {i !== size(policy) - 1 && ','}

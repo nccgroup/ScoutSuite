@@ -26,6 +26,13 @@ export const convertBoolToEnable = value => value ? 'Enabled' : 'Disabled';
 export const convertBoolToCheckmark = value => value ? '✔' : '✖';
 
 /**
+ * Convert a boolean to a readable boolean
+ * @param title
+ * @returns {string}
+ */
+export const convertBoolToString = value => value ? 'true' : 'false';
+
+/**
  * Convert value to never if invalid
  * @param value 
  * @returns {any|string}
@@ -116,6 +123,20 @@ export const renderResourcesAsList = (resources, accessor) => (
     ))}
   </ul>
 );
+
+
+export const renderList = (items, accessor, renderValue) => {
+  if (!items || items.length === 0) return <span>None</span>;
+
+  return <ul>
+    {items.map((item, i) => {
+      const value = get(item, accessor, item);
+      return (<li key={i}>
+        {renderValue ? renderValue(value) : value}
+      </li>);
+    })}
+  </ul>;
+};
 
 /**
  * Render tags in an unordered list

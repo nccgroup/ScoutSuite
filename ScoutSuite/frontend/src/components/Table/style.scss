@@ -1,5 +1,12 @@
 @import 'src/variables.scss';
 
+.table-responsive {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow-x: auto;
+}
+
 .table {
   text-align: left;
   border: none;

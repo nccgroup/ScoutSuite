@@ -8,13 +8,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import './style.scss';
 
 const propTypes = {
-  status: PropTypes.oneOf([
-    'critical', 
-    'high', 
-    'medium', 
-    'low', 
-    'good',
-  ]).isRequired,
+  status: PropTypes.oneOf(['critical', 'high', 'medium', 'low', 'good'])
+    .isRequired,
   amount: PropTypes.number,
 };
 
@@ -22,7 +17,7 @@ const defaultProps = {
   amount: 0,
 };
 
-const ServiceStatus = (props) => {
+const ServiceStatus = props => {
   const { status, amount } = props;
 
   const classNames = cx('service-status', status);
@@ -30,12 +25,15 @@ const ServiceStatus = (props) => {
   const hasIssues = status !== 'good';
 
   return (
-    <Tooltip title={status} placement="top" arrow>
+    <Tooltip
+      title={status} placement="top"
+      arrow>
       <div className={classNames}>
-        {hasIssues 
-          ? <ErrorIcon fontSize="inherit" /> 
-          : <CheckCircleIcon fontSize="inherit" />
-        }
+        {hasIssues ? (
+          <ErrorIcon fontSize="inherit" />
+        ) : (
+          <CheckCircleIcon fontSize="inherit" />
+        )}
         <span>{amount}</span>
       </div>
     </Tooltip>
