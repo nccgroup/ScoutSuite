@@ -11,6 +11,7 @@ import SelectedItemContainer from './SelectedItemContainer';
 import Breadcrumb from '../../components/Breadcrumb/index';
 
 import './style.scss';
+import DownloadButton from '../../components/DownloadButton';
 
 const FlaggedItems = () => {
   const params = useParams();
@@ -57,6 +58,21 @@ const FlaggedItems = () => {
     severity: sortBySeverity,
   };
 
+  const downloadButtons = (
+    <>
+      <DownloadButton
+        service={params.service}
+        resource={params.resource}
+        type="json"
+      />
+      <DownloadButton
+        service={params.service}
+        resource={params.resource}
+        type="csv"
+      />
+    </>
+  );
+
   return (
     <>
       <Breadcrumb />
@@ -71,6 +87,7 @@ const FlaggedItems = () => {
             fetchData={fetchData}
             manualPagination={true}
             pageCount={items.meta.total_pages}
+            headerRight={downloadButtons}
           />
         </div>
 

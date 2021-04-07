@@ -7,6 +7,21 @@
   overflow-x: auto;
 }
 
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+
+  .table-header-right {
+    display: flex;
+    align-items: flex-end;
+
+    & > * {
+      margin-right: 0.75rem;
+    }
+  }
+}
+
 .table {
   text-align: left;
   border: none;
