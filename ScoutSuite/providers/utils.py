@@ -1,5 +1,6 @@
 import asyncio
 from hashlib import sha1
+import inspect
 
 from ScoutSuite.core.console import print_info
 from ScoutSuite.providers.aws.utils import is_throttled as aws_is_throttled
@@ -26,7 +27,9 @@ async def run_concurrently(function, backoff_seconds=15):
     except Exception as e:
         # Determine whether the exception is due to API throttling
         if is_throttled(e):
-            print_info(f'Hitting API rate limiting, will retry in {backoff_seconds}s')
+            source_file = inspect.getsourcefile(function)
+            source_file_line = inspect.getsourcelines(function)[1]
+            print_info(f'Hitting API rate limiting ({"/".join(source_file.split("/")[-2:])} L{source_file_line}), will retry in {backoff_seconds}s')
             await asyncio.sleep(backoff_seconds)
             return await run_concurrently(function, backoff_seconds + 15)
         else:

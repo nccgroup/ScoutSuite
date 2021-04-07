@@ -21,7 +21,11 @@
     ],
     "references": [
         "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-standards-cis-controls-1.1",
-        "https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html"
+        "https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html",
+        "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-use",
+        "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-acct_review-access",
+        "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-acct_document-processes",
+        "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-acct_monitor-access"
     ],
     "dashboard_name": "Root account",
     "path": "iam.credential_reports.id",

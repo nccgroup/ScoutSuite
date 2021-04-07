@@ -5,13 +5,13 @@ from ScoutSuite.utils import format_service_name
 import csv, io, json
 
 # ROUTES TO REPORT
-scout_suite_directory = '/Users/noboruyoshida/code/ScoutSuite'
+scout_suite_directory = '/Users/kevin/Documents/HIV2021/LOG8970/repo/Scoutsuite-server'
 aws = '/scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-635327450130.json'
 azure = '/scoutsuite-report/scoutsuite-results/scoutsuite_results_azure-tenant-0cc90829-0d8e-40d6-ba9c-aea092ba7de5.json'
 gcp = '/scoutsuite-report/scoutsuite-results/scoutsuite_results_gcp-poly-project-1.json'
 
 # REPORT (aws, azure or gcp)
-provider = aws
+provider = azure
 
 with open(f'{scout_suite_directory}{provider}') as json_file:
     results = json.load(json_file)

@@ -1,5 +1,5 @@
 {
-    "description": "\"Send Threat Detection Alerts\" Disabled for SQL Databases",
+    "description": "Send Threat Detection Alerts Disabled for SQL Databases",
     "rationale": "Specify email addresses and ensure that alerts are sent to them.",
     "compliance": [
         {

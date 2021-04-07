@@ -11,15 +11,15 @@ class Groups(AzureResources):
 
         group_dict = {}
 
-        group_dict['id'] = raw_group.object_id
-        group_dict['name'] = raw_group.display_name
-        group_dict['additional_properties'] = raw_group.additional_properties
-        group_dict['deletion_timestamp'] = raw_group.deletion_timestamp
-        group_dict['object_type'] = raw_group.object_type
-        group_dict['mail_enabled'] = raw_group.mail_enabled
-        group_dict['mail_nickname'] = raw_group.mail_nickname
-        group_dict['security_enabled'] = raw_group.security_enabled
-        group_dict['mail'] = raw_group.mail
+        group_dict['id'] = raw_group.get('id')
+        group_dict['name'] = raw_group.get('displayName')
+        # group_dict['additional_properties'] = raw_group.additional_properties
+        group_dict['deletion_timestamp'] = raw_group.get('deletedDateTime')
+        group_dict['object_type'] = 'Group'
+        group_dict['mail_enabled'] = raw_group.get('mailEnabled')
+        group_dict['mail_nickname'] = raw_group.get('mailNickname')
+        group_dict['security_enabled'] = raw_group.get('securityEnabled')
+        group_dict['mail'] = raw_group.get('mail')
         group_dict['users'] = []  # this will be filled in `finalize()`
         group_dict['roles'] = []  # this will be filled in `finalize()`
 

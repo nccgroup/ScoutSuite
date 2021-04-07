@@ -2,7 +2,8 @@
     "description": "Root Account Has Active X.509 Certs",
     "rationale": "Root account X.509 certificates should be deleted as they may be used to make SOAP-protocol requests in the context of the root account.",
     "references": [
-        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-standards-cis-controls-1.1"
+        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-standards-cis-controls-1.1",
+        "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-use"
     ],
     "dashboard_name": "Root account",
     "path": "iam.credential_reports.id",
