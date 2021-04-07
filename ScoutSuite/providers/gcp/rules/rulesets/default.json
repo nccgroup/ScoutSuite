@@ -248,6 +248,18 @@
                 "level": "warning"
             }
         ],
+        "kms-cryptokeys-anonymously-publicly-accessible.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "kms-encryption-keys-not-rotated.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-basic-authentication-enabled.json": [
             {
                 "enabled": true,
