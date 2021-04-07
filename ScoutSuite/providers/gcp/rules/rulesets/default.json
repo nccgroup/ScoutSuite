@@ -42,6 +42,18 @@
                 "enabled": true,
                 "level": "warning"
             }
+          ],
+        "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
+           {
+                "enabled": true,
+                "level": "warning"
+           }
+        ],
+        "cloudsql-sqlservers-instances-contained-database-authentication-on.json": [
+           {
+                "enabled": true,
+                "level": "warning"
+           }
         ],
         "cloudsql-mysql-instances-local-infile-on.json": [
             {
@@ -249,6 +261,18 @@
             }
         ],
         "iam-role-kms-separation-duties-is-false.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kms-cryptokeys-anonymously-publicly-accessible.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "kms-encryption-keys-not-rotated.json": [
             {
                 "enabled": true,
                 "level": "warning"
