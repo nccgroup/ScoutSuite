@@ -11,16 +11,13 @@ export const useResources = (service, resource, ids) => {
 
   useEffect(() => {
     const asyncAPI = async () => {
-      console.log('GET RESOURCES', service, resource, ids);
       if (service && resource && ids) {
         setLoading(true);
         try {
           const requests = ids.map(id =>
             API.get(`services/${service}/resources/${resource}/${id}`),
           );
-          console.log('list de requests', requests);
           const response = await Promise.all(requests);
-          console.log('REQUESTS', response);
           setData(response);
         } catch (e) {
           console.error(e.message);

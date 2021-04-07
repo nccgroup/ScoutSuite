@@ -1,24 +1,25 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
-import GetResourceName from '../GetResourceName/index';
+import ResourceName from '../ResourceName/index';
 
 const propTypes = {
   service: PropTypes.string.name,
   resource: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  name: PropTypes.string,
 };
 
-const GetResourceLink = ({ service, resource, id }) => {
+const ResourceLink = ({ service, resource, id, name }) => {
   return (
     <Link to={`/services/${service}/resources/${resource}/${id}`}>
-      <GetResourceName
+      {name || <ResourceName
         service={service} resource={resource}
-        id={id} />
+        id={id} />}
     </Link>
   );
 };
 
-GetResourceLink.propTypes = propTypes;
+ResourceLink.propTypes = propTypes;
 
-export default GetResourceLink;
+export default ResourceLink;

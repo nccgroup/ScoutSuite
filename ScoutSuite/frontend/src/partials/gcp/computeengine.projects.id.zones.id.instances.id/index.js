@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
-import { Link } from 'react-router-dom';
 
 import { Partial, PartialValue } from '../../../components/Partial';
 import {
@@ -10,8 +9,8 @@ import {
   convertBoolToEnable,
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
-import GetResourceName from '../../../components/GetResourceName';
 import { valueOrNone } from '../../../utils/Partials/index';
+import ResourceLink from '../../../components/ResourceLink';
 
 const renderTags = tags => {
   if (!tags || tags.length === 0) return <span>None</span>;
@@ -48,27 +47,19 @@ const renderNetworkInterfaces = network_interfaces => {
             <li>{ni.networkIP}</li>
             <li>
               Network:{' '}
-              <Link
-                to={`/services/computeengine/resources/networks/${ni.network_id}`}
-              >
-                <GetResourceName
-                  service="computeengine"
-                  resource="networks"
-                  id={ni.network_id}
-                />
-              </Link>
+              <ResourceLink
+                service="computeengine"
+                resource="networks"
+                id={ni.network_id}
+              />
             </li>
             <li>
               Subnetwork:{' '}
-              <Link
-                to={`/services/computeengine/resources/subnetworks/${ni.subnetwork_id}`}
-              >
-                <GetResourceName
-                  service="computeengine"
-                  resource="subnetworks"
-                  id={ni.subnetwork_id}
-                />
-              </Link>
+              <ResourceLink
+                service="computeengine"
+                resource="subnetworks"
+                id={ni.subnetwork_id}
+              />
             </li>
           </ul>
         </li>
@@ -88,23 +79,30 @@ const renderAccessScope = access_scopes => {
   );
 };
 
-const renderDisks = (disks) => {
+const renderDisks = disks => {
   if (!disks) return <span>None</span>;
 
-  return <ul>
-    {Object.values(disks).map((disk, i) => <li key={i}>
-      {disk.source_device_name}
-      <ul>
-        <li>Bootable: {disk.bootable}</li> 
-        <li>Type: {disk.type}</li>
-        <li>Mode: {disk.mode}</li>
-        {disk.latest_snapshot ?
-          <li>Latest snapshot: {disk.latest_snapshot.creation_timestamp}</li> :
-          <li>Latest snapshot: None</li>}
-        <li>Customer Supplied Encryption: <span>{valueOrNone(disk.encrypted_with_csek)}</span></li>
-      </ul>
-    </li>)}
-  </ul>;
+  return (
+    <ul>
+      {Object.values(disks).map((disk, i) => (
+        <li key={i}>
+          {disk.source_device_name}
+          <ul>
+            <li>Bootable: {disk.bootable}</li>
+            <li>Type: {disk.type}</li>
+            <li>Mode: {disk.mode}</li>
+            <li>
+              Latest snapshot: {disk.latest_snapshot ? disk.latest_snapshot.creation_timestamp : 'None'}
+            </li>
+            <li>
+              Customer Supplied Encryption:{' '}
+              <span>{valueOrNone(disk.encrypted_with_csek)}</span>
+            </li>
+          </ul>
+        </li>
+      ))}
+    </ul>
+  );
 };
 
 const propTypes = {
@@ -120,17 +118,11 @@ const Instances = props => {
   return (
     <Partial data={data}>
       <div className="left-pane">
-        <PartialValue
-          label="Instance Name"
-          valuePath="name" />
+        <PartialValue label="Instance Name" valuePath="name" />
 
-        <PartialValue
-          label="Project ID"
-          valuePath="project_id" />
+        <PartialValue label="Project ID" valuePath="project_id" />
 
-        <PartialValue
-          label="Description"
-          valuePath="description" />
+        <PartialValue label="Description" valuePath="description" />
 
         <PartialValue
           label="Creation Date"
@@ -138,9 +130,7 @@ const Instances = props => {
           renderValue={formatDate}
         />
 
-        <PartialValue
-          label="Status"
-          valuePath="status" />
+        <PartialValue label="Status" valuePath="status" />
 
         <PartialValue
           label="Deletion Protection"

@@ -43,9 +43,7 @@ const SQLInstances = props => {
   return (
     <Partial data={data}>
       <div className="left-pane">
-        <PartialValue
-          label="Project ID"
-          valuePath="project_id" />
+        <PartialValue label="Project ID" valuePath="project_id" />
 
         <PartialValue
           label="Automatic Backups"
@@ -91,7 +89,9 @@ const SQLInstances = props => {
       </div>
 
       <TabsMenu>
-        <TabPane title="Authorized Networks">{renderAuthorizedNetworks(item.authorized_networks)}</TabPane>
+        <TabPane title="Authorized Networks">
+          {renderAuthorizedNetworks(item.authorized_networks)}
+        </TabPane>
       </TabsMenu>
     </Partial>
   );

@@ -10,18 +10,16 @@ const propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-const GetResourceName = ({service, resource, id}) => {
+const ResourceName = ({service, resource, id }) => {
   const { data, loading } = useAPI(getResourceEndpoint(service, resource, id));
 
   if (loading) return <span>
     <Skeleton width="40" />
   </span>;
 
-  return <span>
-    {data.name}
-  </span>;
+  return <span>{data.name}</span>;
 };
 
-GetResourceName.propTypes = propTypes;
+ResourceName.propTypes = propTypes;
 
-export default GetResourceName;
+export default ResourceName;

@@ -11,7 +11,7 @@ import {
   valueOrNone,
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
-import GetResourceLink from '../../../components/GetResourceLink';
+import ResourceLink from '../../../components/ResourceLink';
 
 const renderSecurityRules = items => {
   return (
@@ -44,7 +44,7 @@ const renderSecurityRules = items => {
               </td>
               {item.source_address_prefixes_is_asg && (
                 <td width="10%" className="text-center">
-                  <GetResourceLink
+                  <ResourceLink
                     service="network"
                     resource="application_security_groups"
                     id={item.source_address_prefixes}
@@ -79,7 +79,7 @@ const renderSecurityRules = items => {
 };
 
 const renderSubnetLink = ({id}) => (
-  <GetResourceLink
+  <ResourceLink
     service="network" resource="virtual_networks"
     id={id} />
 );
