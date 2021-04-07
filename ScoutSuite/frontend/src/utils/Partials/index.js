@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
+import DetailedValue from '../../components/DetailedValue';
+
 
 export const partialDataShape = {
   item: PropTypes.object.isRequired,
@@ -135,6 +137,24 @@ export const renderList = (items, accessor, renderValue) => {
     })}
   </ul>;
 };
+
+/**
+ * Render tags in an unordered list
+ * @param tags 
+ * @returns {HTMLUListElement}
+ */
+export const renderAwsTags = tags => (
+  <ul>
+    {tags.map((tag, i) => (
+      <li key={i}>
+        <DetailedValue
+          label={tag.Key}
+          value={tag.Value}
+        />
+      </li>
+    ))}
+  </ul>
+);
 
 /**
  * Format title

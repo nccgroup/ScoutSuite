@@ -31,7 +31,7 @@ const ConfigRecorders = props => {
           label="AWS Config Recorder enabled"
           valuePath="recorders_count"
           errorPath="NotConfigured"
-          renderValue={value => (!!value).toString()}
+          renderValue={value => Boolean(value).toString()}
         />
       </InformationsWrapper>
       <TabsMenu>

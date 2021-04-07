@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import GenericObject from '../../../components/Partial/GenericObject';
 import { partialDataShape } from '../../../utils/Partials';
 
-import './style.scss';
-
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -17,7 +15,7 @@ const Ec2Volumes = props => {
   if (!data) return null;
 
   return (
-    <div className="ec2-volume">
+    <div>
       <h4>Attributes</h4>
       <GenericObject
         data={data.item}

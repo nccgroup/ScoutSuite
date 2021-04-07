@@ -29,7 +29,6 @@ const Informations = () => {
       <PartialValue
         label="Default"
         valuePath="default"
-        renderValue={value => value.toString()}
       />
     </>
   );

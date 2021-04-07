@@ -13,7 +13,10 @@ module.exports = {
     'ecmaVersion': 12,
     'sourceType': 'module'
   },
-  'plugins': ['react'],
+  'plugins': [
+    'react',
+    'react-hooks',
+  ],
   'rules': {
     'indent': ['error', 2],
     'quotes': ['error', 'single'],
@@ -21,6 +24,7 @@ module.exports = {
     'eol-last': ['warn', 'always'],
     'react/jsx-uses-vars': 'error',
     'react/jsx-uses-react': 1,
+    'react-hooks/rules-of-hooks': 'error',
     'no-debugger': 0,
     'react/jsx-first-prop-new-line': [1, 'multiline'],
     'react/jsx-max-props-per-line': [1,

@@ -1,6 +1,10 @@
 @import 'src/variables';
 
 .partial-value {
+  .inline {
+    display: inline;
+  }
+
   .issue {
     font-weight: 700;
   }

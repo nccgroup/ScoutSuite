@@ -24,7 +24,6 @@ const Informations = (props) => {
           key={key} 
           label={key} 
           value={value}
-          renderValue={isBoolean(value) ? value => value.toString() : undefined}
         />
       ))}
     </>

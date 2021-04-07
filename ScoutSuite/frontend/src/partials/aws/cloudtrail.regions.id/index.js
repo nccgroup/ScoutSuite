@@ -30,7 +30,7 @@ const Trails = props => {
           label="Configured"
           valuePath="trails_count"
           errorPath="NotConfigured"
-          renderValue={value => (!!value).toString()}
+          renderValue={value => Boolean(value).toString()}
         />
       </InformationsWrapper>
 
