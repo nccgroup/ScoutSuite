@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class LogProfiles(AzureResources):
@@ -16,7 +17,7 @@ class LogProfiles(AzureResources):
     def _parse_log_profile(self, log_profile):
         log_profile_dict = {}
 
-        log_profile_dict['id'] = log_profile.id
+        log_profile_dict['id'] = get_non_provider_id(log_profile.id.lower())
         log_profile_dict['name'] = log_profile.name
         log_profile_dict['storage_account_id'] = log_profile.storage_account_id
         log_profile_dict['service_bus_rule_id'] = log_profile.service_bus_rule_id

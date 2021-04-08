@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
+from ScoutSuite.providers.utils import get_non_provider_id
 from .diagnostic_resource_key_vault import DiagnosticResourceKeyVault
 
 
@@ -27,7 +28,7 @@ class Resources(AzureCompositeResources):
 
     def _parse_resource(self, raw_resource):
         resource = {}
-        resource['id'] = raw_resource.id
+        resource['id'] = get_non_provider_id(raw_resource.id.lower())
         resource['name'] = raw_resource.name
         if raw_resource.tags is not None:
             resource['tags'] = ["{}:{}".format(key, value) for key, value in raw_resource.tags.items()]
