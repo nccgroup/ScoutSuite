@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class RDSInstances(AWSResources):
@@ -17,6 +18,8 @@ class RDSInstances(AWSResources):
     def _parse_instance(self, raw_instance):
         instance = {}
         instance['name'] = raw_instance.pop('DBInstanceIdentifier')
+        instance['id'] = get_non_provider_id(instance['name'])
+
         for key in ['InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade',
                     'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible',
                     'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups',
@@ -25,7 +28,7 @@ class RDSInstances(AWSResources):
 
         instance['is_read_replica'] = self._is_read_replica(raw_instance)
         instance['arn'] = raw_instance.get('DBInstanceArn')
-        return instance['name'], instance
+        return instance['id'], instance
 
     @staticmethod
     def _is_read_replica(instance):

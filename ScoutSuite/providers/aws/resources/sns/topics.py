@@ -2,6 +2,7 @@ import json
 
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 from .subscriptions import Subscriptions
 
@@ -34,6 +35,7 @@ class Topics(AWSCompositeResources):
     def _parse_topic(self, raw_topic):
         raw_topic['arn'] = raw_topic.pop('TopicArn')
         raw_topic['name'] = raw_topic['arn'].split(':')[-1]
+        raw_topic['id'] = get_non_provider_id(raw_topic['name'])
 
         attributes = raw_topic.pop('attributes')
         for k in ['Owner', 'DisplayName']:
@@ -44,4 +46,4 @@ class Topics(AWSCompositeResources):
         if "KmsMasterKeyId" in attributes:
             raw_topic["KmsMasterKeyId"] = attributes["KmsMasterKeyId"]
 
-        return raw_topic['name'], raw_topic
+        return raw_topic['id'], raw_topic

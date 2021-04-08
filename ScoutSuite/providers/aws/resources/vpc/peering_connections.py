@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class PeeringConnections(AWSResources):
@@ -16,5 +17,6 @@ class PeeringConnections(AWSResources):
             self[id] = peering_connection
 
     def _parse_peering_connections(self, raw_peering_connection):
-        raw_peering_connection['id'] = raw_peering_connection['name'] = raw_peering_connection['VpcPeeringConnectionId']
+        raw_peering_connection['id'] = get_non_provider_id(raw_peering_connection['VpcPeeringConnectionId'])
+        raw_peering_connection['name'] = raw_peering_connection['VpcPeeringConnectionId']
         return raw_peering_connection['id'], raw_peering_connection

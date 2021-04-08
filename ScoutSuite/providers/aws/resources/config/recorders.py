@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Recorders(AWSResources):
@@ -15,6 +16,7 @@ class Recorders(AWSResources):
 
     def _parse_recorder(self, raw_recorder):
         recorder = {}
+        recorder['id'] = get_non_provider_id(raw_recorder['name'])
         recorder['name'] = raw_recorder['name']
         recorder['region'] = self.region
         recorder['role_ARN'] = raw_recorder['roleARN']
@@ -23,4 +25,4 @@ class Recorders(AWSResources):
         recorder['last_status'] = raw_recorder['ConfigurationRecordersStatus'].get('lastStatus')
         recorder['last_start_time'] = raw_recorder['ConfigurationRecordersStatus'].get('lastStartTime')
         recorder['last_status_change_time'] = raw_recorder['ConfigurationRecordersStatus'].get('lastStatusChangeTime')
-        return recorder['name'], recorder
+        return recorder['id'], recorder

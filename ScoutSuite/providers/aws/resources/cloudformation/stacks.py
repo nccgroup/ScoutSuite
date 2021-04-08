@@ -2,6 +2,7 @@ import re
 
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Stacks(AWSResources):
@@ -16,7 +17,7 @@ class Stacks(AWSResources):
             self[name] = stack
 
     def _parse_stack(self, raw_stack):
-        raw_stack['id'] = raw_stack.pop('StackId')
+        raw_stack['id'] = get_non_provider_id(raw_stack.pop('StackId'))
         raw_stack['name'] = raw_stack.pop('StackName')
         raw_stack['drifted'] = raw_stack.pop('DriftInformation')[
                                    'StackDriftStatus'] == 'DRIFTED'

@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class AmazonMachineImages(AWSResources):
@@ -14,7 +15,7 @@ class AmazonMachineImages(AWSResources):
             self[name] = resource
 
     def _parse_image(self, raw_image):
-        raw_image['id'] = raw_image.get('ImageId')
+        raw_image['id'] = get_non_provider_id(raw_image.get('ImageId'))
         raw_image['name'] = raw_image.get('Name')
         raw_image['arn'] = 'arn:aws:ec2:{}:{}:ami/{}'.format(self.region,
                                                             raw_image.get('OwnerId'),

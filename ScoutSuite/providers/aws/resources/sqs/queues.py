@@ -2,6 +2,7 @@ import json
 
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Queues(AWSResources):
@@ -21,6 +22,8 @@ class Queues(AWSResources):
         queue['QueueUrl'] = queue_url
         queue['arn'] = queue_attributes.pop('QueueArn')
         queue['name'] = queue['arn'].split(':')[-1]
+        queue['id'] = get_non_provider_id(queue['name'])
+
         queue['kms_master_key_id'] = queue_attributes.pop('KmsMasterKeyId', None)
         queue['CreatedTimestamp'] = queue_attributes.pop('CreatedTimestamp', None)
 
@@ -29,4 +32,4 @@ class Queues(AWSResources):
         else:
             queue['Policy'] = {'Statement': []}
 
-        return queue['name'], queue
+        return queue['id'], queue

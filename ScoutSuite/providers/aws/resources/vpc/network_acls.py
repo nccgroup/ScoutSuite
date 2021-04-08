@@ -2,6 +2,7 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.utils import get_name
 from ScoutSuite.core.fs import load_data
+from ScoutSuite.providers.utils import get_non_provider_id
 
 protocols_dict = load_data('protocols.json', 'protocols')
 
@@ -20,7 +21,7 @@ class NetworkACLs(AWSResources):
             self[id] = network_acl
 
     def _parse_network_acl(self, raw_network_acl):
-        raw_network_acl['id'] = raw_network_acl.pop('NetworkAclId')
+        raw_network_acl['id'] = get_non_provider_id(raw_network_acl.pop('NetworkAclId'))
         get_name(raw_network_acl, raw_network_acl, 'id')
         raw_network_acl['rules'] = {}
         raw_network_acl['rules']['ingress'] = self._parse_network_acl_entries(raw_network_acl['Entries'], False)

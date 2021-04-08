@@ -4,6 +4,8 @@ from ScoutSuite.providers.aws.utils import get_name
 from ScoutSuite.providers.aws.utils import get_keys
 import re
 
+from ScoutSuite.providers.utils import get_non_provider_id
+
 
 class EC2Instances(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
@@ -20,7 +22,7 @@ class EC2Instances(AWSResources):
     async def _parse_instance(self, raw_instance):
         instance = {}
         id = raw_instance['InstanceId']
-        instance['id'] = id
+        instance['id'] = get_non_provider_id(id)
         instance['arn'] = 'arn:aws:ec2:{}:{}:instance/{}'.format(self.region,
                                                                  raw_instance['OwnerId'],
                                                                  raw_instance['InstanceId'])
@@ -51,7 +53,7 @@ class EC2Instances(AWSResources):
         else:
             instance['iam_role'] = None
 
-        return id, instance
+        return instance['id'], instance
 
     @staticmethod
     def _identify_user_data_secrets(user_data):

@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.utils import get_name
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Snapshots(AWSResources):
@@ -16,7 +17,7 @@ class Snapshots(AWSResources):
 
     def _parse_snapshot(self, raw_snapshot):
         snapshot_dict = {}
-        snapshot_dict['id'] = raw_snapshot.get('SnapshotId')
+        snapshot_dict['id'] = get_non_provider_id(raw_snapshot.get('SnapshotId'))
         snapshot_dict['name'] = get_name(raw_snapshot, raw_snapshot, 'SnapshotId')
         snapshot_dict['description'] = raw_snapshot.get('Description')
         snapshot_dict['public'] = self._is_public(raw_snapshot)

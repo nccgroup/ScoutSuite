@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Tables(AWSResources):
@@ -16,7 +17,7 @@ class Tables(AWSResources):
     def _parse_table(self, raw_table):
         table_dict = {}
         table_dict['name'] = raw_table.get('TableName')
-        table_dict['id'] = raw_table.get('TableId')
+        table_dict['id'] = get_non_provider_id(raw_table.get('TableId'))
         table_dict['arn'] = raw_table.get('TableArn')
         table_dict['attribute_definitions'] = raw_table.get('AttributeDefinitions')
         table_dict['key_schema'] = raw_table.get('KeySchema')

@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.utils import get_name
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Volumes(AWSResources):
@@ -15,7 +16,7 @@ class Volumes(AWSResources):
             self[name] = resource
 
     def _parse_volume(self, raw_volume):
-        raw_volume['id'] = raw_volume.pop('VolumeId')
+        raw_volume['id'] = get_non_provider_id(raw_volume.pop('VolumeId'))
         raw_volume['name'] = get_name(raw_volume, raw_volume, 'id')
         raw_volume['arn'] = 'arn:aws:ec2:{}:{}:volume/{}'.format(self.region,
                                                                  self.facade.owner_id,

@@ -29,6 +29,7 @@ class Identities(AWSCompositeResources):
     def _parse_identity(self, raw_identity):
         identity_name, dkim_attributes = raw_identity
         identity = {}
+        identity['id'] = get_non_provider_id(identity_name)
         identity['name'] = identity_name
         identity['DkimEnabled'] = dkim_attributes['DkimEnabled']
         identity['DkimVerificationStatus'] = dkim_attributes['DkimVerificationStatus']
@@ -36,4 +37,4 @@ class Identities(AWSCompositeResources):
                                                                              self.facade.owner_id,
                                                                              identity_name)
 
-        return get_non_provider_id(identity_name), identity
+        return identity['id'], identity

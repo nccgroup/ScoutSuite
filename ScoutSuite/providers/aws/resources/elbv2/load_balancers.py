@@ -35,6 +35,7 @@ class LoadBalancers(AWSCompositeResources):
     def _parse_load_balancer(self, load_balancer):
         load_balancer['arn'] = load_balancer.pop('LoadBalancerArn')
         load_balancer['name'] = load_balancer.pop('LoadBalancerName')
+        load_balancer['id'] = get_non_provider_id(load_balancer['name'])
         load_balancer['security_groups'] = []
         load_balancer['listener_protocols'] = []
         load_balancer['isNetwork'] = load_balancer["Type"] == "network"
@@ -48,4 +49,4 @@ class LoadBalancers(AWSCompositeResources):
             load_balancer['tags'] = {x['Key']: x['Value'] for x in load_balancer['Tags']}
             load_balancer.pop('Tags')
 
-        return get_non_provider_id(load_balancer['name']), load_balancer
+        return load_balancer['id'], load_balancer

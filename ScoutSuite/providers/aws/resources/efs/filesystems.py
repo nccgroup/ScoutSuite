@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class FileSystems(AWSResources):
@@ -15,7 +16,8 @@ class FileSystems(AWSResources):
 
     def _parse_file_system(self, raw_file_system):
         fs_id = raw_file_system.pop('FileSystemId')
+        raw_file_system['id'] = get_non_provider_id(fs_id)
         raw_file_system['name'] = raw_file_system.pop('Name') if 'Name' in raw_file_system else None
         raw_file_system['tags'] = raw_file_system.pop('Tags')
 
-        return fs_id, raw_file_system
+        return raw_file_system['id'], raw_file_system
