@@ -25,7 +25,7 @@ const SelectedItemContainer = () => {
     ...data,
   };
 
-  return <LazyPartial data={partialData} partial={partialPath} />;
+  return <LazyPartial data={partialData} path={path} partial={partialPath} />;
 };
 
 export default SelectedItemContainer;

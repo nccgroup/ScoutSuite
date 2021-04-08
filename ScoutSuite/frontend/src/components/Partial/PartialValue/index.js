@@ -5,8 +5,8 @@ import cx from 'classnames';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 
-import { 
-  PartialContext, 
+import {
+  PartialContext,
   PartialPathContext,
   PartialTabContext,
 } from '../context';
@@ -14,6 +14,8 @@ import { concatPaths } from '../../../utils/Partials';
 import DetailedValue from '../../DetailedValue';
 
 import './style.scss';
+import AddException from '../../Exceptions/AddButton/index';
+import { useParams } from 'react-router-dom';
 
 const propTypes = {
   label: PropTypes.node,
@@ -58,16 +60,17 @@ const PartialValue = props => {
     tooltip,
     tooltipProps,
     renderValue,
-    basePathOverwrite
+    basePathOverwrite,
   } = props;
 
+  const params = useParams();
   const ctx = useContext(PartialContext);
   const basePath = useContext(PartialPathContext);
   const setIssueLevel = useContext(PartialTabContext);
 
   const fullValuePath = concatPaths(basePathOverwrite || basePath, valuePath);
   let value = renderValue(
-    props.value || get(ctx.item, fullValuePath, props.value)
+    props.value || get(ctx.item, fullValuePath, props.value),
   );
 
   if (typeof value === 'boolean') {
@@ -77,30 +80,38 @@ const PartialValue = props => {
   let fullErrorPaths;
   if (errorPath) {
     const paths = isArray(errorPath) ? errorPath : [errorPath];
-    fullErrorPaths = paths.map(path => concatPaths(basePathOverwrite || basePath, path));
+    fullErrorPaths = paths.map(path =>
+      concatPaths(basePathOverwrite || basePath, path),
+    );
   } else {
     fullErrorPaths = [fullValuePath];
   }
 
-  const hasError = fullErrorPaths.some(path => ctx.path_to_issues.includes(path));
+  const hasError = fullErrorPaths.some(path =>
+    ctx.path_to_issues.includes(path),
+  );
   const level = ctx.level;
 
-  useEffect(
-    () => {
-      if (hasError) {
-        setIssueLevel(level);
-      }
-    },
-    [level],
-  );
+  useEffect(() => {
+    if (hasError) {
+      setIssueLevel(level);
+    }
+  }, [level]);
 
   if (value === undefined || value === null) {
     return null;
   }
 
+  const exceptionButton = (
+    <AddException
+      service={params.service} finding={params.finding}
+      path={`${ctx.path}.${fullErrorPaths[0]}`} />
+  );
+
   const content = (
     <span className={cx(hasError && cx('issue', level))}>
       {value}
+      {hasError && exceptionButton}
     </span>
   );
 
@@ -114,8 +125,9 @@ const PartialValue = props => {
           <Tooltip title={value} {...tooltipProps}>
             {content}
           </Tooltip>
-        ) : 
+        ) : (
           content
+        )
       }
     />
   );
