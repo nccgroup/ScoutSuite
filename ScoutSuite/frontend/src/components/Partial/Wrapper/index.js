@@ -12,6 +12,8 @@ const propTypes = {
 const PartialWrapper = (props) => {
   const { data, children } = props;
 
+  console.info('PARTIAL DATA', data);
+
   return (
     <PartialContext.Provider value={data}>
       {children}

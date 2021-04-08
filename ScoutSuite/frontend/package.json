@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
@@ -46,6 +47,7 @@
     "enquirer": "^2.3.6",
     "eslint": "^7.19.0",
     "eslint-plugin-react": "^7.22.0",
+    "prettier-eslint-cli": "^5.0.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^5.0.9"
   }

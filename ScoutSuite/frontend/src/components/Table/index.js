@@ -15,7 +15,8 @@ const propTypes = {
   disablePagination: PropTypes.bool,
   pageCount: PropTypes.number,
   fetchData: PropTypes.func,
-  manualPagination: PropTypes.bool
+  manualPagination: PropTypes.bool,
+  headerRight: PropTypes.element,
 };
 
 const Table = (props) => {
@@ -29,7 +30,8 @@ const Table = (props) => {
     disablePagination = false,
     fetchData = null,
     pageCount = 0,
-    manualPagination = false
+    manualPagination = false,
+    headerRight
   } = props;
 
   const cols = columns.map((item) => {
@@ -54,6 +56,7 @@ const Table = (props) => {
       fetchData={fetchData}
       pageCount={pageCount}
       manualPagination={manualPagination}
+      headerRight={headerRight}
     />
   );
 };

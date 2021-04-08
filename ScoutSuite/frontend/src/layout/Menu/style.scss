@@ -27,6 +27,10 @@
   & > * {
     border-bottom: 1px solid $default-grey-dark;
   }
+
+  .dark-mode & {
+    color: $font-color;
+  }
 }
 
 .sub-menu {
@@ -51,6 +55,10 @@
     display: block;
     color: $white;
     text-decoration: none;
+
+    .dark-mode & {
+      color: $font-color;
+    }
   }
 }
 

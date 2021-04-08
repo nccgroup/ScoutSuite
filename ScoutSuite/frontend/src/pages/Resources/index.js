@@ -11,6 +11,7 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 import { getResourcesEndpoint } from '../../api/paths';
 
 import './style.scss';
+import DownloadButton from '../../components/DownloadButton/index';
 
 const Resources = () => {
   const params = useParams();
@@ -53,7 +54,7 @@ const Resources = () => {
     columns.push({ name: 'Location', key: 'location' });
 
   const initialState = {
-    pageSize: 10
+    pageSize: 10,
   };
 
   const formatters = {
@@ -63,6 +64,21 @@ const Resources = () => {
   const sortBy = {
     severity: sortBySeverity,
   };
+
+  const downloadButtons = (
+    <>
+      <DownloadButton
+        service={params.service}
+        resource={params.resource}
+        type="json"
+      />
+      <DownloadButton
+        service={params.service}
+        resource={params.resource}
+        type="csv"
+      />
+    </>
+  );
 
   return (
     <>
@@ -78,6 +94,7 @@ const Resources = () => {
             manualPagination={true}
             pageCount={response.meta.total_pages}
             initialState={initialState}
+            headerRight={downloadButtons}
           />
         </div>
 

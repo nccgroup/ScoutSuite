@@ -45,8 +45,8 @@ const Policy = props => {
 
   const displayJson = object => 
     JSON.stringify(object, null, 2)
-      .replace(/ /g, '&nbsp;')
-      .replace(/\n/g, '<br/>');
+      .replace(/ /gm, '&nbsp;')
+      .replace(/\n/gm, '<br/>');
 
   const renderJson = (json, errorPath) => (
     <PartialValue 

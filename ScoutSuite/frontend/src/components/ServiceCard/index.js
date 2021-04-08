@@ -19,17 +19,11 @@ const propTypes = {
 };
 
 const ServiceCard = props => {
-  const {
-    id,
-    name,
-    issues,
-    resources,
-    rules,
-  } = props;
+  const { id, name, issues, resources, rules } = props;
 
   const hasFindings = rules > 0;
   const findingsPath = hasFindings ? `/services/${id}/findings` : '/';
-  
+
   return (
     <div className="service-card">
       <div className="header">
@@ -44,32 +38,39 @@ const ServiceCard = props => {
           {issues.Medium > 0 && (
             <ServiceStatus status="medium" amount={issues.Medium} />
           )}
-          {issues.Low > 0 && (
-            <ServiceStatus status="low" amount={issues.Low} />
-          )}
+          {issues.Low > 0 && <ServiceStatus status="low" amount={issues.Low} />}
           {issues.Good > 0 && (
             <ServiceStatus status="good" amount={issues.Good} />
           )}
-          
         </div>
       </div>
-      <hr/>
+      <hr />
       <div className="content">
-        <DetailedValue label="Resources" value={resources} separator="" />
-        <DetailedValue label="Rules" value={rules} separator="" />
-        <DetailedValue label="Flagged Items" value={props['flagged-items']} separator="" />
+        <DetailedValue
+          label="Resources" value={resources}
+          separator="" />
+        <DetailedValue
+          label="Rules" value={rules}
+          separator="" />
+        <DetailedValue
+          label="Flagged Items"
+          value={props['flagged-items']}
+          separator=""
+        />
       </div>
-      <hr/>
+      <hr />
       <div className="footer">
-        <Link 
-          className={cx('link', { 'disabled': !hasFindings })} 
+        <Link
+          className={cx('link', { disabled: !hasFindings })}
           to={findingsPath}
         >
           {hasFindings ? (
             <>
               View report <ChevronRightIcon />
             </>
-          ) : 'No findings'}
+          ) : (
+            'No findings'
+          )}
         </Link>
       </div>
     </div>

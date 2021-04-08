@@ -28,16 +28,16 @@ const parseFile = async (provider, filename) => {
   for (const { name, content } of sections) {
     sectionsParsed.push({ name, values: [] });
 
-    let regexpNames = /<div class="list-group-item-text item-margin">(?:\n[\t ]*)?(?<name>[\w ]+):(?<content>(?: |\n\t*)<span id="(?<id>.*?)">(?:.*?){{(?<value>.*?)}}(?:.*?))<\/div>/gms;
+    let regexpNames = /<div class="list-group-item-text item-margin">(?:\n[\t ]*)?(?<name>[\w1-9.\- ]+):((?<content>(?: |\n\t*)<span id="(?<id>.*?)">(?:.*?){{[ ]*(?<value>.*?)[ ]*}}(?:.*?)<\/span>)|(?:(?:[ ]*\n[\t ]*)?{{#each (?<list>\w*)}}(?:.*?){{\/each}}))(?:\n[\t ]*)?<\/div>/gms;
     let match = regexpNames.exec(content);
     do {
-
       if (match) {
         sectionsParsed[index].values.push({
           name: match.groups.name,
           id: match.groups.id,
           value: match.groups.value,
           content: match.groups.content,
+          list: match.groups.list,
         });
       }
     } while ((match = regexpNames.exec(content)) !== null);
@@ -60,6 +60,7 @@ const template = (CompName, informations, tabs, renderers) => {
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { 
   partialDataShape,
@@ -78,9 +79,9 @@ const ${CompName} = props => {
 
   return (
     <Partial data={data}>
-      <div>
+      <InformationsWrapper>
 ${informations}
-      </div>
+      </InformationsWrapper>
 
       ${tabsRender ? `<TabsMenu>
         ${tabsRender}
@@ -98,26 +99,22 @@ const createValue = (label, valuePath, renderer, addTab) => {
   let extra = '';
 
   if (renderer) {
-    extra += `renderValue={${renderer}}`;
+    extra += `\n${addTab ? '  ' : ''}        renderValue={${renderer}}`;
   }
-
-  if (extra.length > 0) extra += `\n${addTab ? '  ' : ''}        `;
 
   return `${addTab ? '  ' : ''}      <PartialValue
 ${addTab ? '  ' : ''}        label="${label}"
-${addTab ? '  ' : ''}        valuePath="${valuePath}"
-${addTab ? '  ' : ''}        ${extra}/>
+${addTab ? '  ' : ''}        valuePath="${valuePath}"${extra ? extra : ''} />
 
 `;
 };
 
 const notNormalValue = (label, valuePath, content, addTab) => {
-  return `${addTab ? '  ' : ''}        {/* *** NOT NORMAL RENDERING *** 
-${addTab ? '  ' : ''}           LABEL: ${label}
-${addTab ? '  ' : ''}           valuePath: ${valuePath}
-${content}
-${addTab ? '  ' : ''}        */}
-
+  return `${addTab ? '  ' : ''}        {/* *** NOT NORMAL RENDERING ***} 
+${addTab ? '  ' : ''}      <PartialValue
+${addTab ? '  ' : ''}        label="${label}"
+${addTab ? '  ' : ''}        valuePath="${valuePath}" />
+${addTab ? '  ' : ''}        ${content}
 `;
 };
 
@@ -138,25 +135,30 @@ const createPartialValues = (values, addTab) => {
   let output = '';
   let renderers = [];
 
-  values.map(({ name, value, content }) => {
+  values.map(({ name, value, content, list }) => {
     //const errorId = id.split('.').slice(-1);
-    const valueParts = value.split(' ');
+    const valueParts = (value|| '').split(' ');
     let valuePath = '';
     let renderer = null;
 
-    if (valueParts[1] && valueParts[0] !== '#each') {
+    if (list) {
+      if (!renderers.includes('renderList')) renderers.push('renderList');
+      if (!renderers.includes('valueOrNone')) renderers.push('valueOrNone');
+
+      output += createValue(name, list, `${list} => renderList(${list}, valueOrNone)`, addTab);
+    } else if (valueParts[1] && valueParts[0] !== '#each') {
       valuePath = valueParts[1];
       renderer = getRendererName(valueParts[0]);
       if (!renderers.includes(renderer) && renderer !== 'DOESNOTEXIST') renderers.push(renderer);
 
       if (renderer === 'DOESNOTEXIST') renderer = `{/* NO RENDERER FOR ${valueParts[0]} */}`;
 
-      output += createValue(name, valuePath, renderer, addTab);
+      output += createValue(name, valuePath, renderer, addTab, list);
     } else if (valueParts[1] && valueParts[0] === '#each') {
-      output += notNormalValue(name, valueParts[1], content);
+      output += notNormalValue(name, valueParts[1], content, list);
     } else {
       valuePath = value;
-      output += createValue(name, valuePath, renderer, addTab);
+      output += createValue(name, valuePath, renderer, addTab, list);
     }
     
   });
