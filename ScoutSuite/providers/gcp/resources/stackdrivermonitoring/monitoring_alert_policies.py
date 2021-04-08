@@ -14,11 +14,22 @@ class MonitoringAlertPolicies(Resources):
 
     def _parse_alert_policy(self, raw_alert_policies):
         alert_policy_dict = {}
+        alert_policy_dict['project_ownership_assignments'] = \
+            self._specific_alert_policy_present(raw_alert_policies)
+        alert_policy_dict['audit_config_change'] = self._specific_alert_policy_present(raw_alert_policies)
+        alert_policy_dict['custom_role_change'] = self._specific_alert_policy_present(raw_alert_policies)
+        alert_policy_dict['vpc_network_firewall_rule_change'] = self._specific_alert_policy_present(raw_alert_policies)
+        alert_policy_dict['vpc_network_route_change'] = self._specific_alert_policy_present(raw_alert_policies)
+        alert_policy_dict['vpc_network_change'] = self._specific_alert_policy_present(raw_alert_policies)
+        alert_policy_dict['cloud_storage_iam_permission_change'] = \
+            self._specific_alert_policy_present(raw_alert_policies)
+        alert_policy_dict['sql_instance_conf_change'] = self._specific_alert_policy_present(raw_alert_policies)
         return alert_policy_dict
 
-    def _specific_alert_policy_present(self, alert_policies, alert_policy_value: str):
+    def _specific_alert_policy_present(self, alert_policies):
         for alert_policy in alert_policies:
-            for condition in alert_policy.conditions._value:
-                if condition.condition_threshold.filter == alert_policy_value and alert_policy.enabled.value:
+            for condition in alert_policy.conditions._values:
+                if condition.condition_threshold.filter == 'metric.type=\"logging.googleapis.com/user/<Log Metric ' \
+                                                           'Name>\"' and alert_policy.enabled.value:
                     return True
         return False
