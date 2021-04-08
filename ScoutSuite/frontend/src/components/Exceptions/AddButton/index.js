@@ -37,7 +37,7 @@ const AddException = ({ service, finding, path }) => {
 
   return (
     <Tooltip
-      title="Add to exception list" 
+      title="Add finding to exceptions list" 
       placement="top"
       arrow
     >
