@@ -1,0 +1,25 @@
+
+<!-- Cloud Memorystore for Redis partial -->
+<script id="services.cloudmemorystore.projects.id.redis_instances.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Location: <span id="cloudmemorystore.projects.{{@../key}}.redis_instances.{{@key}}.location">{{location}}</span></div>
+        <div class="list-group-item-text item-margin">Redis Version: <span id="cloudmemorystore.projects.{{@../key}}.redis_instances.{{@key}}.redis_version">{{redis_version}}</span></div>
+        <div class="list-group-item-text item-margin">Transit Encryption Mode: <span id="cloudmemorystore.projects.{{@../key}}.redis_instances.{{@key}}.ssl_required">{{convert_bool_to_enabled ssl_required}}</span></div>
+        <div class="list-group-item-text item-margin">Auth Enabled: <span id="cloudmemorystore.projects.{{@../key}}.redis_instances.{{@key}}.auth_enabled"><samp>{{convert_bool_to_enabled auth_enabled}}</samp></span></div>
+    </div>
+</script>
+<script>
+    Handlebars.registerPartial("services.cloudmemorystore.projects.id.redis_instances", $("#services\\.cloudmemorystore\\.projects\\.id\\.redis_instances\\.partial").html());
+</script>
+
+<!-- Single redis instance template -->
+<script id="single_cloudmemorystore_redis_instance-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.cloudmemorystore.projects.id.redis_instances'}}
+</script>
+<script>
+    var single_cloudmemorystore_redis_template = Handlebars.compile($("#single_cloudmemorystore_redis_instance-template").html());
+</script>

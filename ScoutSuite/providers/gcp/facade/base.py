@@ -4,6 +4,7 @@ from ScoutSuite.core.console import print_exception, print_info, print_debug, pr
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
+from ScoutSuite.providers.gcp.facade.memorystoreredis import MemoryStoreRedisFacade
 from ScoutSuite.providers.gcp.facade.cloudstorage import CloudStorageFacade
 from ScoutSuite.providers.gcp.facade.gce import GCEFacade
 from ScoutSuite.providers.gcp.facade.iam import IAMFacade
@@ -29,6 +30,7 @@ class GCPFacade(GCPBaseFacade):
         self.cloudresourcemanager = CloudResourceManagerFacade()
         self.cloudsql = CloudSQLFacade()
         self.cloudstorage = CloudStorageFacade()
+        self.memorystoreredis = MemoryStoreRedisFacade()
         self.gce = GCEFacade()
         self.iam = IAMFacade()
         self.kms = KMSFacade()
@@ -137,6 +139,10 @@ class GCPFacade(GCPBaseFacade):
         Given a project ID and service name, this method tries to determine if the service's API is enabled
         """
 
+        # All projects have IAM policies regardless of whether the IAM API is enabled.
+        if service == 'IAM':
+            return True
+
         serviceusage_client = self._build_arbitrary_client('serviceusage', 'v1', force_new=True)
         services = serviceusage_client.services()
         try:
@@ -148,9 +154,7 @@ class GCPFacade(GCPBaseFacade):
             return True
 
         # These are hardcoded endpoint correspondences as there's no easy way to do this.
-        if service == 'IAM':
-            endpoint = 'iam'
-        elif service == 'KMS':
+        if service == 'KMS':
             endpoint = 'cloudkms'
         elif service == 'CloudStorage':
             endpoint = 'storage-component'

@@ -1,0 +1,27 @@
+{
+    "description": "Enforce SSL Connection Is Disabled For PostgreSQL Database Server",
+    "rationale": "<samp>SSL connectivity</samp> helps to provide a new layer of security, by connecting database server to client applications using Secure Sockets Layer (SSL). Enforcing SSL connections between database server and client applications helps protect against \"man in the middle\" attacks by encrypting the data stream between the server and application.",
+    "remediation": "From Azure Console: <ol><li>Login to Azure Portal using https://portal.azure.com</li><li>Go to <samp>Azure Database</samp> for <samp>PostgreSQL server</samp></li><li>For each database, click on <samp>Connection security</samp></li><li>In <samp>SSL</samp> settings.</li><li>Click <samp>Enabled</samp> to Enforce SSL connection</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "4.3.1"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/postgresql/concepts-ssl-connection-security",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit"
+    ],
+    "dashboard_name": "PostgreSQL Servers",
+    "path": "postgresqldatabase.subscriptions.id.servers.id",
+    "conditions": [
+        "and",
+        [
+            "postgresqldatabase.subscriptions.id.servers.id.ssl_enforcement",
+            "equal",
+            "Disabled"
+        ]
+    ],
+    "id_suffix": "ssl_enforcement"
+}

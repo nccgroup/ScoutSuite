@@ -1,0 +1,27 @@
+{
+    "description": "Logging For Azure Key Vault Is Disabled",
+    "rationale": "Monitoring how and when key vaults are accessed, and by whom enables an audit trail of interactions with confidential information, keys and certificates managed by Azure Keyvault. Enabling logging for Key Vault saves information in an Azure storage account that the user provides. This creates a new container named insights-logs-auditevent automatically for the specified storage account, andthis same storage account can be used for collecting logs for multiple key vaults.",
+    "remediation": "Follow Microsoft Azure documentation and setup Azure Key Vault Logging.",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "5.1.5"
+        }
+    ],
+    "references": [
+      "https://docs.microsoft.com/en-us/azure/key-vault/general/logging?tabs=Vault",
+      "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+    ],
+    "dashboard_name": "Key Vaults",
+    "path": "loggingmonitoring.subscriptions.id.resources_logging.id" ,
+    "conditions": [
+        "and",
+        [
+            "loggingmonitoring.subscriptions.id.resources_logging.id.diagnostic_key_vault.audit_event_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "diagnostic_key_vault_audit_event_enabled"
+}
