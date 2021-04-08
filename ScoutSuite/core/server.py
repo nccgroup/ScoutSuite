@@ -4,7 +4,7 @@ from ScoutSuite.utils import format_service_name
 
 import csv, io, json
 
-def start_api(results):
+def start_api(results, exceptions=None):
     app = Flask(__name__)
     CORS(app)
 
@@ -191,7 +191,7 @@ def start_api(results):
     # Paginated
     @app.route('/api/services/<service>/resources/<resource>')
     def get_resources(service, resource):
-        all_resources, resource_path = get_all_resources(service, resource)
+        all_resources, resource_path = get_all_resources(service, resource, results)
         resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
         for resource_data in resource_list: resource_data['display_path'] = resource_path
 
@@ -199,7 +199,7 @@ def start_api(results):
 
     @app.route('/api/services/<service>/resources/<resource>/<resource_id>')
     def get_resource(service, resource, resource_id):
-        all_resources = get_all_resources(service,resource)[0]
+        all_resources = get_all_resources(service,resource, results)[0]
         for retrieved_resource in all_resources:
             if list(retrieved_resource.keys())[0] == resource_id:
                 if not list(retrieved_resource.values())[0]['id']:
@@ -211,7 +211,7 @@ def start_api(results):
     def download_resource(service, resource):
         download_type = request.args.get('type') if request.args.get('type') else 'json'
         
-        resource_list = [list(fetched_resource.values())[0] for fetched_resource in get_all_resources(service, resource)[0]]
+        resource_list = [list(fetched_resource.values())[0] for fetched_resource in get_all_resources(service, resource, results)[0]]
         data = (dict_to_csv(resource_list), 'csv', 'text/csv') if download_type == 'csv' else (jsonify(resource_list), 'json', 'application/json')
         response = make_response(data[0])
         response.headers['Content-Disposition'] = f'attachment; filename={resource}.{data[1]}'
@@ -229,7 +229,7 @@ def start_api(results):
                 summaries = metadata[category]['summaries']
                 policy_path = summaries[policy_type]['path']
 
-                return get_element_from_path(policy_path)
+                return get_element_from_path(policy_path, results)
 
     @app.route('/api/services/<service>/<policy_type>')
     def get_service_policy_type(service, policy_type):
@@ -243,7 +243,12 @@ def start_api(results):
                     summaries = services[service]['summaries']
                     policy_path = summaries[policy_type]['path']
 
-                    return get_element_from_path(policy_path)
+                    return get_element_from_path(policy_path, results)
+
+    @app.route('/api/exceptions')
+    def get_exceptions():
+        if not exceptions: return jsonify([])
+        return exceptions
 
     @app.route('/api/raw/<path:path_to_element>', methods=['GET'])
     def get_raw_info(path_to_element):
@@ -261,157 +266,157 @@ def start_api(results):
 
     app.run()
 
-    def get_attributes_from_path(path):
-        attributes = []
-        words = path.split('.')
-        for idx, word in enumerate(words):
-            if word == 'id':
-                attributes.append(words[idx-1])
+def get_attributes_from_path(path):
+    attributes = []
+    words = path.split('.')
+    for idx, word in enumerate(words):
+        if word == 'id':
+            attributes.append(words[idx-1])
 
-        return attributes
+    return attributes
 
-    def get_all_elements_from_path(path, report_location = results):
-        path_keywords = path.split('.')
-        element_path_with_brackets = report_location
-        element_list = []
-        subelement_list = []
+def get_all_elements_from_path(path, report_location):
+    path_keywords = path.split('.')
+    element_path_with_brackets = report_location
+    element_list = []
+    subelement_list = []
 
-        id_locations = [id_index for id_index, x in enumerate(path_keywords) if x == 'id'] # [3, 5]
+    id_locations = [id_index for id_index, x in enumerate(path_keywords) if x == 'id'] # [3, 5]
 
-        if not id_locations:
-            elements = get_element_from_path(path)
-            for element in elements:
-                new_element = {element: elements[element]}
-                new_element[element]['path'] = path + f'.{element}'
-                element_list.append(new_element)
-            return element_list
-
-        for id_idx in range(len(id_locations)):
-            subelement_list.append([])
-            if id_idx == 0:
-                path_to_element = path_keywords[:id_locations[id_idx]]
-                element = get_element_from_path_kw(path_to_element, report_location)
-                for subelement in element:
-                    if element[subelement]:
-                        subelement_list[id_idx].append(element[subelement])
-                        subelement_list[id_idx][-1]['path'] = path_keywords[0:id_locations[id_idx]] + [subelement]
-
-            else:
-                for idx, element in enumerate(subelement_list[id_idx - 1]):
-                    path_to_element = path_keywords[id_locations[id_idx - 1] + 1:id_locations[id_idx]]
-                    new_element = get_element_from_path_kw(path_to_element, element)
-                    for element_dict in new_element: new_element[element_dict]['path'] = subelement_list[id_idx - 1][idx]['path'] + path_to_element
-                    subelement_list[id_idx - 1][idx] = new_element
-
-                    for subelement in subelement_list[id_idx - 1][idx]:
-                        if subelement_list[id_idx - 1][idx][subelement]:
-                            subelement_list[id_idx].append(subelement_list[id_idx - 1][idx][subelement])
-                            subelement_list[id_idx][-1]['path'] = subelement_list[id_idx - 1][idx][subelement]['path'] + [subelement]
-
-            if id_idx == len(id_locations) - 1:
-                for subelement in subelement_list[id_idx]:
-                    path_to_element = path_keywords[id_locations[id_idx] + 1:len(path_keywords)]
-                    element = get_element_from_path_kw(path_to_element, subelement)
-                    if element: 
-                        if len(element) > 1:
-                            for individual_element in element:
-                                element_list.append({individual_element: element[individual_element]})
-                                element_list[-1][individual_element]['path'] = '.'.join(subelement['path'] + path_to_element + [individual_element])
-                        else:
-                            element_list.append(element)
-                            for element_dict in element:
-                                element_list[-1][element_dict]['path'] = '.'.join(subelement['path'] + path_to_element + [element_dict])
-        
+    if not id_locations:
+        elements = get_element_from_path(path, report_location)
+        for element in elements:
+            new_element = {element: elements[element]}
+            new_element[element]['path'] = path + f'.{element}'
+            element_list.append(new_element)
         return element_list
 
-    def get_all_resources(service, resource):
-        metadata = results['metadata']
+    for id_idx in range(len(id_locations)):
+        subelement_list.append([])
+        if id_idx == 0:
+            path_to_element = path_keywords[:id_locations[id_idx]]
+            element = get_element_from_path_kw(path_to_element, report_location)
+            for subelement in element:
+                if element[subelement]:
+                    subelement_list[id_idx].append(element[subelement])
+                    subelement_list[id_idx][-1]['path'] = path_keywords[0:id_locations[id_idx]] + [subelement]
 
-        for category in metadata:
-            services = metadata[category]
-            for service_metadata in services:
-                if service_metadata == service:
-                    resources = services[service]['resources']
-                    for resource_metadata in resources:
-                        if resource_metadata == resource:
-                            resource_path = resources[resource]['path']
-                            return (get_all_elements_from_path(resource_path), resource_path)
-        return []
+        else:
+            for idx, element in enumerate(subelement_list[id_idx - 1]):
+                path_to_element = path_keywords[id_locations[id_idx - 1] + 1:id_locations[id_idx]]
+                new_element = get_element_from_path_kw(path_to_element, element)
+                for element_dict in new_element: new_element[element_dict]['path'] = subelement_list[id_idx - 1][idx]['path'] + path_to_element
+                subelement_list[id_idx - 1][idx] = new_element
 
-    def format_title(title):
-        return title[0].upper() + ' '.join(title[1:].lower().split('_'))
+                for subelement in subelement_list[id_idx - 1][idx]:
+                    if subelement_list[id_idx - 1][idx][subelement]:
+                        subelement_list[id_idx].append(subelement_list[id_idx - 1][idx][subelement])
+                        subelement_list[id_idx][-1]['path'] = subelement_list[id_idx - 1][idx][subelement]['path'] + [subelement]
 
-    def dict_to_csv(dict_list):
-        output = io.StringIO()
-        writer = csv.DictWriter(output, fieldnames=list(dict_list[0].keys()), delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
-        writer.writeheader()
-        writer.writerows(dict_list)
-        
-        return output.getvalue()
+        if id_idx == len(id_locations) - 1:
+            for subelement in subelement_list[id_idx]:
+                path_to_element = path_keywords[id_locations[id_idx] + 1:len(path_keywords)]
+                element = get_element_from_path_kw(path_to_element, subelement)
+                if element: 
+                    if len(element) > 1:
+                        for individual_element in element:
+                            element_list.append({individual_element: element[individual_element]})
+                            element_list[-1][individual_element]['path'] = '.'.join(subelement['path'] + path_to_element + [individual_element])
+                    else:
+                        element_list.append(element)
+                        for element_dict in element:
+                            element_list[-1][element_dict]['path'] = '.'.join(subelement['path'] + path_to_element + [element_dict])
+    
+    return element_list
 
-    def get_element_from_path(path, report_location=results):
-        return get_element_from_path_kw(path.split('.'), report_location)
+def get_all_resources(service, resource, results):
+    metadata = results['metadata']
 
-    def get_element_from_path_kw(path, report_location=results):
-        element = report_location
-        for idx in range(len(path)):
-            element = element[path[idx]]
-        
-        return element
+    for category in metadata:
+        services = metadata[category]
+        for service_metadata in services:
+            if service_metadata == service:
+                resources = services[service]['resources']
+                for resource_metadata in resources:
+                    if resource_metadata == resource:
+                        resource_path = resources[resource]['path']
+                        return (get_all_elements_from_path(resource_path, results), resource_path)
+    return []
 
-    def filter_results(results):
-        filter_by = json.loads(dict(request.args)['filter_by']) if request.args.get('filter_by') else {}
-        if not filter_by: return results
+def format_title(title):
+    return title[0].upper() + ' '.join(title[1:].lower().split('_'))
 
-        filtered_results = []
-        for element in results:
-            shared_items = {filter_param: filter_by[filter_param] for filter_param in filter_by if filter_param in element and filter_by[filter_param] == element[filter_param]}
-            if shared_items == filter_by: filtered_results.append(element)
+def dict_to_csv(dict_list):
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=list(dict_list[0].keys()), delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
+    writer.writeheader()
+    writer.writerows(dict_list)
+    
+    return output.getvalue()
 
-        return filtered_results
+def get_element_from_path(path, report_location):
+    return get_element_from_path_kw(path.split('.'), report_location)
 
-    def search_results(results):
-        search_kw = request.args.get('search') if request.args.get('search') else ''
-        if not search_kw: return results
+def get_element_from_path_kw(path, report_location):
+    element = report_location
+    for idx in range(len(path)):
+        element = element[path[idx]]
+    
+    return element
 
-        search_properties = ['name', 'id']
-        search_results = []
-        for element in results:
-            for search_property in search_properties:
-                if element[search_property] and search_kw in element[search_property]:
-                    search_results.append(element)
-                    break
+def filter_results(results):
+    filter_by = json.loads(dict(request.args)['filter_by']) if request.args.get('filter_by') else {}
+    if not filter_by: return results
 
-        return search_results
+    filtered_results = []
+    for element in results:
+        shared_items = {filter_param: filter_by[filter_param] for filter_param in filter_by if filter_param in element and filter_by[filter_param] == element[filter_param]}
+        if shared_items == filter_by: filtered_results.append(element)
 
-    def sort_results(results):
-        sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
-        order_by = request.args.get('order_by') if request.args.get('order_by') else 'asc'
+    return filtered_results
 
-        return sorted(results, key=lambda k: k[sort_by], reverse=(order_by=='desc'))
+def search_results(results):
+    search_kw = request.args.get('search') if request.args.get('search') else ''
+    if not search_kw: return results
 
-    def paginate_results(results):
-        items_per_page = int(request.args.get('limit')) if request.args.get('limit') else 10
-        current_page = int(request.args.get('current_page')) if request.args.get('current_page') else 1
+    search_properties = ['name', 'id']
+    search_results = []
+    for element in results:
+        for search_property in search_properties:
+            if element[search_property] and search_kw in element[search_property]:
+                search_results.append(element)
+                break
 
-        paginated_results = [results[i:i + items_per_page] for i in range(0, len(results), items_per_page)]
-        page_results = {
-            'meta': {
-                'current_page': current_page,
-                'next_page': current_page + 1 if current_page < len(paginated_results) else None,
-                'prev_page': current_page - 1 if current_page > 1 else None,
-                'total_pages': len(paginated_results),
-                'limit': items_per_page
-            },
-            'results': paginated_results[current_page - 1] if paginated_results else []
-        }
+    return search_results
 
-        return page_results
+def sort_results(results):
+    sort_by = request.args.get('sort_by') if request.args.get('sort_by') else 'name'
+    order_by = request.args.get('order_by') if request.args.get('order_by') else 'asc'
 
-    def process_results(results):
-        filtered_results = filter_results(results)
-        searched_results = search_results(filtered_results)
-        sorted_results = sort_results(searched_results)
-        paginated_results = paginate_results(sorted_results)
+    return sorted(results, key=lambda k: k[sort_by], reverse=(order_by=='desc'))
 
-        return paginated_results
+def paginate_results(results):
+    items_per_page = int(request.args.get('limit')) if request.args.get('limit') else 10
+    current_page = int(request.args.get('current_page')) if request.args.get('current_page') else 1
+
+    paginated_results = [results[i:i + items_per_page] for i in range(0, len(results), items_per_page)]
+    page_results = {
+        'meta': {
+            'current_page': current_page,
+            'next_page': current_page + 1 if current_page < len(paginated_results) else None,
+            'prev_page': current_page - 1 if current_page > 1 else None,
+            'total_pages': len(paginated_results),
+            'limit': items_per_page
+        },
+        'results': paginated_results[current_page - 1] if paginated_results else []
+    }
+
+    return page_results
+
+def process_results(results):
+    filtered_results = filter_results(results)
+    searched_results = search_results(filtered_results)
+    sorted_results = sort_results(searched_results)
+    paginated_results = paginate_results(sorted_results)
+
+    return paginated_results

@@ -359,7 +359,7 @@ async def _run(provider,
     if not report_only:
         try:
             print_info('Starting local server for web interface')
-            start_api(report.encoder.load_from_file('RESULTS'))
+            start_api(report.encoder.load_from_file('RESULTS'), exceptions)
         except Exception as e:
             print_exception('Failure when starting server')
             return 110
