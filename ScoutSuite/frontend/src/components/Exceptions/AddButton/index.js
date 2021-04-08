@@ -3,6 +3,9 @@ import { Button } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import { PropTypes } from 'prop-types';
+import { useSnackbar } from 'notistack';
+import get from 'lodash/get';
+
 import { ExceptionsContext } from '../context';
 
 const propTypes = {
@@ -12,23 +15,40 @@ const propTypes = {
 };
 
 const AddException = ({ service, finding, path }) => {
-  const { addException } = useContext(ExceptionsContext);
+  const { exceptions, addException } = useContext(ExceptionsContext);
+  const { enqueueSnackbar } = useSnackbar();
 
-  const add = () => addException(service, finding, path);
+  const add = () => {
+    addException(service, finding, path);
+    enqueueSnackbar(
+      'Exception added. Don\'t forget to export the exceptions!',
+      {
+        variant: 'success',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'right',
+        },
+      },
+    );
+  };
 
-  return (<Tooltip
-    title="Add to exception list"
-    placement="top"
-    arrow>
-    <Button
-      size="small"
-      startIcon={<AddIcon />}
-      className="exception-btn"
-      onClick={add}
-    >
-      Add
-    </Button>
-  </Tooltip>);
+  const exist = get(exceptions, [service, finding], []).includes(path);
+
+  return (
+    <Tooltip
+      title="Add to exception list" placement="top"
+      arrow>
+      <Button
+        disabled={exist}
+        size="small"
+        startIcon={<AddIcon />}
+        className="exception-btn"
+        onClick={add}
+      >
+        Add
+      </Button>
+    </Tooltip>
+  );
 };
 
 AddException.propTypes = propTypes;

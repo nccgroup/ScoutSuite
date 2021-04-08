@@ -11,8 +11,6 @@ export const ExceptionsContext = createContext();
 export const ExceptionsContextProvider = ({ children }) => {
   const [exceptions, setExceptions] = useState({});
 
-  console.log('EXCEPTIONS', exceptions);
-
   const addException = (service, finding, path) => {
     const newException = {
       [service]: {
