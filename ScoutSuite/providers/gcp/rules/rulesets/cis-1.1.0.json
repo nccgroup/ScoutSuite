@@ -1,12 +1,72 @@
 {
   "about": "This ruleset attempts to cover as many recommendations from the CIS Google Cloud Platform Foundation v1.1.0.",
     "rules": {
+      "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
+         {
+            "enabled": true,
+            "level": "warning"
+         }
+      ],
+      "cloudsql-mysql-instances-local-infile-on.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "cloudsql-sqlservers-instances-contained-database-authentication-on.json": [
+         {
+              "enabled": true,
+              "level": "warning"
+         }
+      ],
       "cloudstorage-uniform-bucket-level-access-disabled.json": [
           {
               "enabled": true,
               "level": "warning"
           }
       ],
+      "computeengine-instance-default-service-account.json": [
+         {
+              "enabled": true,
+              "level": "warning"
+         }
+      ],
+      "computeengine-instance-full-api-access.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "computeengine-instance-block-project-ssh-keys-disabled.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "computeengine-instance-os-login-disabled.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "computeengine-instance-connecting-serial-ports-enabled.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "computeengine-instance-ip-forwarding-enabled.json": [
+        {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "computeengine-instance-shielded-vm-disabled.json": [
+          {
+                "enabled": true,
+                "level": "warning"
+          }
+        ],
       "computeengine-network-default-in-use.json": [
             {
                 "enabled": true,
@@ -19,6 +79,18 @@
                 "level": "warning"
             }
         ],
+      "computeengine-instance-disk-not-csek-encrypted.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "computeengine-instance-public-ip-adresses.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
       "iam-role-account-separation-duties-is-false.json": [
           {
               "enabled": true,
@@ -26,6 +98,18 @@
           }
       ],
       "iam-role-kms-separation-duties-is-false.json": [
+          {
+              "enabled": true,
+              "level": "warning"
+          }
+      ],
+      "kms-cryptokeys-anonymously-publicly-accessible.json": [
+          {
+              "enabled": true,
+              "level": "danger"
+          }
+      ],
+      "kms-encryption-keys-not-rotated.json": [
           {
               "enabled": true,
               "level": "warning"

@@ -17,20 +17,43 @@
                     {{#each keys}}
                     <li><samp>{{@key}}</samp></li>
                     <ul>
-                        <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.state">state: <samp>{{state}}</samp></li>
+                        <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.state">State: <samp>{{state}}</samp></li>
                         <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.protection_level">Protection Level: {{protection_level}}</li>
                         <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.algorithm">Algorithm: <samp>{{algorithm}}</samp></li>
                         <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.purpose">Purpose: {{purpose}}</li>
                         <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.creation_datetime">Creation Date: {{format_date creation_datetime}}</li>
                         <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.rotation_period">Rotation Period: {{value_or_none rotation_period}}</li>
                         <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.next_rotation_datetime">Next Rotation Date: {{value_or_none next_rotation_datetime}}</li>
+                        <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.next_rotation_time_days">Days Until Next Rotation: {{value_or_none next_rotation_time_days}}</li>
+                        <li>Bindings</li>
+                        <ul>
+                            {{#each kms_iam_policy}}
+                            <li><samp>{{name}}</samp></li>
+                            <ul>
+                                <li id="kms.projects.{{@../../../key}}.keyrings.{{@../../key}}.keys.{{@../key}}.kms_iam_policy.{{@key}}.title">Title: <samp>{{title}}</samp></li>
+                                <li id="kms.projects.{{@../../../key}}.keyrings.{{@../../key}}.keys.{{@../key}}.kms_iam_policy.{{@key}}.description">Description: {{value_or_none description}}</li>
+                                <li id="kms.projects.{{@../../../key}}.keyrings.{{@../../key}}.keys.{{@../key}}.kms_iam_policy.{{@key}}.custom_role">Custom Role: <samp>{{custom_role}}</samp></li>
+                                <li id="kms.projects.{{@../../../key}}.keyrings.{{@../../key}}.keys.{{@../key}}.kms_iam_policy.{{@key}}.anonymous_public_accessible">Not anonymously or publicly accessible: <samp>{{anonymous_public_accessible}}</samp></li>
+                            </ul>
+
+                            {{else}}
+                            <li><samp>None</samp></li>
+                            {{/each}}
+                        </ul>
                     </ul>
+
+                    <br>
+
+
+
                     {{else}}
                     <li><samp>None</samp></li>
                     {{/each}}
                 </ul>
             </div>
     </div>
+
+
 </script>
 
 <script>
