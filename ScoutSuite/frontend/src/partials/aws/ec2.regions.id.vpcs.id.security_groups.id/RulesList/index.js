@@ -24,7 +24,7 @@ const RulesList = () => {
           <li key={i}>
             <PartialValue
               value={address}
-              errorPath={path}
+              errorPath={`${path}.cidrs.${i}.CIDR`}
               renderValue={value =>
                 value.CIDRName 
                   ? `${value.CIDR} (${value.CIDRName})`
@@ -45,7 +45,7 @@ const RulesList = () => {
           <li key={i}>
             <PartialValue
               value={group}
-              errorPath={path}
+              errorPath={`${path}.cidrs.security_groups.${i}`}
               renderValue={value =>
                 value.GroupName
                   ? (
@@ -91,20 +91,20 @@ const RulesList = () => {
                           renderIpAddresses(
                             'IP adresses',
                             port.cidrs, 
-                            `protocols.${name}.ports.${port_name}.cidrs.${i}.CIDR`,
+                            `protocols.${name}.ports.${port_name}`,
                           )
                         )}
                         {port.Ipv6Ranges && (
                           renderIpAddresses(
                             'IPv6 addresses',
                             port.Ipv6Ranges,
-                            `protocols.${name}.ports.${port_name}.cidrs.${i}.CIDR`,
+                            `protocols.${name}.ports.${port_name}`,
                           )
                         )}
                         {port.security_groups && (
                           renderSecurityGroups(
                             port.security_groups,
-                            `protocols.${name}.ports.${port_name}.security_groups.${i}`,
+                            `protocols.${name}.ports.${port_name}`,
                           )
                         )}
                       </ul>

@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
-import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
-import { PropTypes } from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 
 import { ExceptionsContext } from '../context';
 import { useAPI } from '../../../api/useAPI';
 
 import './style.scss';
+
 
 const propTypes = {
   service: PropTypes.string.isRequired,
@@ -35,21 +35,16 @@ const DownloadException = () => {
 
   return (
     <div className="download-exceptions">
-      <Tooltip
-        title="Download all exceptions" placement="top"
-        arrow>
-        <Button
-          disabled={isEmpty(exceptions)}
-          size="small"
-          startIcon={<AddIcon />}
-          onClick={download}
-          variant="outlined"
-          color="secondary"
-          fullWidth
-        >
-          Export Exceptions
-        </Button>
-      </Tooltip>
+      <Button
+        disabled={isEmpty(exceptions)}
+        size="small"
+        startIcon={<AddIcon />}
+        onClick={download}
+        variant="outlined"
+        fullWidth
+      >
+        Export Exceptions
+      </Button>
     </div>
     
   );
