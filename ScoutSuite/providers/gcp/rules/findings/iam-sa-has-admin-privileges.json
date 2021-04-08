@@ -1,17 +1,23 @@
 {
     "description": "Service Account with Admin Privileges",
     "rationale": "Service accounts represent service-level security of the Resources (application or a VM) which can be determined by the roles assigned to it. Enrolling Service Accounts with administrative privileges grants full access to assigned application or a VM, Service Account Access holder can user.<br><br><b>Note: </b>This rule may flag Google-Managed Service Accounts. Google services rely on these Service Accounts having access to the project, and recommends not removing or changing the Service Account's role",
+    "remediation": "From Console: <ol><li>Go to <samp>IAM & admin/IAM</samp> using <samp>https://console.cloud.google.com/iam-admin/iam</samp></li><li>Got to the <samp>Members</samp></li><li>Identify <samp>User-Managed user created</samp> service account with roles containing <samp>*Admin</samp> or <samp>*admin</samp> or role matching <samp>Editor</samp> or role matching <samp>Owner</samp></li><li>Click the <samp>Delete bin</samp> icon to remove the role from the member (service account in this case)</li></ol>",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.0.0",
             "reference": "1.4"
+        },
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "1.5"
         }
     ],
     "references": [
-        "https://cloud.google.com/iam/docs/service-accounts#google-managed",
+        "https://cloud.google.com/sdk/gcloud/reference/iam/service-accounts/",
         "https://cloud.google.com/iam/docs/understanding-roles",
-        "https://cloud.google.com/iam/docs/using-iam-securely"
+        "https://cloud.google.com/iam/docs/understanding-service-accounts"
     ],
     "dashboard_name": "Bindings",
     "path": "iam.projects.id.bindings.id",
