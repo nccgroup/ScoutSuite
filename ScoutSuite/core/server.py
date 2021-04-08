@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, jsonify, abort
+from flask import Flask, request, Response, make_response, jsonify, abort
 from flask_cors import CORS
 from ScoutSuite.utils import format_service_name
 
@@ -14,12 +14,18 @@ def start_api(results, exceptions=None):
     def home():
         return app.send_static_file('index.html')
 
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return app.send_static_file('index.html')
+
     @app.route('/api', methods=['GET'])
     def api():
         return jsonify(results)
 
     @app.route('/api/services/<service>/findings', methods=['GET'])
     def get_findings(service):
+        if not results['services'][service]['findings']:
+            return Response('Pro feature', status=402)
         findings = results['services'][service]['findings']
         for finding in findings:
             findings[finding]['name'] = finding
@@ -249,7 +255,7 @@ def start_api(results, exceptions=None):
 
     @app.route('/api/exceptions')
     def get_exceptions():
-        if not exceptions: return jsonify([])
+        if not exceptions: return {}
         return exceptions
 
     @app.route('/api/raw/<path:path_to_element>', methods=['GET'])
