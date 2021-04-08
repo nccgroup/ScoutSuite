@@ -1,0 +1,128 @@
+@import 'src/variables.scss';
+
+.table-responsive {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow-x: auto;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+
+  .table-header-right {
+    display: flex;
+    align-items: flex-end;
+
+    & > * {
+      margin-right: 0.75rem;
+    }
+  }
+}
+
+.table {
+  text-align: left;
+  border: none;
+  border-collapse: collapse;
+  width: 100%;
+
+  thead {
+    background-color: $default-grey-subtle;
+  }
+
+  th, td {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-right: $default-grey-subtle solid 1px;
+    text-align: left;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  th {
+    white-space: nowrap;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-right: $default-grey-light solid 1px;
+
+    * {
+      vertical-align: middle;
+    }
+
+    .sort-icons {
+      display: inline-flex;
+      flex-direction: column;
+
+      svg {
+        color: $default-grey;
+        position: relative;
+
+        &.MuiSvgIcon-colorPrimary {
+          color: $font-color;
+        }
+
+        &:first-child {
+          top: 0.375rem;
+        }
+
+        &:last-child {
+          top: -0.375rem;
+        }
+      }
+    }
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  tr {
+    border: none;
+    border-bottom: $default-grey-subtle solid 1px;
+
+    &:first-child {
+      border-top: $default-grey-light solid 1px;
+      border-bottom: $default-grey-subtle solid 1px;
+    }
+  }
+}
+
+.search-bar {
+  padding: 0.75rem 1rem;
+
+  input {
+    width: 18rem;
+    padding: 0.3125rem 1.5rem;
+    border: 1px solid $default-grey-light;
+    outline: none;
+    caret-color: $default-grey;
+    border-radius: $border-radius;
+
+    &::placeholder {
+      color: $default-grey;
+    }
+  }
+}
+
+.pagination {
+  padding: 0.75rem 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  .icon {
+    position: relative;
+    cursor: pointer;
+    z-index: 0;
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+}

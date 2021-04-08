@@ -1,0 +1,70 @@
+:root {
+  --font-color: #4d4d4d;
+  --background-color: #f4f4f4;
+  --ncc-red: #C41230;
+  --ncc-grey-dark: rgb(230, 23, 57);
+  --ncc-grey-dark: #414042;
+  --scoutsuite-green: #10b354; 
+  --scoutsuite-green-hvr: #1bbd5e;
+  --scoutsuite-orange: #FFB64D;
+  --scoutsuite-orange-hvr: rgb(248, 195, 122);
+  --scoutsuite-blue: #4099ff;
+  --scoutsuite-blue-hvr: #77b5fd;
+
+  --default-grey: #999999;
+  --default-grey-subtle: #e5e4e4;
+  --default-grey-light: #cccccc;
+  --default-grey-dark: #343434;
+  --white: #ffffff;
+
+  --link-color: #4990e2;
+  --text-muted: #999999;
+
+  --good-color: #24bc74;
+  --critical-color: #C41230;
+  --high-color: #fc6464;
+  --medium-color: #ffb44c;
+  --low-color: #4099ff;
+}
+
+body.dark-mode {
+  --font-color: #f2f2f2;
+  --background-color: #222222;
+  --ncc-grey-dark: #171618;
+
+  --default-grey: #333333;
+  --default-grey-subtle: #383838;
+  --default-grey-light: #5e5e5e;
+  --white: #121212;
+}
+
+$font-color: var(--font-color);
+$background-color: var(--background-color);
+$ncc-red: var(--ncc-red);
+$ncc-red-hvr: var(--ncc-grey-dark);
+$ncc-grey-dark: var(--ncc-grey-dark);
+$scoutsuite-green: var(--scoutsuite-green); 
+$scoutsuite-green-hvr: var(--scoutsuite-green-hvr);
+$scoutsuite-orange: var(--scoutsuite-orange);
+$scoutsuite-orange-hvr: var(--scoutsuite-orange-hvr);
+$scoutsuite-blue: var(--scoutsuite-blue);
+$scoutsuite-blue-hvr: var(--scoutsuite-blue-hvr);
+
+$default-grey: var(--default-grey);
+$default-grey-subtle: var(--default-grey-subtle);
+$default-grey-light: var(--default-grey-light);
+$default-grey-dark: var(--default-grey-dark);
+$white: var(--white);
+
+$link-color: var(--link-color);
+$text-muted: var(--text-muted);
+
+$good-color: var(--good-color);
+$critical-color: var(--critical-color);
+$high-color: var(--high-color);
+$medium-color: var(--medium-color);
+$low-color: var(--low-color);
+
+$border-radius: 5px;
+$nav-header-height: 5rem;
+$nav-menu-width: 16rem;

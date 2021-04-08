@@ -1,0 +1,63 @@
+@import 'src/variables.scss';
+
+.findings-no-desc {
+  color: $default-grey-light;
+}
+
+.findings-desc {
+  display: flex;
+  align-items: center;
+  color: $link-color;
+  font-weight: 600;
+  cursor: pointer;
+
+  svg {
+    margin-right: 0.5rem;
+  }
+}
+
+.desc-bg {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+
+  background-color: rgba(0,0,0,0.24);
+  cursor: pointer;
+}
+
+.desc-overlay {
+  position: absolute;
+  z-index: 10;
+  background-color: $white;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  right: 0;
+  max-width: 80%;
+
+  margin-top: -1.25rem;
+
+  padding: 0.625rem 1rem;
+
+  ul {
+    padding-left: 1rem;
+    list-style: disc;
+    font-size: 0.9rem;
+  }
+
+  h4 {
+    margin: 0.75rem 0;
+  }
+
+  .desc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+
+    svg {
+      cursor: pointer;
+    }
+  }
+}

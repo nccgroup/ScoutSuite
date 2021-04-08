@@ -1,0 +1,29 @@
+@import 'src/variables';
+
+.nav-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: $ncc-grey-dark;
+  z-index: 10;
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    margin: auto  0;
+
+    img {
+      height: 2.5rem;
+    }
+  }
+
+  &::after {
+    content: ' ';
+    height: 0.625rem;
+    width: 100%;
+    background-color: $ncc-red;
+  }
+}

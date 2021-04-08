@@ -1,0 +1,49 @@
+.policy {
+  margin-bottom: 1rem;
+
+  .inner-code,
+  code {
+    font-size: 0.75rem;
+  }
+
+  .Collapsible {
+    .Collapsible__trigger {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      .policy-title {
+        font-size: 0.875rem;
+        margin: 0;
+      }
+
+      svg {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  code {
+    display: block;
+    padding-left: 0.5rem;
+
+    .Collapsible {
+      display: flex;
+
+      .Collapsible__trigger {
+        &:not(.is-closed) {
+          align-items: flex-start;
+        }
+
+        svg {
+          font-size: 1.125rem;
+        }
+      }
+    }
+
+    & > div, 
+    .Collapsible {
+      margin-left: 1rem;
+    }
+  }
+}

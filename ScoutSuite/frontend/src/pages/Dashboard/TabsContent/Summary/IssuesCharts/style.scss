@@ -1,0 +1,38 @@
+@import 'src/variables';
+
+.issues-charts {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -1.5rem;
+  margin-bottom: -2rem;
+
+  .pie-chart {
+    flex: 1 0 30%;
+    flex-grow: 1;
+    width: 30%;
+    min-width: calc(0.4 * 63rem);
+  }
+
+  .bar-chart {
+    flex: 2 0 45%;
+    min-width: calc(0.6 * 63rem);
+  }
+
+  .pie-chart, .bar-chart {
+    background-color: $white;
+    margin-right: 1.5rem;
+    margin-bottom: 2rem;
+
+    h3 {
+      padding: 0.5rem 1rem;
+      margin: 0;
+      border-bottom: 1px solid $default-grey-subtle;
+    }
+  }
+}
+
+@media (min-width: 1665px) {
+  .issues-charts {
+    margin-right: 4rem;
+  }
+}

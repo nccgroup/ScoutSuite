@@ -1,0 +1,11 @@
+@import 'src/variables';
+
+.tabs {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .tabs-menu {
+    margin-bottom: 2rem;
+  }
+}
