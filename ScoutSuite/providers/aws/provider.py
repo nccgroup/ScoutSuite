@@ -16,8 +16,7 @@ class AWSProvider(BaseProvider):
     Implements provider for AWS
     """
 
-    def __init__(self, profile='default', report_dir=None, timestamp=None, services=None, skipped_services=None,
-                 result_format='json', **kwargs):
+    def __init__(self, profile='default', report_dir=None, timestamp=None, services=None, skipped_services=None, **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
@@ -32,7 +31,6 @@ class AWSProvider(BaseProvider):
         self.provider_code = 'aws'
         self.provider_name = 'Amazon Web Services'
         self.environment = self.profile
-        self.result_format = result_format
 
         self.credentials = kwargs['credentials']
 
@@ -40,8 +38,7 @@ class AWSProvider(BaseProvider):
 
         self.account_id = get_aws_account_id(self.credentials.session)
 
-        super().__init__(report_dir, timestamp,
-                                          services, skipped_services, result_format)
+        super().__init__(report_dir, timestamp, services, skipped_services)
 
     def get_report_name(self):
         """

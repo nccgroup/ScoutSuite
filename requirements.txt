@@ -1,9 +1,8 @@
 # Core
 python-dateutil<2.8.1,>=2.1
 netaddr>=0.8.0
-sqlitedict>=1.6.0
-cherrypy>=18.1.0
-cherrypy-cors>=1.6
+flask>=1.1.2
+flask-cors>=3.0.10
 coloredlogs<=10.0
 asyncio-throttle==0.1.1
 
