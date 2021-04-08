@@ -3,6 +3,7 @@ import get from 'lodash/get';
 
 import { PartialContext, PartialPathContext } from '../../../../components/Partial/context';
 import { PartialValue } from '../../../../components/Partial';
+import ResourceLink from '../../../../components/ResourceLink';
 import WarningMessage from '../../../../components/WarningMessage';
 
 import './style.scss';
@@ -47,8 +48,18 @@ const RulesList = () => {
               errorPath={path}
               renderValue={value =>
                 value.GroupName
-                  ? `${value.GroupName} (${value.GroupId})`   //TODO: Link groupId resource
-                  : `${value.GroupId} (AWS Account ID: ${value.UserId})`
+                  ? (
+                    <span>
+                      {`${value.GroupName} (`}
+                      <ResourceLink 
+                        service="ec2"
+                        resource="security_groups"
+                        id={value.GroupId}
+                        name={value.GroupId}
+                      />
+                      {')'}
+                    </span>
+                  ) : `${value.GroupId} (AWS Account ID: ${value.UserId})`
               }
             />
           </li>

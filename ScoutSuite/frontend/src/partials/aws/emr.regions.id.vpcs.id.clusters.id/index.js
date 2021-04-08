@@ -9,6 +9,7 @@ import { getRawEndpoint } from '../../../api/paths';
 import { getRegionFromPath, getVpcFromPath } from '../../../utils/Api';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+import ResourceLink from '../../../components/ResourceLink';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import Informations from './Informations';
 
@@ -37,6 +38,15 @@ const Clusters = props => {
 
   const attributes = get(data, ['item', 'Ec2InstanceAttributes']);
 
+  const renderGroupLink = (id, name) => (
+    <ResourceLink 
+      service="ec2"
+      resource="security_groups"
+      id={id}
+      name={name}
+    />
+  );
+
   return (
     <Partial data={data}>
       <InformationsWrapper>
@@ -51,12 +61,17 @@ const Clusters = props => {
               valuePath="MasterPublicDnsName"
               renderValue={valueOrNone}
             />
-            {/* TODO: Link */}
             <PartialValue 
               label="Security Group"
               value={get(
                 vpc,
                 ['security_groups', attributes.EmrManagedMasterSecurityGroup, 'name']
+              )}
+              renderValue={value => (
+                renderGroupLink(
+                  attributes.EmrManagedMasterSecurityGroup,
+                  value,
+                )
               )}
             />
           </div>
@@ -65,12 +80,17 @@ const Clusters = props => {
           title="Slave"
           disabled={isEmpty(attributes.EmrManagedSlaveSecurityGroup)}
         >
-          {/* TODO: Link */}
           <PartialValue 
             label="Security Group"
             value={get(
               vpc,
               ['security_groups', attributes.EmrManagedSlaveSecurityGroup, 'name']
+            )}
+            renderValue={value => (
+              renderGroupLink(
+                attributes.EmrManagedSlaveSecurityGroup,
+                value,
+              )
             )}
           />
         </TabPane>
