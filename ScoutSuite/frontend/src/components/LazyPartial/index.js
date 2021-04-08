@@ -9,26 +9,26 @@ import './style.scss';
 const propTypes = {
   data: PropTypes.shape({
     item: PropTypes.object,
-    path_to_issues: PropTypes.arrayOf(PropTypes.string)
+    path_to_issues: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   partial: PropTypes.string.isRequired,
+  path: PropTypes.string,
 };
 
-const LazyPartial = (props) => {
-  const {
-    data,
-    partial
-  } = props;
+const LazyPartial = props => {
+  const { data, partial, path } = props;
 
   const { data: provider } = useAPI('provider');
 
   const DynamicPartial = React.lazy(async () => {
     let md = null;
     console.info('PARTIAL NAME', partial);
-    
+
     try {
-      md = await import('../../partials/' + provider.provider_code + '/' + partial + '/index.js'); // Can't use a string literal because of Babel bug
-    } catch(e) {
+      md = await import(
+        '../../partials/' + provider.provider_code + '/' + partial + '/index.js'
+      ); // Can't use a string literal because of Babel bug
+    } catch (e) {
       md = await import('../../partials/Default');
     }
 
@@ -44,7 +44,9 @@ const LazyPartial = (props) => {
       </div>
       <div className="content">
         <Suspense fallback={<span>Loading...</span>}>
-          <DynamicPartial data={data} item={item} />
+          <DynamicPartial
+            data={{...data, path}}
+            item={item} />
         </Suspense>
       </div>
     </div>

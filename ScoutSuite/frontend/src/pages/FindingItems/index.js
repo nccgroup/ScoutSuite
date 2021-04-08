@@ -9,9 +9,9 @@ import Table from '../../components/Table';
 import Name from './formatters/Name/index';
 import SelectedItemContainer from './SelectedItemContainer';
 import Breadcrumb from '../../components/Breadcrumb/index';
+import DownloadButton from '../../components/DownloadButton';
 
 import './style.scss';
-import DownloadButton from '../../components/DownloadButton';
 
 const FlaggedItems = () => {
   const params = useParams();

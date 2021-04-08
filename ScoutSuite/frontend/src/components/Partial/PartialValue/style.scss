@@ -7,6 +7,9 @@
 
   .issue {
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .critical {
@@ -23,5 +26,9 @@
 
   .low {
     color: $low-color;
+  }
+
+  .exception-btn {
+    font-size: 0.4rem;
   }
 }

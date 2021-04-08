@@ -13,6 +13,7 @@ import Header from './Header';
 import { MenuBar, SubMenu, MenuGroup, MenuElement } from './Menu';
 
 import './style.scss';
+import DownloadException from '../components/Exceptions/DownloadButton';
 
 
 const propTypes = {
@@ -84,6 +85,7 @@ const Layout = (props) => {
             </SubMenu>
           );
         })}
+        <DownloadException />
       </MenuBar>
       <div className="main">{children}</div>
     </div>
