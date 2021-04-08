@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class PostgreSQLFirewallRules(AzureResources):
@@ -19,7 +20,7 @@ class PostgreSQLFirewallRules(AzureResources):
 
     def _parse_firewall_rules(self, firewall_rule):
         firewall_rules_dict = {}
-        firewall_rules_dict['id'] = firewall_rule.id
+        firewall_rules_dict['id'] = get_non_provider_id(firewall_rule.id.lower())
         firewall_rules_dict['name'] = firewall_rule.name
         firewall_rules_dict['start_ip'] = firewall_rule.start_ip_address
         firewall_rules_dict['end_ip'] = firewall_rule.end_ip_address

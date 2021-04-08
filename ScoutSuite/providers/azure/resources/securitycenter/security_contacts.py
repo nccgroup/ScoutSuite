@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class SecurityContacts(AzureResources):
@@ -15,7 +16,7 @@ class SecurityContacts(AzureResources):
 
     def _parse_security_contact(self, security_contact):
         security_contact_dict = {}
-        security_contact_dict['id'] = security_contact.id
+        security_contact_dict['id'] = get_non_provider_id(security_contact.id.lower())
         security_contact_dict['name'] = security_contact.name
         security_contact_dict['email'] = security_contact.email
         security_contact_dict['phone'] = security_contact.phone
