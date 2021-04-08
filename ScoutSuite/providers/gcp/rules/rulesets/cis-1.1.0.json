@@ -1,6 +1,12 @@
 {
   "about": "This ruleset attempts to cover as many recommendations from the CIS Google Cloud Platform Foundation v1.1.0.",
     "rules": {
+      "cloudsql-instances-public-ips.json": [
+          {
+              "enabled": true,
+              "level": "danger"
+          }
+        ],
       "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
          {
             "enabled": true,
