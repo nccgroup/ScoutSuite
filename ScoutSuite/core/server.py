@@ -5,7 +5,9 @@ from ScoutSuite.utils import format_service_name
 import csv, io, json
 
 def start_api(results, exceptions=None):
-    app = Flask(__name__)
+    app = Flask(__name__, 
+            static_url_path='', 
+            static_folder='../frontend/build')
     CORS(app)
 
     @app.route('/', methods=['GET'])
