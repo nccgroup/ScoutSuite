@@ -7,12 +7,12 @@ import csv, io, json
 def start_api(results, exceptions=None):
     app = Flask(__name__, 
             static_url_path='', 
-            static_folder='../frontend/build')
+            static_folder='../web_report')
     CORS(app)
 
     @app.route('/', methods=['GET'])
     def home():
-        return '''<h1>Welcome to SCOUT SUITE API</h1>'''
+        return app.send_static_file('index.html')
 
     @app.route('/api', methods=['GET'])
     def api():

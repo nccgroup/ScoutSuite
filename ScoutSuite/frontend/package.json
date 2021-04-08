@@ -26,7 +26,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build  && mv build ../web_report",
+    "build": "react-scripts build  && cp -r build/* ../web_report/",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "npx eslint .eslintrc.js --fix --ext .js src/"
