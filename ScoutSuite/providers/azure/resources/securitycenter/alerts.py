@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Alerts(AzureResources):
@@ -15,6 +16,6 @@ class Alerts(AzureResources):
 
     def _parse_alert(self, alert):
         alert_dict = {}
-        alert_dict['id'] = alert.id
+        alert_dict['id'] = get_non_provider_id(alert.id)
         alert_dict['name'] = alert.name
         return alert_dict['id'], alert_dict
