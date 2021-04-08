@@ -40,7 +40,7 @@
         "cloudsql-instances-public-ips.json": [
             {
                 "enabled": true,
-                "level": "warning"
+                "level": "danger"
             }
           ],
         "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
