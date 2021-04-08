@@ -20,19 +20,19 @@ const propTypes = {
 };
 
 const renderBlobContainer = data => {
-  return (<div key={data.id}>
+  return (<li key={data.id}>
     <h2>{data.id}</h2>
     <ul>
       <PartialValue
-        label="Soft Delete"
+        label="Public Access Allowed"
         valuePath={`blob_services.${data.id}.public_access_allowed`}
         renderValue={convertBoolToEnable}
       />
     </ul>
-  </div>);
+  </li>);
 };
 const renderBlobService = data => {
-  return (<div key={data.id}>
+  return (<li key={data.id}>
     <h2>{data.name}</h2>
     <ul>
       <PartialValue
@@ -41,8 +41,7 @@ const renderBlobService = data => {
         renderValue={convertBoolToEnable}
       />
     </ul>
-
-  </div>);
+  </li>);
 };
 
 const Bucket = (props) => {
@@ -101,18 +100,20 @@ const Bucket = (props) => {
       <TabsMenu>
         <TabPane title="Blob Containers">
           {!isEmpty(blob_containers) ? (
-            Object.values(blob_containers).map((value) =>
-              renderBlobContainer(value)
-            )
+            <ul>
+              {Object.values(blob_containers).map((value) =>
+                renderBlobContainer(value)
+              )}</ul>
           ) : (
             <span>None</span>
           )}
         </TabPane>
         <TabPane title="Blob Services">
           {!isEmpty(blob_services) ? (
-            Object.values(blob_services).map((value) =>
-              renderBlobService(value)
-            )
+            <ul>
+              {Object.values(blob_services).map((value) => renderBlobService(value)
+              )}
+            </ul>
           ) : (
             <span>None</span>
           )}
