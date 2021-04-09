@@ -138,6 +138,102 @@
                 "enabled": true,
                 "level": "warning"
             }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-project-ownership-assignment.json": [
+             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-audit-config-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-custom-role-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-vpc-network-firewall-rule-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-vpc-network-route-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-vpc-network-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-cloud-storage-iam-permission-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-sql-instance-config-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-project-ownership-assignment.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-audit-config-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-custom-role-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-vpc-network-firewall-rule-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-vpc-network-route-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-vpc-network-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-cloud-storage-iam-permission-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-sql-instance-config-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 
