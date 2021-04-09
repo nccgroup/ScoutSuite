@@ -22,8 +22,8 @@
             "or",
             [
                 "kms.projects.id.keyrings.id.keys.id.rotation_period",
-                "greaterThan",
-                "7776000"
+                "false",
+                ""
             ],
             [
                 "kms.projects.id.keyrings.id.keys.id.rotation_period",
@@ -35,8 +35,8 @@
             "or",
             [
                 "kms.projects.id.keyrings.id.keys.id.next_rotation_time_days",
-                "greaterThan",
-                "90"
+                "false",
+                ""
             ],
             [
                 "kms.projects.id.keyrings.id.keys.id.next_rotation_time_days",
