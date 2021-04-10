@@ -11,6 +11,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import cx from 'classnames';
+import { useParams } from 'react-router-dom';
 
 const propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -37,6 +38,8 @@ const TableRender = (props) => {
     initialState,
     headerRight
   } = props;
+
+  const params = useParams();
 
   const columnsMemo = React.useMemo(() => columns, [columns]);
   const dataMemo = React.useMemo(() => data, [data]);
@@ -80,6 +83,7 @@ const TableRender = (props) => {
     previousPage,
     nextPage,
     pageCount,
+    gotoPage,
     state: { pageIndex, sortBy },
   } = tableInstance;
 
@@ -96,6 +100,10 @@ const TableRender = (props) => {
       });
     }
   }, [pageIndex, sortBy]);
+
+  useEffect(() => {
+    gotoPage(0);
+  }, [params.service, params.resource, params.finding]);
 
   return (
     <>

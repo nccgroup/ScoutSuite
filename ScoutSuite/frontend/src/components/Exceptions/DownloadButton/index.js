@@ -11,9 +11,9 @@ import './style.scss';
 
 
 const propTypes = {
-  service: PropTypes.string.isRequired,
-  finding: PropTypes.string.isRequired,
-  path: PropTypes.string.isRequired,
+  service: PropTypes.string,
+  finding: PropTypes.string,
+  path: PropTypes.string,
 };
 
 const DownloadException = () => {

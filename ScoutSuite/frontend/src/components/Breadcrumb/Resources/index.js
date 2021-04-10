@@ -1,12 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import flatten from 'lodash/flatten';
 
 import { useAPI } from '../../../api/useAPI';
 import { getServicesEndpoint } from '../../../api/paths';
-import PropTypes from 'prop-types';
 import { Link, useParams, useLocation } from 'react-router-dom';
-// import merge from 'lodash/merge';
-import flatten from 'lodash/flatten';
+
 
 const propTypes = {
   service: PropTypes.string.isRequired,

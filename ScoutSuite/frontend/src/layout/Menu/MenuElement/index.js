@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import cx from 'classnames';
@@ -8,17 +8,12 @@ const propTypes = {
   link: PropTypes.string,
   disabled: PropTypes.bool,
   selected: PropTypes.string,
-  setSelected: PropTypes.func,
 };
 
 const MenuElement = (props) => {
-  const { children, link, disabled, selected, setSelected } = props;
-  const isSelected = selected === link;
+  const { children, link, disabled, selected } = props;
+  const isSelected = selected.includes('/' + link);
   const hasLink = link != undefined && link != null;
-
-  useEffect(() => {
-    if (location.pathname.startsWith('/' + link)) setSelected(link);
-  }, [link]);
 
   return (
     <li
@@ -29,7 +24,7 @@ const MenuElement = (props) => {
       )}
     >
       {hasLink && !disabled && (
-        <Link to={'/' + link} onClick={() => setSelected(link)}>
+        <Link to={'/' + link}>
           {children}
         </Link>
       )}
