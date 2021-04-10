@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   useTable,
@@ -37,6 +37,8 @@ const TableRender = (props) => {
     initialState,
     headerRight
   } = props;
+
+  const [searchQuery, setSearchQuery] = useState('');
 
   const columnsMemo = React.useMemo(() => columns, [columns]);
   const dataMemo = React.useMemo(() => data, [data]);
@@ -85,24 +87,35 @@ const TableRender = (props) => {
 
   const onFetchDataDebounced = useAsyncDebounce(fetchData, 100);
 
+  const sortFields = () => {
+    const sortField = sortBy && sortBy[0] ? sortBy[0].id : 'name';
+    const sortDir = sortBy && sortBy[0] && sortBy[0].desc ? 'desc' : 'asc';
+    return {
+      sortBy: sortField,
+      direction: sortDir,
+    };
+  };
+
   useEffect(() => {
     if (manualPagination) {
-      const sortField = sortBy && sortBy[0] ? sortBy[0].id : 'name';
-      const sortDir = sortBy && sortBy[0] && sortBy[0].desc ? 'desc' : 'asc';
       onFetchDataDebounced({
         pageIndex,
-        sortBy: sortField,
-        direction: sortDir,
+        search: searchQuery,
+        ...sortFields()
       });
     }
-  }, [pageIndex, sortBy]);
+  }, [pageIndex, sortBy, searchQuery]);
+
+  const searchTable = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <>
       {!disableSearch && (
         <div className="table-header">
           <div className="search-bar">
-            <input placeholder="Search in this table" />
+            <input onChange={searchTable} placeholder="Search by name or ID" />
           </div>
           <div className="table-header-right">
             {headerRight}

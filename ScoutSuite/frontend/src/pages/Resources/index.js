@@ -22,8 +22,8 @@ const Resources = () => {
   );
   const data = response.results;
 
-  const fetchData = React.useCallback(({ pageIndex, sortBy, direction }) => {
-    loadPage(pageIndex + 1, sortBy, direction);
+  const fetchData = React.useCallback(({ pageIndex, sortBy, direction, search, }) => {
+    loadPage(pageIndex + 1, sortBy, direction, search);
   }, []);
 
   if (loading || !data)

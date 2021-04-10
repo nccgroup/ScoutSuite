@@ -45,6 +45,7 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
       urlQueryParams.set('current_page', queryParams.page);
       if (queryParams.sortBy) urlQueryParams.set('sort_by', queryParams.sortBy);
       if (queryParams.sortBy && queryParams.direction) urlQueryParams.set('direction', queryParams.direction);
+      if (queryParams.search && queryParams.search.length > 0) urlQueryParams.set('search', queryParams.search);
     }
 
     setPath(
@@ -54,8 +55,8 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
     );
   }, [defaultPath, queryParams]);
 
-  const loadPage = (page, sortBy, direction) => {
-    setQueryParams({ page, sortBy: sortBy || null, direction: direction || null });
+  const loadPage = (page, sortBy, direction, search) => {
+    setQueryParams({ page, sortBy: sortBy || null, direction: direction || null, search });
   };
 
   return {
