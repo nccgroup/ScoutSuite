@@ -16,7 +16,7 @@ class Recorders(AWSResources):
 
     def _parse_recorder(self, raw_recorder):
         recorder = {}
-        recorder['id'] = get_non_provider_id(raw_recorder['name'])
+        recorder['id'] = get_non_provider_id(raw_recorder['roleARN'])
         recorder['name'] = raw_recorder['name']
         recorder['region'] = self.region
         recorder['role_ARN'] = raw_recorder['roleARN']

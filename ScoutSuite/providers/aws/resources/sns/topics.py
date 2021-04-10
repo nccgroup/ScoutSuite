@@ -35,7 +35,7 @@ class Topics(AWSCompositeResources):
     def _parse_topic(self, raw_topic):
         raw_topic['arn'] = raw_topic.pop('TopicArn')
         raw_topic['name'] = raw_topic['arn'].split(':')[-1]
-        raw_topic['id'] = get_non_provider_id(raw_topic['name'])
+        raw_topic['id'] = get_non_provider_id(raw_topic['arn'])
 
         attributes = raw_topic.pop('attributes')
         for k in ['Owner', 'DisplayName']:

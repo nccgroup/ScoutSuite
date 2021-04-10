@@ -18,5 +18,5 @@ class ParameterGroups(AWSResources):
         raw_parameter_group['arn'] = raw_parameter_group.pop('DBParameterGroupArn')
         raw_parameter_group['name'] = raw_parameter_group.pop('DBParameterGroupName')
         raw_parameter_group['parameters'] = raw_parameter_group.pop('Parameters')
-        raw_parameter_group['id'] = get_non_provider_id(raw_parameter_group['name'])
+        raw_parameter_group['id'] = get_non_provider_id(raw_parameter_group['arn'])
         return raw_parameter_group['id'], raw_parameter_group

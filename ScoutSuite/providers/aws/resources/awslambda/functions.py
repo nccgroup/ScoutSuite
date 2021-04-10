@@ -17,7 +17,7 @@ class Functions(AWSResources):
     async def _parse_function(self, raw_function):
 
         function_dict = {}
-        function_dict['id'] = get_non_provider_id(raw_function.get('FunctionName'))
+        function_dict['id'] = get_non_provider_id(raw_function.get('FunctionArn'))
         function_dict['name'] = raw_function.get('FunctionName')
         function_dict['arn'] = raw_function.get('FunctionArn')
         function_dict['runtime'] = raw_function.get('Runtime')

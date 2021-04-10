@@ -35,7 +35,7 @@ class LoadBalancers(AWSCompositeResources):
     def _parse_load_balancer(self, load_balancer):
         load_balancer['arn'] = load_balancer.pop('LoadBalancerArn')
         load_balancer['name'] = load_balancer.pop('LoadBalancerName')
-        load_balancer['id'] = get_non_provider_id(load_balancer['name'])
+        load_balancer['id'] = get_non_provider_id(load_balancer['arn'])
         load_balancer['security_groups'] = []
         load_balancer['listener_protocols'] = []
         load_balancer['isNetwork'] = load_balancer["Type"] == "network"

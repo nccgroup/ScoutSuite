@@ -22,7 +22,7 @@ class Queues(AWSResources):
         queue['QueueUrl'] = queue_url
         queue['arn'] = queue_attributes.pop('QueueArn')
         queue['name'] = queue['arn'].split(':')[-1]
-        queue['id'] = get_non_provider_id(queue['name'])
+        queue['id'] = get_non_provider_id(queue['arn'])
 
         queue['kms_master_key_id'] = queue_attributes.pop('KmsMasterKeyId', None)
         queue['CreatedTimestamp'] = queue_attributes.pop('CreatedTimestamp', None)

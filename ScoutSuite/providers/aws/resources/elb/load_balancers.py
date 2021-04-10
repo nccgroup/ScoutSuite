@@ -18,7 +18,6 @@ class LoadBalancers(AWSResources):
 
     def _parse_load_balancer(self, raw_load_balancer):
         load_balancer = {'name': raw_load_balancer['LoadBalancerName']}
-        load_balancer['id'] = get_non_provider_id(load_balancer['name'])
 
         get_keys(raw_load_balancer, load_balancer,
                  ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Scheme', 'attributes'])
@@ -27,6 +26,8 @@ class LoadBalancers(AWSResources):
         load_balancer['arn'] = 'arn:aws:elb:{}:{}:load-balancer/{}'.format(self.region,
                                                                            self.facade.owner_id,
                                                                            raw_load_balancer.get('LoadBalancerName'))
+        load_balancer['id'] = get_non_provider_id(load_balancer['arn'])
+
         for sg in raw_load_balancer['SecurityGroups']:
             load_balancer['security_groups'].append({'GroupId': sg})
 

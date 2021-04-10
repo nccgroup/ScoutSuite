@@ -18,7 +18,6 @@ class RDSInstances(AWSResources):
     def _parse_instance(self, raw_instance):
         instance = {}
         instance['name'] = raw_instance.pop('DBInstanceIdentifier')
-        instance['id'] = get_non_provider_id(instance['name'])
 
         for key in ['InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade',
                     'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible',
@@ -27,7 +26,10 @@ class RDSInstances(AWSResources):
             instance[key] = raw_instance[key] if key in raw_instance else None
 
         instance['is_read_replica'] = self._is_read_replica(raw_instance)
+
         instance['arn'] = raw_instance.get('DBInstanceArn')
+        instance['id'] = get_non_provider_id(instance['arn'])
+
         return instance['id'], instance
 
     @staticmethod
