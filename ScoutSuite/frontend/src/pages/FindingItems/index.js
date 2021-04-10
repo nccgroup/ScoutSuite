@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../api/useAPI';
 import { getItemsEndpoint } from '../../api/paths';
+import { makeTitle } from '../../utils/Partials';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
@@ -38,10 +39,16 @@ const FlaggedItems = () => {
     return <Breadcrumb />;
   }
 
+  const unwantedKeys = [
+    'id',
+    'display_path',
+  ];
+
   const columns = [];
 
   for (let key of Object.keys(items.results[0])) {
-    if (key !== 'display_path') columns.push({ name: key, key });
+    if (!unwantedKeys.includes(key)) 
+      columns.push({ name: makeTitle(key), key });
   }
 
   const data = items.results;

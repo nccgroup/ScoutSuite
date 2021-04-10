@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { PartialValue } from '../../../../components/Partial/index';
 import { valueOrNone, formatDate } from '../../../../utils/Partials';
@@ -38,10 +39,15 @@ const Informations = () => {
         renderValue={valueOrNone}
       />
       <PartialValue
-        /* TODO: Link to execution_role.RoleId */
         label="Execution Role"
-        valuePath="execution_role.RoleName"
-        renderValue={valueOrNone}
+        valuePath="execution_role"
+        renderValue={value => value ? (
+          <Link to={`/services/iam/resources/roles/${value.RoleName}`}>
+            {value.RoleName}
+          </Link>
+        ) : (
+          'None'
+        )}
       />
       <PartialValue
         label="Handler"

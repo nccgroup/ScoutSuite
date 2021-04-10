@@ -13,7 +13,10 @@ import Layout from './layout/index';
 
 function App() {
   return (
-    <SnackbarProvider maxSnack={3}>
+    <SnackbarProvider 
+      maxSnack={1}
+      preventDuplicate
+    >
       <ExceptionsContextProvider>
         <Router>
           <Layout>

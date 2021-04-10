@@ -111,7 +111,7 @@ const IssuesCharts = props => {
                 left: 10,
                 right: 10,
               }}
-              interval={1}
+              interval={0}
               tick={<CustomizedAxisTick />}
             />
             <YAxis />

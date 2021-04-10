@@ -9,6 +9,7 @@ import {
   valueOrNone,
 } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
+import ResourceLink from '../../../components/ResourceLink';
 import WarningMessage from '../../../components/WarningMessage';
 
 import './style.scss';
@@ -86,10 +87,16 @@ const RegionDomain = props => {
               ]}
               renderValue={value => convertBoolToEnable(value && isLogging)}
             />
-            {/* TODO: Link to resource */}
             <PartialValue
               label="Destination S3 Bucket Name"
               valuePath="bucket_id"
+              renderValue={value => (
+                <ResourceLink 
+                  service="s3"
+                  resource="buckets"
+                  id={value}
+                />
+              )}
             />
             <PartialValue
               label="Log File Validation Enabled"

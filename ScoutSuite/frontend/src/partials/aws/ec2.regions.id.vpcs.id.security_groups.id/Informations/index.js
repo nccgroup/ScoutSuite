@@ -9,8 +9,7 @@ const Informations = () => {
       <PartialValue label="ID" valuePath="id" />
       <PartialValue label="ARN" valuePath="arn" />
       <PartialValue label="Region" valuePath="region" />
-      {/* TODO: Get VPC value from 'services.vpc.regions'*/}
-      <PartialValue label="VPC" valuePath="vpc" />  
+      <PartialValue label="VPC" valuePath="vpc" />
       <PartialValue label="Description" valuePath="description" />
     </>
   );

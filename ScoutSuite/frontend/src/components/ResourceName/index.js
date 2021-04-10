@@ -13,9 +13,11 @@ const propTypes = {
 const ResourceName = ({service, resource, id }) => {
   const { data, loading } = useAPI(getResourceEndpoint(service, resource, id));
 
-  if (loading) return <span>
-    <Skeleton width="40" />
-  </span>;
+  if (loading) return (
+    <span>
+      <Skeleton width="40" />
+    </span>
+  );
 
   return <span>{data.name}</span>;
 };

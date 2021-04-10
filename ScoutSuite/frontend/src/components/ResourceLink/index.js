@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ResourceName from '../ResourceName/index';
 
 const propTypes = {
-  service: PropTypes.string.name,
+  service: PropTypes.string.isRequired,
   resource: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
@@ -13,9 +13,13 @@ const propTypes = {
 const ResourceLink = ({ service, resource, id, name }) => {
   return (
     <Link to={`/services/${service}/resources/${resource}/${id}`}>
-      {name || <ResourceName
-        service={service} resource={resource}
-        id={id} />}
+      {name || (
+        <ResourceName
+          service={service} 
+          resource={resource}
+          id={id} 
+        />
+      )}
     </Link>
   );
 };

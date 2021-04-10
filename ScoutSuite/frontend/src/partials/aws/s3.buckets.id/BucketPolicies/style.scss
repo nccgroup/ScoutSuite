@@ -12,6 +12,8 @@
       padding: 0.5rem;
       border: 1px solid $default-grey-light;
       text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       div {
         overflow: hidden;

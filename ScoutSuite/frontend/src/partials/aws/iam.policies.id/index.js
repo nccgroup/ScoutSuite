@@ -31,6 +31,7 @@ const IamPolicies = props => {
           <Policy
             name={arn}
             policy={policy}
+            policyPath="PolicyDocument"
             defaultOpen
           />
         </TabPane>
