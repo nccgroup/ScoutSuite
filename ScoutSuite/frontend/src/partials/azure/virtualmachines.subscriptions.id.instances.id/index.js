@@ -33,8 +33,6 @@ const Instances = props => {
     [item.network_interfaces],
   );
 
-  //const { data: network_interfaces , loading } = useResources('networking', 'network_interfaces', item.network_interfaces);
-
   if (!data) return null;
 
   return (
