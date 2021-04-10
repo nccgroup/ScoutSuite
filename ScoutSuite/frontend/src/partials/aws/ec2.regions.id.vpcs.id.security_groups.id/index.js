@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 
+import { useAPI } from '../../../api/useAPI';
+import { getVpcFromPath, getRegionFromPath } from '../../../utils/Api';
+import { getRawEndpoint } from '../../../api/paths';
 import { Partial, PartialSection } from '../../../components/Partial';
 import { partialDataShape } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
@@ -17,7 +22,20 @@ const propTypes = {
 const Ec2SecurityGroups = props => {
   const { data } = props;
 
-  if (!data) return null;
+  const path = get(data, ['item', 'path'], '');
+  const region = getRegionFromPath(path);
+  const vpcId = getVpcFromPath(path);
+
+  const { data: vpc, loading } = useAPI(
+    getRawEndpoint(`services.ec2.regions.${region}.vpcs.${vpcId}.name`)
+  );
+
+  if (!data || loading) return null;
+
+  if (!isEmpty(vpc)) {
+    data.item.vpc = `${vpc} (${vpcId})`;
+    data.item.region = region;
+  }
 
   return (
     <Partial data={data}>

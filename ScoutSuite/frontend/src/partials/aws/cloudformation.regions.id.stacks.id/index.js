@@ -43,9 +43,7 @@ const CloudtrailStack = props => {
           title="Stack Policy"
           disabled={isEmpty(policy)}
         >
-          <Policy
-            policy={policy}
-          />
+          <Policy policy={policy} />
         </TabPane>
       </TabsMenu>
     </Partial>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Collapsible from 'react-collapsible';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -6,6 +6,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import size from 'lodash/size';
 import isEmpty from 'lodash/isEmpty';
 
+import { PartialContext } from '../context';
 import PartialValue from '../PartialValue';
 import { renderWithInnerHtml } from '../../../utils/Partials';
 
@@ -31,17 +32,32 @@ const Policy = props => {
     defaultOpen,
   } = props;
 
+  const { path_to_issues } = useContext(PartialContext);
+  const hasError = path_to_issues.some(path => path.includes(policyPath));
+
   if (isEmpty(policy)) return null;
+
+  const policyTitle = (
+    <h4 className="policy-title">
+      {name}
+    </h4>
+  );
 
   const displayJson = object => 
     JSON.stringify(object, null, 2)
       .replace(/ /gm, '&nbsp;')
       .replace(/\n/gm, '<br/>');
 
-  const policyTitle = (
-    <h4 className="policy-title">
-      {name}
-    </h4>
+  const renderJson = (json, errorPath) => (
+    <PartialValue 
+      value={displayJson(json)}
+      errorPath={errorPath}
+      renderValue={value => (
+        renderWithInnerHtml(
+          value,
+        )
+      )}
+    />
   );
 
   const policyContent = (
@@ -68,25 +84,17 @@ const Policy = props => {
                   transitionTime={1}
                   open={true}
                 >
-                  <PartialValue 
-                    value={displayJson(object)}
-                    errorPath={`${policyPath}.PolicyDocument.Statement.${i}`}
-                    renderValue={value => (
-                      renderWithInnerHtml(
-                        value,
-                      )
-                    )}
-                  />
+                  {renderJson(object, `${policyPath}.Statement.${i}`)}
                 </Collapsible>
               ))}
               ]
             </>
           ) : (
             <>
-              {renderWithInnerHtml(displayJson(value))}
+              {renderJson(value)}
             </>
           )}
-          {i !== size(policy) - 1 && ','}
+          {i < size(policy) - 1 && ','}
           <br/>
         </div>    
       ))}
@@ -111,7 +119,7 @@ const Policy = props => {
             </>
           }
           transitionTime={1}
-          open={defaultOpen}
+          open={defaultOpen || hasError}
         >
           {policyContent}
         </Collapsible>

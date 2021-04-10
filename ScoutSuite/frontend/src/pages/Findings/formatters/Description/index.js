@@ -57,7 +57,8 @@ const Description = (props) => {
               {original.references.map((ref, i) => (
                 <li key={i}>
                   <a
-                    href={ref} target="_blank"
+                    href={ref} 
+                    target="_blank"
                     rel="noreferrer" >
                     {ref}
                   </a>

@@ -67,7 +67,7 @@ const IamUsers = props => {
                   key={i}
                   name={policy.name}
                   policy={policy.PolicyDocument}
-                  policyPath={`inline_policies.${id}`}
+                  policyPath={`inline_policies.${id}.PolicyDocument`}
                 />
               ))}
             </>

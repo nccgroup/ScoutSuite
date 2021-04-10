@@ -2,16 +2,16 @@ import { useParams } from 'react-router-dom';
 import React from 'react';
 
 import { useAPI } from '../../api/useAPI';
+import { getResourcesEndpoint } from '../../api/paths';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
 import ResourcePartialWrapper from './ResourcePartialWrapper';
 import Breadcrumb from '../../components/Breadcrumb/index';
-
-import { getResourcesEndpoint } from '../../api/paths';
+import DownloadButton from '../../components/DownloadButton/index';
 
 import './style.scss';
-import DownloadButton from '../../components/DownloadButton/index';
+
 
 const Resources = () => {
   const params = useParams();
@@ -38,8 +38,14 @@ const Resources = () => {
   const columns = [{ name: 'Name', key: 'name' }];
 
   // AWS columns
+  if (keys.includes('region')) 
+    columns.push({ name: 'Region', key: 'region' });
+  if (keys.includes('vpc')) 
+    columns.push({ name: 'VPC', key: 'vpc' });
   if (keys.includes('AvailabilityZone'))
     columns.push({ name: 'Availability Zone', key: 'AvailabilityZone' });
+  if (keys.includes('availability_zone'))
+    columns.push({ name: 'Availability Zone', key: 'availability_zone' });
   if (keys.includes('DNSName'))
     columns.push({ name: 'DNS Name', key: 'DNSName' });
   if (keys.includes('SubnetId'))

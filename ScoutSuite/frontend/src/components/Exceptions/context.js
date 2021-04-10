@@ -1,6 +1,7 @@
 import React, { useState, createContext } from 'react';
-import merge from 'lodash/merge';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
+import get from 'lodash/get';
+
 
 const propTypes = {
   children: PropTypes.node.isRequired,
@@ -12,12 +13,19 @@ export const ExceptionsContextProvider = ({ children }) => {
   const [exceptions, setExceptions] = useState({});
 
   const addException = (service, finding, path) => {
-    const newException = {
+    const newExceptions = [
+      ...get(exceptions, [service, finding], []),
+      path,
+    ];
+    
+    setExceptions({
+      ...exceptions,
       [service]: {
-        [finding]: [path],
-      },
-    };
-    setExceptions(merge(newException, exceptions));
+        [finding]: [
+          ...newExceptions,
+        ]
+      }
+    });
   };
 
   return (
