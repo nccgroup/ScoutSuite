@@ -9,7 +9,6 @@ import get from 'lodash/get';
 
 import { ExceptionsContext } from '../context';
 
-
 const propTypes = {
   service: PropTypes.string.isRequired,
   finding: PropTypes.string.isRequired,

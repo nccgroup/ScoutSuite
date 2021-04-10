@@ -19,8 +19,7 @@ class BaseProvider:
     """
 
     def __init__(self, report_dir=None, timestamp=None,
-                 services=None, skipped_services=None,
-                 result_format='json', **kwargs):
+                 services=None, skipped_services=None, **kwargs):
         """
 
         :account_id         account ID

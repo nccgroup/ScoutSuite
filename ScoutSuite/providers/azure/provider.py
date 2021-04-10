@@ -14,7 +14,6 @@ class AzureProvider(BaseProvider):
     def __init__(self,
                  subscription_ids=[], all_subscriptions=None,
                  report_dir=None, timestamp=None, services=None, skipped_services=None,
-                 result_format='json',
                  **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
@@ -46,10 +45,7 @@ class AzureProvider(BaseProvider):
                                             subscription_ids=self.subscription_ids,
                                             all_subscriptions=self.all_subscriptions)
 
-        self.result_format = result_format
-
-        super().__init__(report_dir, timestamp,
-                                            services, skipped_services, result_format)
+        super().__init__(report_dir, timestamp, services, skipped_services)
 
     def get_report_name(self):
         """

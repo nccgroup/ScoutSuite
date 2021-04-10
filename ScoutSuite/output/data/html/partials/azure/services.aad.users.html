@@ -14,7 +14,7 @@
         <div class="list-group-item-text item-margin">Mail: <span id="aad.users.{{@key}}.mail"><samp>{{value_or_none mail}}</samp></span></div>
         <div class="list-group-item-text item-margin">Sign-In Names: <span id="aad.users.{{@key}}.sign_in_names"><samp>{{value_or_none sign_in_names}}</samp></span></div>
         <div class="list-group-item-text item-margin">Type: <span id="aad.users.{{@key}}.user_type"><samp>{{value_or_none user_type}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Status: <span id="aad.users.{{@key}}.account_enabled"><samp>{{convert_bool_to_enabled account_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="aad.users.{{@key}}.account_enabled">{{convert_bool_to_enabled account_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Usage Location: <span id="aad.users.{{@key}}.usage_location"><samp>{{value_or_none usage_location}}</samp></span></div>
         <div class="list-group-item-text item-margin">Deletion Timestamp: <span id="aad.users.{{@key}}.deletion_timestamp"><samp>{{value_or_none deletion_timestamp}}</samp></span></div>
     </div>

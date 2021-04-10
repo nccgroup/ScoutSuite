@@ -1,5 +1,5 @@
 {
-    "description": "Publicly Accessible RDS Snapshot",
+    "description": "Publicly Accessible Snapshot",
     "rationale": "Snapshots should never be public, as this risks exposing sensitive data.",
     "references": [
         "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ShareSnapshot.html"

@@ -20,7 +20,8 @@
         }
     ],
     "references": [
-        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#enable-mfa-for-privileged-users"
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#enable-mfa-for-privileged-users",
+        "https://docs.aws.amazon.com/organizations/latest/userguide/best-practices_member-acct.html#best-practices_mbr-acct_mfa"
     ],
     "dashboard_name": "Users",
     "path": "iam.users.id",

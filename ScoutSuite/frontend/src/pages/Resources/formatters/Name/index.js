@@ -16,7 +16,7 @@ const Name = props => {
     <ResourceLink
       service={params.service} 
       resource={params.resource}
-      id={original.id || original.name} 
+      id={original.id} 
       name={value} 
     />
   );

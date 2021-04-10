@@ -7,7 +7,6 @@ import { useAPI } from '../../../api/useAPI';
 import { getServicesEndpoint } from '../../../api/paths';
 import { Link, useParams, useLocation } from 'react-router-dom';
 
-
 const propTypes = {
   service: PropTypes.string.isRequired,
   finding: PropTypes.string.isRequired,

@@ -15,7 +15,7 @@
         <div class="list-group-item-text item-margin">Start Time: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.start_time"><samp>{{value_or_none start_time}}</samp></span></div>
         <div class="list-group-item-text item-margin">Volume: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.volume"><samp>{{> resource_link resource_path = (concat 'services.ec2.regions' region 'volumes' volume_id )}}</samp></span></div>
         <div class="list-group-item-text item-margin">Owner ID: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.owner_id"><samp>{{value_or_none owner_id}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Encryption: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.encrypted"><samp>{{convert_bool_to_enabled encrypted}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Encryption: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.encrypted">{{convert_bool_to_enabled encrypted}}</span></div>
         <div class="list-group-item-text item-margin">KMS Key ID: <span id="ec2.regions.{{region}}.snapshots.{{@key}}.kms_key_id"><samp>{{value_or_none kms_key_id}}</samp></span></div>
     </div>
 </script>
