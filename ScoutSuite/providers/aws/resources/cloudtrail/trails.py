@@ -18,8 +18,9 @@ class Trails(AWSResources):
 
     def _parse_trail(self, raw_trail):
         trail = {'name': raw_trail.pop('Name')}
-        trail_id = get_non_provider_id(trail['name'])
-        
+
+        # Add region before hashing to get unique id for multiregion trails
+        trail['id'] = get_non_provider_id(trail['name'] + self.region)   
         trail['arn'] = raw_trail.get('TrailARN')
 
         # Do not duplicate entries for multiregion trails
@@ -27,8 +28,8 @@ class Trails(AWSResources):
                 raw_trail['HomeRegion'] != self.region:
             for key in ['HomeRegion', 'TrailARN']:
                 trail[key] = raw_trail[key]
-            trail['scout_link'] = 'services.cloudtrail.regions.{}.trails.{}'.format(raw_trail['HomeRegion'], trail_id)
-            return trail_id, trail
+            trail['scout_link'] = 'services.cloudtrail.regions.{}.trails.{}'.format(raw_trail['HomeRegion'], trail['id'])
+            return trail['id'], trail
 
         for key in raw_trail:
             trail[key] = raw_trail[key]
@@ -49,7 +50,7 @@ class Trails(AWSResources):
             trail['DataEventsEnabled'] = len(event_selector['DataResources']) > 0
             trail['ManagementEventsEnabled'] = event_selector['IncludeManagementEvents']
 
-        return trail_id, trail
+        return trail['id'], trail
 
     def data_logging_status(self, trail):
         for event_selector in trail['EventSelectors']:
