@@ -39,10 +39,16 @@ const FlaggedItems = () => {
     return <Breadcrumb />;
   }
 
+  const unwantedKeys = [
+    'id',
+    'display_path',
+  ];
+
   const columns = [];
 
   for (let key of Object.keys(items.results[0])) {
-    if (key !== 'display_path') columns.push({ name: makeTitle(key), key });
+    if (!unwantedKeys.includes(key)) 
+      columns.push({ name: makeTitle(key), key });
   }
 
   const data = items.results;
