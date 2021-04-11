@@ -33,6 +33,14 @@
         width: 100vw;
         height: 100vh;
         text-align: center;
+        opacity: 0;
+
+        animation: loadRootError 1s ease-in-out 2s forwards;
+      }
+
+      @keyframes loadRootError {
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
     </style>
   </head>
