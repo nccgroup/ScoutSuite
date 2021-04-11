@@ -7,7 +7,8 @@ import {
   partialDataShape,
   formatDate,
   valueOrNone,
-  renderResourcesAsList,
+  renderList,
+  renderPolicyLink,
   renderAwsTags,
 } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
@@ -15,6 +16,7 @@ import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import AuthenticationMethods from './AuthenticationMethods';
 import Policy from '../../../components/Partial/Policy';
+import ResourceLink from '../../../components/ResourceLink';
 
 
 const propTypes = {
@@ -26,10 +28,18 @@ const IamUsers = props => {
 
   if (!data) return null;
 
-  const groups = get(data, ['item', 'groups']);
-  const inline_policies = get(data, ['item', 'inline_policies']);
-  const policies = get(data, ['item', 'policies']);
-  const tags = get(data, ['item', 'Tags']);
+  const groups = get(data, ['item', 'groups'], {});
+  const inline_policies = get(data, ['item', 'inline_policies'], {});
+  const policies = get(data, ['item', 'policies'], {});
+  const tags = get(data, ['item', 'Tags'], []);
+
+  const renderGroupLink = id => (
+    <ResourceLink
+      service="iam"
+      resource="groups"
+      id={id}
+    />
+  );
 
   return (
     <Partial data={data}>
@@ -54,35 +64,40 @@ const IamUsers = props => {
             loginProfile={get(data, ['item', 'LoginProfile'])}
           />
         </TabPane>
-        {!isEmpty(groups) && (
-          <TabPane title="Groups">
-            {renderResourcesAsList(Object.values(groups))}
-          </TabPane>
-        )}
-        {!isEmpty(inline_policies) && (
-          <TabPane title="Inline Policies">
-            <>
-              {Object.entries(inline_policies).map(([id, policy], i) => (
-                <Policy
-                  key={i}
-                  name={policy.name}
-                  policy={policy.PolicyDocument}
-                  policyPath={`inline_policies.${id}.PolicyDocument`}
-                />
-              ))}
-            </>
-          </TabPane>
-        )}
-        {!isEmpty(policies) && (
-          <TabPane title="Managed Policies">
-            {renderResourcesAsList(Object.values(policies))}
-          </TabPane>
-        )}
-        {!isEmpty(tags) && (
-          <TabPane title="Tags">
-            {renderAwsTags(tags)}
-          </TabPane>
-        )}
+        <TabPane 
+          title="Groups"
+          disabled={isEmpty(groups)}
+        >
+          {renderList(Object.values(groups), '', renderGroupLink)}
+        </TabPane>
+        
+        <TabPane 
+          title="Inline Policies"
+          disabled={isEmpty(inline_policies)}
+        >
+          <>
+            {Object.entries(inline_policies).map(([id, policy], i) => (
+              <Policy
+                key={i}
+                name={policy.name}
+                policy={policy.PolicyDocument}
+                policyPath={`inline_policies.${id}.PolicyDocument`}
+              />
+            ))}
+          </>
+        </TabPane>
+        <TabPane 
+          title="Managed Policies"
+          disabled={isEmpty(policies)}
+        >
+          {renderList(Object.values(policies), '', renderPolicyLink)}
+        </TabPane>
+        <TabPane 
+          title="Tags"
+          disabled={isEmpty(tags)}
+        >
+          {renderAwsTags(tags)}
+        </TabPane>
       </TabsMenu>
     </Partial>
   );

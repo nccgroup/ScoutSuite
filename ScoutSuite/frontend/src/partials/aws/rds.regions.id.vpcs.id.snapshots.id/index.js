@@ -36,7 +36,6 @@ const Snapshots = props => {
           />
         ) : (
           <PartialValue
-            // TODO: Link to resource
             label="RDS Instance"
             valuePath="DBInstanceIdentifier"
           />

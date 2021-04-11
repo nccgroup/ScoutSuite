@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { PartialValue } from '../../../../components/Partial/index';
 import { valueOrNone, formatDate } from '../../../../utils/Partials';
+import ResourceLink from '../../../../components/ResourceLink';
 
 
 const Informations = () => {
@@ -42,9 +42,12 @@ const Informations = () => {
         label="Execution Role"
         valuePath="execution_role"
         renderValue={value => value ? (
-          <Link to={`/services/iam/resources/roles/${value.RoleName}`}>
-            {value.RoleName}
-          </Link>
+          <ResourceLink 
+            service="iam"
+            resource="roles"
+            id={value.RoleId}
+            name={value.RoleName}
+          />
         ) : (
           'None'
         )}

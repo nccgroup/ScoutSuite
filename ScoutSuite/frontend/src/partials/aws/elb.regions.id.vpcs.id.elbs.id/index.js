@@ -11,12 +11,14 @@ import { getRawEndpoint } from '../../../api/paths';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { 
   partialDataShape,
-  renderResourcesAsList,
+  renderList,
+  renderSecurityGroupLink,
   renderAwsTags,
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import Informations from './Informations';
+import ResourceLink from '../../../components/ResourceLink';
 
 
 const propTypes = {
@@ -34,16 +36,16 @@ const ELBs = props => {
     getRawEndpoint(`services.elb.regions.${region}.vpcs.${vpcId}`)
   );
 
-  if (!data || loading) return null;
+  if (isEmpty(data.item) || loading) return null;
 
   if (!isEmpty(vpc)) {
     data.item.arn = vpc.arn;
     data.item.vpc = `${vpc.name} (${vpcId})`;
   }
 
-  const listeners = get(data, ['item', 'listeners']);
-  const attributes = get(data, ['item', 'attributes']);
-  const securityGroups = get(data, ['item', 'security_groups'], {});
+  const listeners = get(data, ['item', 'listeners'], {});
+  const attributes = get(data, ['item', 'attributes'], {});
+  const securityGroups = get(data, ['item', 'security_groups'], []);
   const instances = get(data, ['item', 'instances'], []);
   const subnets = get(data, ['item', 'Subnets'], []);
   const tags = get(data, ['item', 'tags'], []);
@@ -82,6 +84,22 @@ const ELBs = props => {
       renderAttributes(value, [...path, key])
     ));
   };
+
+  const renderInstanceLink = id => (
+    <ResourceLink 
+      service="ec2"
+      resource="instances"
+      id={id}
+    />
+  );
+
+  const renderSubnetLink = id => (
+    <ResourceLink 
+      service="vpc"
+      resource="subnets"
+      id={id}
+    />
+  );
 
   return (
     <Partial data={data}>
@@ -127,7 +145,7 @@ const ELBs = props => {
             title="Security Groups"
             disabled={isEmpty(securityGroups)}
           >
-            {renderResourcesAsList(securityGroups, 'GroupId')}
+            {renderList(securityGroups, '', renderSecurityGroupLink)}
           </TabPane>
           <TabPane
             title="Destination"
@@ -137,13 +155,13 @@ const ELBs = props => {
               {!isEmpty(instances) && (
                 <>
                   <h5>Instances</h5>
-                  {renderResourcesAsList(instances)}
+                  {renderList(instances, '', renderInstanceLink)}
                 </>
               )}
               {!isEmpty(subnets) && (
                 <>
                   <h5>Subnets</h5>
-                  {renderResourcesAsList(subnets)}
+                  {renderList(subnets, '', renderSubnetLink)}
                 </>
               )}
             </div>
