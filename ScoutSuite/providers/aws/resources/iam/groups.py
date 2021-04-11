@@ -1,5 +1,4 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Groups(AWSResources):
@@ -13,7 +12,7 @@ class Groups(AWSResources):
         if raw_group['GroupName'] in self:
             return
 
-        raw_group['id'] = get_non_provider_id(raw_group.pop('GroupId'))
+        raw_group['id'] = raw_group.pop('GroupId')
         raw_group['name'] = raw_group.pop('GroupName')
         raw_group['arn'] = raw_group.pop('Arn')
         raw_group['users'] = raw_group.pop('Users')
