@@ -14,7 +14,6 @@ const Ec2Image = props => {
 
   if (!data) return null;
 
-  // TODO: test this partial.
   return (
     <div>
       <h4>Informations</h4>

@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty';
 
 import { 
   partialDataShape, 
-  renderResourcesAsList 
+  renderList,
 } from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
@@ -37,7 +37,7 @@ const CloudtrailStack = props => {
           title="Capabilities"
           disabled={isEmpty(capabilities)}
         >
-          {renderResourcesAsList(capabilities)}
+          {renderList(capabilities)}
         </TabPane>
         <TabPane
           title="Stack Policy"

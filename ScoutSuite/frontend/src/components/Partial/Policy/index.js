@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import Collapsible from 'react-collapsible';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
@@ -64,7 +65,10 @@ const Policy = props => {
     <code>
       {'{'}
       {Object.entries(policy).map(([key, value], i) => (
-        <div key={i}>
+        <div 
+          key={i}
+          className={cx({ 'inline': typeof(value) === 'string' })}
+        >
           {`"${key}":\xa0`}
           {key === 'Statement' ? (
             <>

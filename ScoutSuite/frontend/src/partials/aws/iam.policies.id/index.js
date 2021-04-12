@@ -4,7 +4,8 @@ import get from 'lodash/get';
 
 import { 
   partialDataShape,
-  renderResourcesAsList,
+  renderList,
+  renderResourceLink,
 } from '../../../utils/Partials';
 import { Partial } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
@@ -21,8 +22,8 @@ const IamPolicies = props => {
   if (!data) return null;
 
   const arn = get(data, ['item', 'arn']);
-  const policy = get(data, ['item', 'PolicyDocument']);
-  const attachedEntities = get(data, ['item', 'attached_to']);
+  const policy = get(data, ['item', 'PolicyDocument'], {});
+  const attachedEntities = get(data, ['item', 'attached_to'], {});
 
   return (
     <Partial data={data}>
@@ -40,7 +41,7 @@ const IamPolicies = props => {
             {Object.entries(attachedEntities).map(([type, entities], i) => (
               <li key={i}>
                 {type}
-                {renderResourcesAsList(entities, 'name')}
+                {renderList(entities, '', renderResourceLink('iam', type))}
               </li>
             ))}
           </ul>
