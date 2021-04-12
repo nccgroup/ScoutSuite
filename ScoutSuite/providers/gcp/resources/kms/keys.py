@@ -40,15 +40,16 @@ class Keys(GCPCompositeResources):
         key_dict['algorithm'] = raw_key.get('primary', {}).get('algorithm', None)
         key_dict['next_rotation_datetime'] = raw_key.get('nextRotationTime', None)
         key_dict['purpose'] = raw_key['purpose']
+
         key_dict['rotation_period'] = raw_key.get('rotationPeriod', None)
         if key_dict['rotation_period']:
             rotation_period = int("".join(filter(str.isdigit, key_dict['rotation_period'])))
             # check if rotation period less than 90 days or 7776000 seconds
-            key_dict['rotation_period'] = rotation_period <= 7776000
+            key_dict['rotation_period'] = rotation_period//(24*3600)
 
         key_dict['next_rotation_time_days'] = None
         if key_dict['next_rotation_datetime']:
             next_rotation_time = dateutil.parser.parse(key_dict['next_rotation_datetime']) - datetime.now(timezone.utc)
             # check if next rotation period less than 90 days
-            key_dict['next_rotation_time_days'] = next_rotation_time.days <= 90
+            key_dict['next_rotation_time_days'] = next_rotation_time.days
         return key_dict['id'], key_dict
