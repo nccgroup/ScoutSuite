@@ -23,6 +23,11 @@
             "cloudsql.projects.id.instances.id.public_ip",
             "notEmpty",
             ""
+        ],
+        [
+            "cloudsql.projects.id.instances.id.public_ip",
+            "notEqual",
+            "None"
         ]
     ],
     "id_suffix": "public_ip"
