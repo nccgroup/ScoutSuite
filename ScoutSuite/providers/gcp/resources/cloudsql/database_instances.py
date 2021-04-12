@@ -42,12 +42,30 @@ class DatabaseInstances(GCPCompositeResources):
         if raw_instance['settings'].get('databaseFlags', None):
             instance_dict['local_infile_off'] = self._mysql_local_infile_flag_off(raw_instance)
 
+            instance_dict['log_checkpoints_on'] = self._postgres_flags_on(raw_instance, 'log_checkpoints')
+            instance_dict['log_connections_on'] = self._postgres_flags_on(raw_instance, 'log_connections')
+            instance_dict['log_disconnections_on'] = self._postgres_flags_on(raw_instance, 'log_disconnections')
+            instance_dict['log_lock_waits_on'] = self._postgres_flags_on(raw_instance, 'log_lock_waits')
+            instance_dict['log_min_messages'] = self._postgres_log_min_error_statement_flags(raw_instance)
+            instance_dict['log_temp_files_0'] = self._postgres_log_temp_files_flags_0(raw_instance)
+            instance_dict['log_min_duration_statement_-1'] = self._postgres_log_min_duration_statement_flags_1(
+                raw_instance)
+
             instance_dict['cross_db_ownership_chaining_off'] = self._sqlservers_cross_db_ownership_chaining_flag_off(
                 raw_instance, 'cross db ownership chaining')
             instance_dict['contained_database_authentication_off'] = self._sqlservers_cross_db_ownership_chaining_flag_off(
                 raw_instance, 'contained database authentication')
+
         else:
             instance_dict['local_infile_off'] = True
+
+            instance_dict['log_checkpoints_on'] = self._check_database_type(raw_instance)
+            instance_dict['log_connections_on'] = self._check_database_type(raw_instance)
+            instance_dict['log_disconnections_on'] = self._check_database_type(raw_instance)
+            instance_dict['log_lock_waits_on'] = self._check_database_type(raw_instance)
+            instance_dict['log_min_messages'] = self._check_database_type(raw_instance)
+            instance_dict['log_temp_files_0'] = self._check_database_type(raw_instance)
+            instance_dict['log_min_duration_statement_-1'] = self._check_database_type(raw_instance)
 
             instance_dict['cross_db_ownership_chaining_off'] = True
             instance_dict['contained_database_authentication_off'] = True
@@ -87,11 +105,43 @@ class DatabaseInstances(GCPCompositeResources):
             lambda k: backups[k]['creation_timestamp']))
         return backups[last_backup_id]['creation_timestamp']
 
-
     def _mysql_local_infile_flag_off(self, raw_instance):
         if 'MYSQL' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings']['databaseFlags']:
                 if flag['name'] == 'local_infile' and flag['value'] == 'on':
+                    return False
+        return True
+
+    def _check_database_type(self, raw_instance):
+        if 'POSTGRES' in raw_instance['databaseVersion']:
+            return False
+        return True
+
+    def _postgres_flags_on(self, raw_instance, flag_name: str):
+        if 'POSTGRES' in raw_instance['databaseVersion']:
+            for flag in raw_instance['settings']['databaseFlags']:
+                if flag['name'] == flag_name and flag['value'] == 'off':
+                    return False
+        return True
+
+    def _postgres_log_min_error_statement_flags(self, raw_instance):
+        if 'POSTGRES' in raw_instance['databaseVersion']:
+            for flag in raw_instance['settings']['databaseFlags']:
+                if flag['name'] == 'log_min_error_statement' and flag['value'] is not None:
+                    return True
+        return False
+
+    def _postgres_log_temp_files_flags_0(self, raw_instance):
+        if 'POSTGRES' in raw_instance['databaseVersion']:
+            for flag in raw_instance['settings']['databaseFlags']:
+                if flag['name'] == 'log_temp_files' and flag['value'] != 0:
+                    return False
+        return True
+
+    def _postgres_log_min_duration_statement_flags_1(self, raw_instance):
+        if 'POSTGRES' in raw_instance['databaseVersion']:
+            for flag in raw_instance['settings']['databaseFlags']:
+                if flag['name'] == 'log_min_duration_statement' and flag['value'] != -1:
                     return False
         return True
 
