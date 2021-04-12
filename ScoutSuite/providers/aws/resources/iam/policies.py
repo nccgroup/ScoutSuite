@@ -1,5 +1,4 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Policies(AWSResources):
@@ -11,7 +10,7 @@ class Policies(AWSResources):
 
     def _parse_policy(self, raw_policy):
         policy = {}
-        policy['id'] = get_non_provider_id(raw_policy.pop('PolicyId'))
+        policy['id'] = raw_policy.pop('PolicyId')
         policy['name'] = raw_policy.pop('PolicyName')
         policy['arn'] = raw_policy.pop('Arn')
         policy['PolicyDocument'] = raw_policy.pop('PolicyDocument')

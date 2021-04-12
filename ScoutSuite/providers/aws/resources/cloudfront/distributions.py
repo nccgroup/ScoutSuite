@@ -1,6 +1,5 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Distributions(AWSResources):
@@ -12,7 +11,7 @@ class Distributions(AWSResources):
 
     def _parse_distributions(self, raw_distribution):
         distribution_dict = {}
-        distribution_dict['id'] = get_non_provider_id(raw_distribution.get('Id'))
+        distribution_dict['id'] = raw_distribution.get('Id')
         distribution_dict['name'] = raw_distribution.get('Id')
         distribution_dict['arn'] = raw_distribution.get('ARN')
         distribution_dict['aliases'] = raw_distribution.get('Aliases')

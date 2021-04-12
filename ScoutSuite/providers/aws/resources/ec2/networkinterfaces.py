@@ -1,6 +1,5 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
-from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class NetworkInterfaces(AWSResources):
@@ -16,7 +15,7 @@ class NetworkInterfaces(AWSResources):
             self[name] = resource
 
     def _parse_network_interface(self, raw_network_interface):
-        raw_network_interface['id'] = get_non_provider_id(raw_network_interface['NetworkInterfaceId'])
+        raw_network_interface['id'] = raw_network_interface['NetworkInterfaceId']
         raw_network_interface['name'] = raw_network_interface['NetworkInterfaceId']
         raw_network_interface['arn'] = 'arn:aws:ec2:{}:{}:network-interface/{}'.format(self.region,
                                                                              raw_network_interface.get('OwnerId'),

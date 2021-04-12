@@ -1,6 +1,5 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class EMRClusters(AWSResources):
@@ -15,6 +14,6 @@ class EMRClusters(AWSResources):
             self[name] = resource
 
     def _parse_cluster(self, raw_cluster):
-        raw_cluster['id'] = get_non_provider_id(raw_cluster.pop('Id'))
+        raw_cluster['id'] = raw_cluster.pop('Id')
         raw_cluster['name'] = raw_cluster.pop('Name')
         return raw_cluster['id'], raw_cluster

@@ -1,6 +1,5 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Connections(AWSResources):
@@ -15,6 +14,6 @@ class Connections(AWSResources):
             self[name] = resource
 
     def _parse_connection(self, raw_connection):
-        raw_connection['id'] = get_non_provider_id(raw_connection.pop('connectionId'))
+        raw_connection['id'] = raw_connection.pop('connectionId')
         raw_connection['name'] = raw_connection.pop('connectionName')
         return raw_connection['id'], raw_connection
