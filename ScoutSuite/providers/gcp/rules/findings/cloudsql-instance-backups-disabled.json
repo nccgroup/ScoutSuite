@@ -1,8 +1,17 @@
 {
     "description": "Instance with Automatic Backups Disabled",
-    "rationale": "Automatic backups should be configured for Cloud SQL instances in order to ensure backups are created regularly.",
+    "rationale": "Backups provide a way to restore a Cloud SQL instance to recover lost data or recover from a problem with that instance. Automated backups need to be set for any instance that contains data that should be protected from loss or damage.",
+    "remediation": "From console:<ol><li>Go to the Cloud SQL Instances page in the Google Cloud Console by visiting https://console.cloud.google.com/sql/instances.</li><li>Select the instance where the backups need to be configured.</li><li>Click <samp>Edit</samp></li><li>In the <samp>Backups</samp> section, check `Enable automated backups', and choose a backup window.</li><li>Click <samp>Save</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "6.7"
+        }
+    ],
     "references": [
-        "https://cloud.google.com/sql/docs/mysql/backup-recovery/backups"
+        "https://cloud.google.com/sql/docs/mysql/backup-recovery/backups",
+        "https://cloud.google.com/sql/docs/postgres/backup-recovery/backing-up"
     ],
     "dashboard_name": "Instances",
     "path": "cloudsql.projects.id.instances.id",

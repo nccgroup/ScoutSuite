@@ -1,0 +1,30 @@
+<!-- stackdrivermonitoring all alert policies -->
+<script id="services.stackdrivermonitoring.projects.id.monitoring_alert_policies.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Project Ownership Assignment/Changes Alerts Exist: <span id="stackdrivermonitoring.projects.{{project}}.monitoring_alert_policies.{{@key}}.project_ownership_assignments"><samp>{{project_ownership_assignments}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Audit Configuration Changes Alerts Exist: <span id="stackdrivermonitoring.projects.{{@../key}}.monitoring_alert_policies.{{@key}}.audit_config_change">{{audit_config_change}}</span></div>
+        <div class="list-group-item-text item-margin">Custom Role Changes Alerts Exist: <span id="stackdrivermonitoring.projects.{{@../key}}.monitoring_alert_policies.{{@key}}.custom_role_change">{{custom_role_change}}</span></div>
+        <div class="list-group-item-text item-margin">VPC Network Firewall Rule Changes Alerts Exist: <span id="stackdrivermonitoring.projects.{{@../key}}.monitoring_alert_policies.{{@key}}.vpc_network_firewall_rule_change">{{vpc_network_firewall_rule_change}}</span></div>
+        <div class="list-group-item-text item-margin">VPC Network Route Changes Alerts Exist: <span id="stackdrivermonitoring.projects.{{@../key}}.monitoring_alert_policies.{{@key}}.vpc_network_route_change">{{vpc_network_route_change}}</span></div>
+        <div class="list-group-item-text item-margin">VPC Network Changes Alerts Exist: <span id="stackdrivermonitoring.projects.{{@../key}}.monitoring_alert_policies.{{@key}}.vpc_network_change">{{vpc_network_change}}</span></div>
+        <div class="list-group-item-text item-margin">Cloud Storage IAM Permission Changes Alerts Exist: <span id="stackdrivermonitoring.projects.{{@../key}}.monitoring_alert_policies.{{@key}}.cloud_storage_iam_permission_change">{{cloud_storage_iam_permission_change}}</span></div>
+        <div class="list-group-item-text item-margin">SQL Instance Configuration Changes Alerts Exist: <span id="stackdrivermonitoring.projects.{{@../key}}.monitoring_alert_policies.{{@key}}.sql_instance_conf_change">{{sql_instance_conf_change}}</span></div>
+
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.stackdrivermonitoring.projects.id.monitoring_alert_policies", $("#services\\.stackdrivermonitoring\\.projects\\.id\\.monitoring_alert_policies\\.partial").html());
+</script>
+
+<!-- Single stackdrivermonitoring monitoring_alert_policies template -->
+<script id="single_stackdrivermonitoring_monitoring_alert_policies-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.stackdrivermonitoring.projects.id.monitoring_alert_policies'}}
+</script>
+<script>
+    var single_stackdrivermonitoring_monitoring_alert_policies_template = Handlebars.compile($("#single_stackdrivermonitoring_monitoring_alert_policies-template").html());
+</script>

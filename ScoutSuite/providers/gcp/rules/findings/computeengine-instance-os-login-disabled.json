@@ -1,0 +1,26 @@
+{
+    "description": "OS login Disabled",
+    "rationale": "Enabling osLogin ensures that SSH keys used to connect to instances are mapped with IAM users. Revoking access to IAM user will revoke all the SSH keys associated with that particular user. It facilitates centralized and automated SSH key pair management which is useful in handling cases like response to compromised SSH key pairs and/or revocation of external/third-party/Vendor users.",
+    "remediation": "From console:<ol><li>Go to the VM compute metadata page by visiting https://console.cloud.google.com/compute/metadata.</li><li>Click <samp>Edit</samp>></li><li>Add a metadata entry where the key is <samp>enable-oslogin</samp> and the value is <samp>TRUE</samp>.</li><li>Click <samp>Save</samp> to apply the changes.</li><li>For every instances that overrides the project setting, go to the <samp>VM Instances</samp> page at https://console.cloud.google.com/compute/instances.</li><li>Click the name of the instance on which you want to remove the metadata value.</li><li>At the top of the instance details page, click <samp>Edit</samp> to edit the instance settings.</li><li>Under <samp>Custom metadata</samp>, remove any entry with key <samp>enable-oslogin</samp> and the value is <samp>FALSE</samp></li><li>At the bottom of the instance details page, click <samp>Save</samp> to apply your changes to the instance.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "4.4"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys"
+    ],
+    "dashboard_name": "Instances",
+    "path": "computeengine.projects.id.zones.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.zones.id.instances.id.oslogin_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "oslogin_disabled"
+}
