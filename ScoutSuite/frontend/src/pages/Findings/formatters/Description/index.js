@@ -57,7 +57,7 @@ const Description = (props) => {
             <ul>
               {original.compliance.map((compliance, i) => (
                 <li key={i}>
-                  {compliance.name} (ref. {compliance.reference}) (v. {compliance.version})
+                  {compliance.name} version {compliance.version}, reference {compliance.reference}
                 </li>)
               )}
             </ul>
