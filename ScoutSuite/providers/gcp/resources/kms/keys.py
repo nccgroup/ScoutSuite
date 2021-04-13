@@ -40,9 +40,12 @@ class Keys(GCPCompositeResources):
         key_dict['algorithm'] = raw_key.get('primary', {}).get('algorithm', None)
         key_dict['next_rotation_datetime'] = raw_key.get('nextRotationTime', None)
         key_dict['purpose'] = raw_key['purpose']
+
         key_dict['rotation_period'] = raw_key.get('rotationPeriod', None)
         if key_dict['rotation_period']:
-            key_dict['rotation_period'] = int("".join(filter(str.isdigit, key_dict['rotation_period'])))
+            rotation_period = int("".join(filter(str.isdigit, key_dict['rotation_period'])))
+            # get values in days instead of seconds
+            key_dict['rotation_period'] = rotation_period//(24*3600)
 
         key_dict['next_rotation_time_days'] = None
         if key_dict['next_rotation_datetime']:
