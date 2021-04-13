@@ -11,7 +11,7 @@ class IdentityPolicies(AWSResources):
         super().__init__(facade)
         self.region = region
         self.identity_name = identity_name
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'ses'
         self.resource_type = 'identity-policy'
 

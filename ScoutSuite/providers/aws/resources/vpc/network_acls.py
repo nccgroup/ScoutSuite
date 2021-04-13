@@ -10,7 +10,7 @@ class NetworkACLs(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
         self.region = region
         self.vpc = vpc
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'vpc'
         self.resource_type = 'network-acl'
 

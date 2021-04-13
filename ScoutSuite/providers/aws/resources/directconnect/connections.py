@@ -7,7 +7,7 @@ class Connections(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
         super().__init__(facade)
         self.region = region
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'directconnect'
         self.resource_type = 'connection'
 

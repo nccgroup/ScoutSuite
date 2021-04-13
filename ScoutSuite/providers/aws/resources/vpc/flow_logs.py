@@ -8,7 +8,7 @@ class FlowLogs(AWSResources):
         super().__init__(facade)
         self.facade = facade
         self.region = region
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'vpc'
         self.resource_type = 'flow-log'
 

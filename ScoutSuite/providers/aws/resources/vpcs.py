@@ -11,7 +11,7 @@ class Vpcs(AWSCompositeResources):
         super().__init__(facade)
         self.region = region
         self.add_ec2_classic = add_ec2_classic
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'vpc'
         self.resource_type = 'virtual-private-cloud'
 

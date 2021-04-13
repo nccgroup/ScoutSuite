@@ -8,7 +8,7 @@ class MetricFilters(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
         super(MetricFilters, self).__init__(facade)
         self.region = region
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'cloudwatch'
         self.resource_type = 'metric-filter'
 

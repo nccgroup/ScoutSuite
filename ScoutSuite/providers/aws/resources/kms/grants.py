@@ -8,7 +8,7 @@ class Grants(AWSResources):
         super().__init__(facade)
         self.region = region
         self.key_id = key_id
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'kms'
         self.resource_type = 'grant'
 

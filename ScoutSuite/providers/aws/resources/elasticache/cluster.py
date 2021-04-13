@@ -8,7 +8,7 @@ class Clusters(AWSResources):
         super().__init__(facade)
         self.region = region
         self.vpc = vpc
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'elasticache'
         self.resource_type = 'cluster'
 
