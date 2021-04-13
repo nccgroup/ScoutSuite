@@ -1,7 +1,7 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
-from ScoutSuite.providers.aws.utils import get_partition_name, format_arn
+from ScoutSuite.providers.aws.utils import format_arn
 
 
 class MetricFilters(AWSResources):

@@ -1,5 +1,5 @@
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
-from ScoutSuite.providers.aws.utils import get_partition_name, format_arn
+from ScoutSuite.providers.aws.utils import format_arn
 
 class Vpcs(AWSCompositeResources):
     """
