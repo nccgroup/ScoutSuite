@@ -33,11 +33,17 @@ const ResourcesDetails = () => {
               {service.resources.map((resource, i) => (
                 <tr key={i}>
                   <td>
-                    <ResourceLink
-                      service={service.id}
-                      resource={resource.id}
-                      name={resource.name}
-                    />
+                    {resource.count ? (
+                      <ResourceLink
+                        service={service.id}
+                        resource={resource.id}
+                        name={resource.name}
+                      />
+                    ) : (
+                      <span className="no-link">
+                        {resource.name}
+                      </span>
+                    )}
                   </td>
                   <td>{resource.count || 0}</td>
                 </tr>
