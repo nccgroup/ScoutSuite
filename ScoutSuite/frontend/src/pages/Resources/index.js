@@ -1,5 +1,6 @@
-import { useParams } from 'react-router-dom';
 import React from 'react';
+import { useParams } from 'react-router-dom';
+import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../api/useAPI';
 import { getResourcesEndpoint } from '../../api/paths';
@@ -26,12 +27,20 @@ const Resources = () => {
     loadPage(pageIndex + 1, sortBy, direction);
   }, []);
 
-  if (loading || !data)
+  if (loading) return null;
+
+  if (isEmpty(data)) {
     return (
       <>
         <Breadcrumb />
+        <div className="findings">
+          <div className="table-card no-items">
+            No resources of this type present
+          </div>
+        </div>
       </>
     );
+  }
 
   const keys = Object.keys(data[0]);
 
@@ -89,7 +98,7 @@ const Resources = () => {
   return (
     <>
       <Breadcrumb />
-      <div className="flagged-items">
+      <div className="resources">
         <div className="table-card">
           <Table
             columns={columns}
@@ -106,7 +115,7 @@ const Resources = () => {
 
         <div className="selected-item">
           {!params.id ? (
-            <span className="no-item">No selected resource</span>
+            <span className="no-item">No resource selected</span>
           ) : (
             <ResourcePartialWrapper title={params.id} />
           )}

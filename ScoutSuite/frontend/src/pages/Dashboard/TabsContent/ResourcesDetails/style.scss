@@ -1,0 +1,36 @@
+@import 'src/variables';
+
+.resources-details {
+  .details-card {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    background-color: white;
+    border-radius: $border-radius;
+    margin-bottom: 2rem;
+
+    a:not(:hover) {
+      text-decoration: none;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.5rem 1.5rem;
+      border-bottom: 1px solid $default-grey-subtle;
+
+      &:not(:last-of-type) {
+        border-right: 1px solid $default-grey-subtle;
+      }
+    }
+
+    tr:last-of-type {
+      td {
+        border-bottom: none;
+      }
+    }
+
+    th:first-of-type {
+      width: 30%;
+    }
+  }
+}

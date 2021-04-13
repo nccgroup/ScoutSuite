@@ -14,6 +14,7 @@ import DownloadButton from '../../components/DownloadButton';
 
 import './style.scss';
 
+
 const FlaggedItems = () => {
   const params = useParams();
   const { data: items, loading, loadPage } = useAPI(
@@ -100,7 +101,7 @@ const FlaggedItems = () => {
 
         <div className="selected-item">
           {!params.item ? (
-            <span className="no-item">No selected item</span>
+            <span className="no-item">No finding selected</span>
           ) : (
             <SelectedItemContainer />
           )}
