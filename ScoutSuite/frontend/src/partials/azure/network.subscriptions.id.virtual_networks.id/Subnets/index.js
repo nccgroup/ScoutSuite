@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { PartialValue } from '../../../../components/Partial';
-import { valueOrNone } from '../../../../utils/Partials';
-//import { useResources } from '../../../../api/useResources';
-import { renderList } from '../../../../utils/Partials/index';
+import { valueOrNone, renderList } from '../../../../utils/Partials';
 import ResourceLink from '../../../../components/ResourceLink/index';
 
 const renderInstances = instances => {

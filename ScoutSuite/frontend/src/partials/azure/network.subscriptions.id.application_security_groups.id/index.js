@@ -11,7 +11,7 @@ import {
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import ResourceLink from '../../../components/ResourceLink/index';
 
-const renderNetworkInterfaces = id => {
+const renderNetworkInterface = id => {
   return (
     <ResourceLink
       service="network" 
@@ -69,7 +69,7 @@ const AppSecurityGroups = props => {
       <TabsMenu>
         <TabPane title="Attached Network Interfaces">
           {renderList(network_interfaces_ids, '', value =>
-            renderNetworkInterfaces(value),
+            renderNetworkInterface(value),
           )}
         </TabPane>
       </TabsMenu>
