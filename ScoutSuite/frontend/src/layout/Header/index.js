@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Switch from '@material-ui/core/Switch';
 import { Link } from 'react-router-dom';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
 
 import Logo from './ScoutSuiteLogo/logo.png'; 
 
@@ -30,12 +31,15 @@ const Header = () => {
     <div className="nav-header">
       <div className="content">
         <Link to="/"><img src={Logo} /></Link>
-        <Switch
-          checked={darkMode}
-          onChange={handleChange}
-          label="Dark Mode"
-          labelplacement="start"
-        />
+        <div className="theme-switcher">
+          <Brightness4Icon />
+          <Switch
+            checked={darkMode}
+            onChange={handleChange}
+            label="Dark Mode"
+            labelplacement="start"
+          />
+        </div>
       </div>
     </div>
   );
