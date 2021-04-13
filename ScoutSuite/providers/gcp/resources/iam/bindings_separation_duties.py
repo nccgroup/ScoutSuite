@@ -11,11 +11,11 @@ class BindingsSeparationDuties(Resources):
         raw_bindings = await self.facade.cloudresourcemanager.get_member_bindings(self.project_id)
         binding_id, binding = await self._parse_binding_separation(raw_bindings)
         self[binding_id] = binding
-        x=1
 
     async def _parse_binding_separation(self, raw_bindings):
         binding_dict = {}
         binding_dict['id'] = self.project_id
+        binding_dict['name'] = self.project_id
         binding_dict["account_separation_duties"] = self.ensure_seperation_duties(raw_bindings)
         binding_dict["kms_separation_duties"] = self.ensure_KMS_seperation_duties(raw_bindings)
 
