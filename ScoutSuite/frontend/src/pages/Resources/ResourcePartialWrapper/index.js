@@ -5,6 +5,7 @@ import get from 'lodash/get';
 import { useAPI } from '../../../api/useAPI';
 import { getRawEndpoint, getResourceEndpoint } from '../../../api/paths';
 import LazyPartial from '../../../components/LazyPartial/index';
+import ErrorBoundary from '../../../components/ErrorBoundary/index';
 
 const propTypes = {};
 
@@ -30,7 +31,9 @@ const ResourcePartialWrapper = () => {
   };
  
   return (
-    <LazyPartial data={partialData} partial={partialPath} />
+    <ErrorBoundary>
+      <LazyPartial data={partialData} partial={partialPath} />
+    </ErrorBoundary>
   );
 };
 

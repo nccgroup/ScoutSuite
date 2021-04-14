@@ -1,5 +1,4 @@
 import asyncio
-import copy
 import os
 import webbrowser
 
@@ -13,9 +12,8 @@ from ScoutSuite.core.console import set_logger_configuration, print_info, print_
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
-from ScoutSuite.core.server import Server
+from ScoutSuite.core.server import start_api
 from ScoutSuite.output.html import ScoutReport
-from ScoutSuite.output.utils import get_filename
 from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
 
@@ -58,10 +56,6 @@ def run_from_cli():
                    timestamp=args.get('timestamp'),
                    services=args.get('services'), skipped_services=args.get('skipped_services'),
                    list_services=args.get('list_services'),
-                   result_format=args.get('result_format'),
-                   database_name=args.get('database_name'),
-                   host_ip=args.get('host_ip'),
-                   host_port=args.get('host_port'),
                    max_workers=args.get('max_workers'),
                    regions=args.get('regions'),
                    excluded_regions=args.get('excluded_regions'),
@@ -73,7 +67,8 @@ def run_from_cli():
                    debug=args.get('debug'),
                    quiet=args.get('quiet'),
                    log_file=args.get('log_file'),
-                   no_browser=args.get('no_browser'),
+                   server_only=args.get('server_only'),
+                   report_only=args.get('report_only'),
                    programmatic_execution=False)
     except (KeyboardInterrupt, SystemExit):
         print_info('Exiting')
@@ -103,8 +98,6 @@ def run(provider,
         report_name=None, report_dir=None,
         timestamp=False,
         services=[], skipped_services=[], list_services=None,
-        result_format='json',
-        database_name=None, host_ip='127.0.0.1', host_port=8000,
         max_workers=10,
         regions=[],
         excluded_regions=[],
@@ -116,7 +109,8 @@ def run(provider,
         debug=False,
         quiet=False,
         log_file=None,
-        no_browser=False,
+        server_only=None,
+        report_only=False,
         programmatic_execution=True):
     """
     Run a scout job in an async event loop.
@@ -155,8 +149,6 @@ async def _run(provider,
                report_name, report_dir,
                timestamp,
                services, skipped_services, list_services,
-               result_format,
-               database_name, host_ip, host_port,
                regions,
                excluded_regions,
                fetch_local, update,
@@ -166,7 +158,8 @@ async def _run(provider,
                debug,
                quiet,
                log_file,
-               no_browser,
+               server_only,
+               report_only,
                programmatic_execution,
                **kwargs):
     """
@@ -237,13 +230,7 @@ async def _run(provider,
         report = ScoutReport(cloud_provider.provider_code,
                              report_name,
                              report_dir,
-                             timestamp,
-                             result_format=result_format)
-
-        if database_name:
-            database_file, _ = get_filename('RESULTS', report_name, report_dir, file_extension="db")
-            Server.init(database_file, host_ip, host_port)
-            return
+                             timestamp)
     except Exception as e:
         print_exception('Report initialization failure: {}'.format(e))
         return 103
@@ -253,6 +240,11 @@ async def _run(provider,
         available_services = [x for x in dir(cloud_provider.services) if
                               not (x.startswith('_') or x in ['credentials', 'fetch'])]
         print_info('The available services are: "{}"'.format('", "'.join(available_services)))
+        return 0
+
+    if server_only:
+        print_info('Starting local server for user interface')
+        start_api(report.encoder.load_from_file('RESULTS', server_only[0]))
         return 0
 
     # Complete run, including pulling data from provider
@@ -273,11 +265,14 @@ async def _run(provider,
         if update:
             try:
                 print_info('Updating existing data')
-                current_run_services = copy.deepcopy(cloud_provider.services)
+                #Load previous results
                 last_run_dict = report.encoder.load_from_file('RESULTS')
-                cloud_provider.services = last_run_dict['services']
-                for service in cloud_provider.service_list:
-                    cloud_provider.services[service] = current_run_services[service]
+                #Get list of previous services which were not updated during this run
+                previous_services = [prev_service for prev_service in last_run_dict['service_list'] if prev_service not in cloud_provider.service_list]
+                #Add previous services
+                for service in previous_services:
+                    cloud_provider.service_list.append(service)
+                    cloud_provider.services[service] = last_run_dict['services'][service]
             except Exception as e:
                 print_exception('Failure while updating report: {}'.format(e))
 
@@ -355,18 +350,21 @@ async def _run(provider,
         print_exception('Failure while running post-processing engine: {}'.format(e))
         return 108
 
-    # Save config and create HTML report
+    # Save config and create JSON report
     try:
-        html_report_path = report.save(cloud_provider, exceptions, force_write, debug)
+        report.save(cloud_provider, exceptions, force_write, debug)
     except Exception as e:
-        print_exception('Failure while generating HTML report: {}'.format(e))
+        print_exception('Failure while generating JSON report: {}'.format(e))
         return 109
 
-    # Open the report by default
-    if not no_browser:
-        print_info('Opening the HTML report')
-        url = 'file://%s' % os.path.abspath(html_report_path)
-        webbrowser.open(url, new=2)
+    # Start server for front-end
+    if not report_only:
+        try:
+            print_info('Starting local server for web interface')
+            start_api(report.encoder.load_from_file('RESULTS'), exceptions)
+        except Exception as e:
+            print_exception('Failure when starting server')
+            return 110
 
     if ERRORS_LIST:  # errors were handled during execution
         return 200

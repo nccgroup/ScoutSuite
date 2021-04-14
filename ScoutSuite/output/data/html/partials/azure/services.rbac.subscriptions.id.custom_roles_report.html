@@ -1,0 +1,22 @@
+<!-- RBAC  -->
+<script id="services.rbac.subscriptions.id.custom_roles_report.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">No Administering Resource Locks Role: <span id="rbac.subscriptions.{{@../key}}.custom_roles_report.{{@key}}.missing_custom_role_administering_resource_locks"><samp>{{ missing_custom_role_administering_resource_locks}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.rbac.subscriptions.id.custom_roles_report", $("#services\\.rbac\\.subscriptions\\.id\\.custom_roles_report\\.partial").html());
+</script>
+
+<!-- Single aad group template -->
+<script id="single_rbac_custom_roles_report-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.rbac.subscriptions.id.custom_roles_report'}}
+</script>
+<script>
+    var single_rbac_policy_template = Handlebars.compile($("#single_rbac_custom_roles_report-template").html());
+</script>

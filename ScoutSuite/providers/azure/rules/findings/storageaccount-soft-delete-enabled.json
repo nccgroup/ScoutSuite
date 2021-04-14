@@ -1,0 +1,27 @@
+{
+    "description": "Storage Account Soft Delete Disabled",
+    "rationale": "Enabling this configuration for azure storage ensures that even if blobs/data were deleted from the storage account, Blobs/data objects remain recoverable for a particular time which set in the \"Retention policies\" ",
+    "remediation": "In the Azure console:<ol><li>Go to <samp>Storage Accounts</samp></li> <li>For each storage account, navigate to <samp>Data protection</samp></li> <li>Ensure that soft delete is <samp>Enabled</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "3.8"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-soft-delete"
+    ],
+    "dashboard_name": "Accounts",
+    "display_path": "storageaccounts.subscriptions.id.storage_accounts.id",
+    "path": "storageaccounts.subscriptions.id.storage_accounts.id.blob_services.id",
+    "conditions": [
+        "and",
+        [
+            "storageaccounts.subscriptions.id.storage_accounts.id.blob_services.id.soft_delete_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "soft_delete_enabled"
+}

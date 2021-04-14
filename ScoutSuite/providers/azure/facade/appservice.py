@@ -12,9 +12,8 @@ class AppServiceFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        client = WebSiteManagementClient(self.credentials.get_credentials('arm'),
-                                       subscription_id=subscription_id)
-        client._client.config.add_user_agent(get_user_agent())
+        client = WebSiteManagementClient(self.credentials.get_credentials(),
+                                         subscription_id=subscription_id, user_agent=get_user_agent())
         return client
 
     async def get_web_apps(self, subscription_id: str):

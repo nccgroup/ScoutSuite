@@ -1,0 +1,29 @@
+<!-- Logging and Monitoring Log Alerts-->
+<script id="services.loggingmonitoring.subscriptions.id.log_alerts.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Create Policy Assignment activity log alert exist: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_alerts.{{@key}}.create_policy_assignment_exist"><samp>{{value_or_none create_policy_assignment_exist}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Create or update Network Security Group activity log alert exist: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_alerts.{{@key}}.create_update_NSG_exist"><samp>{{value_or_none create_update_NSG_exist}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Delete Network Security Group activity log alert exist: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_alerts.{{@key}}.delete_NSG_exist"><samp>{{value_or_none delete_NSG_exist}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Create or update Network Security Group Rule activity log alert exist: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_alerts.{{@key}}.create_update_NSG_rule_exist"><samp>{{value_or_none create_update_NSG_rule_exist}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Delete Network Security Group Rule activity log alert exist: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_alerts.{{@key}}.delete_NSG_rule_exist"><samp>{{value_or_none delete_NSG_rule_exist}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Create or update Security Solution activity log alert exist: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_alerts.{{@key}}.create_update_security_solution_exist"><samp>{{value_or_none create_update_security_solution_exist}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Delete Security Solution activity log alert exist: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_alerts.{{@key}}.delete_security_solution_exist"><samp>{{value_or_none delete_security_solution_exist}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Create our update or delete SQL Server Firewall Rule activity log alert exist: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_alerts.{{@key}}.create_delete_firewall_rule_exist"><samp>{{value_or_none create_delete_firewall_rule_exist}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.loggingmonitoring.subscriptions.id.log_alerts", $("#services\\.loggingmonitoring\\.subscriptions\\.id\\.log_alerts\\.partial").html());
+</script>
+
+<!-- Single loggingmonittoring log alerts template -->
+<script id="single_loggingmonitoring_log_alerts-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.loggingmonitoring.subscriptions.id.log_alerts'}}
+</script>
+<script>
+    var single_loggingmonitoring_log_alerts_template = Handlebars.compile($("#single_loggingmonitoring_log_alerts-template").html());
+</script>

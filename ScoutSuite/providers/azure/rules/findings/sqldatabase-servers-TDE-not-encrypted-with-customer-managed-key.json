@@ -1,0 +1,30 @@
+{
+    "description": "SQL Server TDE Protector Not Encrypted With Customer-Managed Key",
+    "rationale": "Customer-managed key support for Transparent Data Encryption (TDE) allows user control of TDE encryption keys and restricts who can access them and when. Azure Key Vault, Azure’s cloud-based external key management system is the first key management service where TDE has integrated support for Customer-managed keys. With Customer-managed key support, the database encryption key is protected by an asymmetric key stored inthe Key Vault. The asymmetric key is set at the server level and inherited by all databases under that server.",
+    "remediation": "From Azure console: <br> Go to <samp>SQL servers</samp><br>For the desired server instance<br><ol><li>Click on <samp>Transparent data encryption</samp></li><li>Set <samp> Use your own key</samp> to <samp>YES</samp></li><li>Browse through your <samp>key vaults</samp> to Select an existing key or create a new key in Key Vault</li><li>Check <samp>Make selected key the default TDE protector</samp></li></ol>" ,
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "4.5"
+        }
+    ],
+    "references": [
+      "https://docs.microsoft.com/en-us/azure/azure-sql/database/transparent-data-encryption-byok-overview?view=sql-server-ver15",
+      "https://azure.microsoft.com/en-in/blog/preview-sql-transparent-data-encryption-tde-with-bring-your-own-key-support/",
+      "https://winterdom.com/2017/09/07/azure-sql-tde-protector-keyvault",
+      "https://docs.microsoft.com/en-us/azure/azure-sql/database/transparent-data-encryption-byok-overview?view=sql-server-ver15"
+    ],
+    "dashboard_name": "SQL Databases",
+    "display_path": "sqldatabase.subscriptions.id.servers.id",
+    "path": "sqldatabase.subscriptions.id.servers.id",
+    "conditions": [
+        "and",
+        [
+            "sqldatabase.subscriptions.id.servers.id.encryption_protectors.TDE_protector_is_encrypted",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "server_encryption_protectors_TDE_protector_is_encrypted"
+}

@@ -48,10 +48,8 @@ const Vaults = props => {
           valuePath="resource_group_name"
           renderValue={valueOrNone} />
 
-
       </InformationsWrapper>
-
-      
+            
     </Partial>
   );
 };
