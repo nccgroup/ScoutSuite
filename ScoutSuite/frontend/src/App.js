@@ -1,15 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-
-import {ExceptionsContextProvider} from './components/Exceptions/context';
 import { SnackbarProvider } from 'notistack';
 
+import { ExceptionsContextProvider } from './components/Exceptions/context';
 import Findings from './pages/Findings';
 import Resources from './pages/Resources';
 import Dashboard from './pages/Dashboard';
 import ExternalAttack from './pages/ExternalAttack/index';
 import FindingItems from './pages/FindingItems/index';
 import Layout from './layout/index';
+
 
 function App() {
   return (
@@ -35,7 +35,12 @@ function App() {
               <Route path="/services/:service/findings">
                 <Findings />
               </Route>
-              <Route path="/services/:service/external-attacks">
+              <Route
+                path={[
+                  '/services/:service/external_attack_surface',
+                  '/categories/:category/external_attack_surface',
+                ]}
+              >
                 <ExternalAttack />
               </Route>
               <Route path="/">

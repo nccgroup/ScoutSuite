@@ -1,6 +1,12 @@
 @import 'src/variables';
 
 .resources-details {
+  div {
+    h3 {
+      font-size: 1.375rem;
+    }
+  }
+
   .details-card {
     width: 100%;
     border-collapse: collapse;

@@ -7,9 +7,7 @@ import * as Cache from './cache';
  * @param {*} path
  */
 export const useAPI = (defaultPath, defaultValue, settings = {}) => {
-  const [data, setData] = useState(
-    Cache.has(defaultPath) ? Cache.get(defaultPath) : defaultValue,
-  );
+  const [data, setData] = useState(null);
   const [path, setPath] = useState(defaultPath);
   const [loading, setLoading] = useState(!Cache.has(path));
   const [reloading, setReloading]= useState(false);
@@ -27,6 +25,7 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
         const response = await API.get(path);
         setData(response);
       } catch (e) {
+        setData(defaultValue);
         setError(
           'Oops! Something went wrong loading this content. Is the server working?',
         );

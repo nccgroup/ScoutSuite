@@ -14,6 +14,7 @@ const Breadcrumb = () => {
   return (
     <div className="breadcrumb-nav">
       <Provider />
+      {params.category && <Service service={params.category} />}
       {params.service && <Service service={params.service} />}
       {params.finding && <Findings service={params.service} finding={params.finding} />}
       {params.resource && <Resources service={params.service} resource={params.resource} />}

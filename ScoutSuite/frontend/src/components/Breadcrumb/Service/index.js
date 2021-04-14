@@ -21,7 +21,7 @@ const Service = props => {
       <ChevronRightIcon />
 
       {pathname.endsWith('/findings') && <span>Findings</span>}
-      {pathname.endsWith('/external-attacks') && <span>External Attacks Surface</span>}
+      {pathname.endsWith('/external_attack_surface') && <span>External Attacks Surface</span>}
     </>
   );
 };
