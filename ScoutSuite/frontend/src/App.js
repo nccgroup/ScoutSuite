@@ -11,6 +11,7 @@ import ExternalAttack from './pages/ExternalAttack';
 import PasswordPolicy from './pages/PasswordPolicy';
 import FindingItems from './pages/FindingItems';
 import Layout from './layout';
+import ErrorBoundary from './components/ErrorBoundary';
 
 
 function App() {
@@ -23,36 +24,38 @@ function App() {
         <ExceptionsContextProvider>
           <Router>
             <Layout>
-              <Switch>
-                <Route
-                  path={[
-                    '/services/:service/findings/:finding/items/:item',
-                    '/services/:service/findings/:finding',
-                  ]}
-                >
-                  <FindingItems />
-                </Route>
-                <Route path="/services/:service/resources/:resource/:id?">
-                  <Resources />
-                </Route>
-                <Route path="/services/:service/findings">
-                  <Findings />
-                </Route>
-                <Route
-                  path={[
-                    '/services/:service/external_attack_surface',
-                    '/categories/:category/external_attack_surface',
-                  ]}
-                >
-                  <ExternalAttack />
-                </Route>
-                <Route path="/services/:service/password_policy">
-                  <PasswordPolicy />
-                </Route>
-                <Route path="/" exact>
-                  <Dashboard />
-                </Route>
-              </Switch>
+              <ErrorBoundar>
+                <Switch>
+                  <Route
+                    path={[
+                      '/services/:service/findings/:finding/items/:item',
+                      '/services/:service/findings/:finding',
+                    ]}
+                  >
+                    <FindingItems />
+                  </Route>
+                  <Route path="/services/:service/resources/:resource/:id?">
+                    <Resources />
+                  </Route>
+                  <Route path="/services/:service/findings">
+                    <Findings />
+                  </Route>
+                  <Route
+                    path={[
+                      '/services/:service/external_attack_surface',
+                      '/categories/:category/external_attack_surface',
+                    ]}
+                  >
+                    <ExternalAttack />
+                  </Route>
+                  <Route path="/services/:service/password_policy">
+                    <PasswordPolicy />
+                  </Route>
+                  <Route path="/" exact>
+                    <Dashboard />
+                  </Route>
+                </Switch>
+              </ErrorBoundar>
             </Layout>
           </Router>
         </ExceptionsContextProvider>
