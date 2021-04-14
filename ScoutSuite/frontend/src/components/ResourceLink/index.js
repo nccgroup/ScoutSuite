@@ -7,7 +7,7 @@ import ResourceName from '../ResourceName/index';
 const propTypes = {
   service: PropTypes.string.isRequired,
   resource: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   name: PropTypes.string,
   nameProps: PropTypes.object,
 };
@@ -21,8 +21,12 @@ const ResourceLink = props => {
     nameProps
   } = props;
 
+  const link = id 
+    ? `/services/${service}/resources/${resource}/${id}`
+    : `/services/${service}/resources/${resource}`;
+
   return (
-    <Link to={`/services/${service}/resources/${resource}/${id}`}>
+    <Link to={link}>
       {name || (
         <ResourceName
           service={service} 

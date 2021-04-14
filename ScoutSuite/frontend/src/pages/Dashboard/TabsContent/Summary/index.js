@@ -24,13 +24,13 @@ const Summary = (props) => {
   return (
     <div className="dashboard-summary">
       <div className="overview">
-        <h1>Overview</h1>
+        <h2>Overview</h2>
         <hr />
         <IssuesCharts services={services} />
       </div>
 
       <div className="services">
-        <h1>Services</h1>
+        <h2>Services</h2>
         <hr />
         <div className="cards">
           {services.map((service, i) => (

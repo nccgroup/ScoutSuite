@@ -10,42 +10,52 @@ import Dashboard from './pages/Dashboard';
 import ExternalAttack from './pages/ExternalAttack/index';
 import FindingItems from './pages/FindingItems/index';
 import Layout from './layout/index';
+import AppLoader from './components/AppLoader';
+import ErrorPage from './pages/404';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
-    <SnackbarProvider 
-      maxSnack={1}
-      preventDuplicate
-    >
-      <ExceptionsContextProvider>
-        <Router>
-          <Layout>
-            <Switch>
-              <Route
-                path={[
-                  '/services/:service/findings/:finding/items/:item',
-                  '/services/:service/findings/:finding',
-                ]}
-              >
-                <FindingItems />
-              </Route>
-              <Route path="/services/:service/resources/:resource/:id?">
-                <Resources />
-              </Route>
-              <Route path="/services/:service/findings">
-                <Findings />
-              </Route>
-              <Route path="/services/:service/external-attacks">
-                <ExternalAttack />
-              </Route>
-              <Route path="/">
-                <Dashboard />
-              </Route>
-            </Switch>
-          </Layout>
-        </Router>
-      </ExceptionsContextProvider>
-    </SnackbarProvider>
+    <AppLoader>
+      <SnackbarProvider 
+        maxSnack={1}
+        preventDuplicate
+      >
+        <ExceptionsContextProvider>
+          <Router>
+            <Layout>
+              <ErrorBoundary>
+                <Switch>
+                  <Route
+                    path={[
+                      '/services/:service/findings/:finding/items/:item',
+                      '/services/:service/findings/:finding',
+                    ]}
+                  >
+                    <FindingItems />
+                  </Route>
+                  <Route path="/services/:service/resources/:resource/:id?">
+                    <Resources />
+                  </Route>
+                  <Route path="/services/:service/findings">
+                    <Findings />
+                  </Route>
+                  <Route path="/services/:service/external-attacks">
+                    <ExternalAttack />
+                  </Route>
+                  <Route path="/" exact>
+                    <Dashboard />
+                  </Route>
+                  <Route path="*">
+                    <ErrorPage />
+                  </Route>
+                </Switch>
+              </ErrorBoundary>
+            </Layout>
+          </Router>
+        </ExceptionsContextProvider>
+      </SnackbarProvider>
+    </AppLoader>
   );
 }
 

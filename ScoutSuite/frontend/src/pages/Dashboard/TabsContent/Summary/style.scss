@@ -1,20 +1,11 @@
-@import 'src/variables';
-
 .dashboard-summary {
   .overview, .services {
     width: 100%;
     margin-bottom: 2rem;
 
     & > hr {
-      border: 0;
-      border-bottom: 2px solid $default-grey-subtle;
-      margin-top: 0.5rem;
       margin-bottom: 2rem;
     }
-  }
-
-  h1 {
-    margin: 0;
   }
 
   .services {

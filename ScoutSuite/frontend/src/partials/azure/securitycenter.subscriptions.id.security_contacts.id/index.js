@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import { Partial, PartialValue } from '../../../components/Partial';
-import { partialDataShape, convertBoolToEnable } from '../../../utils/Partials';
+import { partialDataShape, convertBoolToEnable, valueOrNone } from '../../../utils/Partials';
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
@@ -21,7 +21,11 @@ const SecurityContacts = props => {
 
         <PartialValue label="Email" valuePath="email" />
 
-        <PartialValue label="Phone" valuePath="phone" />
+        <PartialValue
+          label="Phone"
+          valuePath="phone"
+          renderValue={valueOrNone}
+        />
 
         <PartialValue
           label="Notify on Alert"

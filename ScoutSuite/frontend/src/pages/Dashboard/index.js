@@ -9,6 +9,7 @@ import { TAB_NAMES } from '../../utils/Dashboard';
 import Breadcrumb from '../../components/Breadcrumb/index';
 
 import './style.scss';
+import ErrorBoundary from '../../components/ErrorBoundary/index';
 
 const Dashboard = () => {
   const { data: services, loading } = useAPI('dashboard');
@@ -23,13 +24,19 @@ const Dashboard = () => {
       <div className="dashboard">
         <TabsMenu>
           <TabPane title={TAB_NAMES.SUMMARY}>
-            <Summary services={serivcesList} />
+            <ErrorBoundary>
+              <Summary services={serivcesList} />
+            </ErrorBoundary>
           </TabPane>
           <TabPane title={TAB_NAMES.EXECUTION_DETAILS}>
-            <ExecutionDetails />
+            <ErrorBoundary>
+              <ExecutionDetails />
+            </ErrorBoundary>
           </TabPane>
           <TabPane title={TAB_NAMES.RESOURCES_DETAILS}>
-            <ResourcesDetails />
+            <ErrorBoundary>
+              <ResourcesDetails />
+            </ErrorBoundary>
           </TabPane>
         </TabsMenu>
       </div>

@@ -122,7 +122,6 @@ export const renderList = (items, accessor, renderValue) => {
     <ul>
       {items.map((item, i) => {
         const value = get(item, accessor, item);
-        console.log('salut', value);
         return (
           <li key={i}>
             {renderValue ? renderValue(value) : value}
