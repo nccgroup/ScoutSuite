@@ -44,11 +44,11 @@ jobs:
       - name: Build the React App
         run: npm run build
     
-      # 
+      # Add files build files 
       - uses: EndBug/add-and-commit@v7
         with:
           author_name: github-actions
           author_email: 41898282+github-actions[bot]@users.noreply.github.com
           message: '[Github Action] Automated frontend build'
           add: '*'
-          cwd: '/ScoutSuite/frontend/'
+          cwd: '/ScoutSuite/web_report/'
