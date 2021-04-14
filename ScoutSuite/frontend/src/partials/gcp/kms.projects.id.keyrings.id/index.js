@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 
 import { Partial, PartialValue } from '../../../components/Partial';
 import { partialDataShape } from '../../../utils/Partials';
@@ -9,12 +10,56 @@ import PartialSection from '../../../components/Partial/PartialSection/index';
 import { formatDate, valueOrNone } from '../../../utils/Partials/index';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 
-const renderKeys = keys => {
-  if (!keys || keys.length === 0) return <span>None</span>;
+const renderKmsPolicy = policies => {
+  console.log(isEmpty(policies));
+
+  if (isEmpty(policies)) return <ul><li>None</li></ul>;
 
   return (
     <ul>
-      {Object.entries(keys).map(([key]) => (
+      {Object.entries(policies).map(([key, policy]) => (
+        <PartialSection
+          path={`kms_iam_policy.${key}`}
+          key={key}>
+          <li>
+            <b>{policy.name}</b>
+            <ul>
+              <li>
+                <PartialValue
+                  label="Title"
+                  valuePath="title" />
+              </li>
+              <li>
+                <PartialValue
+                  label="Description"
+                  valuePath="description" />
+              </li>
+              <li>
+                <PartialValue
+                  label="Custom Role"
+                  valuePath="custom_role"
+                />
+              </li>
+              <li>
+                <PartialValue
+                  label="Not anonymously or publicly accessible"
+                  valuePath="anonymous_public_accessible"
+                />
+              </li>
+            </ul>
+          </li>
+        </PartialSection>
+      ))}
+    </ul>
+  );
+};
+
+const renderKeys = keys => {
+  if (isEmpty(keys)) return <span>None</span>;
+
+  return (
+    <ul>
+      {Object.entries(keys).map(([key, value]) => (
         <PartialSection
           path={`keys.${key}`}
           key={key}>
@@ -35,12 +80,6 @@ const renderKeys = keys => {
                 <PartialValue
                   label="Algorithm"
                   valuePath="algorithm"
-                />
-              </li>
-              <li>
-                <PartialValue
-                  label="Purpose"
-                  valuePath="purpose"
                 />
               </li>
               <li>
@@ -77,6 +116,10 @@ const renderKeys = keys => {
                   renderValue={valueOrNone}
                 />
               </li>
+              <li><b>Bindings</b></li>
+              {
+                renderKmsPolicy(value.kms_iam_policy)
+              }
             </ul>
           </li>
         </PartialSection>
@@ -114,7 +157,7 @@ const Keyrings = props => {
 
       <TabsMenu>
         <TabPane title="Keys">
-          {renderKeys(item.keyrings)}
+          {renderKeys(item.keys)}
         </TabPane>
       </TabsMenu>
     </Partial>
