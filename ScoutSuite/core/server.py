@@ -30,7 +30,7 @@ def start_api(results, exceptions=None):
         for finding in findings:
             findings[finding]['name'] = finding
             if findings[finding]['dashboard_name'] == 'Password policy':
-                findings[finding]['redirect_to'] = '/services/iam/password-policy'
+                findings[finding]['redirect_to'] = '/services/iam/password_policy'
         
         return jsonify(list(findings.values()))
 
