@@ -18,11 +18,12 @@ class FileSystems(AWSResources):
             self[name] = resource
 
     def _parse_file_system(self, raw_file_system):
-        raw_file_system['id'] = raw_file_system.pop('FileSystemId')
+        fs_id = raw_file_system.pop('FileSystemId')
+        raw_file_system['id'] = fs_id
         raw_file_system['name'] = raw_file_system.pop('Name') if 'Name' in raw_file_system else None
         raw_file_system['tags'] = raw_file_system.pop('Tags')
         raw_file_system['arn'] = format_arn(self.partition, self.service, self.region, raw_file_system.get('OwnerId'),
-                                            raw_file_system.pop('FileSystemId'), self.resource_type)
+                                            fs_id, self.resource_type)
 
         return raw_file_system['id'], raw_file_system
 
