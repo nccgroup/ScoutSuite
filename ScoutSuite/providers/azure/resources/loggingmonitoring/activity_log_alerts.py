@@ -14,6 +14,7 @@ class ActivityLogAlerts(AzureResources):
 
     def _parse_log_alerts(self, log_alerts):
         log_alerts_dict = {}
+        log_alerts_dict['name'] = self.subscription_id
         log_alerts_dict['create_policy_assignment_exist'] = self.ensure_alert_exist(log_alerts,
                                                                                     'Microsoft.Authorization'
                                                                                     '/policyAssignments/write')
