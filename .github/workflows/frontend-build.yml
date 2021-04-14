@@ -3,7 +3,7 @@ name: Fronted Build CI
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master, v6-master ]
+    branches: [ develop, v6-master ]
     paths:
     - './ScoutSuite/frontend/*' # Only trigger when content in the frontend changed
     
