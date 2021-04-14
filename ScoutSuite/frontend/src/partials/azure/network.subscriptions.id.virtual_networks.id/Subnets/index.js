@@ -7,7 +7,9 @@ import ResourceLink from '../../../../components/ResourceLink/index';
 
 const renderInstances = instances => {
   const renderInstanceLink = (id) => (
-    <ResourceLink service="virtualmachines" resource="instances" id={id} />
+    <ResourceLink
+      service="virtualmachines" resource="instances"
+      id={id} />
   );
 
   return renderList(instances, '', value => renderInstanceLink(value));
