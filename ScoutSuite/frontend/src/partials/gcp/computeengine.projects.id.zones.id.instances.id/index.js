@@ -163,6 +163,18 @@ const Instances = props => {
           renderValue={convertBoolToEnable}
         />
 
+        <PartialValue
+          label="Public IP Addresses"
+          valuePath="public_ip_addresses"
+          renderValue={convertBoolToEnable}
+        />
+
+        <PartialValue
+          label="Shielded VM"
+          valuePath="shielded_enable"
+          renderValue={convertBoolToEnable}
+        />
+
         {renderTags(item.tags)}
       </InformationsWrapper>
 
@@ -182,6 +194,12 @@ const Instances = props => {
               label="Access Scopes"
               valuePath="access_scopes"
               renderValue={renderAccessScope}
+            />
+
+            <PartialValue
+              label="Default Service Account with Full Access to All Cloud APIs"
+              valuePath="full_access_apis"
+              renderValue={convertBoolToEnable}
             />
           </div>
         </TabPane>
