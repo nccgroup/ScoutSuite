@@ -16,7 +16,7 @@ const renderDnssecKeys = dnssecKeys => {
     <ul>
       {Object.entries(dnssecKeys).map(([key]) => (
         <PartialSection
-          path={`keys.${key}`}
+          path={`dnssec_keys.${key}`}
           key={key}>
           <li>
             <b>{key}</b>
