@@ -11,9 +11,15 @@ const Name = props => {
   const params = useParams();
   const { value, row: { original } } = props;
 
+  const link = original.redirect_to 
+    ? `${original.redirect_to}?finding=${original.id}`
+    : `/services/${params.service}/findings/${original.id}/items`;
+
   if (original.flagged_items && original.flagged_items > 0) {
     return (
-      <Link to={`/services/${params.service}/findings/${original.id}/items`}>{value}</Link>
+      <Link to={link}>
+        {value}
+      </Link>
     );
   }
 

@@ -33,7 +33,7 @@ export const getCategoryExternalAttackEndpoint = (category) =>
  * @param {*} service
  */
 export const getPasswordPolicyEndpoint = service =>
-  `services/${service}/password-policy`;
+  `services/${service}/password_policy`;
 
 /**
  * Endpoint for a service's Permissions infos

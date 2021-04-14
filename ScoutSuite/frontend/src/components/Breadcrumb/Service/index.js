@@ -22,6 +22,7 @@ const Service = props => {
 
       {pathname.endsWith('/findings') && <span>Findings</span>}
       {pathname.endsWith('/external_attack_surface') && <span>External Attacks Surface</span>}
+      {pathname.endsWith('/password_policy') && <span>Password Policy</span>}
     </>
   );
 };

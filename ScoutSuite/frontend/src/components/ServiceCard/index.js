@@ -45,7 +45,7 @@ const ServiceCard = props => {
           )}
         </div>
       </div>
-      <hr />
+      <hr/>
       <div className="content">
         <DetailedValue
           label="Resources" 
@@ -61,7 +61,7 @@ const ServiceCard = props => {
           separator=""
         />
       </div>
-      <hr />
+      <hr/>
       <div className="footer">
         <Link
           className={cx('link', { disabled: !hasFindings })}

@@ -6,13 +6,21 @@ body {
   font-family: 'Quicksand', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
 
-a, a:visited {
-  color: $link-color;
-  text-decoration: none;
+  a, a:visited {
+    color: $link-color;
+    text-decoration: none;
+  
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 
-  &:hover {
-    text-decoration: underline;
+  hr {
+    border: 0;
+    border-bottom: 2px solid $default-grey-subtle;
+    margin: 0.5rem 0 1rem 0;
   }
 }
+
+

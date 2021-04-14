@@ -1,0 +1,19 @@
+@import 'src/variables';
+
+.password-policy {
+  h2 {
+    font-size: 1.75rem;
+    margin: 0;
+  }
+
+  .informations-card {
+    width: 100%;
+    padding: 1.5rem 2rem;
+    background-color: $white;
+    border-radius: $border-radius;
+
+    .partial-value {
+      margin-bottom: 0.25rem;
+    }
+  }
+}

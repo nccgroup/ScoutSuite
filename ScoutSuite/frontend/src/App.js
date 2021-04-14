@@ -6,9 +6,10 @@ import { ExceptionsContextProvider } from './components/Exceptions/context';
 import Findings from './pages/Findings';
 import Resources from './pages/Resources';
 import Dashboard from './pages/Dashboard';
-import ExternalAttack from './pages/ExternalAttack/index';
-import FindingItems from './pages/FindingItems/index';
-import Layout from './layout/index';
+import ExternalAttack from './pages/ExternalAttack';
+import PasswordPolicy from './pages/PasswordPolicy';
+import FindingItems from './pages/FindingItems';
+import Layout from './layout';
 
 
 function App() {
@@ -42,6 +43,9 @@ function App() {
                 ]}
               >
                 <ExternalAttack />
+              </Route>
+              <Route path="/services/:service/password_policy">
+                <PasswordPolicy />
               </Route>
               <Route path="/">
                 <Dashboard />

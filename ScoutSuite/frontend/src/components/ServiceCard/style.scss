@@ -10,8 +10,7 @@ div.service-card {
 
   & > hr {
     margin: 0;
-    border: 0;
-    border-bottom: 1px solid $default-grey-subtle;;
+    border-bottom-width: 1px;
   }
 
   .header {
