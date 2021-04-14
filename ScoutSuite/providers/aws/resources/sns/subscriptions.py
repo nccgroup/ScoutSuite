@@ -22,4 +22,5 @@ class Subscriptions(AWSResources):
 
     def _parse_subscription(self, raw_subscription):
         protocol = raw_subscription.pop('Protocol')
+        raw_subscription['arn'] = raw_subscription.pop('SubscriptionArn')
         return protocol, raw_subscription

@@ -41,6 +41,11 @@
             "kms.regions.id.keys.id.key_manager",
             "equal",
             "CUSTOMER"
+        ],
+        [
+            "kms.regions.id.keys.id.key_enabled",
+            "true",
+            ""
         ]
     ],
     "id_suffix": "rotation_enabled"

@@ -1222,6 +1222,12 @@
                 "level": "danger"
             }
         ],
+        "sqs-queue-server-side-encryption-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "sqs-queue-world-policy.json": [
             {
                 "args": [

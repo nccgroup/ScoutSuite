@@ -1,12 +1,26 @@
 {
     "description": "Gmail Account in Use",
-    "rationale": "Gmail accounts are personally created and controllable accounts. Organizations seldom have any control over them. Thus, it is recommended that you use fully managed corporate Google accounts for increased visibility, auditing, and control over access to Cloud Platform resources.",
+    "rationale": "It is recommended fully-managed corporate Google accounts be used for increased visibility, auditing, and controlling access to Cloud Platform resources. Email accounts based outside of the user's organization, such as personal accounts, should not be used for business purposes.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.0.0",
             "reference": "1.1"
+        },
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "1.1"
         }
+    ],
+    "references": [
+        "https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#manage-identities",
+        "https://support.google.com/work/android/answer/6371476",
+        "https://cloud.google.com/sdk/gcloud/reference/organizations/get-iam-policy",
+        "https://cloud.google.com/sdk/gcloud/reference/beta/resource-manager/folders/get-iam-policy",
+        "https://cloud.google.com/sdk/gcloud/reference/projects/get-iam-policy",
+        "https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints",
+        "https://cloud.google.com/resource-manager/docs/organization-policy/restricting-domains"
     ],
     "dashboard_name": "Users",
     "path": "iam.projects.id.users.id",
