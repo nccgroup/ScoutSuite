@@ -70,6 +70,13 @@ const renderKeys = keys => {
                   renderValue={valueOrNone}
                 />
               </li>
+              <li>
+                <PartialValue
+                  label="Days Until Next Rotation"
+                  valuePath="next_rotation_time_days"
+                  renderValue={valueOrNone}
+                />
+              </li>
             </ul>
           </li>
         </PartialSection>
