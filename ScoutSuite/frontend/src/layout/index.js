@@ -89,7 +89,9 @@ const Layout = (props) => {
         })}
         <DownloadException />
       </MenuBar>
-      <div className="main">{children}</div>
+      <div className="main">
+        {children}
+      </div>
     </div>
   );
 };
