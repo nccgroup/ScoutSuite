@@ -118,6 +118,11 @@ const WebApps = props => {
             valuePath="http_logging_enabled"
             renderValue={convertBoolToEnable}
           />
+          <PartialValue
+            label="FTP Deployment"
+            valuePath="ftp_deployment_enabled"
+            renderValue={convertBoolToEnable}
+          />
 
           <PartialValue
             label="Minimum TLS Version Supported"
