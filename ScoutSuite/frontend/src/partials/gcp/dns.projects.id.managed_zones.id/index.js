@@ -9,12 +9,12 @@ import PartialSection from '../../../components/Partial/PartialSection/index';
 import { formatDate, convertBoolToEnable } from '../../../utils/Partials/index';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 
-const renderDnssecKeys = keys => {
-  if (!keys || keys.length === 0) return <span>None</span>;
+const renderDnssecKeys = dnssecKeys => {
+  if (!dnssecKeys || dnssecKeys.length === 0) return <span>None</span>;
 
   return (
     <ul>
-      {Object.entries(keys).map(([key]) => (
+      {Object.entries(dnssecKeys).map(([key]) => (
         <PartialSection
           path={`keys.${key}`}
           key={key}>
@@ -34,8 +34,7 @@ const renderDnssecKeys = keys => {
               <li>
                 <PartialValue
                   label="Length"
-                  valuePath="length"
-                />
+                  valuePath="length"/>
               </li>
             </ul>
           </li>
@@ -86,8 +85,8 @@ const ManagedZones = props => {
       </InformationsWrapper>
 
       <TabsMenu>
-        <TabPane title="Keys">
-          {renderDnssecKeys(item.managed_zones)}
+        <TabPane title="DNSSEC Keys">
+          {renderDnssecKeys(item.dnssec_keys)}
         </TabPane>
       </TabsMenu>
     </Partial>

@@ -11,7 +11,6 @@ import { formatDate, valueOrNone } from '../../../utils/Partials/index';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 
 const renderKmsPolicy = policies => {
-  console.log(isEmpty(policies));
 
   if (isEmpty(policies)) return <ul><li>None</li></ul>;
 
