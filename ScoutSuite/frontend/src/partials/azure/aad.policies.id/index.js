@@ -11,7 +11,7 @@ const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const Applications = props => {
+const Policies = props => {
   const { data } = props;
 
   if (!data) return null;
@@ -43,6 +43,6 @@ const Applications = props => {
   );
 };
 
-Applications.propTypes = propTypes;
+Policies.propTypes = propTypes;
 
-export default Applications;
+export default Policies;
