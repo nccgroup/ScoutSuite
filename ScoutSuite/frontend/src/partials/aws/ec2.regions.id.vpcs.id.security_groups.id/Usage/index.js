@@ -9,7 +9,8 @@ import {
 } from '../../../../components/Partial/context';
 import { 
   makeTitle,
-  renderResourcesAsList,
+  renderList,
+  renderResourceLink,
 } from '../../../../utils/Partials';
 import WarningMessage from '../../../../components/WarningMessage';
 
@@ -21,15 +22,16 @@ const Usage = () => {
   const basePath = useContext(PartialPathContext);
   const value = get(ctx.item, basePath);
 
-  const renderUsageList = resources => 
+
+  const renderUsageList = (resources, service, type) => 
     isArray(resources) 
-      ? renderResourcesAsList(resources, 'name')
+      ? renderList(resources, '', renderResourceLink(service, type))
       : (
         Object.entries(resources).map(([name, list], i) => (
           <ul key={i}>
             <li>
               {makeTitle(name)}
-              {renderUsageList(list)}
+              {renderUsageList(list, service, type)}
             </li>
           </ul>
         ))
@@ -47,7 +49,7 @@ const Usage = () => {
                     {`${makeTitle(service)} ${makeTitle(type)}`}
                   </h5>
                 </li>
-                {renderUsageList(resources)}
+                {renderUsageList(resources, service, type)}
               </div>
             ))
           ))}

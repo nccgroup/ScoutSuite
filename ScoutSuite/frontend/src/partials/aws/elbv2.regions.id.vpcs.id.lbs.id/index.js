@@ -9,7 +9,8 @@ import { getRegionFromPath, getVpcFromPath } from '../../../utils/Api';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { 
   partialDataShape,
-  renderResourcesAsList,
+  renderList,
+  renderSecurityGroupLink,
   renderAwsTags,
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
@@ -38,8 +39,8 @@ const ElbV2 = props => {
     data.item.vpc = `${vpc} (${vpcId})`;
   }
 
-  const listeners = get(data, ['item', 'listeners']);
-  const attributes = get(data, ['item', 'attributes']);
+  const listeners = get(data, ['item', 'listeners'], {});
+  const attributes = get(data, ['item', 'attributes'], []);
   const securityGroups = get(data, ['item', 'security_groups'], {});
   const tags = get(data, ['item', 'tags'], []);
   const isNetwork = get(data, ['item', 'isNetwork']);
@@ -97,7 +98,7 @@ const ElbV2 = props => {
               title="Security Groups"
               disabled={isEmpty(securityGroups)}
             >
-              {renderResourcesAsList(securityGroups, 'GroupId')}
+              {renderList(securityGroups, '', renderSecurityGroupLink)}
             </TabPane>
           )}
           {!isEmpty(tags) && (

@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 
-import { renderResourcesAsList } from '../../../../utils/Partials';
+import { 
+  renderList, 
+  renderSecurityGroupLink 
+} from '../../../../utils/Partials';
 import DetailedValue from '../../../../components/DetailedValue';
 
 
@@ -14,47 +17,47 @@ const NetworkInterfaces = props => {
   const { interfaces } = props;
 
   return (
-    Object.entries(interfaces).map(([id, value], i) => (
+    Object.entries(interfaces).map(([id, networkInterface], i) => (
       <div key={i}>
         <h5>{id}</h5>
         <ul>
-          {value.Description && (
+          {networkInterface.Description && (
             <li>
               <DetailedValue
                 label="Description"
-                value={value.Description}
+                value={networkInterface.Description}
               />
             </li>
           )}
-          {value.Association && (
+          {networkInterface.Association && (
             <>
               <li>
                 <DetailedValue
                   label="Public IP"
-                  value={value.Association.PublicIp}
+                  value={networkInterface.Association.PublicIp}
                 />
               </li>
               <li>
                 <DetailedValue
                   label="Public DNS"
-                  value={value.Association.PublicDnsName}
+                  value={networkInterface.Association.PublicDnsName}
                 />
               </li>
             </>
           )}
-          {value.Attachment && (
+          {networkInterface.Attachment && (
             <li>
               <DetailedValue
                 label="Attached to Instance"
-                value={value.Attachment.InstanceId}
+                value={networkInterface.Attachment.InstanceId}
               />
             </li>
           )}
-          {!isEmpty(value.Ipv6Addresses) && (
+          {!isEmpty(networkInterface.Ipv6Addresses) && (
             <>
               <li>IPv6 Addresses:</li>
               <ul>
-                {value.Ipv6Addresses.map((address, i) => (
+                {networkInterface.Ipv6Addresses.map((address, i) => (
                   <li key={i}>
                     {address.Ipv6Address}
                   </li>
@@ -62,7 +65,7 @@ const NetworkInterfaces = props => {
               </ul>
             </>
           )}
-          {value.PrivateIpAddresses.map((address, i) => (
+          {networkInterface.PrivateIpAddresses.map((address, i) => (
             <li key={i}>
               <DetailedValue
                 label={address.Primary ? 
@@ -72,11 +75,11 @@ const NetworkInterfaces = props => {
               />
             </li>
           ))}
-          {!isEmpty(value.Groups) && (
+          {!isEmpty(networkInterface.Groups) && (
             <li>
               <DetailedValue
                 label="Security Groups"
-                value={renderResourcesAsList(value.Groups, 'GroupName')}
+                value={renderList(networkInterface.Groups, '', renderSecurityGroupLink)}
               />
             </li>
           )}

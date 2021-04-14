@@ -15,7 +15,10 @@
         <div class="list-group-item-text item-margin">Block Project SSH Keys: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.block_project_ssh_keys_disabled">{{convert_bool_to_enabled block_project_ssh_keys_enabled}}</span></div>
         <div class="list-group-item-text item-margin">IP Forwarding: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.ip_forwarding_enabled">{{convert_bool_to_enabled ip_forwarding_enabled}}</span></div>
         <div class="list-group-item-text item-margin">OS Login: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.oslogin_disabled">{{convert_bool_to_enabled oslogin_enabled}}</span></div>
-        <div class="list-group-item-text item-margin">Serial Port Connection: <span id="computeengine.projects.{{@../../key}}.zones.{@{../key}}.instances.{{@key}}.serial_port_enabled">{{convert_bool_to_enabled serial_port_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Serial Port Connection: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.serial_port_enabled">{{convert_bool_to_enabled serial_port_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Public IP Addresses: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.public_ip_addresses">{{convert_bool_to_enabled public_ip_addresses}}</span></div>
+        <div class="list-group-item-text item-margin">Shielded VM: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.shielded_enable">{{convert_bool_to_enabled shielded_enable}}</span></div>
+
         {{#if tags}}
         <div class="list-group-item-text item-margin">Tags:</div>
         <ul>
@@ -61,6 +64,7 @@
             {{/each}}
         </ul>
         </span></div>
+        <div class="list-group-item-text item-margin">Default Service Account with Full Access to All Cloud APIs: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.full_access_apis"><samp>{{convert_bool_to_enabled full_access_apis}}</samp></span></div>
     </div>
     <div class="list-group-item">
         <h5 class="list-group-item-heading">Disks</h5>
@@ -77,7 +81,7 @@
                 {{else}}
                 <li id="latest_snapshot">Latest snapshot: <samp>None</samp></li>
                 {{/if}}
-                <li>Customer Supplied Encryption: <span>{{convert_bool_to_enabled encrypted_with_csek}}</span></li>
+                <li>Customer Supplied Encryption: <span id="computeengine.projects.{{@../../../key}}.zones.{{@../../key}}.instances.{{@../key}}.disks.{{@key}}.encrypted_with_csek">{{convert_bool_to_enabled encrypted_with_csek}}</span></li>
             </ul>
             {{else}}
             <li><samp>None</samp></li>

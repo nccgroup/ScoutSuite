@@ -13,6 +13,8 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 import DownloadButton from '../../components/DownloadButton';
 
 import './style.scss';
+import ErrorBoundary from '../../components/ErrorBoundary';
+
 
 const FlaggedItems = () => {
   const params = useParams();
@@ -84,23 +86,25 @@ const FlaggedItems = () => {
     <>
       <Breadcrumb />
       <div className="finding-items">
-        <div className="table-card">
-          <Table
-            columns={columns}
-            data={data}
-            initialState={initialState}
-            formatters={formatters}
-            sortBy={sortBy}
-            fetchData={fetchData}
-            manualPagination={true}
-            pageCount={items.meta.total_pages}
-            headerRight={downloadButtons}
-          />
-        </div>
+        <ErrorBoundary>
+          <div className="table-card">
+            <Table
+              columns={columns}
+              data={data}
+              initialState={initialState}
+              formatters={formatters}
+              sortBy={sortBy}
+              fetchData={fetchData}
+              manualPagination={true}
+              pageCount={items.meta.total_pages}
+              headerRight={downloadButtons}
+            />
+          </div>
+        </ErrorBoundary>
 
         <div className="selected-item">
           {!params.item ? (
-            <span className="no-item">No selected item</span>
+            <span className="no-item">No finding selected</span>
           ) : (
             <SelectedItemContainer />
           )}

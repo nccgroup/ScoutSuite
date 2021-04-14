@@ -29,6 +29,8 @@ class Firewalls(Resources):
         firewall_dict['target_tags'] = raw_firewall.get('targetTags', [])
         firewall_dict['direction'] = raw_firewall['direction']
         firewall_dict['disabled'] = raw_firewall['disabled']
+        firewall_dict['logs'] = raw_firewall['logConfig'].get('enable', False)
+
         self._parse_firewall_rules(firewall_dict, raw_firewall)
         return firewall_dict['id'], firewall_dict
 

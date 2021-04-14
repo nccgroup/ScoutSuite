@@ -1,0 +1,27 @@
+.app-loader {
+  display: flex;
+  align-items:center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+
+  .delay-explanation {
+    max-width: 600px;
+    opacity: 0;
+    transform: translateY(10px);
+
+    animation: loadExplanation 1s ease-in-out 3s forwards;
+
+    code {
+      padding: 0 4px;
+      background-color: rgba(0,0,0,0.1);
+      border-radius: 3px;
+    }
+  }
+}
+
+@keyframes loadExplanation {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1;  transform: translateY(0); }
+}

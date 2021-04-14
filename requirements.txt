@@ -17,7 +17,7 @@ grpcio>=1.18.0
 google-cloud-container>=2.1.0
 google-cloud-core>=0.29.1
 google-cloud-iam>=0.1.0
-google-cloud-logging>=1.15.0
+google-cloud-logging>=2.2.0
 google-cloud-monitoring==1.1.0
 google-cloud-resource-manager>=0.28.3
 google-cloud-storage>=1.13.2
@@ -48,6 +48,7 @@ azure-mgmt-rdbms==8.0.0
 
 --extra-index-url https://test.pypi.org/simple
 msgraphcore==0.0.2
+
 
 # Aliyun / Alibaba Cloud Provider
 aliyun-python-sdk-core>=2.13.4

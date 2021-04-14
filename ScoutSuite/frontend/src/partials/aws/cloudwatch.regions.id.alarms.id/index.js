@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty';
 
 import { 
   partialDataShape,
-  renderResourcesAsList,
+  renderList,
 } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
@@ -35,7 +35,7 @@ const MetricFilters = props => {
       <TabsMenu>
         <TabPane title="Alarm Actions">
           {!isEmpty(actions) ? (
-            renderResourcesAsList(actions)
+            renderList(actions)
           ) : (
             <PartialValue
               errorPath="NoActions"
@@ -51,7 +51,7 @@ const MetricFilters = props => {
           title="Insufficient Data Actions"
           disabled={isEmpty(alarms)}
         >
-          {renderResourcesAsList(alarms)}
+          {renderList(alarms)}
         </TabPane>
       </TabsMenu>
     </Partial>

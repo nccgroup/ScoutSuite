@@ -4,11 +4,10 @@ import os
 from ScoutSuite.core.console import print_error, print_exception, print_debug
 from ScoutSuite.providers.aws.services import AWSServicesConfig
 from ScoutSuite.providers.aws.resources.vpc.base import put_cidr_name
-from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
+from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id, get_partition_name
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
-from ScoutSuite.providers.aws.utils import get_partition_name
 
 
 class AWSProvider(BaseProvider):
@@ -77,6 +76,10 @@ class AWSProvider(BaseProvider):
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
         
+        if 'ec2' in self.service_list and 'vpc' in self.service_list:
+            self._match_instances_and_vpcs()
+            self._match_instances_and_subnets()
+
         if 'awslambda' in self.service_list and 'iam' in self.service_list:
             self._match_lambdas_and_roles()
 
@@ -397,15 +400,44 @@ class AWSProvider(BaseProvider):
             subnet = get_object_at(self, subnet_path)
             subnet['network_acl'] = acl_id
 
-    def match_instances_and_subnets_callback(self, current_config, path, current_path, instance_id, callback_args):
-        if 'ec2' in self.service_list and 'vpc' in self.service_list:  # validate both services were included in run
-            subnet_id = current_config['SubnetId']
-            if subnet_id:
-                vpc = self.subnet_map[subnet_id]
-                subnet = self.services['vpc']['regions'][vpc['region']]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
-                manage_dictionary(subnet, 'instances', [])
-                if instance_id not in subnet['instances']:
-                    subnet['instances'].append(instance_id)
+    def _match_instances_and_subnets(self):
+        ec2_instances = self._get_ec2_instances_details(['id', 'vpc', 'region', 'SubnetId'])  # fetch all EC2 instances with only required fields
+        for instance in ec2_instances.values():
+            subnet = self.services['vpc']['regions'][instance['region']]['vpcs'][instance['vpc']]['subnets'][instance['SubnetId']]  # find the subnet reference
+            manage_dictionary(subnet, 'instances', [])  # initialize instances list for the subnet (if not already set)
+            if instance['id'] not in subnet['instances']:  # if instance is not already mapped to the subnet
+                subnet['instances'].append(instance['id'])  # append EC2 instance ID to instance list in subnet
+
+    def _get_ec2_instances_details(self, details=None):
+        """
+        Fetches a list of EC2 instances 
+
+        :param details [str]:       (Optional) List of details to be included, if not specified, all details will be included
+        :return:                    A dictionary of EC2 instances with the specified details
+        """
+        ec2_instances = {}
+        for ec2_region_id, ec2_region_data in self.services['ec2']['regions'].items():
+            if ec2_region_data['instances_count'] > 0:
+                for region_vpc_id, region_vpc_data in ec2_region_data['vpcs'].items():
+                    if region_vpc_data['instances_count'] > 0:
+                        for ec2_instance_id, ec2_instance_data in region_vpc_data['instances'].items():
+                            ec2_instances[ec2_instance_id] = ec2_instance_data.copy()
+                            ec2_instances[ec2_instance_id]['region'] = ec2_region_id
+                            ec2_instances[ec2_instance_id]['vpc'] = region_vpc_id
+        if details is not None:
+            for instance_key in ec2_instances.keys():
+                for detail in list(ec2_instances[instance_key].keys()):
+                    if detail not in details:
+                        ec2_instances[instance_key].pop(detail, None)
+        return ec2_instances
+
+    def _match_instances_and_vpcs(self):
+        ec2_instances = self._get_ec2_instances_details(['id', 'vpc', 'region'])  # fetch all EC2 instances with only required fields
+        for instance in ec2_instances.values():
+            vpc = self.services['vpc']['regions'][instance['region']]['vpcs'][instance['vpc']]  # find the VPC reference
+            manage_dictionary(vpc, 'instances', [])  # initialize instances list for the VPC (if not already set)
+            if instance['id'] not in vpc['instances']:  # if instance is not already mapped to the VPC
+                vpc['instances'].append(instance['id'])  # append EC2 instance ID to instance list in VPC
 
     def _match_instances_and_roles(self):
         if 'ec2' in self.service_list and 'iam' in self.service_list:  # validate both services were included in run

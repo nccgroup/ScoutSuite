@@ -1,4 +1,4 @@
-@import 'src/variables.scss';
+@import 'src/variables';
 
 .findings-no-desc {
   color: $default-grey-light;
@@ -29,15 +29,19 @@
 }
 
 .desc-overlay {
-  position: absolute;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
   z-index: 10;
+  overflow-y: auto;
+
   background-color: $white;
   box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-  right: 0;
-  max-width: 80%;
-
-  margin-top: -1.25rem;
-
+  
+  max-height: calc(100% - 6rem);
+  max-width: 560px;
+  margin: 3rem auto;
   padding: 0.625rem 1rem;
 
   ul {

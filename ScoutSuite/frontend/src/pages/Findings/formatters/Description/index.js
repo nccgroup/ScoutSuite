@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import isEmpty from 'lodash/isEmpty';
 
 import { renderWithInnerHtml } from '../../../../utils/Partials';
 
@@ -46,12 +47,23 @@ const Description = (props) => {
           
           {renderWithInnerHtml(value)}
 
-          {original.remediation && <>
+          {!isEmpty(original.remediation) && <>
             <h4>Remediation</h4>
             {renderWithInnerHtml(original.remediation)}
           </>}
 
-          {original.references && <>
+          {!isEmpty(original.compliance) && <>
+            <h4>Compliance</h4>
+            <ul>
+              {original.compliance.map((compliance, i) => (
+                <li key={i}>
+                  {compliance.name} version {compliance.version}, reference {compliance.reference}
+                </li>)
+              )}
+            </ul>
+          </>}
+
+          {!isEmpty(original.references) && <>
             <h4>References</h4>
             <ul>
               {original.references.map((ref, i) => (

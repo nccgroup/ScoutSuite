@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import { Partial, PartialValue } from '../../../components/Partial';
-import { 
+import {
   partialDataShape,
-  valueOrNone, 
-  convertBoolToEnable, 
+  valueOrNone,
+  convertBoolToEnable,
   renderList
 } from '../../../utils/Partials';
 
@@ -37,6 +37,10 @@ const Vaults = props => {
           label="Public Access"
           valuePath="public_access_allowed"
           renderValue={convertBoolToEnable} />
+        <PartialValue
+          label="Vault Recoverable"
+          valuePath="recovery_protection_enabled"
+        />
 
         <PartialValue
           label="Tags"
@@ -48,10 +52,8 @@ const Vaults = props => {
           valuePath="resource_group_name"
           renderValue={valueOrNone} />
 
-
       </InformationsWrapper>
 
-      
     </Partial>
   );
 };
