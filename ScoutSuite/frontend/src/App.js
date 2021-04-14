@@ -24,7 +24,7 @@ function App() {
         <ExceptionsContextProvider>
           <Router>
             <Layout>
-              <ErrorBoundar>
+              <ErrorBoundary>
                 <Switch>
                   <Route
                     path={[
@@ -55,7 +55,7 @@ function App() {
                     <Dashboard />
                   </Route>
                 </Switch>
-              </ErrorBoundar>
+              </ErrorBoundary>
             </Layout>
           </Router>
         </ExceptionsContextProvider>
