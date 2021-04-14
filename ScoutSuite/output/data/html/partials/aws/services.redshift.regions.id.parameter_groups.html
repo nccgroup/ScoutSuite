@@ -15,6 +15,7 @@
         <h4 class="list-group-item-heading">Parameters</h4>
         <ul>
             {{#each parameters}}
+            <div class="list-group-item-text item-margin">ARN: <samp>{{arn}}</samp></div>
             <li class="list-group-item-text"><samp>{{@key}}</samp>:
                 <span id="redshift.regions.{{../region}}.parameter_groups.{{@../key}}.{{@key}}"><samp>{{value}}</samp></span>
             </li>

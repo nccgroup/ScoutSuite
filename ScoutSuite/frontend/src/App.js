@@ -47,7 +47,7 @@ function App() {
               <Route path="/services/:service/password_policy">
                 <PasswordPolicy />
               </Route>
-              <Route path="/">
+              <Route path="/" exact>
                 <Dashboard />
               </Route>
             </Switch>

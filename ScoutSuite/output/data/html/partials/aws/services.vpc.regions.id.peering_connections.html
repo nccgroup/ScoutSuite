@@ -6,6 +6,7 @@
         </div>
         <div class="list-group-item">
             <div class="list-group-item-text">Status: {{Status.Message}}</div>
+            <div class="list-group-item-text">ARN: <samp>{{arn}}</samp></div>
         </div>
         {{> services.vpc.regions.id.peering_connections.vpc_info vpc_info = RequesterVpcInfo vpc_role = 'Requester'}}
         {{> services.vpc.regions.id.peering_connections.vpc_info vpc_info = AccepterVpcInfo vpc_role = 'Accepter'}}

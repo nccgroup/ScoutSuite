@@ -51,6 +51,7 @@ const Findings = () => {
     remediation: item.remediation,
     flagged_items: item.flagged_items,
     redirect_to: item.redirect_to,
+    compliance: item.compliance,
   }));
 
   const initialState = {

@@ -12,6 +12,7 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 import DownloadButton from '../../components/DownloadButton/index';
 
 import './style.scss';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 
 const Resources = () => {
@@ -99,19 +100,22 @@ const Resources = () => {
     <>
       <Breadcrumb />
       <div className="resources">
-        <div className="table-card">
-          <Table
-            columns={columns}
-            data={data}
-            formatters={formatters}
-            sortBy={sortBy}
-            fetchData={fetchData}
-            manualPagination={true}
-            pageCount={response.meta.total_pages}
-            initialState={initialState}
-            headerRight={downloadButtons}
-          />
-        </div>
+        <ErrorBoundary>
+          <div className="table-card">
+            <Table
+              columns={columns}
+              data={data}
+              formatters={formatters}
+              sortBy={sortBy}
+              fetchData={fetchData}
+              manualPagination={true}
+              pageCount={response.meta.total_pages}
+              initialState={initialState}
+              headerRight={downloadButtons}
+            />
+          </div>
+        </ErrorBoundary>
+
 
         <div className="selected-item">
           {!params.id ? (

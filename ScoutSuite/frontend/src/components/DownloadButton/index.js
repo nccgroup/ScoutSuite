@@ -5,7 +5,6 @@ import { PropTypes } from 'prop-types';
 
 import './style.scss';
 
-
 const propTypes = {
   service: PropTypes.string.isRequired,
   resource: PropTypes.string.isRequired,

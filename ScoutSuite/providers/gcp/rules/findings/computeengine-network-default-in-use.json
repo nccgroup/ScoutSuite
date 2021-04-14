@@ -1,0 +1,32 @@
+{
+    "description": "Default Network should should be removed",
+    "rationale": "The default network has a preconfigured network configuration and automatically generates insecure firewall rules. These automatically created firewall rules do not get audit logged and cannot be configured to enable firewall rule logging.",
+    "remediation": "From  Console:\n<ol>\n    <li>Go to <samp>VPC networks</samp> page by visiting:\n        <a href=\"https://console.cloud.google.com/networking/networks/list\">https://console.cloud.google.com/networking/networks/list</a>\n    </li>\n    <li>Click the network named <samp>default</samp></li>\n    <li>On the network detail page, click <samp>EDIT</samp></li>\n    <li>Click <samp>DELETE VPC NETWORK</samp> </li>\n    <li>If needed, create a new network to replace the default network</li>\n</ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "3.1"
+        }
+    ],
+    "dashboard_name": "Networks",
+    "path": "computeengine.projects.id.networks.id",
+    "references": [
+        "https://cloud.google.com/compute/docs/networking#firewall_rules",
+        "https://cloud.google.com/compute/docs/reference/latest/networks/insert",
+        "https://cloud.google.com/compute/docs/reference/latest/networks/delete",
+        "https://cloud.google.com/vpc/docs/firewall-rules-logging",
+        "https://cloud.google.com/vpc/docs/vpc#default-network",
+        "https://cloud.google.com/sdk/gcloud/reference/compute/networks/delete"
+    ],
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.networks.id.name",
+            "equal",
+            "default"
+        ]
+    ],
+    "id_suffix": "name"
+
+}

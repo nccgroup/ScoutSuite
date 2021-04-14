@@ -1,17 +1,23 @@
 {
     "description": "Bucket Accessible by \"_ARG_0_\"",
     "rationale": "Allowing anonymous and/or public access grants permissions to anyone to access bucket content. Such access might not be desired if you are storing any sensitive data. Hence, ensure that anonymous and/or public access to a bucket is not allowed.",
-    "remediation": "No role should contain \"allUsers\" and/or \"allAuthenticatedUsers\" as a member.",
+    "remediation": "\"From console:<ol><li>Go to <samp>Storage browser</samp> by visiting https://console.cloud.google.com/storage/browser.</li><li>Click on the bucket name to go to its <samp>Bucket details</samp> page.</li><li>Click on the <samp>Permissions</samp> tab.</li><li>Click <samp>Delete</samp> button in front of <samp>allUsers</samp> and <samp>allAuthenticatedUsers</samp> to remove that particular role assignment.</li></ol>",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.0.0",
             "reference": "5.1"
+        },
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "5.1"
         }
     ],
     "references": [
         "https://cloud.google.com/storage/docs/access-control/iam-reference",
-        "https://cloud.google.com/storage/docs/access-control/making-data-public"
+        "https://cloud.google.com/storage/docs/access-control/making-data-public",
+        "https://cloud.google.com/storage/docs/gsutil/commands/iam"
     ],
     "dashboard_name": "Buckets",
     "display_path": "cloudstorage.projects.id.buckets.id",

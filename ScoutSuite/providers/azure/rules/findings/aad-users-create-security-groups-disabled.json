@@ -1,0 +1,23 @@
+{
+    "description": "Users Can Create Security Group Enabled",
+    "rationale": "When creating security groups is enabled, all users in the directory are allowed to create new security groups and add members to those groups. Security group creation should be restricted to administrators only.",
+    "remediation": "From Azure console:<ol><li>Go to <samp>Azure Active Directory</samp></li> <li>Go to <samp>Groups</samp></li> <li>Go to <samp>General</samp> in setting</li> <li>Ensure that <samp>Users can create security groups in Azure Portals</samp> is set to <samp>No</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "1.17"
+        }
+    ],
+    "dashboard_name": "Policies",
+    "path": "aad.policies.id",
+    "conditions": [
+        "and",
+        [
+            "aad.policies.id.allowed_to_create_security_groups",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "allowed_to_create_security_groups"
+}

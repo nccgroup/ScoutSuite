@@ -1,0 +1,45 @@
+{
+    "description": "Unattached Disks Not Encrypted With CMK",
+    "rationale": "Managed disks are encrypted by default with Platform-managed keys. Using Customer-managed keys may provide an additional level of security or meet an organization's regulatory requirements. Encrypting managed disks ensures that its entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads. Even if the disk is not attached to any of the VMs, there is always a risk where a compromised user account with administrative access to VM service can mount/attach these data disks which may lead to sensitive information disclosure and tampering.",
+    "remediation": "If data stored in the disk is no longer useful, refer to Azure documentation to delete unattached data disks at : <ol><li>https://docs.microsoft.com/en-us/rest/api/compute/disks/delete</li><li>https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-delete</li></ol><br> If data stored in the disk is important, To encrypt the disk refer azure documentation at: <ol><li>https://docs.microsoft.com/en-us/azure/virtual-machines/disks-enable-customer-managed-keys-portal</li><li>https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "7.3"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/security/fundamentals/azure-disk-encryption-vms-vmss",
+        "https://docs.microsoft.com/en-us/azure/security-center/asset-inventory?toc=%2Fazure%2Fsecurity%2Ftoc.json",
+        "https://docs.microsoft.com/en-us/rest/api/compute/disks/delete",
+        "https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-delete",
+        "https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings",
+        "https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-update",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest"
+    ],
+    "dashboard_name": "Disks",
+    "path": "virtualmachines.subscriptions.id.disks.id",
+    "conditions": [
+        "and",
+        [
+            "virtualmachines.subscriptions.id.disks.id.disk_state",
+            "equal",
+            "Unattached"
+        ],
+        [
+            "or",
+            [
+                "virtualmachines.subscriptions.id.disks.id.encryption_type",
+                "null",
+                ""
+            ],
+            [
+              "virtualmachines.subscriptions.id.disks.id.encryption_type",
+              "equal",
+              "EncryptionAtRestWithPlatformKey"
+            ]
+        ]
+    ],
+    "id_suffix": "encryption_type"
+}

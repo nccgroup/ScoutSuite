@@ -83,6 +83,66 @@ const SQLInstances = props => {
         />
 
         <PartialValue
+          label="Local Infile Flag is Off"
+          valuePath="local_infile_off"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Cross db Ownership Chaining Flag is Off"
+          valuePath="cross_db_ownership_chaining_off"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Contained Database Authentication Flag is Off"
+          valuePath="contained_database_authentication_off"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Checkpoints Flag is On"
+          valuePath="log_checkpoints_on"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Connections Flag is On"
+          valuePath="log_connections_on"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Disconnections Flag is On"
+          valuePath="log_disconnections_on"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Lock Waits Flag is On"
+          valuePath="log_lock_waits_on"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Min Messages Flag set Appropriately"
+          valuePath="log_min_messages"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Temp Files Flag set to 0"
+          valuePath="log_temp_files_0"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Min Duration Statement Flag set to -1"
+          valuePath="log_min_duration_statement_-1"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
           label="Authorized Networks"
           valuePath="authorized_networks"
           renderValue={valueOrNone}

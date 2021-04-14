@@ -5,8 +5,10 @@ import Provider from './Provider';
 import Service from './Service';
 import Findings from './Findings';
 import Resources from './Resources';
+import ErrorBoundary from '../ErrorBoundary';
 
 import './style.scss';
+
 
 const Breadcrumb = () => {
   const params = useParams();

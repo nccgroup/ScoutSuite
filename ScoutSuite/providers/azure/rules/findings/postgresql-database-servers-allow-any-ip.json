@@ -1,0 +1,29 @@
+{
+    "description": "PostgreSQL Database Allow Ingress 0.0.0.0/0 (Any IP)",
+    "rationale": "If access from Azure services is enabled, the server's firewall will accept connections from all Azure resources, including resources not in your subscription. This is usually not a desired configuration. Instead, setup firewall rules to allow access from specific network ranges or VNET rules to allow access from specific virtual networks.",
+    "remediation": "From Azure Console: <ol><li>Login to Azure Portal using https://portal.azure.com</li><li>Go to <samp>Azure Database</samp> for <samp>PostgreSQL server</samp></li><li>For each database, click on <samp>Connection security</samp></li><li>In <samp>Firewall rukes</samp></li><li>Ensure <samp> Allow access to Azure services</samp> is set to 'OFF'</li><li>Click <samp>Save</samp> to apply the changed rule.</li></ol>",    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "4.3.9"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/postgresql/concepts-firewall-rules",
+        "https://docs.microsoft.com/en-us/azure/postgresql/howto-manage-firewall-using-cli",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-4-protect-applications-and-services-from-external-network-attacks"
+    ],
+    "dashboard_name": "PostgreSQL Firewall Rules",
+    "display_path": "postgresqldatabase.subscriptions.id.servers.id",
+    "path": "postgresqldatabase.subscriptions.id.servers.id.postgresql_firewall_rules.id",
+    "conditions": [
+        "and",
+        [
+            "postgresqldatabase.subscriptions.id.servers.id.postgresql_firewall_rules.id.start_ip",
+            "equal",
+            "0.0.0.0"
+        ]
+    ],
+    "id_suffix": "start_ip"
+}

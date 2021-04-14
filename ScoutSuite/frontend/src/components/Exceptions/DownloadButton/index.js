@@ -9,7 +9,6 @@ import { useAPI } from '../../../api/useAPI';
 
 import './style.scss';
 
-
 const propTypes = {
   service: PropTypes.string,
   finding: PropTypes.string,
@@ -19,15 +18,37 @@ const propTypes = {
 const DownloadException = () => {
   const { exceptions } = useContext(ExceptionsContext);
   const { data: provider } = useAPI('provider');
+  const { data: serverExceptions } = useAPI('exceptions');
 
   const download = () => {
-    // TODO: Fetch data from server first (not implement on server-side yet)
+    let mergedExceptions = serverExceptions;
+
+    Object.entries(exceptions).forEach(([service, findings]) => {
+      Object.entries(findings).forEach(([finding, rules]) => {
+        const findingsList =
+          mergedExceptions[service] && mergedExceptions[service][finding]
+            ? [...mergedExceptions[service][finding], ...rules]
+            : rules;
+
+        mergedExceptions = {
+          ...mergedExceptions,
+          [service]: {
+            ...mergedExceptions[service],
+            [finding]: findingsList,
+          },
+        };
+      });
+    });
+
     var dataStr =
       'data:text/json;charset=utf-8,' +
-      encodeURIComponent(JSON.stringify(exceptions));
+      encodeURIComponent(JSON.stringify(mergedExceptions, null, 2));
     var downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute('href', dataStr);
-    downloadAnchorNode.setAttribute('download', `${provider.provider_code}-exceptions.json`);
+    downloadAnchorNode.setAttribute(
+      'download',
+      `exceptions-${provider.provider_code}.json`,
+    );
     document.body.appendChild(downloadAnchorNode); // required for firefox
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
@@ -46,7 +67,6 @@ const DownloadException = () => {
         Export Exceptions
       </Button>
     </div>
-    
   );
 };
 

@@ -1,0 +1,27 @@
+{
+    "description": "Log Disconnections Database Flag For PostgreSQL Instance Is Off",
+    "rationale": "PostgreSQL does not log session details such as duration and session end by default. Enabling the log_disconnections setting will create log entries at the end of each session which can be useful in troubleshooting issues and determine any unusual activity across a time period. The log_disconnections and log_connections work hand in hand and generally, the pair would be enabled/disabled together. This recommendation is applicable to PostgreSQL database instances.",
+    "remediation": "From console:<ol><li>Go to the Cloud SQL Instances page in the Google Cloud Console by visiting https://console.cloud.google.com/sql/instances.</li><li>Select the PostgreSQL instance where the database flag needs to be enabled.</li><li>Click <samp>Edit</samp></li><li>Scroll down to the <samp>Flags</samp> section.</li><li>To set a flag that has not been set on the instance before, click <samp>Add item</samp>, choose the flag <samp>log_disconnections</samp> from the drop-down menu, and set its value to <samp>off</samp>.</li><li>Click <samp>Save</samp></li><li>Confirm the changes under <samp>Flags</samp> on the Overview page.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "6.2.3"
+        }
+    ],
+    "references": [
+        "https://www.postgresql.org/docs/9.6/runtime-config-logging.html#RUNTIME-CONFIG-LOGGING-WHAT",
+        "https://cloud.google.com/sql/docs/postgres/flags"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.log_disconnections_on",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "log_disconnections_on"
+}

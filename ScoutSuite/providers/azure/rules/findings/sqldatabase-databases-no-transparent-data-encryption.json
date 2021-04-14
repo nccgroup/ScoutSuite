@@ -1,12 +1,21 @@
 {
-    "description": "Transparent Data Encryption Disabled for SQL Databases",
-    "rationale": "Enable transparent data encryption for all SQL databases.",
+    "description": "Data Encryption Disabled for SQL Databases",
+    "rationale": "Azure SQL Database transparent data encryption helps protect against the threat of malicious activity by performing real-time encryption and decryption of the database, associated backups, and transaction log files at rest without requiring changes to the application.",
+    "remediation": "From Azure Console: <ol><li>Go to <samp>SQL databases</samp></li>\n<li>For each DB instance</li>\n<li>Click on <samp>Transparent data encryption</samp></li>\n<li>Set <samp>Data encryption</samp> to On</li></ol>",
     "compliance": [
         {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "4.1.2"
+        },{
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.0.0",
             "reference": "4.2"
         }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/transparent-data-encryption-with-azure-sql-database",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest"
     ],
     "dashboard_name": "SQL Databases",
     "display_path": "sqldatabase.subscriptions.id.servers.id",
