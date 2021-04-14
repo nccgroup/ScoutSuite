@@ -24,7 +24,7 @@ def start_api(results, exceptions=None):
 
     @app.route('/api/services/<service>/findings', methods=['GET'])
     def get_findings(service):
-        if not results['services'][service]['findings']:
+        if service not in results['services']:
             return Response('Pro feature', status=402)
         findings = results['services'][service]['findings']
         for finding in findings:

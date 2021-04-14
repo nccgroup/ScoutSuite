@@ -7,6 +7,7 @@ from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
 from ScoutSuite.providers.gcp.facade.memorystoreredis import MemoryStoreRedisFacade
 from ScoutSuite.providers.gcp.facade.cloudstorage import CloudStorageFacade
 from ScoutSuite.providers.gcp.facade.gce import GCEFacade
+from ScoutSuite.providers.gcp.facade.dns import DNSFacade
 from ScoutSuite.providers.gcp.facade.iam import IAMFacade
 from ScoutSuite.providers.gcp.facade.kms import KMSFacade
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
@@ -34,6 +35,7 @@ class GCPFacade(GCPBaseFacade):
         self.gce = GCEFacade()
         self.iam = IAMFacade()
         self.kms = KMSFacade()
+        self.dns = DNSFacade()
         self.stackdriverlogging = StackdriverLoggingFacade()
         self.stackdrivermonitoring = StackdriverMonitoringFacade()
 
@@ -120,8 +122,8 @@ class GCPFacade(GCPBaseFacade):
                     if project['lifecycleState'] == "ACTIVE":
                         projects.append(project)
             else:
-                print_exception('No Projects Found: '
-                                'You may have specified a non-existing organization/folder/project?')
+                print_exception('No Projects Found, '
+                                'you may have specified a non-existing Organization, Folder or Project')
 
         except Exception as e:
             try:
@@ -168,6 +170,10 @@ class GCPFacade(GCPBaseFacade):
             endpoint = 'logging'
         elif service == 'StackdriverMonitoring':
             endpoint = 'monitoring'
+        elif service == 'MemoryStore':
+            endpoint = 'redis'
+        elif service =='DNS':
+            endpoint='dns'
         else:
             print_debug('Could not validate the state of the {} API for project \"{}\", '
                         'including it in the execution'.format(format_service_name(service.lower()), project_id))

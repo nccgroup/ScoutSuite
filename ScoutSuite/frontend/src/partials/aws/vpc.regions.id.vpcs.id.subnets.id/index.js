@@ -8,7 +8,8 @@ import {
   partialDataShape,
   convertBoolToEnable,
   valueOrNone,
-  renderResourcesAsList,
+  renderList,
+  renderFlowlogLink,
 } from '../../../utils/Partials';
 import { 
   Partial, 
@@ -16,7 +17,8 @@ import {
 } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
-import FlowLogs from './FlowLogs';
+import ResourceLink from '../../../components/ResourceLink';
+import WarningMessage from '../../../components/WarningMessage';
 
 
 const propTypes = {
@@ -29,8 +31,16 @@ const RegionDomain = props => {
   if (!data) return null;
 
   const id = get(data, ['item', 'id']);
-  const instances = get(data, ['item', 'instances']);
+  const instances = get(data, ['item', 'instances'], []);
   const flowLogs = get(data, ['item', 'flow_logs']);
+
+  const renderInstanceLink = id => (
+    <ResourceLink 
+      service="ec2"
+      resource="instances"
+      id={id}
+    />
+  );
 
   return (
     <Partial data={data}>
@@ -71,13 +81,29 @@ const RegionDomain = props => {
       </InformationsWrapper>
 
       <TabsMenu>
-        {!isEmpty(instances) &&(
-          <TabPane title="Instances">
-            {renderResourcesAsList(instances, 'name')}
-          </TabPane>
-        )}
+        <TabPane 
+          title="Instances"
+          disabled={isEmpty(instances)}
+        >
+          {renderList(instances, '', renderInstanceLink)}
+        </TabPane>
         <TabPane title="Flow Logs">
-          <FlowLogs flowLogs={flowLogs} />
+          {isEmpty(flowLogs) ? (
+            <PartialValue
+              errorPath="no_flowlog"
+              renderValue={() => (
+                <WarningMessage
+                  message="This subnet has no flow logs."
+                />
+              )}
+            />
+          ) : (
+            renderList(
+              flowLogs.filter(value => typeof value === 'string'), 
+              '',
+              renderFlowlogLink,
+            )
+          )}
         </TabPane>
       </TabsMenu>
     </Partial>

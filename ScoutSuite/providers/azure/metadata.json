@@ -134,6 +134,10 @@
     },
     "network": {
       "resources": {
+        "network_interfaces": {
+          "cols": 2,
+          "path": "services.network.subscriptions.id.network_interfaces"
+        },
         "virtual_networks": {
           "cols": 2,
           "path": "services.network.subscriptions.id.virtual_networks"

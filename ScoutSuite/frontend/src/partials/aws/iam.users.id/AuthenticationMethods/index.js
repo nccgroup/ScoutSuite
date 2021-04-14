@@ -64,7 +64,7 @@ const AuthenticationMethods = props => {
           {accessKeys.map((key, i) => (
             <li key={i}>
               <PartialValue
-                errorPath={`AccessKey.${i}`}
+                errorPath={`AccessKeys.${i}`}
                 renderValue={() => (
                   <ul className="key-infos">
                     {key.AccessKeyId}

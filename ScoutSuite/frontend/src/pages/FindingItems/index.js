@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../api/useAPI';
 import { getItemsEndpoint } from '../../api/paths';
+import { makeTitle } from '../../utils/Partials';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
@@ -12,6 +13,8 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 import DownloadButton from '../../components/DownloadButton';
 
 import './style.scss';
+import ErrorBoundary from '../../components/ErrorBoundary';
+
 
 const FlaggedItems = () => {
   const params = useParams();
@@ -38,10 +41,16 @@ const FlaggedItems = () => {
     return <Breadcrumb />;
   }
 
+  const unwantedKeys = [
+    'id',
+    'display_path',
+  ];
+
   const columns = [];
 
   for (let key of Object.keys(items.results[0])) {
-    if (key !== 'display_path') columns.push({ name: key, key });
+    if (!unwantedKeys.includes(key)) 
+      columns.push({ name: makeTitle(key), key });
   }
 
   const data = items.results;
@@ -77,23 +86,25 @@ const FlaggedItems = () => {
     <>
       <Breadcrumb />
       <div className="finding-items">
-        <div className="table-card">
-          <Table
-            columns={columns}
-            data={data}
-            initialState={initialState}
-            formatters={formatters}
-            sortBy={sortBy}
-            fetchData={fetchData}
-            manualPagination={true}
-            pageCount={items.meta.total_pages}
-            headerRight={downloadButtons}
-          />
-        </div>
+        <ErrorBoundary>
+          <div className="table-card">
+            <Table
+              columns={columns}
+              data={data}
+              initialState={initialState}
+              formatters={formatters}
+              sortBy={sortBy}
+              fetchData={fetchData}
+              manualPagination={true}
+              pageCount={items.meta.total_pages}
+              headerRight={downloadButtons}
+            />
+          </div>
+        </ErrorBoundary>
 
         <div className="selected-item">
           {!params.item ? (
-            <span className="no-item">No selected item</span>
+            <span className="no-item">No finding selected</span>
           ) : (
             <SelectedItemContainer />
           )}

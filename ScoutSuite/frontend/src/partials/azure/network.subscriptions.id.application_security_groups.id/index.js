@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import InformationsWrapper from '../../../components/InformationsWrapper';
@@ -9,13 +9,28 @@ import {
   renderList,
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+import ResourceLink from '../../../components/ResourceLink/index';
+
+const renderNetworkInterface = id => {
+  return (
+    <ResourceLink
+      service="network" 
+      resource="network_interfaces"
+      id={id} />
+  );
+};
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
+  item: PropTypes.object,
 };
 
 const AppSecurityGroups = props => {
-  const { data } = props;
+  const { data, item } = props;
+  const network_interfaces_ids = useMemo(
+    () => Object.values(item.network_interfaces).map(item => item.id),
+    [item.network_interfaces],
+  );
 
   if (!data) return null;
 
@@ -53,7 +68,9 @@ const AppSecurityGroups = props => {
 
       <TabsMenu>
         <TabPane title="Attached Network Interfaces">
-          {/* ADD NETWORK INTERFACES */}
+          {renderList(network_interfaces_ids, '', value =>
+            renderNetworkInterface(value),
+          )}
         </TabPane>
       </TabsMenu>
     </Partial>

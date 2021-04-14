@@ -34,7 +34,8 @@ class Keys(AWSCompositeResources):
         if 'metadata' in raw_key:
             key_dict['creation_date'] = raw_key['metadata']['KeyMetadata']['CreationDate'] if \
                 raw_key['metadata']['KeyMetadata']['CreationDate'] else None
-            key_dict['key_enabled'] = False if raw_key['metadata']['KeyMetadata']['KeyState'] == 'Disabled' else True
+            key_dict['key_enabled'] = False if raw_key['metadata']['KeyMetadata']['KeyState'] in \
+                ['Disabled', 'PendingDeletion'] else True
             key_dict['description'] = raw_key['metadata']['KeyMetadata']['Description'] if len(
                 raw_key['metadata']['KeyMetadata']['Description'].strip()) > 0 else None
             key_dict['origin'] = raw_key['metadata']['KeyMetadata']['Origin'] if len(

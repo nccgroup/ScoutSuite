@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
+import { useLocation } from 'react-router-dom';
 
 import { useAPI } from '../api/useAPI';
 import { 
@@ -15,12 +16,12 @@ import { MenuBar, SubMenu, MenuGroup, MenuElement } from './Menu';
 import './style.scss';
 import DownloadException from '../components/Exceptions/DownloadButton';
 
-
 const propTypes = {
   children: PropTypes.node.isRequired,
 };
 
 const Layout = (props) => {
+  const location = useLocation();
   const [opened, setOpened] = useState(null);
   const [selected, setSelected] = useState(null);
   const { data: categories, loading } = useAPI(getServicesEndpoint());
@@ -32,9 +33,12 @@ const Layout = (props) => {
       const navOpen = categories.find(({ services }) =>
         services.map((s) => s.id).includes(service ? service[1] : null),
       );
+      const pathParts = location.pathname.split('/');
+      const selected = pathParts.slice(0,5).join('/');
+      setSelected(selected);
       setOpened(navOpen ? navOpen.name : null);
     }
-  }, [categories]);
+  }, [categories, location.pathname]);
 
   if (loading) return null;
 
@@ -59,7 +63,6 @@ const Layout = (props) => {
                       link={getDashboardLink(dashboard, service.id)}
                       key={dashboard}
                       selected={selected}
-                      setSelected={setSelected}
                     >
                       <BarChartIcon fontSize="inherit" />{' '}
                       <span>{getDashboardName(dashboard)}</span>
@@ -71,7 +74,6 @@ const Layout = (props) => {
                       link={`services/${service.id}/resources/${res.id}`}
                       disabled={!res.count}
                       selected={selected}
-                      setSelected={setSelected}
                       key={res.id}
                     >
                       <DevicesOtherIcon fontSize="inherit" />{' '}
@@ -87,7 +89,9 @@ const Layout = (props) => {
         })}
         <DownloadException />
       </MenuBar>
-      <div className="main">{children}</div>
+      <div className="main">
+        {children}
+      </div>
     </div>
   );
 };

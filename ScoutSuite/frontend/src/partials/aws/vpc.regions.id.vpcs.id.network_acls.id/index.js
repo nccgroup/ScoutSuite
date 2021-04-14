@@ -4,10 +4,7 @@ import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import isEmtpy from 'lodash/isEmpty';
 
-import { 
-  partialDataShape,
-  renderResourcesAsList,
-} from '../../../utils/Partials';
+import { partialDataShape, renderList } from '../../../utils/Partials';
 import { 
   Partial, 
   PartialValue,
@@ -16,6 +13,7 @@ import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import RulesTable from './RulesTable';
 import WarningMessage from '../../../components/WarningMessage';
+import ResourceLink from '../../../components/ResourceLink';
 
 
 const propTypes = {
@@ -29,6 +27,14 @@ const RegionDomain = props => {
 
   const rules = get(data, ['item', 'rules']);
   const subnets = get(data, ['item', 'Associations']);
+
+  const renderSubnetLink = id => (
+    <ResourceLink
+      service="vpc"
+      resource="subnets"
+      id={id}
+    />
+  );
 
   return (
     <Partial data={data}>
@@ -58,7 +64,7 @@ const RegionDomain = props => {
         </TabPane>
         <TabPane title="Associated Subnets">
           {!isEmtpy(subnets) ? (
-            renderResourcesAsList(subnets, 'SubnetId')
+            renderList(subnets, 'SubnetId', renderSubnetLink)
           ) : (
             <PartialValue 
               valuePath="IsDefault"
