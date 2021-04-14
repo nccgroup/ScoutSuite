@@ -7,13 +7,15 @@ import {
   partialDataShape,
   formatDate,
   valueOrNone,
-  renderResourcesAsList,
+  renderList,
+  renderPolicyLink,
 } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import WarningMessage from '../../../components/WarningMessage';
 import Policy from '../../../components/Partial/Policy';
+import ResourceLink from '../../../components/ResourceLink';
 
 
 const propTypes = {
@@ -25,9 +27,17 @@ const IamGroups = props => {
 
   if (!data) return null;
 
-  const members = get(data, ['item', 'users'], []);
-  const inline_policies = get(data, ['item', 'inline_policies']);
-  const policies = get(data, ['item', 'policies']);
+  const users = get(data, ['item', 'users'], []);
+  const inline_policies = get(data, ['item', 'inline_policies'], {});
+  const policies = get(data, ['item', 'policies'], []);
+
+  const renderUserLink = id => (
+    <ResourceLink
+      service="iam"
+      resource="users"
+      id={id}
+    />
+  );
 
   return (
     <Partial data={data}>
@@ -46,8 +56,8 @@ const IamGroups = props => {
 
       <TabsMenu>
         <TabPane title="Members">
-          {!isEmpty(members) ? (
-            renderResourcesAsList(members)
+          {!isEmpty(users) ? (
+            renderList(users, '', renderUserLink)
           ) : (
             <PartialValue
               errorPath="ALL"
@@ -57,25 +67,27 @@ const IamGroups = props => {
             />
           )}
         </TabPane>
-        {!isEmpty(inline_policies) && (
-          <TabPane title="Inline Policies">
-            <>
-              {Object.entries(inline_policies).map(([id, policy], i) => (
-                <Policy
-                  key={i}
-                  name={policy.name}
-                  policy={policy.PolicyDocument}
-                  policyPath={`inline_policies.${id}`}
-                />
-              ))}
-            </>
-          </TabPane>
-        )}
-        {!isEmpty(policies) && (
-          <TabPane title="Managed Policies">
-            {renderResourcesAsList(policies)}
-          </TabPane>
-        )}
+        <TabPane 
+          title="Inline Policies"
+          disabled={isEmpty(inline_policies)}
+        >
+          <>
+            {Object.entries(inline_policies).map(([id, policy], i) => (
+              <Policy
+                key={i}
+                name={policy.name}
+                policy={policy.PolicyDocument}
+                policyPath={`inline_policies.${id}.PolicyDocument`}
+              />
+            ))}
+          </>
+        </TabPane>
+        <TabPane 
+          title="Managed Policies"
+          disabled={isEmpty(policies)}
+        >
+          {renderList(policies, '', renderPolicyLink)}
+        </TabPane>
       </TabsMenu>
     </Partial>
   );

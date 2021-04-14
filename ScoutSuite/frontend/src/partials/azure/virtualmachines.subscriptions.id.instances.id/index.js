@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import get from 'lodash/get';
 // import Skeleton from '@material-ui/lab/Skeleton';
 
 import InformationsWrapper from '../../../components/InformationsWrapper';
@@ -11,18 +10,28 @@ import {
   renderList,
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
-//import { useResources } from '../../../api/useResources';
-// import { Link } from 'react-router-dom';
+import ResourceLink from '../../../components/ResourceLink/index';
+
+const renderNetworkInterfaces = id => {
+  return (
+    <ResourceLink
+      service="network" 
+      resource="network_interfaces"
+      id={id} />
+  );
+};
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
+  item: PropTypes.object,
 };
 
 const Instances = props => {
-  const { data } = props;
-  const item = get(data, ['item'], {});
-
-  //const { data: network_interfaces , loading } = useResources('networking', 'network_interfaces', item.network_interfaces);
+  const { data, item } = props;
+  const network_interfaces_ids = useMemo(
+    () => Object.values(item.network_interfaces).map(item => item.id),
+    [item.network_interfaces],
+  );
 
   if (!data) return null;
 
@@ -113,8 +122,9 @@ const Instances = props => {
 
       <TabsMenu>
         <TabPane title="Network Interfaces">
-          {/* {loading && <Skeleton />}
-          {renderList(network_interfaces, '', (ni) => <Link to={`/services/network/resources/network/${ni.id}`}>{ni.name}</Link>)} */}
+          {renderList(network_interfaces_ids, '', value =>
+            renderNetworkInterfaces(value),
+          )}
         </TabPane>
 
         <TabPane title="Extensions">

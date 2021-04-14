@@ -27,6 +27,12 @@
     display: block;
     padding-left: 0.5rem;
 
+    div.inline {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     .Collapsible {
       display: flex;
 

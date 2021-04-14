@@ -2,6 +2,7 @@ import React from 'react';
 
 import { PartialValue } from '../../../../components/Partial/index';
 import { valueOrNone, formatDate } from '../../../../utils/Partials';
+import ResourceLink from '../../../../components/ResourceLink';
 
 
 const Informations = () => {
@@ -38,10 +39,18 @@ const Informations = () => {
         renderValue={valueOrNone}
       />
       <PartialValue
-        /* TODO: Link to execution_role.RoleId */
         label="Execution Role"
-        valuePath="execution_role.RoleName"
-        renderValue={valueOrNone}
+        valuePath="execution_role"
+        renderValue={value => value ? (
+          <ResourceLink 
+            service="iam"
+            resource="roles"
+            id={value.RoleId}
+            name={value.RoleName}
+          />
+        ) : (
+          'None'
+        )}
       />
       <PartialValue
         label="Handler"

@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 
 from ScoutSuite import DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY
@@ -37,6 +38,12 @@ def prompt_for_overwrite(filename, force_write):
     if not os.path.exists(filename) or force_write:
         return True
     return prompt_for_yes_no(f'File \'{filename}\' already exists. Do you want to overwrite it')
+
+
+def load_from_json_file(file_path):
+    if not file_path: return None
+    with open(file_path) as f:
+        return json.load(f)
 
 
 def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, file_extension=None):

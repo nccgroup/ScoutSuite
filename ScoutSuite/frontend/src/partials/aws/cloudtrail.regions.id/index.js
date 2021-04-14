@@ -5,11 +5,12 @@ import isEmpty from 'lodash/isEmpty';
 
 import { 
   partialDataShape,
-  renderResourcesAsList,
+  renderList,
 } from '../../../utils/Partials';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
+import ResourceLink from '../../../components/ResourceLink';
 
 
 const propTypes = {
@@ -22,6 +23,15 @@ const Trails = props => {
   if (!data) return null;
 
   const trails = get(data, ['item', 'trails'], []);
+
+  const renderTrailLink = ([id, trail]) => (
+    <ResourceLink 
+      service="cloudtrail"
+      resource="trails"
+      id={id}
+      name={trail.name}
+    />
+  );
 
   return (
     <Partial data={data}>
@@ -39,7 +49,7 @@ const Trails = props => {
           title="Trails"
           disabled={isEmpty(trails)}
         >
-          {renderResourcesAsList(Object.values(trails), 'name')}
+          {renderList(Object.entries(trails), '', renderTrailLink)}
         </TabPane>
       </TabsMenu>
     </Partial>

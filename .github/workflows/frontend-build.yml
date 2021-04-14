@@ -1,0 +1,54 @@
+name: Fronted Build CI
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master, v6-master ]
+    paths:
+    - './ScoutSuite/frontend/*' # Only trigger when content in the frontend changed
+    
+  # We should have a seperate CI for testing the build in PRs 
+  # pull_request: 
+    # branches: [ master, v6-master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          # Version Spec of the version to use.  Examples: 12.x, 10.15.1, >=10.15.0
+          node-version: 12.x
+      
+      # Move into the frontend directory for the next steps
+      - name: Move in frontend directory
+        run: cd /ScoutSuite/frontend/
+        
+      # Install all NPM packages
+      - name: Install NPM packages
+        run: npm install
+
+      # Build the production version of the React app
+      - name: Build the React App
+        run: npm run build
+    
+      # 
+      - uses: EndBug/add-and-commit@v7
+        with:
+          author_name: github-actions
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: '[Github Action] Automated frontend build'
+          add: '*'
+          cwd: '/ScoutSuite/frontend/'

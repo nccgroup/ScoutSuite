@@ -109,8 +109,6 @@ const Buckets = (props) => {
       </div>
 
       <TabsMenu>
-        {/*TODO: Tab error highlight */}
-
         <TabPane title="IAM Permissions">
           {!isEmpty(member_bindings) ? (
             renderIAM(Object.entries(member_bindings))

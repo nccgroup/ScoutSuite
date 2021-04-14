@@ -10,6 +10,7 @@ class DiagnosticSettings(AzureResources):
 
     async def fetch_all(self):
         diagnostic_dict = {}
+        diagnostic_dict['name']=self.subscription_id
         diagnostic_dict['diagnostic_exist'] = await self.facade.loggingmonitoring.get_subscription_diagnostic_settings(
             self.subscription_id) != []
         self[self.subscription_id] = diagnostic_dict

@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.aws.utils import get_partition_name, format_arn
 
 
 class Clusters(AWSResources):
@@ -7,6 +8,9 @@ class Clusters(AWSResources):
         super().__init__(facade)
         self.region = region
         self.vpc = vpc
+        self.partition = get_partition_name(facade.session)
+        self.service = 'elasticache'
+        self.resource_type = 'cluster'
 
     async def fetch_all(self):
         raw_clusters = await self.facade.elasticache.get_clusters(self.region, self.vpc)
@@ -21,3 +25,4 @@ class Clusters(AWSResources):
                                                                              self.facade.owner_id,
                                                                              raw_cluster.get('name'))
         return raw_cluster['id'], raw_cluster
+

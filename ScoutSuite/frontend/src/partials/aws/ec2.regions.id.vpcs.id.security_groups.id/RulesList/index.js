@@ -3,6 +3,7 @@ import get from 'lodash/get';
 
 import { PartialContext, PartialPathContext } from '../../../../components/Partial/context';
 import { PartialValue } from '../../../../components/Partial';
+import ResourceLink from '../../../../components/ResourceLink';
 import WarningMessage from '../../../../components/WarningMessage';
 
 import './style.scss';
@@ -23,7 +24,7 @@ const RulesList = () => {
           <li key={i}>
             <PartialValue
               value={address}
-              errorPath={path}
+              errorPath={`${path}.cidrs.${i}.CIDR`}
               renderValue={value =>
                 value.CIDRName 
                   ? `${value.CIDR} (${value.CIDRName})`
@@ -44,11 +45,21 @@ const RulesList = () => {
           <li key={i}>
             <PartialValue
               value={group}
-              errorPath={path}
+              errorPath={`${path}.cidrs.security_groups.${i}`}
               renderValue={value =>
                 value.GroupName
-                  ? `${value.GroupName} (${value.GroupId})`   //TODO: Link groupId resource
-                  : `${value.GroupId} (AWS Account ID: ${value.UserId})`
+                  ? (
+                    <span>
+                      {`${value.GroupName} (`}
+                      <ResourceLink 
+                        service="ec2"
+                        resource="security_groups"
+                        id={value.GroupId}
+                        name={value.GroupId}
+                      />
+                      {')'}
+                    </span>
+                  ) : `${value.GroupId} (AWS Account ID: ${value.UserId})`
               }
             />
           </li>
@@ -80,20 +91,20 @@ const RulesList = () => {
                           renderIpAddresses(
                             'IP adresses',
                             port.cidrs, 
-                            `protocols.${name}.ports.${port_name}.cidrs.${i}.CIDR`,
+                            `protocols.${name}.ports.${port_name}`,
                           )
                         )}
                         {port.Ipv6Ranges && (
                           renderIpAddresses(
                             'IPv6 addresses',
                             port.Ipv6Ranges,
-                            `protocols.${name}.ports.${port_name}.cidrs.${i}.CIDR`,
+                            `protocols.${name}.ports.${port_name}`,
                           )
                         )}
                         {port.security_groups && (
                           renderSecurityGroups(
                             port.security_groups,
-                            `protocols.${name}.ports.${port_name}.security_groups.${i}`,
+                            `protocols.${name}.ports.${port_name}`,
                           )
                         )}
                       </ul>

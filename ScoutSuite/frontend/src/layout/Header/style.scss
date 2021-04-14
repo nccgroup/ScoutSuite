@@ -18,6 +18,20 @@
     img {
       height: 2.5rem;
     }
+
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      svg {
+        color: $white;
+
+        .dark-mode & {
+          color: $font-color;
+        }
+      }
+    }
   }
 
   &::after {
@@ -27,3 +41,5 @@
     background-color: $ncc-red;
   }
 }
+
+

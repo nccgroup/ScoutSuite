@@ -25,10 +25,36 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>ScoutSuite Report</title>
+    <style>
+      .root-not-loaded {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        text-align: center;
+        opacity: 0;
+
+        animation: loadRootError 1s ease-in-out 2s forwards;
+      }
+
+      @keyframes loadRootError {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="root-not-loaded">
+        <div>
+          <img src="logo.png" style="width: 200px" />
+          <h4 style>The <code>.html</code> file can't be viewed directly.</h4>
+          <p>Please use the local server to view this web report.</p>
+        </div>
+      </div>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

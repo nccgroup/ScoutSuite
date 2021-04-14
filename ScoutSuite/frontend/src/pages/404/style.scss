@@ -1,0 +1,18 @@
+@import 'src/variables';
+
+.page-404 {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 100%;
+  
+  .content-404 {
+    max-width: 420px;
+    text-align: center;
+
+    .MuiSvgIcon-root {
+      font-size: 6rem;
+      color: $medium-color;
+    }
+  }
+}

@@ -1,5 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import { Partial, PartialValue } from '../../../components/Partial';
@@ -9,14 +13,37 @@ import {
   renderList,
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+import Subnet from './Subnets';
+import PartialSection from '../../../components/Partial/PartialSection/index';
 
+const renderSubnets = subnets => {
+  return Object.entries(subnets).map(([key, subnet]) => (
+    <Accordion
+      square variant="outlined"
+      key={key}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+        <span>{subnet.name}</span>
+      </AccordionSummary>
+      <AccordionDetails>
+        <PartialSection path={`subnets.${key}`}>
+          <Subnet subnet={subnet} />
+        </PartialSection>
+      </AccordionDetails>
+    </Accordion>
+  ));
+};
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
+  item: PropTypes.object,
 };
 
 const VirtualNetworks = props => {
-  const { data } = props;
+  const { data, item } = props;
 
   if (!data) return null;
 
@@ -84,9 +111,7 @@ const VirtualNetworks = props => {
       </InformationsWrapper>
 
       <TabsMenu>
-        <TabPane title="Subnets">
-          {/* RENDER SUBNET */} 
-        </TabPane>
+        <TabPane title="Subnets">{renderSubnets(item.subnets)}</TabPane>
       </TabsMenu>
     </Partial>
   );

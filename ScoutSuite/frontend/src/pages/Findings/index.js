@@ -50,6 +50,7 @@ const Findings = () => {
     references: item.references,
     remediation: item.remediation,
     flagged_items: item.flagged_items,
+    compliance: item.compliance,
   }));
 
   const initialState = {
