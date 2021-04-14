@@ -99,6 +99,10 @@ const Roles = props => {
           valuePath="assignable_scopes"
           renderValue={valueOrNone}
         />
+        <PartialValue
+          label="Custom Subscriptions Owner Roles"
+          valuePath="custom_subscription_owner_role"
+        />
       </InformationsWrapper>
 
       <TabsMenu>
