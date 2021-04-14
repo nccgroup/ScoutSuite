@@ -9,7 +9,7 @@ const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
 };
 
-const CustomRolesreport = props => {
+const CustomRolesReport = props => {
 
   const { data } = props;
 
@@ -24,6 +24,6 @@ const CustomRolesreport = props => {
   );
 };
 
-CustomRolesreport.propTypes = propTypes;
+CustomRolesReport.propTypes = propTypes;
 
-export default CustomRolesreport;
+export default CustomRolesReport;
