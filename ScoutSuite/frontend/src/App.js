@@ -54,6 +54,9 @@ function App() {
                   <Route path="/" exact>
                     <Dashboard />
                   </Route>
+                  <Route path="*">
+                    <ErrorPage />
+                  </Route>
                 </Switch>
               </ErrorBoundary>
             </Layout>
