@@ -15,10 +15,6 @@
     border-radius: $border-radius;
     margin-bottom: 2rem;
 
-    a:not(:hover) {
-      text-decoration: none;
-    }
-
     .no-link {
       color: $text-muted;
       cursor: not-allowed;
