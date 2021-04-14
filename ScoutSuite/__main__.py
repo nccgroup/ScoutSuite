@@ -13,6 +13,7 @@ from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
 from ScoutSuite.core.server import start_api
+from ScoutSuite.output.utils import load_from_json_file
 from ScoutSuite.output.html import ScoutReport
 from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
@@ -171,6 +172,14 @@ async def _run(provider,
 
     print_info('Launching Scout')
 
+    if server_only:
+        print_info('Starting local server for web interface')
+        start_api(
+            load_from_json_file(server_only[0]),
+            load_from_json_file(exceptions)
+        )
+        return 0
+
     print_info('Authenticating to cloud provider')
     auth_strategy = get_authentication_strategy(provider)
 
@@ -240,11 +249,6 @@ async def _run(provider,
         available_services = [x for x in dir(cloud_provider.services) if
                               not (x.startswith('_') or x in ['credentials', 'fetch'])]
         print_info('The available services are: "{}"'.format('", "'.join(available_services)))
-        return 0
-
-    if server_only:
-        print_info('Starting local server for user interface')
-        start_api(report.encoder.load_from_file('RESULTS', server_only[0]))
         return 0
 
     # Complete run, including pulling data from provider
@@ -361,7 +365,10 @@ async def _run(provider,
     if not report_only:
         try:
             print_info('Starting local server for web interface')
-            start_api(report.encoder.load_from_file('RESULTS'), exceptions)
+            start_api(
+                report.encoder.load_from_file('RESULTS'),
+                report.encoder.load_from_file('EXCEPTIONS', exceptions)
+            )
         except Exception as e:
             print_exception('Failure when starting server')
             return 110
