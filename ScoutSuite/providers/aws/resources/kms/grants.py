@@ -1,6 +1,5 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Grants(AWSResources):
@@ -17,7 +16,7 @@ class Grants(AWSResources):
 
     def _parse_grant(self, raw_grant):
         grant_dict = {
-            'key_id': get_non_provider_id(raw_grant.get('KeyId')),
+            'key_id': raw_grant.get('KeyId'),
             'grant_id': raw_grant.get('GrantId'),
             'name': raw_grant.get('Name'),
             'create_date': raw_grant.get('CreationDate'),

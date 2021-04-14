@@ -44,4 +44,4 @@ class LoadBalancers(AWSResources):
         if 'Tags' in raw_load_balancer and raw_load_balancer['Tags']:
             load_balancer['tags'] = {x['Key']: x['Value'] for x in raw_load_balancer['Tags']}
 
-        return load_balancer['id'], load_balancer
+        return get_non_provider_id(load_balancer['name']), load_balancer
