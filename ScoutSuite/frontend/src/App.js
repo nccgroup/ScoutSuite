@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import ExternalAttack from './pages/ExternalAttack';
 import PasswordPolicy from './pages/PasswordPolicy';
 import PasswordPolicyFinding from './pages/PasswordPolicyFinding';
+import Permissions from './pages/Permissions';
 import FindingItems from './pages/FindingItems';
 import ErrorPage from './pages/404';
 
@@ -55,6 +56,9 @@ function App() {
                   </Route>
                   <Route path="/services/:service/password_policy">
                     <PasswordPolicy />
+                  </Route>
+                  <Route path="/services/:service/permissions">
+                    <Permissions />
                   </Route>
                   <Route path="/" exact>
                     <Dashboard />

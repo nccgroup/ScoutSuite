@@ -22,13 +22,14 @@ const Resources = () => {
     [],
     { pagination: true },
   );
-  const data = response.results;
 
   const fetchData = React.useCallback(({ pageIndex, sortBy, direction }) => {
     loadPage(pageIndex + 1, sortBy, direction);
   }, []);
 
   if (loading) return null;
+
+  const data = response.results;
 
   if (isEmpty(data)) {
     return (
