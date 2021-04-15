@@ -111,12 +111,12 @@ const renderFirewallRules = (rules, serverKey) => {
 
   return rules.map(([key, rule]) => {
     const baseErrorPath = `sqldatabase.servers.${serverKey}.firewall_rules.${key}`;
-
+    console.log(rule);
     return (
       <PartialSection path={`firewall_rules.${key}`} key={rule.id}>
         <li>
 
-          <b>{key}</b>
+          <b>{rule.name}</b>
 
           <PartialValue
             label="Firewall rule start IP"
