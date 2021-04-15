@@ -44,8 +44,6 @@ def start_api(results, exceptions=None):
     @app.route('/api/services/<service>/findings/<finding>/items/options/<attribute>')
     def get_findings_items_attribute_options(service, finding, attribute):
         item_list = get_all_items_in_finding(service, finding, results)
-
-        print(item_list)
         
         return get_attribute_options(attribute, item_list, results)
 
