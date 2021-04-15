@@ -181,6 +181,12 @@ def start_api(results, exceptions=None):
 
         return jsonify(process_results(resource_list))
 
+    @app.route('/api/services/<service>/resources/<resource>/options/<attribute>')
+    def get_resources_attribute_options(service, resource, attribute):
+        all_resources, resource_path = get_all_resources(service, resource, results)
+        
+        return get_attribute_options(attribute, all_resources, results)
+
     @app.route('/api/services/<service>/resources/<resource>/<resource_id>')
     def get_resource(service, resource, resource_id):
         all_resources = get_all_resources(service,resource, results)[0]
@@ -390,6 +396,19 @@ def get_element_from_path_kw(path, report_location):
         element = element[path[idx]]
     
     return element
+
+def get_attribute_options(attribute, resources, results):
+    option_list = []
+    for resource in resources:
+        resource = list(resource.values())[0]
+        path = resource['path'].split('.')
+        element = results
+        for idx in range(len(path)):
+            element = element[path[idx]]
+            if path[idx] == attribute:
+                option_list.append(path[idx+1])
+
+    return jsonify(option_list)
 
 def filter_results(results):
     filter_by = json.loads(dict(request.args)['filter_by']) if request.args.get('filter_by') else {}
