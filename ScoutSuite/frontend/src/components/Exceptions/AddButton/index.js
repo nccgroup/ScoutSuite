@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
-import { Button } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import { PropTypes } from 'prop-types';
 import { useSnackbar } from 'notistack';
 import get from 'lodash/get';
@@ -15,7 +16,12 @@ const propTypes = {
 };
 
 const AddException = ({ service, finding, path }) => {
-  const { exceptions, addException } = useContext(ExceptionsContext);
+  const { 
+    exceptions, 
+    addException,
+    removeException,
+  } = useContext(ExceptionsContext);
+
   const { enqueueSnackbar } = useSnackbar();
 
   const add = () => {
@@ -32,21 +38,39 @@ const AddException = ({ service, finding, path }) => {
     );
   };
 
+  const remove = () => {
+    removeException(service, finding, path);
+    enqueueSnackbar(
+      'Exception removed.',
+      {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'right',
+        },
+      },
+    );
+  };
+
   const exist = get(exceptions, [service, finding], []).includes(path);
 
   return (
     <Tooltip
-      title="Add to exception list" placement="top"
-      arrow>
-      <Button
-        disabled={exist}
+      title={
+        exist 
+          ? 'Remove finding from exceptions list' 
+          : 'Add finding to exceptions list'
+      } 
+      placement="top"
+      arrow
+    >
+      <IconButton
         size="small"
-        startIcon={<AddIcon />}
         className="exception-btn"
-        onClick={add}
+        onClick={exist ? remove : add}
       >
-        Add
-      </Button>
+        {exist ? <RemoveIcon /> : <AddIcon />}
+      </IconButton>
     </Tooltip>
   );
 };

@@ -5,10 +5,12 @@ import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../../api/useAPI';
 import { getRawEndpoint } from '../../../api/paths';
+import { getRegionFromPath, getVpcFromPath } from '../../../utils/Api';
 import { Partial, PartialValue } from '../../../components/Partial';
 import { 
   partialDataShape,
-  renderResourcesAsList,
+  renderList,
+  renderSecurityGroupLink,
   renderAwsTags,
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
@@ -24,16 +26,21 @@ const ElbV2 = props => {
   const { data } = props;
 
   const path = get(data, ['item', 'path'], '');
-  const { data: vpc, loading } = useAPI(getRawEndpoint(path.replace(/\.lbs.*/, '')));
+  const region = getRegionFromPath(path);
+  const vpcId = getVpcFromPath(path);
+
+  const { data: vpc, loading } = useAPI(
+    getRawEndpoint(`services.elbv2.regions.${region}.vpcs.${vpcId}.name`)
+  );
 
   if (!data || loading) return null;
 
   if (!isEmpty(vpc)) {
-    data.item.vpc = `${vpc.name} (${vpc.id})`;
+    data.item.vpc = `${vpc} (${vpcId})`;
   }
 
-  const listeners = get(data, ['item', 'listeners']);
-  const attributes = get(data, ['item', 'attributes']);
+  const listeners = get(data, ['item', 'listeners'], {});
+  const attributes = get(data, ['item', 'attributes'], []);
   const securityGroups = get(data, ['item', 'security_groups'], {});
   const tags = get(data, ['item', 'tags'], []);
   const isNetwork = get(data, ['item', 'isNetwork']);
@@ -91,7 +98,7 @@ const ElbV2 = props => {
               title="Security Groups"
               disabled={isEmpty(securityGroups)}
             >
-              {renderResourcesAsList(securityGroups, 'GroupId')}
+              {renderList(securityGroups, '', renderSecurityGroupLink)}
             </TabPane>
           )}
           {!isEmpty(tags) && (

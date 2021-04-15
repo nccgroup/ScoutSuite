@@ -4,11 +4,10 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../../api/useAPI';
+import { getVpcFromPath, getRegionFromPath } from '../../../utils/Api';
 import { getRawEndpoint } from '../../../api/paths';
 import { Partial, PartialValue } from '../../../components/Partial';
-import { 
-  partialDataShape,
-} from '../../../utils/Partials';
+import { partialDataShape } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import Informations from './Informations';
@@ -25,7 +24,12 @@ const Ec2Instance = props => {
   const { data } = props;
 
   const path = get(data, ['item', 'path'], '');
-  const { data: vpc, loading } = useAPI(getRawEndpoint(path.replace(/\.instances.*/, '')));
+  const region = getRegionFromPath(path);
+  const vpcId = getVpcFromPath(path);
+
+  const { data: vpc, loading } = useAPI(
+    getRawEndpoint(`services.ec2.regions.${region}.vpcs.${vpcId}.name`)
+  );
 
   if (!data || loading) return null;
 
@@ -35,8 +39,8 @@ const Ec2Instance = props => {
   const secrets = get(data, ['item', 'user_data_secrets']);
 
   if (!isEmpty(vpc)) {
-    data.item.vpc = `${vpc.name} (${vpc.id})`;
-    data.item.region = vpc.path[vpc.path.findIndex(x => x === 'regions') + 1];
+    data.item.vpc = `${vpc} (${vpcId})`;
+    data.item.region = region;
   }
 
   return (

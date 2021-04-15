@@ -100,6 +100,7 @@ class Instances(AzureResources):
             else:
                 instance_dict['storage_profile']['OS Managed Disk ID'] = None
                 instance_dict['storage_profile']['OS Managed Disk Storage Account Type'] = None
+
             if raw_instance.storage_profile.data_disks is not None and raw_instance.storage_profile.data_disks:
                 instance_dict['storage_profile']['Data Disks'] = ["{} ({}GB)".format(disk.name, disk.disk_size_gb) for disk in raw_instance.storage_profile.data_disks]
         else:

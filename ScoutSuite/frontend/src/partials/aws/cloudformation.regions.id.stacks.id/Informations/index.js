@@ -3,6 +3,7 @@ import isEmpty from 'lodash/isEmpty';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 
 import { PartialValue } from '../../../../components/Partial/index';
+import ResourceLink from '../../../../components/ResourceLink';
 import { formatDate } from '../../../../utils/Partials';
 
 import './style.scss';
@@ -28,10 +29,14 @@ const Informations = () => {
         label="Role"
         valuePath="iam_role.name"
         renderValue={
-          // TODO: link to resource
           value => value ? (
             <>
-              {value}
+              <ResourceLink 
+                name={value}
+                service="iam"
+                resource="role"
+                id={value}
+              />
               <PartialValue
                 className="role-icon"
                 errorPath={value}

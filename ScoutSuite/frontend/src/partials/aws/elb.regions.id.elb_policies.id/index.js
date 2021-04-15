@@ -17,10 +17,10 @@ const ELBs = props => {
 
   if (!data) return null;
 
-  const protocols = get(data, ['item', 'protocols']);
-  const options = get(data, ['item', 'options']);
-  const ciphers = get(data, ['item', 'ciphers']);
-  const attributes = get(data, ['item', 'PolicyAttributeDescriptions']);
+  const protocols = get(data, ['item', 'protocols'], {});
+  const options = get(data, ['item', 'options'], {});
+  const ciphers = get(data, ['item', 'ciphers'], {});
+  const attributes = get(data, ['item', 'PolicyAttributeDescriptions'], []);
   const isSslPolicy = get(data, ['item', 'PolicyTypeName']) === 'SSLNegotiationPolicyType';
 
   const renderEntries = entry => (

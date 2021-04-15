@@ -20,6 +20,7 @@ class Subnets(AWSResources):
         raw_subnet['id'] = raw_subnet['SubnetId']
         get_name(raw_subnet, raw_subnet, 'SubnetId')
         raw_subnet.pop('SubnetId')
+        raw_subnet['arn'] = raw_subnet.pop('SubnetArn')
 
         if raw_subnet['Ipv6CidrBlockAssociationSet']:
             raw_subnet['CidrBlockv6'] = raw_subnet['Ipv6CidrBlockAssociationSet'][0]['Ipv6CidrBlock']

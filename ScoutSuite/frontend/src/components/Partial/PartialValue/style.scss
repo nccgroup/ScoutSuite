@@ -6,10 +6,9 @@
   }
 
   .issue {
-    font-weight: 700;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
+    font-weight: 700;
   }
 
   .critical {
@@ -29,6 +28,10 @@
   }
 
   .exception-btn {
-    font-size: 0.4rem;
+    margin-left: 0.5rem;
+
+    svg {
+      font-size: 1rem;
+    }
   }
 }
