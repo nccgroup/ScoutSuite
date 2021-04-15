@@ -91,6 +91,9 @@ const Networks = props => {
           valuePath="creation_timestamp"
           renderValue={formatDate}
         />
+
+        <PartialValue label="Legacy Mode" valuePath="legacy_mode" />
+
       </InformationsWrapper>
 
       <TabsMenu>

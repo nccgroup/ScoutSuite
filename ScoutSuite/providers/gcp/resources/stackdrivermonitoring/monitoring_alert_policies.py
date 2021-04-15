@@ -14,6 +14,7 @@ class MonitoringAlertPolicies(Resources):
 
     def _parse_alert_policy(self, raw_alert_policies):
         alert_policy_dict = {}
+        alert_policy_dict['name'] = self.project_id
         alert_policy_dict['project_ownership_assignments'] = \
             self._specific_alert_policy_present(raw_alert_policies)
         alert_policy_dict['audit_config_change'] = self._specific_alert_policy_present(raw_alert_policies)
