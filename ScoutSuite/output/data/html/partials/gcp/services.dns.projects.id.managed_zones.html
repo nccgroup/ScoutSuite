@@ -19,9 +19,9 @@
                 {{#each dnssec_keys}}
                 <li><samp>{{@key}}</samp></li>
                 <ul>
-                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.keys.{{@key}}.key_algorithm">Key Algorithm: <samp>{{key_algorithm}}</samp></li>
-                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.keys.{{@key}}.key_type">Key Type: <samp>{{key_type}}</samp></li>
-                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.keys.{{@key}}.length">Length: {{length}}</li>
+                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.dnssec_keys.{{@key}}.key_algorithm">Key Algorithm: <samp>{{key_algorithm}}</samp></li>
+                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.dnssec_keys.{{@key}}.key_type">Key Type: <samp>{{key_type}}</samp></li>
+                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.dnssec_keys.{{@key}}.length">Length: {{length}}</li>
                 </ul>
                 {{else}}
                 <li><samp>None</samp></li>
