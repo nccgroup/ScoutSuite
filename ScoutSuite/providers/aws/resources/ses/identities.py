@@ -33,8 +33,11 @@ class Identities(AWSCompositeResources):
     def _parse_identity(self, raw_identity):
         identity_name, dkim_attributes = raw_identity
         identity = {}
+        identity['id'] = get_non_provider_id(identity_name)
         identity['name'] = identity_name
         identity['DkimEnabled'] = dkim_attributes['DkimEnabled']
         identity['DkimVerificationStatus'] = dkim_attributes['DkimVerificationStatus']
-        identity['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id, identity_name, self.resource_type)
-        return get_non_provider_id(identity_name), identity
+        identity['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id, identity_name,
+                                     self.resource_type)
+
+        return identity['id'], identity

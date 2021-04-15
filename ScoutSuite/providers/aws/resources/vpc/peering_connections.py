@@ -22,4 +22,5 @@ class PeeringConnections(AWSResources):
     def _parse_peering_connections(self, raw_peering_connection):
         raw_peering_connection['id'] = raw_peering_connection['name'] = raw_peering_connection['VpcPeeringConnectionId']
         raw_peering_connection['arn'] = format_arn(self.partition, self.service, self.region, '', raw_peering_connection['VpcPeeringConnectionId'], self.resource_type)
+
         return raw_peering_connection['id'], raw_peering_connection

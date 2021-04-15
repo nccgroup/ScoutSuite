@@ -23,5 +23,5 @@ class Alarms(AWSResources):
             if key in raw_alarm:
                 raw_alarm.pop(key)
 
-        alarm_id = get_non_provider_id(raw_alarm['arn'])
-        return alarm_id, raw_alarm
+        raw_alarm['id'] = get_non_provider_id(raw_alarm['arn'])
+        return raw_alarm['id'], raw_alarm
