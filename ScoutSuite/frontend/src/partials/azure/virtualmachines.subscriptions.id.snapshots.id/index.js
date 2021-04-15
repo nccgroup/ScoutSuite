@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import { Partial, PartialValue } from '../../../components/Partial';
-import { 
+import {
   partialDataShape,
-  valueOrNone, 
+  valueOrNone,
   formatDate
 } from '../../../utils/Partials';
 
@@ -80,7 +80,7 @@ const Snapshots = props => {
 
       </InformationsWrapper>
 
-      
+
     </Partial>
   );
 };
