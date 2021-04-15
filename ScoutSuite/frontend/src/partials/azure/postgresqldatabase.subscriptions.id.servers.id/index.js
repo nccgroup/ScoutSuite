@@ -24,7 +24,7 @@ const renderFirewallRules = (rules, serverKey) => {
     return (
       <PartialSection path={`postgresql_firewall_rules.${key}`} key={rule.id}>
         <li>
-          <b>{key}</b>
+          <b>{rule.name}</b>
           <PartialValue
             label="Firewall rule start IP"
             valuePath="start_ip"

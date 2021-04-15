@@ -116,7 +116,7 @@ const renderFirewallRules = (rules, serverKey) => {
       <PartialSection path={`firewall_rules.${key}`} key={rule.id}>
         <li>
 
-          <b>{key}</b>
+          <b>{rule.name}</b>
 
           <PartialValue
             label="Firewall rule start IP"
