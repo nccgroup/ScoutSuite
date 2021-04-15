@@ -1,39 +1,39 @@
 import React from 'react';
-import { useParams, useLocation } from 'react-router-dom';
-import get from 'lodash/get';
+import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 
 import { useAPI } from '../../api/useAPI';
-import { 
-  getPasswordPolicyEndpoint,
-  getRawEndpoint,
-} from '../../api/paths';
+import { getPasswordPolicyEndpoint } from '../../api/paths';
 import { Partial, PartialValue } from '../../components/Partial';
 import Breadcrumb from '../../components/Breadcrumb';
+import WarningMessage from '../../components/WarningMessage';
 
 import './style.scss';
 
 
-const PasswordPolicy = () => {
+const propTypes = {
+  findingData: PropTypes.object,
+};
+
+const defaultProps = {
+  findingData: {
+    path_to_issues: [],
+  },
+};
+
+const PasswordPolicy = props => {
+  const { findingData } = props;
+
   const { service } = useParams();
-  const { data, loading: l1 } = useAPI(getPasswordPolicyEndpoint(service), {});
+  const { data, loading } = useAPI(getPasswordPolicyEndpoint(service), {});
   
-  const finding = new URLSearchParams(useLocation().search).get('finding');
-
-  const { data: findingData, loading: l2 } = useAPI(
-    getRawEndpoint(`services.${service}.findings.${finding}`)
-  );
+  if (loading) return null;
   
-  if (l1 || l2) return null;
-
-  const issues = get(findingData, 'items', []);
-
   return (
     <Partial 
       data={{
         item: data,
-        path: `${service}.password_policy`,
-        path_to_issues: issues.map(issue => issue.split('.').pop()),
-        level: findingData.level,
+        ...findingData,
       }}
     >
       <Breadcrumb />
@@ -45,6 +45,11 @@ const PasswordPolicy = () => {
             label="Minimum password length"
             valuePath="MinimumPasswordLength"
           />
+          {data.MinimumPasswordLength == 1 && (
+            <WarningMessage 
+              message="It should be noted that 1 character passwords are authorized when no password policy exists, even though the web console displays '6'"
+            />
+          )}
           <PartialValue
             label="Require at least one uppercase letter"
             valuePath="RequireUppercaseCharacters"
@@ -95,5 +100,8 @@ const PasswordPolicy = () => {
     </Partial>
   );
 };
+
+PasswordPolicy.propTypes = propTypes;
+PasswordPolicy.defaultProps = defaultProps;
 
 export default PasswordPolicy;

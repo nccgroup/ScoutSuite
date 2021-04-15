@@ -4,14 +4,16 @@ import { SnackbarProvider } from 'notistack';
 
 import AppLoader from './components/AppLoader';
 import { ExceptionsContextProvider } from './components/Exceptions/context';
+import Layout from './layout';
+import ErrorBoundary from './components/ErrorBoundary';
 import Findings from './pages/Findings';
 import Resources from './pages/Resources';
 import Dashboard from './pages/Dashboard';
 import ExternalAttack from './pages/ExternalAttack';
 import PasswordPolicy from './pages/PasswordPolicy';
+import PasswordPolicyFinding from './pages/PasswordPolicyFinding';
 import FindingItems from './pages/FindingItems';
-import Layout from './layout';
-import ErrorBoundary from './components/ErrorBoundary';
+import ErrorPage from './pages/404';
 
 
 function App() {
@@ -47,6 +49,9 @@ function App() {
                     ]}
                   >
                     <ExternalAttack />
+                  </Route>
+                  <Route path="/services/:service/password_policy/:finding">
+                    <PasswordPolicyFinding />
                   </Route>
                   <Route path="/services/:service/password_policy">
                     <PasswordPolicy />

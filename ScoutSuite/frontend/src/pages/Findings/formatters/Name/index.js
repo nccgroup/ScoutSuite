@@ -12,7 +12,7 @@ const Name = props => {
   const { value, row: { original } } = props;
 
   const link = original.redirect_to 
-    ? `${original.redirect_to}?finding=${original.id}`
+    ? `${original.redirect_to}/${original.id}`
     : `/services/${params.service}/findings/${original.id}/items`;
 
   if (original.flagged_items && original.flagged_items > 0) {

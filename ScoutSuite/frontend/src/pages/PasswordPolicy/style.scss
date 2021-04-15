@@ -15,5 +15,13 @@
     .partial-value {
       margin-bottom: 0.25rem;
     }
+
+    .warning-message {
+      margin: -0.25rem 0 0.25rem 1rem;
+
+      svg {
+        font-size: 1rem;
+      }
+    }
   }
 }
