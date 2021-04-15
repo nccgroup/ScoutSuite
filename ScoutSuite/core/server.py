@@ -37,31 +37,7 @@ def start_api(results, exceptions=None):
     # Paginated
     @app.route('/api/services/<service>/findings/<finding>/items', methods=['GET'])
     def get_items(service, finding):
-        item_list = []
-        finding = results['services'][service]['findings'][finding]
-
-        if not finding['items']:
-            return jsonify([])
-
-        path = finding['display_path'] if 'display_path' in finding else finding['path'] # storageaccounts.subscriptions.id.storage_accounts.id
-        attributes = get_attributes_from_path(path)[:-1] # ['subscriptions']
-
-        for item_path in finding['items']:
-            item_path_kw = item_path.split('.') # [storageaccounts, subscriptions, c4596cb7-805b-49aa-9a04-ed74e9f5c789, storage_accounts, e21374e58a7142b3bc563467ac097f66345454fd, blob_containers, test, public_access_allowed]
-            if 'id_suffix' in finding and item_path_kw[-1] == finding['id_suffix']: item_path_kw = item_path_kw[:-1]
-
-            item_to_display = get_element_from_path_kw(item_path_kw[:len(path.split('.'))], results['services'])
-            item = {
-                'name': item_to_display['name'],
-                'display_path': '.'.join(item_path_kw[:len(path.split('.'))])
-            }
-            if 'id' in item_to_display: item['id'] = item_to_display['id']
-        
-            for attribute in attributes:
-                attribute_idx = item_path_kw.index(attribute)
-                item[attribute[:-1]] = item_path_kw[attribute_idx + 1]
-            
-            item_list.append(item)
+        item_list = get_all_items_in_finding(service, finding, results)
 
         return jsonify(process_results(item_list))
 
@@ -217,13 +193,15 @@ def start_api(results, exceptions=None):
 
     @app.route('/api/services/<service>/resources/<resource>/download')
     def download_resource(service, resource):
-        download_type = request.args.get('type') if request.args.get('type') else 'json'
-        
         resource_list = [list(fetched_resource.values())[0] for fetched_resource in get_all_resources(service, resource, results)[0]]
-        data = (dict_to_csv(resource_list), 'csv', 'text/csv') if download_type == 'csv' else (jsonify(resource_list), 'json', 'application/json')
-        response = make_response(data[0])
-        response.headers['Content-Disposition'] = f'attachment; filename={resource}.{data[1]}'
-        response.mimetype = data[2]
+        response = download_filtered_elements(resource_list, f'{resource}')
+
+        return response
+
+    @app.route('/api/services/<service>/findings/<finding>/items/download')
+    def download_items(service, finding):
+        item_list = get_all_items_in_finding(service, finding, results)
+        response = download_filtered_elements(item_list, f'{finding}_items')
 
         return response
 
@@ -282,6 +260,35 @@ def get_attributes_from_path(path):
             attributes.append(words[idx-1])
 
     return attributes
+
+def get_all_items_in_finding(service, finding, results):
+    item_list = []
+    finding = results['services'][service]['findings'][finding]
+
+    if not finding['items']:
+        return jsonify([])
+
+    path = finding['display_path'] if 'display_path' in finding else finding['path'] # storageaccounts.subscriptions.id.storage_accounts.id
+    attributes = get_attributes_from_path(path)[:-1] # ['subscriptions']
+
+    for item_path in finding['items']:
+        item_path_kw = item_path.split('.') # [storageaccounts, subscriptions, c4596cb7-805b-49aa-9a04-ed74e9f5c789, storage_accounts, e21374e58a7142b3bc563467ac097f66345454fd, blob_containers, test, public_access_allowed]
+        if 'id_suffix' in finding and item_path_kw[-1] == finding['id_suffix']: item_path_kw = item_path_kw[:-1]
+
+        item_to_display = get_element_from_path_kw(item_path_kw[:len(path.split('.'))], results['services'])
+        item = {
+            'name': item_to_display['name'],
+            'display_path': '.'.join(item_path_kw[:len(path.split('.'))])
+        }
+        if 'id' in item_to_display: item['id'] = item_to_display['id']
+    
+        for attribute in attributes:
+            attribute_idx = item_path_kw.index(attribute)
+            item[attribute[:-1]] = item_path_kw[attribute_idx + 1]
+        
+        item_list.append(item)
+
+    return item_list
 
 def get_all_elements_from_path(path, report_location):
     path_keywords = path.split('.')
@@ -350,6 +357,18 @@ def get_all_resources(service, resource, results):
                         resource_path = resources[resource]['path']
                         return (get_all_elements_from_path(resource_path, results), resource_path)
     return []
+
+def download_filtered_elements(element_list, filename):
+    download_type = request.args.get('type') if request.args.get('type') else 'json'
+    filtered_list = filter_results(element_list)
+    searched_list = search_results(filtered_list)
+    
+    data = (dict_to_csv(searched_list), 'csv', 'text/csv') if download_type == 'csv' else (jsonify(searched_list), 'json', 'application/json')
+    response = make_response(data[0])
+    response.headers['Content-Disposition'] = f'attachment; filename={filename}.{data[1]}'
+    response.mimetype = data[2]
+
+    return response
 
 def format_title(title):
     return title[0].upper() + ' '.join(title[1:].lower().split('_'))
