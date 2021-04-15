@@ -4,13 +4,17 @@ import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../api/useAPI';
 import { getItemsEndpoint } from '../../api/paths';
+import { makeTitle } from '../../utils/Partials';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
 import SelectedItemContainer from './SelectedItemContainer';
 import Breadcrumb from '../../components/Breadcrumb/index';
+import DownloadButton from '../../components/DownloadButton';
 
 import './style.scss';
+import ErrorBoundary from '../../components/ErrorBoundary';
+
 
 const FlaggedItems = () => {
   const params = useParams();
@@ -37,24 +41,19 @@ const FlaggedItems = () => {
     return <Breadcrumb />;
   }
 
-  const columns = [
-    { name: 'ID', key: 'id' },
-    { name: 'Name', key: 'name' },
+  const unwantedKeys = [
+    'id',
+    'display_path',
   ];
 
-  for (let [key] of Object.entries(items.results[0])) {
-    if (key !== 'item') columns.push({ name: key, key });
+  const columns = [];
+
+  for (let key of Object.keys(items.results[0])) {
+    if (!unwantedKeys.includes(key)) 
+      columns.push({ name: makeTitle(key), key });
   }
 
-  const data = items.results.map((item) => {
-    let newItem = item.item;
-
-    for (let [key, value] of Object.entries(item)) {
-      if (key !== 'item') newItem[key] = value.id;
-    }
-
-    return newItem;
-  });
+  const data = items.results;
 
   const initialState = {
     pageSize: 10,
@@ -68,26 +67,44 @@ const FlaggedItems = () => {
     severity: sortBySeverity,
   };
 
+  const downloadButtons = (
+    <>
+      <DownloadButton
+        service={params.service}
+        resource={params.resource}
+        type="json"
+      />
+      <DownloadButton
+        service={params.service}
+        resource={params.resource}
+        type="csv"
+      />
+    </>
+  );
+
   return (
     <>
       <Breadcrumb />
-      <div className="flagged-items">
-        <div className="table-card">
-          <Table
-            columns={columns}
-            data={data}
-            initialState={initialState}
-            formatters={formatters}
-            sortBy={sortBy}
-            fetchData={fetchData}
-            manualPagination={true}
-            pageCount={items.meta.total_pages}
-          />
-        </div>
+      <div className="finding-items">
+        <ErrorBoundary>
+          <div className="table-card">
+            <Table
+              columns={columns}
+              data={data}
+              initialState={initialState}
+              formatters={formatters}
+              sortBy={sortBy}
+              fetchData={fetchData}
+              manualPagination={true}
+              pageCount={items.meta.total_pages}
+              headerRight={downloadButtons}
+            />
+          </div>
+        </ErrorBoundary>
 
         <div className="selected-item">
           {!params.item ? (
-            <span className="no-item">No selected item</span>
+            <span className="no-item">No finding selected</span>
           ) : (
             <SelectedItemContainer />
           )}

@@ -5,11 +5,13 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 from .blob_containers import BlobContainers
 # from .queues import Queues
+from .blob_services import BlobServices
 
 
 class StorageAccounts(AzureCompositeResources):
     _children = [
         (BlobContainers, 'blob_containers'),
+        (BlobServices, 'blob_services'),
         # (Queues, 'queues')  # FIXME - not implemented by SDK
     ]
 
@@ -32,6 +34,8 @@ class StorageAccounts(AzureCompositeResources):
 
     def _parse_storage_account(self, raw_storage_account):
         storage_account = {}
+
+        encryption = raw_storage_account.encryption
         raw_id = raw_storage_account.id
         storage_account['id'] = get_non_provider_id(raw_id.lower())
         storage_account['resource_group_name'] = get_resource_group_name(raw_id)
@@ -43,6 +47,8 @@ class StorageAccounts(AzureCompositeResources):
         storage_account['bypass'] = raw_storage_account.network_rule_set.bypass
         storage_account['access_keys_last_rotation_date'] = \
             self._parse_access_keys_last_rotation_date(raw_storage_account.activity_logs)
+        storage_account['encryption_key_source'] = raw_storage_account.encryption.key_source
+        storage_account['encryption_key_customer_managed'] = self._is_encryption_key_customer_managed(raw_storage_account.encryption.key_source)
         if raw_storage_account.tags is not None:
             storage_account['tags'] = ["{}:{}".format(key, value) for key, value in  raw_storage_account.tags.items()]
         else:
@@ -65,3 +71,8 @@ class StorageAccounts(AzureCompositeResources):
                 if last_rotation_date is None or last_rotation_date < log.event_timestamp:
                     last_rotation_date = log.event_timestamp
         return last_rotation_date
+
+    def _is_encryption_key_customer_managed(self, key_source):
+        # Microsoft Storage is the default option which is not customer-managed
+        return key_source != "Microsoft.Storage"
+

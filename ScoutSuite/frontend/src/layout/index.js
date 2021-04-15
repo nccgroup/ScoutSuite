@@ -2,21 +2,26 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
+import { useLocation } from 'react-router-dom';
 
 import { useAPI } from '../api/useAPI';
+import { 
+  getDashboardName,
+  getDashboardLink,
+} from '../utils/Dashboard';
 import { getServicesEndpoint } from '../api/paths';
 import Header from './Header';
 import { MenuBar, SubMenu, MenuGroup, MenuElement } from './Menu';
 
 import './style.scss';
-import { getDashboardName } from '../utils/Dashboard';
-import { getDashboardLink } from '../utils/Dashboard/index';
+import DownloadException from '../components/Exceptions/DownloadButton';
 
 const propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 const Layout = (props) => {
+  const location = useLocation();
   const [opened, setOpened] = useState(null);
   const [selected, setSelected] = useState(null);
   const { data: categories, loading } = useAPI(getServicesEndpoint());
@@ -28,9 +33,12 @@ const Layout = (props) => {
       const navOpen = categories.find(({ services }) =>
         services.map((s) => s.id).includes(service ? service[1] : null),
       );
+      const pathParts = location.pathname.split('/');
+      const selected = pathParts.slice(0,5).join('/');
+      setSelected(selected);
       setOpened(navOpen ? navOpen.name : null);
     }
-  }, [categories]);
+  }, [categories, location.pathname]);
 
   if (loading) return null;
 
@@ -47,13 +55,14 @@ const Layout = (props) => {
               key={category.id}
             >
               {category.services.map((service) => (
-                <MenuGroup title={service.name} key={service.id} size="large">
+                <MenuGroup
+                  title={service.name} key={service.id}
+                  size="large">
                   {service.dashboards.map((dashboard) => (
                     <MenuElement
                       link={getDashboardLink(dashboard, service.id)}
                       key={dashboard}
                       selected={selected}
-                      setSelected={setSelected}
                     >
                       <BarChartIcon fontSize="inherit" />{' '}
                       <span>{getDashboardName(dashboard)}</span>
@@ -63,14 +72,13 @@ const Layout = (props) => {
                   {service.resources.map((res) => (
                     <MenuElement
                       link={`services/${service.id}/resources/${res.id}`}
-                      disabled={res.count === 0}
+                      disabled={!res.count}
                       selected={selected}
-                      setSelected={setSelected}
                       key={res.id}
                     >
                       <DevicesOtherIcon fontSize="inherit" />{' '}
                       <span>
-                        {res.name} ({res.count})
+                        {res.name} ({res.count || 0})
                       </span>
                     </MenuElement>
                   ))}
@@ -79,8 +87,11 @@ const Layout = (props) => {
             </SubMenu>
           );
         })}
+        <DownloadException />
       </MenuBar>
-      <div className="main">{children}</div>
+      <div className="main">
+        {children}
+      </div>
     </div>
   );
 };

@@ -7,10 +7,16 @@
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.1.0",
             "reference": "3.7"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "3.6"
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security"
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy"
     ],
     "dashboard_name": "Storage Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",

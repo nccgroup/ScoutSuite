@@ -1,6 +1,7 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import React from 'react';
 import PropTypes from 'prop-types';
+import ResourceLink from '../../../../components/ResourceLink/index';
 
 const propTypes = {
   value: PropTypes.string.isRequired,
@@ -12,7 +13,12 @@ const Name = props => {
   const { value, row: { original } } = props;
 
   return (
-    <Link to={`/services/${params.service}/resources/${params.resource}/${original.id || original.name}?path=${original.path}`}>{value}</Link>
+    <ResourceLink
+      service={params.service} 
+      resource={params.resource}
+      id={original.id} 
+      name={value} 
+    />
   );
 };
 

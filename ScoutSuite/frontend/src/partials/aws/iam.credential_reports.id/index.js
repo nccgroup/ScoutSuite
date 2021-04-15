@@ -17,7 +17,7 @@ const IamCredentialReport = props => {
   return (
     <Partial data={data}>
       <div>
-        <h3>Credentials</h3>
+        <h4>Credentials</h4>
         <PartialValue
           label="Creation Date"
           valuePath="user_creation_time"
@@ -55,7 +55,6 @@ const IamCredentialReport = props => {
         <PartialValue
           label="Hardware MFA Active"
           valuePath="mfa_active_hardware"
-          renderValue={value => value.toString()}
         />
         <PartialValue
           label="Access Key 1 Active"

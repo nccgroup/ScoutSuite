@@ -111,7 +111,7 @@ const IssuesCharts = props => {
                 left: 10,
                 right: 10,
               }}
-              interval={1}
+              interval={0}
               tick={<CustomizedAxisTick />}
             />
             <YAxis />
@@ -123,11 +123,21 @@ const IssuesCharts = props => {
                 fontWeight: 600,
               }}
             />
-            <Bar dataKey="Good" stackId="a" fill={fillColors[0]} />
-            <Bar dataKey="Low" stackId="a" fill={fillColors[1]} />
-            <Bar dataKey="Medium" stackId="a" fill={fillColors[2]} />
-            <Bar dataKey="High" stackId="a" fill={fillColors[3]} />
-            <Bar dataKey="Critical" stackId="a" fill={fillColors[4]} />
+            <Bar
+              dataKey="Good" stackId="a"
+              fill={fillColors[0]} />
+            <Bar
+              dataKey="Low" stackId="a"
+              fill={fillColors[1]} />
+            <Bar
+              dataKey="Medium" stackId="a"
+              fill={fillColors[2]} />
+            <Bar
+              dataKey="High" stackId="a"
+              fill={fillColors[3]} />
+            <Bar
+              dataKey="Critical" stackId="a"
+              fill={fillColors[4]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -145,7 +155,10 @@ const CustomizedAxisTick = props => {
 
   return (
     <g transform={`translate(${payload.coordinate},${y})`}>
-      <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform="rotate(-40)">
+      <text
+        x={0} y={0}
+        dy={16} textAnchor="end"
+        fill="#666" transform="rotate(-40)">
         {payload.value}
       </text>
     </g>

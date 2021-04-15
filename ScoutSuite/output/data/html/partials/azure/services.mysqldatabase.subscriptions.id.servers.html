@@ -1,0 +1,24 @@
+<!-- MySQL Database partial -->
+<script id="services.mysqldatabase.subscriptions.id.servers.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">MySQL Server Name: <span id="mysqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Server SSL connection enforcement: <span id="mysqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.ssl_enforcement">{{ssl_enforcement}}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.mysqldatabase.subscriptions.id.servers", $("#services\\.mysqldatabase\\.subscriptions\\.id\\.servers\\.partial").html());
+</script>
+
+<!-- Single SQL Database template -->
+<script id="single_mysqldatabase_servers-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.mysqldatabase.servers' }}
+</script>
+<script>
+    var single_mysqldatabase_servers_template = Handlebars.compile($("#single_mysqldatabase_servers-template").html());
+</script>

@@ -7,10 +7,16 @@
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.1.0",
             "reference": "3.6"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "3.5"
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources"
+        "https://docs.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access"
     ],
     "dashboard_name": "Storage Accounts",
     "display_path": "storageaccounts.subscriptions.id.storage_accounts.id",

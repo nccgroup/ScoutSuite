@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useAPI } from '../../../api/useAPI';
 import { getItemEndpoint } from '../../../api/paths';
 import LazyPartial from '../../../components/LazyPartial';
+import ErrorBoundary from '../../../components/ErrorBoundary';
 
 const SelectedItemContainer = () => {
   const path = new URL(document.location).searchParams.get('path');
@@ -25,7 +26,11 @@ const SelectedItemContainer = () => {
     ...data,
   };
 
-  return <LazyPartial data={partialData} partial={partialPath} />;
+  return <ErrorBoundary>
+    <LazyPartial
+      data={partialData} path={path}
+      partial={partialPath} />
+  </ErrorBoundary>;
 };
 
 export default SelectedItemContainer;

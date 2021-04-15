@@ -5,7 +5,7 @@ from ScoutSuite import __version__
 class ScoutSuiteArgumentParser:
 
     def __init__(self):
-        self.parser = argparse.ArgumentParser()
+        self.parser = argparse.ArgumentParser(epilog='To get addtional help on a specific provider run: scout.py {provider} -h')
 
         # People will still be able to use the old --provider syntax
         self.parser.add_argument("--provider",
@@ -264,11 +264,6 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Overwrite existing files')
-        parser.add_argument('-l', '--local',
-                            dest='fetch_local',
-                            default=False,
-                            action='store_true',
-                            help='Use local data previously fetched and re-run the analysis.')
         parser.add_argument('--max-rate',
                             dest='max_rate',
                             type=int,
@@ -305,11 +300,16 @@ class ScoutSuiteArgumentParser:
                             default='default.json',
                             nargs='?',
                             help='Set of rules to be used during the analysis.')
-        parser.add_argument('--no-browser',
-                            dest='no_browser',
+        parser.add_argument('--server-only',
+                            dest='server_only',
+                            default=None,
+                            nargs=1,
+                            help='Start the server for the web interface with an existing results file.')
+        parser.add_argument('--report-only',
+                            dest='report_only',
                             default=False,
                             action='store_true',
-                            help='Do not automatically open the report in the browser.')
+                            help='Generate the JSON report but don''t start the web interface.')
         parser.add_argument('--max-workers',
                             dest='max_workers',
                             type=int,
@@ -348,29 +348,6 @@ class ScoutSuiteArgumentParser:
                             default=None,
                             nargs='?',
                             help='Exception file to use during analysis.')
-        parser.add_argument('--result-format',
-                            dest='result_format',
-                            default='json',
-                            type=str,
-                            choices=['json', 'sqlite'],
-                            help="[EXPERIMENTAL FEATURE] The database file format to use. JSON doesn't require a server to view the report, "
-                                 "but cannot be viewed if the result file is over 400mb.")
-        parser.add_argument('--serve',
-                            dest="database_name",
-                            default=None,
-                            const=True,
-                            nargs="?",
-                            help="[EXPERIMENTAL FEATURE] Serve the specified result database on the server to show the report. "
-                                 "This must be used when the results are exported as an sqlite database.")
-        parser.add_argument('--host',
-                            dest="host_ip",
-                            default="127.0.0.1",
-                            help="[EXPERIMENTAL FEATURE] Address on which you want the server to listen. Defaults to localhost.")
-        parser.add_argument('--port',
-                            dest="host_port",
-                            type=int,
-                            default=8000,
-                            help="[EXPERIMENTAL FEATURE] Port on which you want the server to listen. Defaults to 8000.")
 
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)
@@ -392,14 +369,16 @@ class ScoutSuiteArgumentParser:
                                   'and Secret Access Key.')
         # Azure
         elif v.get('provider') == 'azure':
-            if v.get('tenant_id') and not (v.get('service_principal') or v.get('user_account_browser')):
-                self.parser.error('--tenant can only be set when using --user-account-browser or --service-principal authentication')
+            if v.get('tenant_id') and not (v.get('service_principal') or v.get('user_account_browser') or v.get('user_account')):
+                self.parser.error('--tenant can only be set when using --user-account-browser or --user-account or '
+                                  '--service-principal authentication')
             if v.get('service_principal') and not v.get('tenant_id'):
                 self.parser.error('You must provide --tenant when using --service-principal authentication')
             if v.get('user_account_browser') and not v.get('tenant_id'):
                 self.parser.error('You must provide --tenant when using --user-account-browser authentication')
+            if v.get('user_account') and not v.get('tenant_id'):
+                self.parser.error('You must provide --tenant when using --user-account authentication')
             if v.get('subscription_ids') and v.get('all_subscriptions'):
                 self.parser.error('--subscription-ids and --all-subscriptions are mutually exclusive options')
 
         return args
-

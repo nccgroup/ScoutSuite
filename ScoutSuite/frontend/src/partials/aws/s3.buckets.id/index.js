@@ -6,7 +6,8 @@ import isEmpty from 'lodash/isEmpty';
 import { partialDataShape } from '../../../utils/Partials';
 import { Partial, PartialSection } from '../../../components/Partial';
 import Policy from '../../../components/Partial/Policy';
-import { TabsMenu, TabPane } from '../../../components/Tabs';
+import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import Informations from './Informations';
 import AccessControlList from './AccessControlList';
 import PoliciesAccessTable from './PoliciesAccessTable';
@@ -29,9 +30,9 @@ const Bucket = props => {
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
+      <InformationsWrapper>
         <Informations />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu className="bucket-policies">
         {!isEmpty(policy) && (

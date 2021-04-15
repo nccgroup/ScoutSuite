@@ -1,0 +1,20 @@
+@import 'src/variables';
+
+.rds-parameters {
+  .partial-value {
+    display: flex;
+
+    .parameter-label {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 0.5rem;
+
+      svg {
+        font-size: 1rem;
+        margin-right: 0.25rem;
+        color: $link-color;
+        cursor: pointer;
+      }
+    }
+  }
+}

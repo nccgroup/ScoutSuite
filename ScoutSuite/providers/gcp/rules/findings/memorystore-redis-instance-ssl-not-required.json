@@ -1,0 +1,19 @@
+{
+    "description": "Memory Instance Not Requiring SSL for Incoming Connections",
+    "rationale": "All incoming connections to Cloud Memorystore databases should require the use of SSL.",
+    "compliance": [],
+    "references": [
+        "https://cloud.google.com/memorystore/docs/redis/securing-tls-connections"
+    ],
+    "dashboard_name": "Redis Instances",
+    "path": "cloudmemorystore.projects.id.redis_instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudmemorystore.projects.id.redis_instances.id.ssl_required",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "ssl_required"
+}

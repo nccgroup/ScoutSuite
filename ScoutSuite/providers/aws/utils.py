@@ -111,3 +111,27 @@ def snake_keys(d):
             else:
                 new_table[new_key] = d[k]
     return new_table
+
+def format_arn(partition, service, region, account_id, resource_id, resource_type=None):
+    """
+    Formats a resource ARN based on the parameters
+
+    :param partition:                   The partition where the resource is located
+    :param service:                     The service namespace that identified the AWS product
+    :param region:                      The corresponding region
+    :param account_id:                  The ID of the AWS account that owns the resource
+    :param resource_id:                 The resource identified
+    :param resource_type:               (Optional) The resource type
+    :return:                            Resource ARN
+    """
+
+    try:
+        # If a resource type is specified
+        if resource_type is not None:
+            arn = f"arn:{partition}:{service}:{region}:{account_id}:{resource_type}/{resource_id}"
+        else:
+            arn = f"arn:{partition}:{service}:{region}:{account_id}:{resource_id}"
+    except Exception as e:
+        print_exception(f'Failed to parse a resource ARN: {e}')
+        return None
+    return arn

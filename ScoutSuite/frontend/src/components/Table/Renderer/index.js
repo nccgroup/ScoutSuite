@@ -11,6 +11,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import cx from 'classnames';
+import { useParams } from 'react-router-dom';
 
 const propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -22,6 +23,7 @@ const propTypes = {
   pageCount: PropTypes.number,
   fetchData: PropTypes.func,
   manualPagination: PropTypes.bool,
+  headerRight: PropTypes.element,
 };
 
 const TableRender = (props) => {
@@ -33,11 +35,14 @@ const TableRender = (props) => {
     pageCount: controlledPageCount,
     fetchData,
     manualPagination,
-    initialState
+    initialState,
+    headerRight
   } = props;
 
-  const columnsMemo = React.useMemo(() => columns);
-  const dataMemo = React.useMemo(() => data);
+  const params = useParams();
+
+  const columnsMemo = React.useMemo(() => columns, [columns]);
+  const dataMemo = React.useMemo(() => data, [data]);
 
   const useTableParams = [
     {
@@ -78,6 +83,7 @@ const TableRender = (props) => {
     previousPage,
     nextPage,
     pageCount,
+    gotoPage,
     state: { pageIndex, sortBy },
   } = tableInstance;
 
@@ -95,11 +101,20 @@ const TableRender = (props) => {
     }
   }, [pageIndex, sortBy]);
 
+  useEffect(() => {
+    gotoPage(0);
+  }, [params.service, params.resource, params.finding]);
+
   return (
     <>
       {!disableSearch && (
-        <div className="search-bar">
-          <input placeholder="Search in this table" />
+        <div className="table-header">
+          <div className="search-bar">
+            <input placeholder="Search in this table" />
+          </div>
+          <div className="table-header-right">
+            {headerRight}
+          </div>
         </div>
       )}
 

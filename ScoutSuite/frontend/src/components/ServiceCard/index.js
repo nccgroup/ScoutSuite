@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import cx from 'classnames';
 
 import ServiceStatus from '../ServiceStatus';
@@ -11,6 +10,7 @@ import DetailedValue from '../DetailedValue';
 import './style.scss';
 
 const propTypes = {
+  id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   resources: PropTypes.number.isRequired,
   rules: PropTypes.number.isRequired,
@@ -19,16 +19,11 @@ const propTypes = {
 };
 
 const ServiceCard = props => {
-  const {
-    name,
-    issues,
-    resources,
-    rules,
-  } = props;
+  const { id, name, issues, resources, rules } = props;
 
   const hasFindings = rules > 0;
-  const findingsPath = hasFindings ? `/services/${name.toLowerCase()}/findings` : '/';
-  
+  const findingsPath = hasFindings ? `/services/${id}/findings` : '/';
+
   return (
     <div className="service-card">
       <div className="header">
@@ -43,32 +38,39 @@ const ServiceCard = props => {
           {issues.Medium > 0 && (
             <ServiceStatus status="medium" amount={issues.Medium} />
           )}
-          {issues.Low > 0 && (
-            <ServiceStatus status="low" amount={issues.Low} />
-          )}
+          {issues.Low > 0 && <ServiceStatus status="low" amount={issues.Low} />}
           {issues.Good > 0 && (
             <ServiceStatus status="good" amount={issues.Good} />
           )}
-          
         </div>
       </div>
-      <hr/>
+      <hr />
       <div className="content">
-        <DetailedValue label="Resources" value={resources} separator="" />
-        <DetailedValue label="Rules" value={rules} separator="" />
-        <DetailedValue label="Flagged Items" value={props['flagged-items']} separator="" />
+        <DetailedValue
+          label="Resources" value={resources}
+          separator="" />
+        <DetailedValue
+          label="Rules" value={rules}
+          separator="" />
+        <DetailedValue
+          label="Flagged Items"
+          value={props['flagged-items']}
+          separator=""
+        />
       </div>
-      <hr/>
+      <hr />
       <div className="footer">
-        <Link 
-          className={cx('link', { 'disabled': !hasFindings })} 
+        <Link
+          className={cx('link', { disabled: !hasFindings })}
           to={findingsPath}
         >
           {hasFindings ? (
             <>
-              View report <FontAwesomeIcon icon={faChevronRight}/>
+              View report <ChevronRightIcon />
             </>
-          ) : 'No findings'}
+          ) : (
+            'No findings'
+          )}
         </Link>
       </div>
     </div>

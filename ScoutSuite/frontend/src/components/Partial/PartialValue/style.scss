@@ -1,13 +1,37 @@
 @import 'src/variables';
 
 .partial-value {
-  .warning {
-    color: $medium-color;
+  .inline {
+    display: inline;
+  }
+
+  .issue {
+    display: inline-flex;
+    align-items: center;
     font-weight: 700;
   }
 
-  .danger {
+  .critical {
+    color: $critical-color;
+  }
+
+  .high, .danger {
     color: $high-color;
-    font-weight: 700;
+  }
+
+  .medium, .warning {
+    color: $medium-color;
+  }
+
+  .low {
+    color: $low-color;
+  }
+
+  .exception-btn {
+    margin-left: 0.5rem;
+
+    svg {
+      font-size: 1rem;
+    }
   }
 }

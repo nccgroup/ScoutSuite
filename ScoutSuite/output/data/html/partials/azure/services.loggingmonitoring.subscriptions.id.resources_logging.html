@@ -1,0 +1,22 @@
+<!-- Logging and Monitoring Resource Logging-->
+<script id="services.loggingmonitoring.subscriptions.id.resources_logging.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Logging for key vault enabled: <span id="loggingmonitoring.subscriptions.{{@../key}}.resources_logging.{{@key}}.diagnostic_key_vault_audit_event_enabled"><samp>{{convert_bool_to_enabled diagnostic_key_vault.audit_event_enabled}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.loggingmonitoring.subscriptions.id.resources_logging", $("#services\\.loggingmonitoring\\.subscriptions\\.id\\.resources_logging\\.partial").html());
+</script>
+
+<!-- Single loggingmonitoring resource logging template -->
+<script id="single_loggingmonitoring_resources_logging-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.loggingmonitoring.subscriptions.id.resources_logging'}}
+</script>
+<script>
+    var single_loggingmonitoring_resources_logging_template = Handlebars.compile($("#single_loggingmonitoring_resources_logging-template").html());
+</script>

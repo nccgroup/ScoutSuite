@@ -4,14 +4,21 @@
   color: $text-muted;
   font-weight: 700;
   margin-right: 1rem;
+  cursor: pointer;
+
+  .tab-content {
+    display: none;
+  }
 
   &.is-selected {
     color: $font-color;
     padding-bottom: 0.125rem;
     border-bottom: 2px solid $font-color;
+    cursor: default;
   }
-  
-  &:not(.is-selected):hover {
-    cursor: pointer;
+
+  &.disabled {
+    color: $default-grey-light;
+    cursor: not-allowed;
   }
 }

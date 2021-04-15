@@ -1,0 +1,34 @@
+{
+    "description": "Uniform Bucket-Level Access Is Disabled",
+    "rationale": "It is recommended to use uniform bucket-level access to unify and simplify how you grant access to your Cloud Storage resources. In order to support a uniform permissioning system, Cloud Storage has uniform bucket-level access. Using this feature disables ACLs for all Cloud Storage resources: access to Cloud Storage resources then is granted exclusively through Cloud IAM. Enabling uniform bucket-level access guarantees that if a Storage bucket is not publicly accessible, no object in the bucket is publicly accessible either.",
+    "remediation": "From console:<ol><li>Open the Cloud Storage browser in the Google Cloud Console by visiting: https://console.cloud.google.com/storage/browser</li><li>In the list of buckets, click on the name of the desired bucket.</li><li>Select the <samp>Permissions</samp> tab near the top of the page.</li><li>In the text box that starts with <samp>This bucket uses fine-grained access control</samp>..., click <samp>Edit</samp>.</li><li>In the pop-up menu that appears, select <samp>Uniform</samp>.</li><li>Click <samp>Save</samp>.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "5.2"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/storage/docs/uniform-bucket-level-access",
+        "https://cloud.google.com/storage/docs/using-uniform-bucket-level-access",
+        "https://cloud.google.com/storage/docs/org-policy-constraints#uniform-bucket"
+    ],
+    "dashboard_name": "Buckets",
+    "display_path": "cloudstorage.projects.id.buckets.id",
+    "path": "cloudstorage.projects.id.buckets.id",
+    "conditions": [
+        "or",
+        [
+            "cloudstorage.projects.id.buckets.id.uniform_bucket_level_access",
+            "false",
+            ""
+        ],
+        [
+            "cloudstorage.projects.id.buckets.id.uniform_bucket_level_access",
+            "equal",
+            "None"
+        ]
+    ],
+    "id_suffix": "uniform_bucket_level_access"
+}

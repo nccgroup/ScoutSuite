@@ -6,11 +6,9 @@ import isArray from 'lodash/isArray';
 
 import './style.scss';
 
+
 const propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.array,
-  ]).isRequired,
+  children: PropTypes.node.isRequired,
   className: PropTypes.string,
 };
 
@@ -23,7 +21,9 @@ const TabsMenu = props => {
   let children = isArray(props.children) ? props.children : [props.children];
   children = children.filter(x => x);
 
-  const [ selectedTab, setSelectedTab ] = useState(0);
+  const [ selectedTab, setSelectedTab ] = useState(
+    children.findIndex(tab => !tab.props.disabled)  // selects first non-disabled tab
+  );
   const content = get(children[selectedTab], ['props', 'children']);
 
   return (
@@ -36,7 +36,7 @@ const TabsMenu = props => {
         }))}
       </div>
       <div className="tab-content">
-        {React.isValidElement(content) && content}
+        {content}
       </div>
     </div>
   );

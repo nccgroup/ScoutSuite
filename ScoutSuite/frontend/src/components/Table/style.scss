@@ -1,4 +1,26 @@
-@import 'src/variables.scss';
+@import 'src/variables';
+
+.table-responsive {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow-x: auto;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+
+  .table-header-right {
+    display: flex;
+    align-items: flex-end;
+
+    & > * {
+      margin-right: 0.75rem;
+    }
+  }
+}
 
 .table {
   text-align: left;
@@ -77,6 +99,7 @@
     padding: 0.3125rem 1.5rem;
     border: 1px solid $default-grey-light;
     outline: none;
+    color: $font-color;
     caret-color: $default-grey;
     border-radius: $border-radius;
 

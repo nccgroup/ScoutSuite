@@ -1,9 +1,8 @@
-@import 'src/variables.scss';
+@import 'src/variables';
 
 .findings {
   .table-card {
     position: relative;
-    overflow: hidden;
     margin-right: 2rem;
     background: $white;
     border-radius: $border-radius;

@@ -3,17 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.34",
-    "@fortawesome/free-solid-svg-icons": "^5.15.2",
-    "@fortawesome/react-fontawesome": "^0.1.14",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "lodash": "^4.17.20",
+    "notistack": "^1.0.5",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-collapsible": "^2.8.3",
@@ -27,7 +26,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build  && cp -r build/* ../web_report/",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "npx eslint .eslintrc.js --fix --ext .js src/"
@@ -49,6 +48,8 @@
     "enquirer": "^2.3.6",
     "eslint": "^7.19.0",
     "eslint-plugin-react": "^7.22.0",
-    "husky": "^5.0.9"
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^5.0.9",
+    "prettier-eslint-cli": "^5.0.1"
   }
 }

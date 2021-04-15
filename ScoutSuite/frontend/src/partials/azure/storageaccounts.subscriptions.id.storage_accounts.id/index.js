@@ -11,11 +11,37 @@ import {
   convertValueOrNever,
   convertListToChips,
 } from '../../../utils/Partials/index';
-import { TabPane, TabsMenu } from '../../../components/Tabs';
-import PartialTable from '../../../components/Partial/PartialTable/index';
+import { TabPane, TabsMenu } from '../../../components/Partial/PartialTabs';
+import InformationsWrapper from '../../../components/InformationsWrapper';
+
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
+};
+
+const renderBlobContainer = data => {
+  return (<li key={data.id}>
+    <h2>{data.id}</h2>
+    <ul>
+      <PartialValue
+        label="Public Access Allowed"
+        valuePath={`blob_services.${data.id}.public_access_allowed`}
+        renderValue={convertBoolToEnable}
+      />
+    </ul>
+  </li>);
+};
+const renderBlobService = data => {
+  return (<li key={data.id}>
+    <h2>{data.name}</h2>
+    <ul>
+      <PartialValue
+        label="Soft Delete"
+        valuePath={`blob_services.${data.id}.soft_delete_enabled`}
+        renderValue={convertBoolToEnable}
+      />
+    </ul>
+  </li>);
 };
 
 const Bucket = (props) => {
@@ -23,71 +49,77 @@ const Bucket = (props) => {
 
   if (!data) return null;
 
-  const blobColumns = [
-    {
-      name: 'Key',
-      key: 'key',
-    },
-    {
-      name: 'Public Access',
-      key: 'public_access_allowed',
-    },
-  ];
-
-  const blobRenderers = { public_access_allowed: convertBoolToEnable };
 
   const blob_containers = get(data, ['item', 'blob_containers']);
+  const blob_services = get(data, ['item', 'blob_services']);
 
   return (
     <Partial data={data}>
-      <div className="left-pane">
-        <PartialValue label="Storage Account Name" path="name" />
+      <InformationsWrapper>
+        <PartialValue
+          label="Storage Account Name"
+          valuePath="name"
+        />
         <PartialValue
           label="Public Traffic"
-          path="public_traffic_allowed"
+          valuePath="public_traffic_allowed"
           renderValue={convertBoolToEnable}
         />
         <PartialValue
           label="HTTPS Required"
-          path="https_traffic_enabled"
+          valuePath="https_traffic_enabled"
           renderValue={convertBoolToEnable}
         />
         <PartialValue
           label="Microsoft Trusted Services"
-          path="trusted_microsoft_services_enabled"
+          valuePath="trusted_microsoft_services_enabled"
           renderValue={convertBoolToEnable}
         />
         <PartialValue
           label="Last Access Key Rotation"
-          path="access_keys_rotated"
+          valuePath="access_keys_rotated"
           renderValue={convertValueOrNever}
         />
         <PartialValue
+          label="Storage encrypted with Customer Managed Key"
+          valuePath="encryption_key_customer_managed"
+          renderValue={convertBoolToEnable}
+        />
+        <PartialValue
           label="Tags"
-          path="tags"
+          valuePath="tags"
           renderValue={convertListToChips}
         />
         <PartialValue
           label="Resource group"
-          path="resource_group_name"
+          valuePath="resource_group_name"
           renderValue={convertValueOrNever}
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Blob Containers">
           {!isEmpty(blob_containers) ? (
-            <PartialTable
-              columns={blobColumns}
-              path="blob_containers"
-              formatters={blobRenderers}
-            />
+            <ul>
+              {Object.values(blob_containers).map((value) =>
+                renderBlobContainer(value)
+              )}</ul>
+          ) : (
+            <span>None</span>
+          )}
+        </TabPane>
+        <TabPane title="Blob Services">
+          {!isEmpty(blob_services) ? (
+            <ul>
+              {Object.values(blob_services).map((value) => renderBlobService(value)
+              )}
+            </ul>
           ) : (
             <span>None</span>
           )}
         </TabPane>
       </TabsMenu>
-    </Partial>
+    </Partial >
   );
 };
 

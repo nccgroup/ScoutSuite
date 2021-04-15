@@ -69,4 +69,7 @@ report-*
 /private*/
 /**/private*/
 
+#Profiling output
+*.prof
+
 !docker/bin

@@ -1,8 +1,7 @@
 import { useParams } from 'react-router-dom';
 import React from 'react';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
-
-// import PropTypes from 'prop-types';
+import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../api/useAPI';
 import { getFindingsEndpoint } from '../../api/paths';
@@ -15,13 +14,25 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 
 import './style.scss';
 
-const propTypes = {};
 
 const Findings = () => {
   const params = useParams();
   const { data: findings, loading } = useAPI(getFindingsEndpoint(params.service));
 
   if (loading) return null;
+
+  if (isEmpty(findings)) {
+    return (
+      <>
+        <Breadcrumb />
+        <div className="findings">
+          <div className="table-card no-items">
+            <CheckCircleOutlineOutlinedIcon /> <b>All good!</b> No findings for this service.
+          </div>
+        </div>
+      </>
+    );
+  }
 
   const columns = [
     { name: 'Severity', key: 'severity', sortInverted: true },
@@ -39,6 +50,7 @@ const Findings = () => {
     references: item.references,
     remediation: item.remediation,
     flagged_items: item.flagged_items,
+    compliance: item.compliance,
   }));
 
   const initialState = {
@@ -61,19 +73,6 @@ const Findings = () => {
     severity: sortBySeverity,
   };
 
-  if (findings.length === 0) {
-    return (
-      <>
-        <Breadcrumb />
-        <div className="findings">
-          <div className="table-card no-items">
-            <CheckCircleOutlineOutlinedIcon /> <b>All good!</b> No findings for this service.
-          </div>
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
       <Breadcrumb />
@@ -91,7 +90,5 @@ const Findings = () => {
     </>
   );
 };
-
-Findings.propTypes = propTypes;
 
 export default Findings;

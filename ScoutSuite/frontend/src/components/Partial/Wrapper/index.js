@@ -6,14 +6,13 @@ import { partialDataShape } from '../../../utils/Partials';
 
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
-  ]).isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 const PartialWrapper = (props) => {
   const { data, children } = props;
+
+  console.info('PARTIAL DATA', data);
 
   return (
     <PartialContext.Provider value={data}>

@@ -1,0 +1,24 @@
+
+<!-- Cloud Resources Manager Separation Duties bindings' partial -->
+<script id="services.iam.projects.id.bindings_separation_duties.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Separation of duties enforced for service account related roles: <span id="iam.projects.{{@../key}}.bindings_separation_duties.{{@key}}.account_separation_duties"><samp>{{account_separation_duties}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Separation of duties enforced for KMS related roles: <span id="iam.projects.{{@../key}}.bindings_separation_duties.{{@key}}.kms_separation_duties"><samp>{{kms_separation_duties}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.iam.projects.id.bindings_separation_duties", $("#services\\.iam\\.projects\\.id\\.bindings_separation_duties\\.partial").html());
+</script>
+
+<!-- Single iam bindings separation duties template -->
+<script id="single_iam_bindings_separation_duties-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.iam.projects.id.bindings_separation_duties'}}
+</script>
+<script>
+    var single_iam_bindings_separation_duties_template = Handlebars.compile($("#single_iam_bindings_separation_duties-template").html());
+</script>

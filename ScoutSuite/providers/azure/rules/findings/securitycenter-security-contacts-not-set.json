@@ -14,7 +14,6 @@
         }
     ],
     "dashboard_name": "Security Center",
-    "display_path": "securitycenter.subscriptions.id.security_contacts",
     "path": "securitycenter.subscriptions.id.security_contacts",
     "conditions": [
         "and",

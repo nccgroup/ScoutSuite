@@ -1,13 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+
+import DetailedValue from '../../components/DetailedValue';
+import ResourceLink from '../../components/ResourceLink';
+
+
+export const partialDataShape = {
+  item: PropTypes.object.isRequired,
+  path_to_issues: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 /**
  * Convert a boolean to enabled or disabled
  * @param value
  * @returns {string}
  */
-export const convertBoolToEnable = value => value ? 'enabled' : 'disabled';
+export const convertBoolToEnable = value => value ? 'Enabled' : 'Disabled';
 
 /**
  * Convert a boolean to a checkmark or x
@@ -17,24 +27,29 @@ export const convertBoolToEnable = value => value ? 'enabled' : 'disabled';
 export const convertBoolToCheckmark = value => value ? '✔' : '✖';
 
 /**
+ * Convert a boolean to a readable boolean
+ * @param title
+ * @returns {string}
+ */
+export const convertBoolToString = value => value ? 'true' : 'false';
+
+/**
  * Convert value to never if invalid
- * @param {*} value 
- * @returns 
+ * @param value 
+ * @returns {any|string}
  */
 export const convertValueOrNever = value => value ? value : 'Never';
 
 /**
  * Convert a list of value to a list of chips
- * @param {*} list 
- * @returns 
+ * @param list 
+ * @returns {array|string}
  */
-export const convertListToChips = list => list && list.length > 0 ? list.map((item, index) => <span className="chip" key={index}>{item}</span>) : 'None';
+export const convertListToChips = list => 
+  !isEmpty(list) 
+    ? list.map((item, index) => <span className="chip" key={index}>{item}</span>) 
+    : 'None';
 
-
-export const partialDataShape = {
-  item: PropTypes.object.isRequired,
-  path_to_issues: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
 /**
  * Convert a boolean to a 'yes' or 'no'
  * @param value
@@ -82,6 +97,7 @@ export const formatDate = time => {
 };
 
 /**
+ * Render div with content set throught innerHTML
  * @param innerHtml 
  * @param props 
  * @returns {HTMLDivElement}
@@ -94,17 +110,99 @@ export const renderWithInnerHtml = (innerHtml, props) => (
 );
 
 /**
- * Render the resources in an object as an unordered list
+ * Render the items in an object as an unordered list
  * @param resources 
  * @param accessor 
  * @returns {HTMLUListElement}
  */
-export const renderResourcesAsList = (resources, accessor) => (
+export const renderList = (items, accessor, renderValue) => {
+  if (!items || items.length === 0) return <span>None</span>;
+
+  return (
+    <ul>
+      {items.map((item, i) => {
+        const value = get(item, accessor, item);
+        return (
+          <li key={i}>
+            {renderValue ? renderValue(value) : value}
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
+
+/**
+ * Render a Security Group object as a link
+ * @param securityGroup 
+ * @returns {ResourceLink}
+ */
+export const renderSecurityGroupLink = ({ GroupId }) => (
+  <ResourceLink
+    service="ec2"
+    resource="security_groups"
+    id={GroupId}
+    name={GroupId}
+  />
+);
+
+/**
+ * Render a Policy id as a link
+ * @param id 
+ * @returns {ResourceLink}
+ */
+export const renderPolicyLink = id => (
+  <ResourceLink
+    service="iam"
+    resource="policies"
+    id={id}
+  />
+);
+
+/**
+ * Render a FlowLog id as a link
+ * @param id 
+ * @returns {ResourceLink}
+ */
+export const renderFlowlogLink = id => (
+  <ResourceLink
+    service="vpc"
+    resource="flow_logs"
+    id={id}
+    name={id}
+  />
+);
+
+/**
+ * Generates a function with the 'service' and 'resource' set in order 
+ * to render the links in a list when given to the 'renderList' function
+ * @param {string} service 
+ * @param {string} type 
+ * @returns {function}
+ */
+// eslint-disable-next-line
+export const renderResourceLink = (service, type) => (resource) => (
+  <ResourceLink
+    service={service}
+    resource={type}
+    id={resource.id}
+    name={resource.name}
+  />
+);
+
+/**
+ * Render tags in an unordered list
+ * @param tags 
+ * @returns {HTMLUListElement}
+ */
+export const renderAwsTags = tags => (
   <ul>
-    {Object.values(resources).map((resource, i) => (
+    {tags.map((tag, i) => (
       <li key={i}>
-        {/* TODO: link to resource */}
-        {get(resource, accessor, resource)}
+        <DetailedValue
+          label={tag.Key}
+          value={tag.Value}
+        />
       </li>
     ))}
   </ul>

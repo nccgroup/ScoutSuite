@@ -1,0 +1,45 @@
+<!-- PostgreSQL Database partial -->
+<script id="services.postgresqldatabase.subscriptions.id.servers.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+
+        <div class="list-group-item-text item-margin">PostgreSQL Server Name: <span id="postgresqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Server SSL connection enforcement: <span id="postgresqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.ssl_enforcement">{{ssl_enforcement}}</span></div>
+        <div class="list-group-item-text item-margin">Log checkpoint server parameter: <span id="postgresqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_log_checkpoints_value">{{log_checkpoints.value}}</span></div>
+        <div class="list-group-item-text item-margin">Log connections server parameter: <span id="postgresqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_log_connections_value">{{log_connections.value}}</span></div>
+        <div class="list-group-item-text item-margin">Log disconnections server parameter: <span id="postgresqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_log_disconnections_value">{{log_disconnections.value}}</span></div>
+        <div class="list-group-item-text item-margin">Log duration server parameter: <span id="postgresqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_log_duration_value">{{log_duration.value}}</span></div>
+        <div class="list-group-item-text item-margin">Connection throttling server parameter: <span id="postgresqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_connection_throttling_value">{{connection_throttling.value}}</span></div>
+        <div class="list-group-item-text item-margin">Log retention days server parameter: <span id="postgresqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_log_retention_days_value">{{log_retention_days.value}}</span></div>
+
+    </div>
+
+        <div class="list-group-item">
+        <h4 class="list-group-item-heading">PostgreSQL Firewall Rules</h4>
+        <div class="list-group-item-text item-margin">
+            {{#each postgresql_firewall_rules}}
+            <samp>{{name}}</samp>
+            <div class="list-group-item-text item-margin">
+                <div class="list-group-item-text item-margin">PostgreSQL Firewall rule start IP: <span id="postgresqldatabase.subscriptions.{{@../../key}}.servers.{{@../key}}.postgresql_firewall_rules.{{@key}}.start_ip">{{start_ip}}</span></div>
+                <div class="list-group-item-text item-margin">PostgreSQL Firewall rule end IP: <span id="postgresqldatabase.subscriptions.{{@../../key}}.servers.{{@../key}}.postgresql_firewall_rules.{{@key}}.end_ip">{{end_ip}}</span></div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.postgresqldatabase.subscriptions.id.servers", $("#services\\.postgresqldatabase\\.subscriptions\\.id\\.servers\\.partial").html());
+</script>
+
+<!-- Single SQL Database template -->
+<script id="single_postgresqldatabase_servers-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.postgresqldatabase.servers' }}
+</script>
+<script>
+    var single_postgresqldatabase_servers_template = Handlebars.compile($("#single_postgresqldatabase_servers-template").html());
+</script>
