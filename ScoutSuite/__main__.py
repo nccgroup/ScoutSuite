@@ -60,7 +60,7 @@ def run_from_cli():
                    max_workers=args.get('max_workers'),
                    regions=args.get('regions'),
                    excluded_regions=args.get('excluded_regions'),
-                   fetch_local=args.get('fetch_local'), update=args.get('update'),
+                   update=args.get('update'),
                    max_rate=args.get('max_rate'),
                    ip_ranges=args.get('ip_ranges'), ip_ranges_name_key=args.get('ip_ranges_name_key'),
                    ruleset=args.get('ruleset'), exceptions=args.get('exceptions'),
@@ -102,7 +102,7 @@ def run(provider,
         max_workers=10,
         regions=[],
         excluded_regions=[],
-        fetch_local=False, update=False,
+        update=False,
         max_rate=None,
         ip_ranges=[], ip_ranges_name_key='name',
         ruleset='default.json', exceptions=None,
@@ -152,7 +152,7 @@ async def _run(provider,
                services, skipped_services, list_services,
                regions,
                excluded_regions,
-               fetch_local, update,
+               update,
                ip_ranges, ip_ranges_name_key,
                ruleset, exceptions,
                force_write,
@@ -175,8 +175,7 @@ async def _run(provider,
     if server_only:
         print_info('Starting local server for web interface')
         start_api(
-            load_from_json_file(server_only[0]),
-            load_from_json_file(exceptions)
+            load_from_json_file(server_only[0])
         )
         return 0
 
@@ -252,42 +251,29 @@ async def _run(provider,
         return 0
 
     # Complete run, including pulling data from provider
-    if not fetch_local:
+    # Fetch data from provider APIs
+    try:
+        print_info('Gathering data from APIs')
+        await cloud_provider.fetch(regions=regions, excluded_regions=excluded_regions)
+    except KeyboardInterrupt:
+        print_info('\nCancelled by user')
+        return 130
+    except Exception as e:
+        print_exception('Unhandled exception thrown while gathering data: {}'.format(e))
+        return 104
 
-        # Fetch data from provider APIs
+    # Update means we reload the whole config and overwrite part of it
+    if update:
         try:
-            print_info('Gathering data from APIs')
-            await cloud_provider.fetch(regions=regions, excluded_regions=excluded_regions)
-        except KeyboardInterrupt:
-            print_info('\nCancelled by user')
-            return 130
-        except Exception as e:
-            print_exception('Unhandled exception thrown while gathering data: {}'.format(e))
-            return 104
-
-        # Update means we reload the whole config and overwrite part of it
-        if update:
-            try:
-                print_info('Updating existing data')
-                #Load previous results
-                last_run_dict = report.encoder.load_from_file('RESULTS')
-                #Get list of previous services which were not updated during this run
-                previous_services = [prev_service for prev_service in last_run_dict['service_list'] if prev_service not in cloud_provider.service_list]
-                #Add previous services
-                for service in previous_services:
-                    cloud_provider.service_list.append(service)
-                    cloud_provider.services[service] = last_run_dict['services'][service]
-            except Exception as e:
-                print_exception('Failure while updating report: {}'.format(e))
-
-    # Partial run, using pre-pulled data
-    else:
-        try:
-            print_info('Using local data')
-            # Reload to flatten everything into a python dictionary
+            print_info('Updating existing data')
+            #Load previous results
             last_run_dict = report.encoder.load_from_file('RESULTS')
-            for key in last_run_dict:
-                setattr(cloud_provider, key, last_run_dict[key])
+            #Get list of previous services which were not updated during this run
+            previous_services = [prev_service for prev_service in last_run_dict['service_list'] if prev_service not in cloud_provider.service_list]
+            #Add previous services
+            for service in previous_services:
+                cloud_provider.service_list.append(service)
+                cloud_provider.services[service] = last_run_dict['services'][service]
         except Exception as e:
             print_exception('Failure while updating report: {}'.format(e))
 

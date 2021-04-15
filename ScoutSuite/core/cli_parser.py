@@ -264,11 +264,6 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Overwrite existing files')
-        parser.add_argument('-l', '--local',
-                            dest='fetch_local',
-                            default=False,
-                            action='store_true',
-                            help='Use local data previously fetched and re-run the analysis.')
         parser.add_argument('--max-rate',
                             dest='max_rate',
                             type=int,
@@ -315,11 +310,6 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Generate the JSON report but don''t start the web interface.')
-        # parser.add_argument('--no-browser',
-        #                     dest='no_browser',
-        #                     default=False,
-        #                     action='store_true',
-        #                     help='Do not automatically open the report in the browser.')
         parser.add_argument('--max-workers',
                             dest='max_workers',
                             type=int,
