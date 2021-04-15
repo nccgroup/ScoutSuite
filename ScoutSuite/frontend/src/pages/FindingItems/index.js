@@ -1,10 +1,9 @@
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../../api/useAPI';
 import { getItemsEndpoint } from '../../api/paths';
-import { makeTitle } from '../../utils/Partials';
 import { sortBySeverity } from '../../utils/Severity/sort';
 import Table from '../../components/Table';
 import Name from './formatters/Name/index';
@@ -18,42 +17,55 @@ import ErrorBoundary from '../../components/ErrorBoundary';
 
 const FlaggedItems = () => {
   const params = useParams();
-  const { data: items, loading, loadPage } = useAPI(
+  const { data: response, loading, loadPage } = useAPI(
     getItemsEndpoint(params.service, params.finding),
     [],
     { pagination: true },
   );
+  const data = response.results;
 
-  const fetchData = React.useCallback(({ pageIndex, sortBy, direction }) => {
-    loadPage(pageIndex + 1, sortBy, direction);
+  const [defaultObj, setdefaultObj] = useState({});
+
+  useEffect(() => {
+    if (
+      data &&
+      !isEmpty(data[0]) &&
+      JSON.stringify(data[0]) !== JSON.stringify(defaultObj)
+    ) {
+      setdefaultObj(data[0]);
+    }
+  }, [data]);
+
+  const fetchData = React.useCallback(({ pageIndex, sortBy, direction, filters }) => {
+    loadPage(pageIndex + 1, sortBy, direction, null, filters);
   }, []);
-
-  if (isEmpty(items) || isEmpty(items.results)) {
-    return (
-      <>
-        <Breadcrumb />
-        <div>Server request failed</div>
-      </>
-    );
-  }
 
   if (loading) {
     return <Breadcrumb />;
   }
 
-  const unwantedKeys = [
-    'id',
-    'display_path',
-  ];
+  const keys = Object.keys(defaultObj);
+  const columns = [{ name: 'Name', key: 'name' }];
 
-  const columns = [];
+  // AWS columns
+  if (keys.includes('region')) columns.push({ name: 'Region', key: 'region' });
+  if (keys.includes('vpc')) columns.push({ name: 'VPC', key: 'vpc' });
+  if (keys.includes('AvailabilityZone'))
+    columns.push({ name: 'Availability Zone', key: 'AvailabilityZone' });
+  if (keys.includes('availability_zone'))
+    columns.push({ name: 'Availability Zone', key: 'availability_zone' });
+  if (keys.includes('DNSName'))
+    columns.push({ name: 'DNS Name', key: 'DNSName' });
+  if (keys.includes('SubnetId'))
+    columns.push({ name: 'SubnetId', key: 'SubnetId' });
 
-  for (let key of Object.keys(items.results[0])) {
-    if (!unwantedKeys.includes(key)) 
-      columns.push({ name: makeTitle(key), key });
-  }
-
-  const data = items.results;
+  // GCP columns
+  if (keys.includes('description'))
+    columns.push({ name: 'Description', key: 'description' });
+  if (keys.includes('project_id'))
+    columns.push({ name: 'Project ID', key: 'project_id' });
+  if (keys.includes('location'))
+    columns.push({ name: 'Location', key: 'location' });
 
   const initialState = {
     pageSize: 10,
@@ -96,7 +108,7 @@ const FlaggedItems = () => {
               sortBy={sortBy}
               fetchData={fetchData}
               manualPagination={true}
-              pageCount={items.meta.total_pages}
+              pageCount={response.meta.total_pages}
               headerRight={downloadButtons}
             />
           </div>

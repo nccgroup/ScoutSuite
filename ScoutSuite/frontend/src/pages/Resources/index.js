@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 
@@ -14,7 +14,6 @@ import DownloadButton from '../../components/DownloadButton/index';
 import './style.scss';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
-
 const Resources = () => {
   const params = useParams();
   const { data: response, loading, loadPage } = useAPI(
@@ -24,34 +23,34 @@ const Resources = () => {
   );
   const data = response.results;
 
-  const fetchData = React.useCallback(({ pageIndex, sortBy, direction, search, }) => {
-    loadPage(pageIndex + 1, sortBy, direction, search);
-  }, []);
+  const [defaultObj, setdefaultObj] = useState({});
+
+  useEffect(() => {
+    if (
+      data &&
+      !isEmpty(data[0]) &&
+      JSON.stringify(data[0]) !== JSON.stringify(defaultObj)
+    ) {
+      setdefaultObj(data[0]);
+    }
+  }, [data]);
+
+  const fetchData = React.useCallback(
+    ({ pageIndex, sortBy, direction, search, filters }) => {
+      loadPage(pageIndex + 1, sortBy, direction, search, filters);
+    },
+    [],
+  );
 
   if (loading) return null;
 
-  if (isEmpty(data)) {
-    return (
-      <>
-        <Breadcrumb />
-        <div className="findings">
-          <div className="table-card no-items">
-            No resources of this type present
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  const keys = Object.keys(data[0]);
+  const keys = Object.keys(defaultObj);
 
   const columns = [{ name: 'Name', key: 'name' }];
 
   // AWS columns
-  if (keys.includes('region')) 
-    columns.push({ name: 'Region', key: 'region' });
-  if (keys.includes('vpc')) 
-    columns.push({ name: 'VPC', key: 'vpc' });
+  if (keys.includes('region')) columns.push({ name: 'Region', key: 'region' });
+  if (keys.includes('vpc')) columns.push({ name: 'VPC', key: 'vpc' });
   if (keys.includes('AvailabilityZone'))
     columns.push({ name: 'Availability Zone', key: 'AvailabilityZone' });
   if (keys.includes('availability_zone'))
@@ -115,7 +114,6 @@ const Resources = () => {
             />
           </div>
         </ErrorBoundary>
-
 
         <div className="selected-item">
           {!params.id ? (

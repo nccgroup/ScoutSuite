@@ -25,7 +25,7 @@ const DownloadButton = ({ service, resource, type }) => {
         className="download-btn"
         variant="outlined"
         type="submit"
-        size="small"
+        size="normal"
         startIcon={<GetAppOutlinedIcon />}
       >
         {type.toUpperCase()}
