@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import NoteAddOutlinedIcon from '@material-ui/icons/NoteAddOutlined';
 import isEmpty from 'lodash/isEmpty';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { renderWithInnerHtml } from '../../../../utils/Partials';
 
@@ -36,9 +37,13 @@ const Description = props => {
 
   return (
     <>
-      <span className="findings-desc" onClick={handlePopoverOpen}>
-        <NoteAddOutlinedIcon fontSize="inherit" />
-      </span>
+      <Tooltip
+        title="Click to see finding details" placement="top"
+        arrow>
+        <span className="findings-desc" onClick={handlePopoverOpen}>
+          <NoteAddOutlinedIcon fontSize="inherit" />
+        </span>
+      </Tooltip>
 
       <Modal
         title="Finding Description"
