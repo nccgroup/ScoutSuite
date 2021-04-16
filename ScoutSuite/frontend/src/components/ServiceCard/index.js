@@ -53,7 +53,7 @@ const ServiceCard = props => {
           label="Rules" value={rules}
           separator="" />
         <DetailedValue
-          label="Flagged Items"
+          label="Flagged Resources"
           value={props['flagged-items']}
           separator=""
         />
