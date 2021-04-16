@@ -27,4 +27,28 @@
     margin: 1.5rem 2rem;
     overflow: hidden;
   }
+
+  .about-scout {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem 1rem 1rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+
+    svg {
+      font-size: 0.75rem;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem 0;
+}
+
+.modal-content {
+  padding: 0.5rem 1rem;
 }
