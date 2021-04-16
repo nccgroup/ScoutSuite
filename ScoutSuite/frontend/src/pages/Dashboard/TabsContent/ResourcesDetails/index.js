@@ -29,8 +29,6 @@ const ResourcesDetails = () => {
       });
     }));
 
-    console.log(servicesList);
-
     if (type == 'json') {
       exportJSON(servicesList, 'resource-details');
     } else {
