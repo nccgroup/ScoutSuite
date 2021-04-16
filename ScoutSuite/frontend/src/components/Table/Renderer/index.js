@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   useTable,
@@ -12,6 +12,9 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import cx from 'classnames';
 import { useParams } from 'react-router-dom';
+import { TextField } from '@material-ui/core';
+import Filter from '../Filter/index';
+import isEmpty from 'lodash/isEmpty';
 
 const propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -26,7 +29,7 @@ const propTypes = {
   headerRight: PropTypes.element,
 };
 
-const TableRender = (props) => {
+const TableRender = props => {
   const {
     columns,
     data,
@@ -36,9 +39,11 @@ const TableRender = (props) => {
     fetchData,
     manualPagination,
     initialState,
-    headerRight
+    headerRight,
   } = props;
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState({});
   const params = useParams();
 
   const columnsMemo = React.useMemo(() => columns, [columns]);
@@ -50,7 +55,7 @@ const TableRender = (props) => {
       data: dataMemo,
       initialState: {
         pageIndex: 0,
-        ...initialState
+        ...initialState,
       },
       disableMultiSort: true,
       disableSortRemove: true,
@@ -89,30 +94,63 @@ const TableRender = (props) => {
 
   const onFetchDataDebounced = useAsyncDebounce(fetchData, 100);
 
+  const sortFields = () => {
+    const sortField = sortBy && sortBy[0] ? sortBy[0].id : 'name';
+    const sortDir = sortBy && sortBy[0] && sortBy[0].desc ? 'desc' : 'asc';
+    return {
+      sortBy: sortField,
+      direction: sortDir,
+    };
+  };
+
   useEffect(() => {
     if (manualPagination) {
-      const sortField = sortBy && sortBy[0] ? sortBy[0].id : 'name';
-      const sortDir = sortBy && sortBy[0] && sortBy[0].desc ? 'desc' : 'asc';
       onFetchDataDebounced({
         pageIndex,
-        sortBy: sortField,
-        direction: sortDir,
+        search: searchQuery,
+        filters,
+        ...sortFields(),
       });
     }
-  }, [pageIndex, sortBy]);
+  }, [pageIndex, sortBy, searchQuery, filters]);
+
+  const searchTable = e => {
+    setSearchQuery(e.target.value);
+  };
+
+  const selectFilter = e => {
+    setFilters({ ...filters, [e.target.name]: e.target.value || undefined});
+  };
 
   useEffect(() => {
     gotoPage(0);
   }, [params.service, params.resource, params.finding]);
+
+  const excludeFromFilter = ['name', 'description'];
+  const filtersList = columns.filter((col) => !excludeFromFilter.includes(col.key));
 
   return (
     <>
       {!disableSearch && (
         <div className="table-header">
           <div className="search-bar">
-            <input placeholder="Search in this table" />
+            <TextField
+              onChange={searchTable}
+              label="Search by name or ID"
+              variant="outlined"
+              size="small"
+            />
           </div>
           <div className="table-header-right">
+            {manualPagination && filtersList.length > 0 && <span>Filters</span>}
+            {manualPagination && filtersList.map(col => (
+              <Filter
+                key={col.key}
+                filter={col}
+                selected={filters[col.key]}
+                handleChange={selectFilter}
+              />
+            ))}
             {headerRight}
           </div>
         </div>
@@ -170,6 +208,8 @@ const TableRender = (props) => {
           })}
         </tbody>
       </table>
+
+      {isEmpty(page) && isEmpty(rows) && <div className="no-items">No items for this query.</div>}
 
       {!disablePagination && (
         <div className="pagination">

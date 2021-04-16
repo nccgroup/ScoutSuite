@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as API from './api';
 import * as Cache from './cache';
+import isEmpty from 'lodash/isEmpty';
 
 /**
  * React Hook to fetch API data and re-render the component
@@ -12,12 +13,13 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
   );
   const [path, setPath] = useState(defaultPath);
   const [loading, setLoading] = useState(!Cache.has(path));
-  const [reloading, setReloading]= useState(false);
+  const [reloading, setReloading] = useState(false);
   const [error, setError] = useState(null);
   const [queryParams, setQueryParams] = useState({
     page: 1,
     sortBy: null,
     direction: null,
+    filters: {},
   });
 
   useEffect(() => {
@@ -44,7 +46,12 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
     if (settings.pagination) {
       urlQueryParams.set('current_page', queryParams.page);
       if (queryParams.sortBy) urlQueryParams.set('sort_by', queryParams.sortBy);
-      if (queryParams.sortBy && queryParams.direction) urlQueryParams.set('direction', queryParams.direction);
+      if (queryParams.sortBy && queryParams.direction)
+        urlQueryParams.set('direction', queryParams.direction);
+      if (queryParams.search && queryParams.search.length > 0)
+        urlQueryParams.set('search', queryParams.search);
+      if (!isEmpty(queryParams.filters))
+        urlQueryParams.set('filter_by', JSON.stringify(queryParams.filters));
     }
 
     setPath(
@@ -54,8 +61,14 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
     );
   }, [defaultPath, queryParams]);
 
-  const loadPage = (page, sortBy, direction) => {
-    setQueryParams({ page, sortBy: sortBy || null, direction: direction || null });
+  const loadPage = (page, sortBy, direction, search, filters) => {
+    setQueryParams({
+      page,
+      sortBy: sortBy || null,
+      direction: direction || null,
+      search,
+      filters,
+    });
   };
 
   return {

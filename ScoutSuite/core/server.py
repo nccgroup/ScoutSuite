@@ -41,6 +41,12 @@ def start_api(results, exceptions=None):
 
         return jsonify(process_results(item_list))
 
+    @app.route('/api/services/<service>/findings/<finding>/items/options/<attribute>')
+    def get_findings_items_attribute_options(service, finding, attribute):
+        item_list = get_all_items_in_finding(service, finding, results)
+        
+        return get_attribute_options(attribute, item_list, results)
+
     @app.route('/api/services/<service>/findings/<finding>/items/<item_id>', methods=['GET'])
     def get_issue_paths(service, finding, item_id):
         path = request.args.get('path')
@@ -184,8 +190,9 @@ def start_api(results, exceptions=None):
     @app.route('/api/services/<service>/resources/<resource>/options/<attribute>')
     def get_resources_attribute_options(service, resource, attribute):
         all_resources, resource_path = get_all_resources(service, resource, results)
+        resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
         
-        return get_attribute_options(attribute, all_resources, results)
+        return get_attribute_options(attribute, resource_list, results)
 
     @app.route('/api/services/<service>/resources/<resource>/<resource_id>')
     def get_resource(service, resource, resource_id):
@@ -397,16 +404,11 @@ def get_element_from_path_kw(path, report_location):
     
     return element
 
-def get_attribute_options(attribute, resources, results):
+def get_attribute_options(attribute, items, results):
     option_list = []
-    for resource in resources:
-        resource = list(resource.values())[0]
-        path = resource['path'].split('.')
-        element = results
-        for idx in range(len(path)):
-            element = element[path[idx]]
-            if path[idx] == attribute:
-                option_list.append(path[idx+1])
+    for item in items:
+        if attribute in item and item[attribute] not in option_list:
+            option_list.append(item[attribute])
 
     return jsonify(option_list)
 
@@ -429,7 +431,7 @@ def search_results(results):
     search_results = []
     for element in results:
         for search_property in search_properties:
-            if element[search_property] and search_kw in element[search_property]:
+            if search_property in element and search_kw in element[search_property]:
                 search_results.append(element)
                 break
 

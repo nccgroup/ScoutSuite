@@ -71,6 +71,12 @@ export const getResourcesEndpoint = (service, resource) =>
 export const getResourceEndpoint = (service, resource, id) =>
   `/services/${service}/resources/${resource}/${id}`;
 
+export const getResourceFilterAttributeEndpoint = (service, resource, attribute) =>
+  `services/${service}/resources/${resource}/options/${attribute}`;
+
+export const getFindingFilterAttributeEndpoint = (service, finding, attribute) =>
+  `services/${service}/findings/${finding}/items/options/${attribute}`;  
+
 /**
  * Endpoint for raw access to the JSON report
  * @param {*} raw 
