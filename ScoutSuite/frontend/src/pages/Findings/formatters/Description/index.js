@@ -1,23 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import NoteAddOutlinedIcon from '@material-ui/icons/NoteAddOutlined';
 import isEmpty from 'lodash/isEmpty';
 
 import { renderWithInnerHtml } from '../../../../utils/Partials';
 
 import './style.scss';
+import Modal from '../../../../components/Modal';
 
 const propTypes = {
   value: PropTypes.string.isRequired,
   row: PropTypes.object.isRequired,
 };
 
-const Description = (props) => {
-  const { value, row: { original } } = props;
+const Description = props => {
+  const {
+    value,
+    row: { original },
+  } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handlePopoverOpen = (event) => {
+  const handlePopoverOpen = event => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -34,52 +37,54 @@ const Description = (props) => {
   return (
     <>
       <span className="findings-desc" onClick={handlePopoverOpen}>
-        <InfoOutlinedIcon fontSize="inherit" />  Finding description.
+        <NoteAddOutlinedIcon fontSize="inherit" />
       </span>
 
-      {open && <>
-        <div className="desc-bg" onClick={handlePopoverClose}></div>
-        <div className="desc-overlay">
-          <div className="desc-header">
-            <h4>Finding Description</h4>
-            <CloseOutlinedIcon onClick={handlePopoverClose} />
-          </div>
-          
-          {renderWithInnerHtml(value)}
+      <Modal
+        title="Finding Description"
+        handleClose={handlePopoverClose}
+        open={open}
+      >
+        {renderWithInnerHtml(value)}
 
-          {!isEmpty(original.remediation) && <>
+        {!isEmpty(original.remediation) && (
+          <>
             <h4>Remediation</h4>
             {renderWithInnerHtml(original.remediation)}
-          </>}
+          </>
+        )}
 
-          {!isEmpty(original.compliance) && <>
+        {!isEmpty(original.compliance) && (
+          <>
             <h4>Compliance</h4>
             <ul>
               {original.compliance.map((compliance, i) => (
                 <li key={i}>
-                  {compliance.name} version {compliance.version}, reference {compliance.reference}
-                </li>)
-              )}
+                  {compliance.name} version {compliance.version}, reference{' '}
+                  {compliance.reference}
+                </li>
+              ))}
             </ul>
-          </>}
+          </>
+        )}
 
-          {!isEmpty(original.references) && <>
+        {!isEmpty(original.references) && (
+          <>
             <h4>References</h4>
             <ul>
               {original.references.map((ref, i) => (
                 <li key={i}>
                   <a
-                    href={ref} 
-                    target="_blank"
-                    rel="noreferrer" >
+                    href={ref} target="_blank"
+                    rel="noreferrer">
                     {ref}
                   </a>
-                </li>)
-              )}
+                </li>
+              ))}
             </ul>
-          </>}
-        </div>
-      </>}
+          </>
+        )}
+      </Modal>
     </>
   );
 };

@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import BarChartIcon from '@material-ui/icons/BarChart';
-import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
+import DnsOutlinedIcon from '@material-ui/icons/DnsOutlined';
 import { useLocation } from 'react-router-dom';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 
 import { useAPI } from '../api/useAPI';
 import { getDashboardName, getDashboardLink } from '../utils/Dashboard';
@@ -16,7 +13,7 @@ import { MenuBar, SubMenu, MenuGroup, MenuElement } from './Menu';
 import DownloadException from '../components/Exceptions/DownloadButton';
 
 import './style.scss';
-
+import Modal from '../components/Modal/index';
 
 const propTypes = {
   children: PropTypes.node.isRequired,
@@ -87,7 +84,7 @@ const Layout = props => {
                         selected={selected}
                         key={res.id}
                       >
-                        <DevicesOtherIcon fontSize="inherit" />{' '}
+                        <DnsOutlinedIcon fontSize="inherit" />{' '}
                         <span>
                           {res.name} ({res.count || 0})
                         </span>
@@ -106,23 +103,23 @@ const Layout = props => {
         <div className="main">{children}</div>
       </div>
 
-      <Dialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <div className="modal-title" onClose={handleClose}>
-          <h2>About Scout Suite</h2>
-          <IconButton aria-label="close" onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </div>
-        <div className="modal-content">
-          <p>Scout Suite is an open-source tool released by <a href="https://www.nccgroup.trust/">NCC Group</a>.</p>
-          <p>Use the top navigation bar to review the configuration of the supported cloud provider services.</p>
-          <p>For more information about Scout Suite, please check out the {'project\'s'} page on <a href="https://github.com/nccgroup/ScoutSuite">GitHub</a>.</p>
-        </div>
-      </Dialog>
+      <Modal
+        title="About Scout Suite" handleClose={handleClose}
+        open={open}>
+        <p>
+          Scout Suite is an open-source tool released by{' '}
+          <a href="https://www.nccgroup.trust/">NCC Group</a>.
+        </p>
+        <p>
+          Use the top navigation bar to review the configuration of the
+          supported cloud provider services.
+        </p>
+        <p>
+          For more information about Scout Suite, please check out the{' '}
+          {'project\'s'} page on{' '}
+          <a href="https://github.com/nccgroup/ScoutSuite">GitHub</a>.
+        </p>
+      </Modal>
     </>
   );
 };
