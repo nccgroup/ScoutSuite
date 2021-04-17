@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
 
-import { PartialContext, PartialPathContext } from '../../../../../components/Partial/context';
+import { PartialContext, PartialPathContext } from '../../../../components/Partial/context';
 
 const propTypes = {
   columnName: PropTypes.string.isRequired,
