@@ -138,15 +138,15 @@ const WebApps = props => {
           />
         </TabPane>
 
-        <TabPane title="Identities" disabled={item.identity}>
-          <PartialValue
+        <TabPane title="Identities" disabled={!item.identity}>
+          {item.identity && <PartialValue
             label="System Assigned Identity"
             valuePath="identity.principal_id"
             errorPath="identity.managed_principal_id"
             renderValue={valueOrNone}
-          />
+          />}
 
-          {item.identity.user_assigned_identities && (
+          {item.identity && item.identity.user_assigned_identities && (
             <div>
               <b>User Assigned Identities</b>
               {renderList(
@@ -168,13 +168,13 @@ const WebApps = props => {
           <PartialValue
             label="Outbound IP Addresses"
             valuePath="outbound_ip_addresses"
-            renderValue={renderList(item.outbound_ip_addresses)}
+            renderValue={() => renderList(item.outbound_ip_addresses)}
           />
 
           <PartialValue
             label="Possible Outbound IP Addresses"
             valuePath="possible_outbound_ip_addresses"
-            renderValue={renderList(item.possible_outbound_ip_addresses)}
+            renderValue={() => renderList(item.possible_outbound_ip_addresses)}
           />
         </TabPane>
       </TabsMenu>

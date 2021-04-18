@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class ClusterSecurityGroups(AWSResources):
@@ -16,4 +17,5 @@ class ClusterSecurityGroups(AWSResources):
     def _parse_security_group(self, raw_security_group):
         name = raw_security_group.pop('ClusterSecurityGroupName')
         raw_security_group['name'] = name
-        return name, raw_security_group
+        raw_security_group['id'] = get_non_provider_id(name)
+        return raw_security_group['id'], raw_security_group

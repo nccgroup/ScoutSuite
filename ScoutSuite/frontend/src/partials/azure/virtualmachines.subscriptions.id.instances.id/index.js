@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 // import Skeleton from '@material-ui/lab/Skeleton';
 
@@ -11,6 +11,7 @@ import {
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import ResourceLink from '../../../components/ResourceLink/index';
+import DetailedValue from '../../../components/DetailedValue';
 
 const renderNetworkInterfaces = id => {
   return (
@@ -21,6 +22,19 @@ const renderNetworkInterfaces = id => {
   );
 };
 
+const renderKeyValue = ([key, value]) => {
+  return <DetailedValue
+    label={key}
+    value={valueOrNone(value)} />;
+};
+
+const renderExtension = (item) => {
+  return <PartialValue
+    label=''
+    value={item.name}
+    errorPath="extensions" />;
+};
+
 const propTypes = {
   data: PropTypes.shape(partialDataShape).isRequired,
   item: PropTypes.object,
@@ -28,10 +42,6 @@ const propTypes = {
 
 const Instances = props => {
   const { data, item } = props;
-  const network_interfaces_ids = useMemo(
-    () => Object.values(item.network_interfaces).map(item => item.id),
-    [item.network_interfaces],
-  );
 
   if (!data) return null;
 
@@ -121,14 +131,39 @@ const Instances = props => {
       </InformationsWrapper>
 
       <TabsMenu>
+
+        <TabPane title="Diagnostics Profile" disabled={!item.diagnostics_profile}>
+          {item.diagnostics_profile && renderList(Object.entries(item.diagnostics_profile), '', item =>
+            renderKeyValue(item)
+          )}
+        </TabPane>
+
+        <TabPane title="OS Profile" disabled={!item.os_profile}>
+          {item.os_profile && renderList(Object.entries(item.os_profile), '', item =>
+            renderKeyValue(item)
+          )}
+        </TabPane>
+
+        <TabPane title="Storage Profile" disabled={!item.storage_profile}>
+          {item.storage_profile && renderList(Object.entries(item.storage_profile), '', item =>
+            renderKeyValue(item)
+          )}
+        </TabPane>
+
+        <TabPane title="Additional Capabilities" disabled={!item.additional_capabilities}>
+          {item.additional_capabilities && renderList(Object.entries(item.additional_capabilities), '', item =>
+            valueOrNone(item)
+          )}
+        </TabPane>
+
         <TabPane title="Network Interfaces">
-          {renderList(network_interfaces_ids, '', value =>
-            renderNetworkInterfaces(value),
+          {renderList(item.network_interfaces, '', id =>
+            renderNetworkInterfaces(id)
           )}
         </TabPane>
 
         <TabPane title="Extensions">
-          {renderList(item.extensions)}
+          {renderList(item.extensions, '', value => renderExtension(value))}
         </TabPane>
       </TabsMenu>
     </Partial>
