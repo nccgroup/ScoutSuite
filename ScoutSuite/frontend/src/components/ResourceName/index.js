@@ -3,6 +3,7 @@ import { useAPI } from '../../api/useAPI';
 import { getResourceEndpoint } from '../../api/paths';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { PropTypes } from 'prop-types';
+import get from 'lodash/get';
 
 
 const propTypes = {
@@ -13,7 +14,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  renderData: data => data ? data.name : '',
+  renderData: data => get(data, 'name', ''),
 };
 
 const ResourceName = ({service, resource, id, renderData }) => {
