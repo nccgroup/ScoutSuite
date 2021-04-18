@@ -13,7 +13,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  renderData: data => data.name,
+  renderData: data => data ? data.name : '',
 };
 
 const ResourceName = ({service, resource, id, renderData }) => {

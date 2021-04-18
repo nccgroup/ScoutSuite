@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import isEmpty from 'lodash/isEmpty';
 
@@ -14,10 +14,37 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 
 import './style.scss';
 
-
 const Findings = () => {
   const params = useParams();
-  const { data: findings, loading } = useAPI(getFindingsEndpoint(params.service));
+  const { data: findings, loading } = useAPI(
+    getFindingsEndpoint(params.service),
+  );
+  const [findingsList, setFindingsList] = useState([]);
+
+  const getAllFindings = () =>
+    findings.map(item => ({
+      id: item.name,
+      severity: item.flagged_items === 0 ? 'success' : item.level,
+      name: item.description,
+      flagged: `${item.flagged_items}/${item.checked_items}`,
+      description: item.rationale,
+      references: item.references,
+      remediation: item.remediation,
+      flagged_items: item.flagged_items,
+      compliance: item.compliance,
+    }));
+
+  useEffect(() => {
+    setFindingsList(getAllFindings());
+  }, []);
+
+  const fetchData = React.useCallback(({ search }) => {
+    if (search)
+      setFindingsList(
+        getAllFindings().filter(finding => finding.name.toLowerCase().includes(search.toLowerCase())),
+      );
+    else setFindingsList(getAllFindings());
+  }, []);
 
   if (loading) return null;
 
@@ -27,7 +54,8 @@ const Findings = () => {
         <Breadcrumb />
         <div className="findings">
           <div className="table-card no-items">
-            <CheckCircleOutlineOutlinedIcon /> <b>All good!</b> No findings for this service.
+            <CheckCircleOutlineOutlinedIcon /> <b>All good!</b> No findings for
+            this service.
           </div>
         </div>
       </>
@@ -40,18 +68,6 @@ const Findings = () => {
     { name: 'Flagged Items', key: 'flagged', sortInverted: true },
     { name: 'Description', key: 'description' },
   ];
-
-  const data = findings.map((item) => ({
-    id: item.name,
-    severity: item.flagged_items === 0 ? 'success' : item.level,
-    name: item.description,
-    flagged: `${item.flagged_items}/${item.checked_items}`,
-    description: item.rationale,
-    references: item.references,
-    remediation: item.remediation,
-    flagged_items: item.flagged_items,
-    compliance: item.compliance,
-  }));
 
   const initialState = {
     sortBy: [
@@ -80,10 +96,11 @@ const Findings = () => {
         <div className="table-card">
           <Table
             columns={columns}
-            data={data}
+            data={findingsList}
             initialState={initialState}
             formatters={formatters}
             sortBy={sortBy}
+            fetchData={fetchData}
           />
         </div>
       </div>

@@ -26,7 +26,7 @@ const Users = props => {
         <PartialValue
           label="Project ID"
           errorPath="project_id"
-          valuePath="project"
+          valuePath="project_id"
         />
       </InformationsWrapper>
 

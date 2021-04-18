@@ -26,5 +26,23 @@
     grid-area: main;
     margin: 1.5rem 2rem;
     overflow: hidden;
+
+    .ncc-footer {
+      font-size: 0.75rem;
+
+      a {
+        color: $ncc-red;
+
+        &:hover {
+          color: $ncc-red-hvr;
+        }
+
+        img {
+          margin-left:0.25rem;
+          max-height: 0.75rem;
+        }
+      }
+      
+    }
   }
 }

@@ -91,6 +91,8 @@ const Layout = (props) => {
       </MenuBar>
       <div className="main">
         {children}
+
+        <span className="ncc-footer">Scout Suite is an open-source tool released by <a href="https://www.nccgroup.trust">NCC Group <img src="/logo.png" /></a></span>
       </div>
     </div>
   );
