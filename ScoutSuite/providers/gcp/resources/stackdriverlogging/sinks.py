@@ -1,5 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Sinks(Resources):
@@ -16,6 +17,7 @@ class Sinks(Resources):
     def _parse_sink(self, raw_sink):
         sink_dict = {}
         sink_dict['name'] = raw_sink.name
+        sink_dict['id'] = get_non_provider_id(sink_dict['name'])
         sink_dict['filter'] = raw_sink.filter_
         sink_dict['destination'] = raw_sink.destination
         return sink_dict['name'], sink_dict
