@@ -104,7 +104,7 @@ const TableRender = props => {
   };
 
   useEffect(() => {
-    if (manualPagination) {
+    if (fetchData) {
       onFetchDataDebounced({
         pageIndex,
         search: searchQuery,
@@ -209,7 +209,7 @@ const TableRender = props => {
         </tbody>
       </table>
 
-      {isEmpty(page) && isEmpty(rows) && <div className="no-items">No items for this query.</div>}
+      {isEmpty(page) && isEmpty(rows) && <div className="no-items-in-query">No items for this query.</div>}
 
       {!disablePagination && (
         <div className="pagination">

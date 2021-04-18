@@ -11,6 +11,7 @@ import {
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import ResourceLink from '../../../components/ResourceLink';
+import { convertBoolToCheckmark } from '../../../utils/Partials/index';
 
 const renderNetworkInterfaces = id => {
   return (
@@ -71,12 +72,7 @@ const renderSecurityRules = items => {
                 {item.destination_address_prefixes}
               </td>
               <td width="10%" className="text-center">
-                {item.allow && (
-                  <i className="fa fa-check-circle finding-good"></i>
-                )}
-                {!item.allow && (
-                  <i className="fa fa-times-circle finding-danger"></i>
-                )}
+                {convertBoolToCheckmark(item.allow)}
               </td>
             </tr>
           ))}
