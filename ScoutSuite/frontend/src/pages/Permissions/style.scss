@@ -18,6 +18,18 @@
     margin: 0 2rem 2rem 0;
     background: $white;
     border-radius: $border-radius;
+
+    &.no-items {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+
+      svg, b {
+        margin-right: 0.25rem;
+      }
+    }
   }
 
   .informations-card {

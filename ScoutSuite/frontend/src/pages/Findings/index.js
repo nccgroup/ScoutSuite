@@ -22,7 +22,7 @@ const Findings = () => {
   const [findingsList, setFindingsList] = useState([]);
 
   const getAllFindings = () =>
-    findings.map(item => ({
+    findings ? findings.map(item => ({
       id: item.name,
       severity: item.flagged_items === 0 ? 'success' : item.level,
       name: item.description,
@@ -32,7 +32,7 @@ const Findings = () => {
       remediation: item.remediation,
       flagged_items: item.flagged_items,
       compliance: item.compliance,
-    }));
+    })) : [];
 
   useEffect(() => {
     setFindingsList(getAllFindings());

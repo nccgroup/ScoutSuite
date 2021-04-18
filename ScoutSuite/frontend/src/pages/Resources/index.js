@@ -26,13 +26,13 @@ const Resources = () => {
 
   useEffect(() => {
     if (
-      response.results &&
+      response &&
       !isEmpty(response.results[0]) &&
       JSON.stringify(response.results[0]) !== JSON.stringify(defaultObj)
     ) {
       setdefaultObj(response.results[0]);
     }
-  }, [response.results]);
+  }, [response]);
 
   const fetchData = React.useCallback(
     ({ pageIndex, sortBy, direction, search, filters }) => {

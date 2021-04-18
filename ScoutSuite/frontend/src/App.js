@@ -57,7 +57,7 @@ function App() {
                   <Route path="/services/:service/password_policy">
                     <PasswordPolicy />
                   </Route>
-                  <Route path="/services/:service/permissions">
+                  <Route path="/services/:service/permissions/:id?">
                     <Permissions />
                   </Route>
                   <Route path="/" exact>
