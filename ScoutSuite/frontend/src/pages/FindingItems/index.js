@@ -11,12 +11,12 @@ import Name from './formatters/Name/index';
 import SelectedItemContainer from './SelectedItemContainer';
 import Breadcrumb from '../../components/Breadcrumb/index';
 import DownloadButton from '../../components/DownloadButton';
-
-import './style.scss';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
+import './style.scss';
 
-const FlaggedItems = () => {
+
+const FindingItems = () => {
   const params = useParams();
   const { data: response, loading, loadPage } = useAPI(
     getItemsEndpoint(params.service, params.finding),
@@ -25,7 +25,7 @@ const FlaggedItems = () => {
   );
   const [defaultObj, setdefaultObj] = useState({});
   
-  const data = get(response, 'results');
+  const data = get(response, 'results', []);
   useEffect(() => {
     if (
       data &&
@@ -108,7 +108,7 @@ const FlaggedItems = () => {
               sortBy={sortBy}
               fetchData={fetchData}
               manualPagination={true}
-              pageCount={response.meta.total_pages}
+              pageCount={get(response, ['meta', 'total_pages'])}
               headerRight={downloadButtons}
             />
           </div>
@@ -126,4 +126,4 @@ const FlaggedItems = () => {
   );
 };
 
-export default FlaggedItems;
+export default FindingItems;

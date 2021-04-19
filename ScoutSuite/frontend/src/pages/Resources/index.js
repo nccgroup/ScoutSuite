@@ -24,7 +24,7 @@ const Resources = () => {
   );
   const [defaultObj, setdefaultObj] = useState({});
 
-  const data = get(response, 'results');
+  const data = get(response, 'results', []);
   useEffect(() => {
     if (
       data &&
