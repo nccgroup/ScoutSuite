@@ -45,4 +45,17 @@
       
     }
   }
+
+  .about-scout {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem 1rem 1rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+
+    svg {
+      font-size: 0.75rem;
+      margin-right: 0.5rem;
+    }
+  }
 }

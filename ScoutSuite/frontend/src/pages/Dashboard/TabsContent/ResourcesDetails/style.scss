@@ -1,6 +1,14 @@
 @import 'src/variables';
 
 .resources-details {
+  .download-btns {
+    margin-bottom: 1rem;
+    
+    button {
+      margin-right: 0.5rem;
+    }
+  }
+
   .details-card {
     width: 100%;
     border-collapse: collapse;

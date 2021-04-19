@@ -22,7 +22,7 @@ const Findings = () => {
   const [findingsList, setFindingsList] = useState([]);
 
   const getAllFindings = () =>
-    findings.map(item => ({
+    findings ? findings.map(item => ({
       id: item.name,
       severity: item.flagged_items === 0 ? 'success' : item.level,
       name: item.description,
@@ -32,7 +32,7 @@ const Findings = () => {
       remediation: item.remediation,
       flagged_items: item.flagged_items,
       compliance: item.compliance,
-    }));
+    })) : [];
 
   useEffect(() => {
     setFindingsList(getAllFindings());
@@ -54,8 +54,7 @@ const Findings = () => {
         <Breadcrumb />
         <div className="findings">
           <div className="table-card no-items">
-            <CheckCircleOutlineOutlinedIcon /> <b>All good!</b> No findings for
-            this service.
+            <CheckCircleOutlineOutlinedIcon /> <b>Good!</b> No findings for this service.
           </div>
         </div>
       </>
@@ -65,7 +64,7 @@ const Findings = () => {
   const columns = [
     { name: 'Severity', key: 'severity', sortInverted: true },
     { name: 'Name', key: 'name' },
-    { name: 'Flagged Items', key: 'flagged', sortInverted: true },
+    { name: 'Flagged Resources', key: 'flagged', sortInverted: true },
     { name: 'Description', key: 'description' },
   ];
 
