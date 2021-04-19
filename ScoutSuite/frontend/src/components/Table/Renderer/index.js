@@ -107,7 +107,7 @@ const TableRender = props => {
     };
   };
 
-  // Fetch new data for search (if it's manual pagination)
+  // Fetch new data for search (if it's for manual pagination)
   useEffect(() => {
     if (!manualPagination && fetchData) {
       onFetchDataDebounced({
