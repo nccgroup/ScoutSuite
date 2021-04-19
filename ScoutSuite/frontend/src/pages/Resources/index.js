@@ -108,7 +108,7 @@ const Resources = () => {
               sortBy={sortBy}
               fetchData={fetchData}
               manualPagination={true}
-              pageCount={response.meta.total_pages}
+              pageCount={get(response, ['meta', 'total_pages'])}
               initialState={initialState}
               headerRight={downloadButtons}
             />

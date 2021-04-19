@@ -64,18 +64,20 @@ const TableRender = props => {
     useSortBy,
   ];
 
+  // Add pagination
   if (!disablePagination) {
     useTableParams.push(usePagination);
   }
 
+  // Add manual pagination and sorting
   if (manualPagination) {
     useTableParams[0].manualPagination = true;
     useTableParams[0].manualSortBy = true;
     useTableParams[0].pageCount = controlledPageCount;
   }
 
+  // React-table table instance
   const tableInstance = useTable(...useTableParams);
-
   const {
     getTableProps,
     getTableBodyProps,
@@ -92,8 +94,10 @@ const TableRender = props => {
     state: { pageIndex, sortBy },
   } = tableInstance;
 
+  // Debounce table refresh by 100 ms
   const onFetchDataDebounced = useAsyncDebounce(fetchData, 100);
 
+  // Generate sort for table
   const sortFields = () => {
     const sortField = sortBy && sortBy[0] ? sortBy[0].id : 'name';
     const sortDir = sortBy && sortBy[0] && sortBy[0].desc ? 'desc' : 'asc';
@@ -103,8 +107,18 @@ const TableRender = props => {
     };
   };
 
+  // Fetch new data for search (if it's manual pagination)
   useEffect(() => {
-    if (fetchData) {
+    if (!manualPagination && fetchData) {
+      onFetchDataDebounced({
+        search: searchQuery,
+      });
+    }
+  }, [searchQuery]);
+
+  // Fetch new data for manual pagination
+  useEffect(() => {
+    if (manualPagination) {
       onFetchDataDebounced({
         pageIndex,
         search: searchQuery,
@@ -112,21 +126,25 @@ const TableRender = props => {
         ...sortFields(),
       });
     }
-  }, [pageIndex, sortBy, searchQuery, filters]);
+  }, [pageIndex, JSON.stringify(sortBy), searchQuery, filters]);
 
+  // Search input handler
   const searchTable = e => {
     setSearchQuery(e.target.value);
     gotoPage(0);
   };
 
+  // Filter input handler
   const selectFilter = e => {
     setFilters({ ...filters, [e.target.name]: e.target.value || undefined});
   };
 
+  // Reset page to 0 on URL change
   useEffect(() => {
     gotoPage(0);
   }, [params.service, params.resource, params.finding]);
 
+  // Create filters
   const excludeFromFilter = ['name', 'description'];
   const filtersList = columns.filter((col) => !excludeFromFilter.includes(col.key));
 
@@ -218,7 +236,7 @@ const TableRender = props => {
             onClick={previousPage}
             className={cx('icon', !canPreviousPage && 'disabled')}
           />
-          {pageIndex + 1} / {pageCount}
+          {pageCount > 0 ? pageIndex + 1 : '0'} / {pageCount}
           <ChevronRightIcon
             onClick={nextPage}
             className={cx('icon', !canNextPage && 'disabled')}

@@ -14,15 +14,9 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 
 import './style.scss';
 
-const Findings = () => {
-  const params = useParams();
-  const { data: findings, loading } = useAPI(
-    getFindingsEndpoint(params.service),
-  );
-  const [findingsList, setFindingsList] = useState([]);
-
-  const getAllFindings = () =>
-    findings ? findings.map(item => ({
+const getAllFindings = findings =>
+  findings
+    ? findings.map(item => ({
       id: item.name,
       severity: item.flagged_items === 0 ? 'success' : item.level,
       name: item.description,
@@ -33,19 +27,34 @@ const Findings = () => {
       flagged_items: item.flagged_items,
       compliance: item.compliance,
       redirect_to: item.redirect_to,
-    })) : [];
+    }))
+    : [];
+
+const Findings = () => {
+  const params = useParams();
+  const { data: findings, loading } = useAPI(
+    getFindingsEndpoint(params.service),
+  );
+  const [findingsList, setFindingsList] = useState([]);
 
   useEffect(() => {
-    setFindingsList(getAllFindings());
-  }, []);
+    setFindingsList(getAllFindings(findings));
+  }, [findings]);
 
-  const fetchData = React.useCallback(({ search }) => {
-    if (search)
-      setFindingsList(
-        getAllFindings().filter(finding => finding.name.toLowerCase().includes(search.toLowerCase())),
-      );
-    else setFindingsList(getAllFindings());
-  }, []);
+  const fetchData = React.useCallback(
+    ({ search }) => {
+      if (search && search.length > 0)
+        setFindingsList(
+          getAllFindings(findings).filter(finding =>
+            finding.name.toLowerCase().includes(search.toLowerCase()),
+          ),
+        );
+      else {
+        setFindingsList(getAllFindings(findings));
+      }
+    },
+    [findings],
+  );
 
   if (loading) return null;
 
