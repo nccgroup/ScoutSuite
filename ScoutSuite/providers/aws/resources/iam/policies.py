@@ -15,5 +15,6 @@ class Policies(AWSResources):
         policy['arn'] = raw_policy.pop('Arn')
         policy['PolicyDocument'] = raw_policy.pop('PolicyDocument')
         policy['attached_to'] = raw_policy.pop('attached_to')
+        policy['scope'] = 'AWS' if policy['arn'].startswith('arn:aws:iam::aws:') else 'Local'
 
         return policy['id'], policy
