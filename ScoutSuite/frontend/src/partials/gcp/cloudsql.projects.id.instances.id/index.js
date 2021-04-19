@@ -8,26 +8,34 @@ import {
   convertBoolToEnable,
   formatDate,
   valueOrNone,
+  renderList,
 } from '../../../utils/Partials';
 import { TabPane, TabsMenu } from '../../../components/Tabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
+import PartialSection from '../../../components/Partial/PartialSection/index';
 
-const renderAuthorizedNetworks = items => {
-  if (!items || items.length === 0) return <span>None</span>;
-
+const renderAuthorizedNetwork = (value, i) => {
   return (
-    <ul>
-      {items.map((value, i) => {
-        return (
-          <li key={i}>
-            <PartialValue
-              errorPath={`authorized_networks.${i}.open_to_the_world`}
-              value={value}
-            />
-          </li>
-        );
-      })}
-    </ul>
+    <PartialSection path={`authorized_networks.${i}`}>
+      <PartialValue
+        errorPath="open_to_the_world"
+        value={value}
+        renderValue={valueOrNone}
+      />
+    </PartialSection>
+  );
+};
+
+const renderUser = ([key, item]) => {
+  return (
+    <PartialSection path={`users.${key}`}>
+      <PartialValue
+        label={item.name}
+        errorPath="root_access_from_any_host"
+        value={item.host ? `(host: ${item.host})` : ''}
+        renderValue={valueOrNone}
+      />
+    </PartialSection>
   );
 };
 
@@ -142,16 +150,19 @@ const SQLInstances = props => {
           renderValue={valueOrNone}
         />
 
-        <PartialValue
-          label="Authorized Networks"
-          valuePath="authorized_networks"
-          renderValue={valueOrNone}
-        />
       </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Authorized Networks">
-          {renderAuthorizedNetworks(item.authorized_networks)}
+          {renderList(item.authorized_networks, '', (value, i) =>
+            renderAuthorizedNetwork(value, i),
+          )}
+        </TabPane>
+
+        <TabPane title="Users">
+          {renderList(Object.entries(item.users), '', (value, i) =>
+            renderUser(value, i),
+          )}
         </TabPane>
       </TabsMenu>
     </Partial>

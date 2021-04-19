@@ -41,24 +41,31 @@ const Bindings = props => {
       </InformationsWrapper>
 
       <TabsMenu>
-        <TabPane title="Permissions"></TabPane>
+        <TabPane title="Permissions">
+          <PartialValue
+            valuePath="permissions"
+            renderValue={renderList} />
+        </TabPane>
 
         <TabPane title="Bindings">
           <PartialValue
             label="Attached Users"
             valuePath="members.users"
+            errorPath={['users', 'name']}
             renderValue={renderList}
           />
 
           <PartialValue
             label="Attached Groups"
             valuePath="members.groups"
+            errorPath="groups"
             renderValue={renderList}
           />
 
           <PartialValue
             label="Attached Service Accounts"
             valuePath="members.service_accounts"
+            errorPath="service_accounts"
             renderValue={renderList}
           />
         </TabPane>
