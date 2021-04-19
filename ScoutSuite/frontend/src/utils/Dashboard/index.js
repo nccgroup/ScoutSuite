@@ -48,7 +48,7 @@ export const SEVERITIES = {
     icon: <ReportProblemOutlinedIcon fontSize="inherit" />
   },
   success: {
-    text: 'All good',
+    text: 'Good',
     icon: <CheckCircleOutlineOutlinedIcon fontSize="inherit" />
   },
 };

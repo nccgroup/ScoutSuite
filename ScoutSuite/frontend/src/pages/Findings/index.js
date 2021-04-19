@@ -55,8 +55,7 @@ const Findings = () => {
         <Breadcrumb />
         <div className="findings">
           <div className="table-card no-items">
-            <CheckCircleOutlineOutlinedIcon /> <b>All good!</b> No findings for
-            this service.
+            <CheckCircleOutlineOutlinedIcon /> <b>Good!</b> No findings for this service.
           </div>
         </div>
       </>
@@ -66,7 +65,7 @@ const Findings = () => {
   const columns = [
     { name: 'Severity', key: 'severity', sortInverted: true },
     { name: 'Name', key: 'name' },
-    { name: 'Flagged Items', key: 'flagged', sortInverted: true },
+    { name: 'Flagged Resources', key: 'flagged', sortInverted: true },
     { name: 'Description', key: 'description' },
   ];
 

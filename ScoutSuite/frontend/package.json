@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^12.6.3",
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
+    "json2csv": "^5.0.6",
     "lodash": "^4.17.20",
     "notistack": "^1.0.5",
     "prop-types": "^15.7.2",
