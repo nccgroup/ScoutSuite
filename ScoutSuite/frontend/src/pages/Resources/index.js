@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
+import get from 'lodash/get';
 
 import { useAPI } from '../../api/useAPI';
 import { getResourcesEndpoint } from '../../api/paths';
@@ -21,10 +22,9 @@ const Resources = () => {
     [],
     { pagination: true },
   );
-  const data = response.results;
-
   const [defaultObj, setdefaultObj] = useState({});
 
+  const data = get(response, 'results', []);
   useEffect(() => {
     if (
       data &&
@@ -33,7 +33,7 @@ const Resources = () => {
     ) {
       setdefaultObj(data[0]);
     }
-  }, [data]);
+  }, [response]);
 
   const fetchData = React.useCallback(
     ({ pageIndex, sortBy, direction, search, filters }) => {

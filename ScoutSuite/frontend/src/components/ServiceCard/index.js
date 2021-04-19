@@ -9,6 +9,7 @@ import DetailedValue from '../DetailedValue';
 
 import './style.scss';
 
+
 const propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
@@ -44,13 +45,15 @@ const ServiceCard = props => {
           )}
         </div>
       </div>
-      <hr />
+      <hr/>
       <div className="content">
         <DetailedValue
-          label="Resources" value={resources}
+          label="Resources" 
+          value={resources}
           separator="" />
         <DetailedValue
-          label="Rules" value={rules}
+          label="Rules" 
+          value={rules}
           separator="" />
         <DetailedValue
           label="Flagged Resources"
@@ -58,7 +61,7 @@ const ServiceCard = props => {
           separator=""
         />
       </div>
-      <hr />
+      <hr/>
       <div className="footer">
         <Link
           className={cx('link', { disabled: !hasFindings })}

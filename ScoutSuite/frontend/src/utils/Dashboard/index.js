@@ -6,7 +6,8 @@ import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlin
 import { 
   getFindingsEndpoint, 
   getPasswordPolicyEndpoint, 
-  getExternalAttackServiceEndpoint, 
+  getServiceExternalAttackEndpoint,
+  getCategoryExternalAttackEndpoint,
   getPermissionsEndpoint 
 } from '../../api/paths';
 
@@ -64,12 +65,20 @@ export const getDashboardName = (dashboard) => {
   return names[dashboard];
 };
 
-export const getDashboardLink = (dashboard, service) => {
+export const getServiceDashboardLink = (dashboard, service) => {
   const links = {
     findings: getFindingsEndpoint(service),
-    'external attack surface': getExternalAttackServiceEndpoint(service),
+    'external attack surface': getServiceExternalAttackEndpoint(service),
     password_policy: getPasswordPolicyEndpoint(service),
     permissions: getPermissionsEndpoint(service),
+  };
+
+  return links[dashboard];
+};
+
+export const getCategoryDashboardLink = (dashboard, category) => {
+  const links = {
+    'external attack surface': getCategoryExternalAttackEndpoint(category),
   };
 
   return links[dashboard];

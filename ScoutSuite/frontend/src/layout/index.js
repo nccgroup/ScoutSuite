@@ -2,18 +2,23 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import DnsOutlinedIcon from '@material-ui/icons/DnsOutlined';
-import { useLocation } from 'react-router-dom';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { useLocation } from 'react-router-dom';
+import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../api/useAPI';
-import { getDashboardName, getDashboardLink } from '../utils/Dashboard';
 import { getServicesEndpoint } from '../api/paths';
+import {
+  getDashboardName,
+  getCategoryDashboardLink,
+  getServiceDashboardLink,
+} from '../utils/Dashboard';
 import Header from './Header';
 import { MenuBar, SubMenu, MenuGroup, MenuElement } from './Menu';
 import DownloadException from '../components/Exceptions/DownloadButton';
+import Modal from '../components/Modal/index';
 
 import './style.scss';
-import Modal from '../components/Modal/index';
 
 const propTypes = {
   children: PropTypes.node.isRequired,
@@ -62,13 +67,30 @@ const Layout = props => {
                 setOpened={setOpened}
                 key={category.id}
               >
+                {!isEmpty(category.dashboard) && (
+                  <MenuGroup
+                    title="Summaries"
+                    size="large"
+                  >
+                    {category.dashboard.map((dashboard, i) => (
+                      <MenuElement
+                        link={getCategoryDashboardLink(dashboard, category.id)}
+                        selected={selected}
+                        key={i}
+                      >
+                        <BarChartIcon fontSize="inherit" />{' '}
+                        <span>{getDashboardName(dashboard)}</span>
+                      </MenuElement>
+                    ))}
+                  </MenuGroup>
+                )}
                 {category.services.map(service => (
                   <MenuGroup
                     title={service.name} key={service.id}
                     size="large">
                     {service.dashboards.map(dashboard => (
                       <MenuElement
-                        link={getDashboardLink(dashboard, service.id)}
+                        link={getServiceDashboardLink(dashboard, service.id)}
                         key={dashboard}
                         selected={selected}
                       >

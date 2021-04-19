@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import get from 'lodash/get';
 
-import { PartialContext, PartialPathContext } from '../../../../../components/Partial/context';
-import { PartialValue } from '../../../../../components/Partial';
-import { convertBoolToCheckmark } from '../../../../../utils/Partials';
+import { PartialContext, PartialPathContext } from '../../../../components/Partial/context';
+import { PartialValue } from '../../../../components/Partial';
+import { convertBoolToCheckmark } from '../../../../utils/Partials';
 
 
 const AccessControlList = () => {

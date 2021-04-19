@@ -116,6 +116,7 @@ const TableRender = props => {
 
   const searchTable = e => {
     setSearchQuery(e.target.value);
+    gotoPage(0);
   };
 
   const selectFilter = e => {
