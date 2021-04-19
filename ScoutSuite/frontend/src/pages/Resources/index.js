@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
+import get from 'lodash/get';
 
 import { useAPI } from '../../api/useAPI';
 import { getResourcesEndpoint } from '../../api/paths';
@@ -21,16 +22,16 @@ const Resources = () => {
     [],
     { pagination: true },
   );
-
   const [defaultObj, setdefaultObj] = useState({});
 
+  const data = get(response, 'results');
   useEffect(() => {
     if (
-      response &&
-      !isEmpty(response.results[0]) &&
-      JSON.stringify(response.results[0]) !== JSON.stringify(defaultObj)
+      data &&
+      !isEmpty(data[0]) &&
+      JSON.stringify(data[0]) !== JSON.stringify(defaultObj)
     ) {
-      setdefaultObj(response.results[0]);
+      setdefaultObj(data[0]);
     }
   }, [response]);
 
@@ -42,8 +43,6 @@ const Resources = () => {
   );
 
   if (loading) return null;
-
-  const data = response.results;
 
   const keys = Object.keys(defaultObj);
 

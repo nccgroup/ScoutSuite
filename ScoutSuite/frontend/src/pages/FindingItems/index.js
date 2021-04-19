@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
+import get from 'lodash/get';
 
 import { useAPI } from '../../api/useAPI';
 import { getItemsEndpoint } from '../../api/paths';
@@ -22,10 +23,9 @@ const FlaggedItems = () => {
     [],
     { pagination: true },
   );
-  const data = response.results;
-
   const [defaultObj, setdefaultObj] = useState({});
-
+  
+  const data = get(response, 'results');
   useEffect(() => {
     if (
       data &&
