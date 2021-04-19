@@ -90,7 +90,7 @@ const Layout = props => {
                     size="large">
                     {service.dashboards.map(dashboard => (
                       <MenuElement
-                        link={getDashboardLink(dashboard, service.id)}
+                        link={getServiceDashboardLink(dashboard, service.id)}
                         key={dashboard}
                         selected={selected}
                       >
