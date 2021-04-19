@@ -57,38 +57,40 @@ const ResourcesDetails = () => {
         </Button>
       </div>
 
-      {services.map((service, i) => (
-        <div key={i}>
-          <h3>{service.name}</h3>
-          <hr />
-          <table className="details-card">
-            <thead>
-              <tr>
-                <th>Resource</th>
-                <th>Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              {service.resources.map((resource, i) => (
-                <tr key={i}>
-                  <td>
-                    {resource.count ? (
-                      <ResourceLink
-                        service={service.id}
-                        resource={resource.id}
-                        name={resource.name}
-                      />
-                    ) : (
-                      <span className="no-link">{resource.name}</span>
-                    )}
-                  </td>
-                  <td>{resource.count || 0}</td>
+      <div className="services">
+        {services.map((service, i) => (
+          <div key={i}>
+            <h3>{service.name}</h3>
+            <hr />
+            <table className="details-card">
+              <thead>
+                <tr>
+                  <th>Resource</th>
+                  <th>Count</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ))}
+              </thead>
+              <tbody>
+                {service.resources.map((resource, i) => (
+                  <tr key={i}>
+                    <td>
+                      {resource.count ? (
+                        <ResourceLink
+                          service={service.id}
+                          resource={resource.id}
+                          name={resource.name}
+                        />
+                      ) : (
+                        <span className="no-link">{resource.name}</span>
+                      )}
+                    </td>
+                    <td>{resource.count || 0}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

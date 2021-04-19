@@ -4,6 +4,7 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import DnsOutlinedIcon from '@material-ui/icons/DnsOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { useLocation } from 'react-router-dom';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
 import { useAPI } from '../api/useAPI';
@@ -42,8 +43,14 @@ const Layout = props => {
   useEffect(() => {
     if (categories) {
       const service = location.pathname.match(/^\/services\/(.*?)\//);
-      const navOpen = categories.find(({ services }) =>
-        services.map(s => s.id).includes(service ? service[1] : null),
+      const category = location.pathname.match(/^\/categories\/(.*?)\//);
+
+      console.log(service, category);
+
+      const navOpen = categories.find(({ id, services }) =>
+        service 
+          ? services.some(s => s.id === get(service, 1, null))
+          : id === get(category, 1, null)
       );
       const pathParts = location.pathname.split('/');
       const selected = pathParts.slice(0, 5).join('/');

@@ -31,6 +31,8 @@
       font-size: 0.75rem;
 
       a {
+        display: inline-flex;
+        align-items: center;
         color: $ncc-red;
 
         &:hover {
@@ -49,7 +51,7 @@
   .about-scout {
     display: flex;
     align-items: center;
-    padding: 0 1rem 1rem 1rem;
+    padding: 0.5rem 1rem;
     font-size: 0.75rem;
     cursor: pointer;
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import Tabs from '@material-ui/core/Tabs';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 
@@ -29,11 +30,19 @@ const TabsMenu = props => {
   return (
     <div className={cx(className, 'tabs')}>
       <div className="tabs-menu">
-        {children.map((child, i) => React.cloneElement(child, {
-          isSelected: i === selectedTab,
-          key: i,
-          onClick: () => setSelectedTab(i),
-        }))}
+        <Tabs
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          {children.map((child, i) => (
+            <div key={i}>
+              {React.cloneElement(child, {
+                isSelected: i === selectedTab,
+                onClick: () => setSelectedTab(i),
+              })}
+            </div>
+          ))}
+        </Tabs>
       </div>
       <div className="tab-content">
         {content}

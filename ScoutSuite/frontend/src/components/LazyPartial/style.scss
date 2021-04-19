@@ -9,7 +9,7 @@
 
   .header, .content {
     padding-left: 1.5rem;
-    padding-right: 2.5rem;
+    padding-right: 1.5rem;
   }
 
   h4 {
@@ -33,10 +33,23 @@
     flex-grow: 1;
     display: flex;
     padding-top: 1rem;
-    padding-bottom: 2rem;
+    padding-bottom: 1.5rem;
 
     & > div {
       flex-grow: 1;
+    }
+
+    .tabs {
+      overflow: hidden;
+
+      .MuiTabs-root {
+        min-height: unset;
+
+        .MuiTabScrollButton-root {
+          width: auto;
+          height: 1.5rem;
+        }
+      }
     }
 
     .informations-wrapper {
