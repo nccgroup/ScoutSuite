@@ -68,10 +68,7 @@ const Layout = props => {
                 key={category.id}
               >
                 {!isEmpty(category.dashboard) && (
-                  <MenuGroup
-                    title="Summaries"
-                    size="large"
-                  >
+                  <MenuGroup title="Summaries" size="large">
                     {category.dashboard.map((dashboard, i) => (
                       <MenuElement
                         link={getCategoryDashboardLink(dashboard, category.id)}
@@ -86,7 +83,8 @@ const Layout = props => {
                 )}
                 {category.services.map(service => (
                   <MenuGroup
-                    title={service.name} key={service.id}
+                    title={service.name} 
+                    pro_feature={service.pro_feature} key={service.id}
                     size="large">
                     {service.dashboards.map(dashboard => (
                       <MenuElement
@@ -95,7 +93,9 @@ const Layout = props => {
                         selected={selected}
                       >
                         <BarChartIcon fontSize="inherit" />{' '}
-                        <span>{getDashboardName(dashboard)}</span>
+                        <span>
+                          {getDashboardName(dashboard)}{' '}
+                        </span>
                       </MenuElement>
                     ))}
 
