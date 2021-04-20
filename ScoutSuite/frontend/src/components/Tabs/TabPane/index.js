@@ -36,7 +36,7 @@ const TabPane = props => {
   const tabOnClick = disabled ? null : onClick;
 
   return (
-    <span 
+    <div 
       className={classNames} 
       onClick={tabOnClick}
     >
@@ -46,7 +46,7 @@ const TabPane = props => {
       <div className="tab-content">
         {children}
       </div>
-    </span>
+    </div>
   );
 };
 

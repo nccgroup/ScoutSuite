@@ -15,16 +15,7 @@
 
   .search-bar {
     input {
-      caret-color: $font-color;
       min-width: 260px;
-    }
-
-    label {
-      color: $font-color;
-    }
-
-    fieldset {
-      border-color: $font-color;
     }
   }
 
@@ -43,6 +34,26 @@
       input {
         font-size: 0.5rem;
       }
+    }
+  }
+
+  &, .table-header-right {
+    input {
+      caret-color: $font-color;
+    }
+
+    label {
+      color: $font-color !important;
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+      &, &:hover {
+        border-color: $font-color !important;
+      }
+    }
+
+    svg {
+      color: $font-color;
     }
   }
 }

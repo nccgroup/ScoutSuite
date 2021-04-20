@@ -9,6 +9,8 @@ button.download-btn {
   }
 
   span {
-    color: $link-color;
+    &, svg {
+      color: $link-color !important;
+    }
   }
 }

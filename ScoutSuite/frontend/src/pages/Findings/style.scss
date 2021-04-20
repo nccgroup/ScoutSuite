@@ -3,9 +3,9 @@
 .findings {
   .table-card {
     position: relative;
-    margin-right: 2rem;
     background: $white;
     border-radius: $border-radius;
+    margin-bottom: 1rem;
 
     &.no-items {
       display: flex;

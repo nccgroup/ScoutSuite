@@ -9,7 +9,7 @@
 
   .header, .content {
     padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-right: 0.75em;
   }
 
   h4 {
@@ -45,15 +45,30 @@
       .MuiTabs-root {
         min-height: unset;
 
+        .MuiTabs-scroller:last-child {
+          margin-left: 2rem;
+        }
+
         .MuiTabScrollButton-root {
           width: auto;
           height: 1.5rem;
+
+          &:first-child {
+            padding-right: 0.75rem;
+          }
+          &:last-child {
+            padding-left: 0.75rem;
+          }
         }
+      }
+
+      .tab-content {
+        padding: 0 2rem;
       }
     }
 
     .informations-wrapper {
-      margin-right: 2.5rem;
+      margin-right: 0.75rem;
       flex-grow: 0;
     }
 
