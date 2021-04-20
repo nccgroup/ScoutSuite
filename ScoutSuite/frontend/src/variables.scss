@@ -16,6 +16,8 @@
   --default-grey-light: #cccccc;
   --default-grey-dark: #343434;
   --white: #ffffff;
+  
+  --informations-background: #f4f4f4;
 
   --link-color: #4990e2;
   --text-muted: #999999;
@@ -37,6 +39,8 @@ body.dark-mode {
   --default-grey-light: #5e5e5e;
   --default-grey-dark: #2a2a2a;
   --white: #303030;
+
+  --informations-background: #282828;
 }
 
 $font-color: var(--font-color);
@@ -56,6 +60,8 @@ $default-grey-subtle: var(--default-grey-subtle);
 $default-grey-light: var(--default-grey-light);
 $default-grey-dark: var(--default-grey-dark);
 $white: var(--white);
+
+$informations-background: var(--informations-background);
 
 $link-color: var(--link-color);
 $text-muted: var(--text-muted);
