@@ -46,7 +46,7 @@ export const useAPI = (defaultPath, defaultValue, settings = {}) => {
       urlQueryParams.set('current_page', queryParams.page);
       if (queryParams.sortBy) urlQueryParams.set('sort_by', queryParams.sortBy);
       if (queryParams.sortBy && queryParams.direction)
-        urlQueryParams.set('direction', queryParams.direction);
+        urlQueryParams.set('order_by', queryParams.direction);
       if (queryParams.search && queryParams.search.length > 0)
         urlQueryParams.set('search', queryParams.search);
       if (!isEmpty(queryParams.filters))
