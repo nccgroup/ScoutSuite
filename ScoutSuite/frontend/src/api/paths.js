@@ -1,12 +1,12 @@
 /**
  * Endpoint for the list of all the services
  */
-export const getServicesEndpoint = () => '/services';
+export const getServicesEndpoint = () => 'services';
 
 /**
  * Endpoint for ScoutSuite executions details
  */
-export const getExecutionDetailsEndpoint = () => '/execution-details';
+export const getExecutionDetailsEndpoint = () => 'execution-details';
 
 /**
  * Endpoint for the findings of a service
@@ -66,7 +66,7 @@ export const getItemEndpoint = (service, finding, id, path) =>
  * @returns 
  */
 export const getResourcesEndpoint = (service, resource) =>
-  `/services/${service}/resources/${resource}`;
+  `services/${service}/resources/${resource}`;
 
 /**
  * Enpoint for getting a resource's infos
@@ -76,7 +76,7 @@ export const getResourcesEndpoint = (service, resource) =>
  * @returns 
  */
 export const getResourceEndpoint = (service, resource, id) =>
-  `/services/${service}/resources/${resource}/${id}`;
+  `services/${service}/resources/${resource}/${id}`;
 
 export const getResourceFilterAttributeEndpoint = (service, resource, attribute) =>
   `services/${service}/resources/${resource}/options/${attribute}`;

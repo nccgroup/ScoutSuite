@@ -19,7 +19,6 @@ export const get = async (path) => {
     return Cache.get(path);
   }
 
- 
   const { data } = await axios.get(BASE_URL + '/api/' + path);
   Cache.set(path, data);
   
