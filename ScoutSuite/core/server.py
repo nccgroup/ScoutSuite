@@ -23,6 +23,7 @@ def start_api(results, exceptions=None):
 
     @app.errorhandler(404)
     def page_not_found(e):
+        if request.path.startswith('/api/'): return Response('Not found', status=404)
         return app.send_static_file('index.html')
 
     @app.route('/api', methods=['GET'])
