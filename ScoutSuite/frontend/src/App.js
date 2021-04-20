@@ -51,7 +51,7 @@ function App() {
                   >
                     <ExternalAttack />
                   </Route>
-                  <Route path="/services/:service/password_policy/:finding">
+                  <Route path="/services/:service/password_policy/:id">
                     <PasswordPolicyFinding />
                   </Route>
                   <Route path="/services/:service/password_policy">
