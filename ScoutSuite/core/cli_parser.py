@@ -1,4 +1,4 @@
-import argparse
+import argparse, sys
 from ScoutSuite import __version__
 
 
@@ -95,8 +95,7 @@ class ScoutSuiteArgumentParser:
                                             parents=[self.common_providers_args_parser],
                                             help="Run Scout against a Google Cloud Platform account")
 
-        common_args = self.parser.parse_args()
-        if not vars(common_args)['server_only']:
+        if '--server-only' not in sys.argv:
 
             gcp_parser = parser.add_argument_group('Authentication modes')
 
@@ -137,8 +136,7 @@ class ScoutSuiteArgumentParser:
                                             parents=[self.common_providers_args_parser],
                                             help="Run Scout against a Microsoft Azure account")
 
-        common_args = self.parser.parse_args()
-        if not vars(common_args)['server_only']:
+        if '--server-only' not in sys.argv:
 
             azure_parser = parser.add_argument_group('Authentication modes')
             azure_auth_params = parser.add_argument_group('Authentication parameters')
@@ -366,10 +364,6 @@ class ScoutSuiteArgumentParser:
         # Cannot simply use required for backward compatibility
         if not args.provider:
             self.parser.error('You need to input a provider')
-
-        # If local analysis, overwrite results
-        if args.__dict__.get('fetch_local'):
-            args.force_write = True
 
         # Test conditions
         v = vars(args)
