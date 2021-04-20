@@ -8,18 +8,15 @@ import PasswordPolicy from '../PasswordPolicy';
 
 
 const PasswordPolicyFinding = () => {
-  const { service, finding } = useParams();  
+  const { service, id } = useParams();  
 
   const { data, loading } = useAPI(
-    getRawEndpoint(`services.${service}.findings.${finding}`)
+    getRawEndpoint(`services.${service}.findings.${id}`)
   );
 
-  
   if (loading) return null;
   
   const issues = get(data, 'items', []);
-  
-  console.log(data, issues);
 
   return (
     <PasswordPolicy 
