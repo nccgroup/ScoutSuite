@@ -2,13 +2,20 @@ from flask import Flask, request, Response, make_response, jsonify, abort
 from flask_cors import CORS
 from ScoutSuite.utils import format_service_name
 
-import csv, io, json
+import csv, io, json, logging, sys
 
 def start_api(results, exceptions=None):
     app = Flask(__name__, 
             static_url_path='', 
             static_folder='../web_report')
     CORS(app)
+
+    # Comment out the following 5 lines to view server requests in shell
+    cli = sys.modules['flask.cli']
+    cli.show_server_banner = lambda *x: None
+    app.logger.disabled = True
+    log = logging.getLogger('werkzeug')
+    log.disabled = True
 
     @app.route('/', methods=['GET'])
     def home():
@@ -24,11 +31,14 @@ def start_api(results, exceptions=None):
 
     @app.route('/api/services/<service>/findings', methods=['GET'])
     def get_findings(service):
+        # If service is in metadata but not in services, it's a pro feature
         if service not in results['services']:
             return Response('Pro feature', status=402)
+        
         findings = results['services'][service]['findings']
         for finding in findings:
             findings[finding]['name'] = finding
+            # Password_policy needs to be redirected to its partial
             if findings[finding]['dashboard_name'] == 'Password policy':
                 findings[finding]['redirect_to'] = '/services/iam/password_policy'
         
@@ -43,29 +53,26 @@ def start_api(results, exceptions=None):
 
     @app.route('/api/services/<service>/findings/<finding>/items/<item_id>', methods=['GET'])
     def get_issue_paths(service, finding, item_id):
-        path = request.args.get('path')
+        element_path = request.args.get('path')
         items = results['services'][service]['findings'][finding]['items']
         issue_paths = []
         for item_path in items:
-            if (path == item_path):
+            # If the element path is the whole item path, send 'ALL'
+            if (element_path == item_path):
                 issue_paths.append('ALL')
-            if (path in item_path):
-                issue_path = item_path.split(path)[1][1:]
+            # If the element path is a substring of the item path, send the tail of the item path
+            if (element_path in item_path):
+                issue_path = item_path.split(element_path)[1][1:]
                 issue_paths.append(issue_path)
-
-        words = path.split('.')
-        item_path_with_brackets = results['services']
-        for idx in range(len(words)):
-            item_path_with_brackets = item_path_with_brackets[words[idx]]
 
         issue_paths_and_item = {
             'path_to_issues': issue_paths,
-            'item': item_path_with_brackets,
+            'item': get_element_from_path(element_path, results['services'])
         }
 
         return jsonify(issue_paths_and_item)
 
-    @app.route('/api/services/', methods=['GET'])
+    @app.route('/api/services', methods=['GET'])
     def get_services():
         metadata = results['metadata']
         category_list = []
@@ -76,13 +83,15 @@ def start_api(results, exceptions=None):
             category_dashboard = []
             for service in services:
                 resource_list = []
+                # If a dashboard exists in a specific category, append all dashboard types to category_dashboard
                 if service == 'summaries':
-                    for dashboard_type in services[service]:
+                    for dashboard_type in services['summaries']:
                         category_dashboard.append(dashboard_type)
                 else:
-                    service_id = service
-                    dashboard = ['findings']
+                    # The 'findings' dashboard is included for all services
+                    service_dashboard = ['findings']
 
+                    # Get each resource's information and append to resource_list
                     if 'resources' in services[service]:
                         resources = services[service]['resources']
                         for resource in resources:
@@ -94,15 +103,15 @@ def start_api(results, exceptions=None):
                             }
                             resource_list.append(resource_info)
 
+                    # If a dashboard exists in a specific service, append all dashboard types to category_dashboard
                     if 'summaries' in services[service]:
-                        dashboard_types = services[service]['summaries']
-                        for dashboard_type in dashboard_types:
-                            dashboard.append(dashboard_type)
+                        for dashboard_type in services[service]['summaries']:
+                            service_dashboard.append(dashboard_type)
 
                     service_info = {
                         'id': service,
                         'name': format_service_name(service),
-                        'dashboards': dashboard,
+                        'dashboards': service_dashboard,
                         'resources': resource_list
                     }
                     service_list.append(service_info)
@@ -150,10 +159,13 @@ def start_api(results, exceptions=None):
                 'Low': 0,
                 'Good': 0
             }
+            
+            # For every finding where there's at least one item, add it to 'issues'
+            # with its corresponding issue level
             findings = results['services'][summary_service]['findings']
-            for rule in findings:
-                if findings[rule]['items']:
-                    issue_level = findings[rule]['level']
+            for finding in findings:
+                if findings[finding]['items']:
+                    issue_level = findings[finding]['level']
                     if issue_level == 'danger': issues['High'] += 1
                     if issue_level == 'warning': issues['Medium'] += 1
                 else:
@@ -244,13 +256,7 @@ def start_api(results, exceptions=None):
 
     @app.route('/api/raw/<path:path_to_element>', methods=['GET'])
     def get_raw_info(path_to_element):
-        words = path_to_element.split('/')
-        path_to_elemnt_in_brackets = results
-
-        for idx in range(len(words)):
-            path_to_elemnt_in_brackets = path_to_elemnt_in_brackets[words[idx]]
-
-        return jsonify(path_to_elemnt_in_brackets)
+        return jsonify(get_element_from_path(path_to_element, results))
 
     @app.route('/health', methods=['GET'])
     def check_server_health():
@@ -260,27 +266,31 @@ def start_api(results, exceptions=None):
 
 def get_attributes_from_path(path):
     attributes = []
-    words = path.split('.')
-    for idx, word in enumerate(words):
+    elements = path.split('.')
+    for idx, word in enumerate(elements):
         if word == 'id':
-            attributes.append(words[idx-1])
+            attributes.append(elements[idx-1])
 
     return attributes
 
 def get_all_items_in_finding(service, finding, results):
     item_list = []
     finding = results['services'][service]['findings'][finding]
-
+    
+    # If there is no items, return an empty array
     if not finding['items']:
         return jsonify([])
 
-    path = finding['display_path'] if 'display_path' in finding else finding['path'] # storageaccounts.subscriptions.id.storage_accounts.id
-    attributes = get_attributes_from_path(path)[:-1] # ['subscriptions']
+    # Use display path if possible, if not use path
+    path = finding['display_path'] if 'display_path' in finding else finding['path']
+    attributes = get_attributes_from_path(path)[:-1]
 
     for item_path in finding['items']:
-        item_path_kw = item_path.split('.') # [storageaccounts, subscriptions, c4596cb7-805b-49aa-9a04-ed74e9f5c789, storage_accounts, e21374e58a7142b3bc563467ac097f66345454fd, blob_containers, test, public_access_allowed]
-        if 'id_suffix' in finding and item_path_kw[-1] == finding['id_suffix']: item_path_kw = item_path_kw[:-1]
+        item_path_kw = item_path.split('.')
 
+        # Remove the item's tail if it's the id_suffix
+        if 'id_suffix' in finding and item_path_kw[-1] == finding['id_suffix']: item_path_kw = item_path_kw[:-1]
+    
         item_to_display = get_element_from_path_kw(item_path_kw[:len(path.split('.'))], results['services'])
         item = {
             'name': item_to_display['name'],
@@ -302,9 +312,11 @@ def get_all_elements_from_path(path, report_location):
     element_list = []
     subelement_list = []
 
-    id_locations = [id_index for id_index, x in enumerate(path_keywords) if x == 'id'] # [3, 5]
+    # List of all the positions of 'id' in path
+    id_indexes = [id_index for id_index, x in enumerate(path_keywords) if x == 'id']
 
-    if not id_locations:
+    # If there is no 'id', return the only element from path
+    if not id_indexes:
         elements = get_element_from_path(path, report_location)
         for element in elements:
             new_element = {element: elements[element]}
@@ -312,37 +324,55 @@ def get_all_elements_from_path(path, report_location):
             element_list.append(new_element)
         return element_list
 
-    for id_idx in range(len(id_locations)):
+    # Loop through each of the attributes = same number as the number of 'id' in path
+    for id_idx in range(len(id_indexes)):
         subelement_list.append([])
+
+        # First attribute
         if id_idx == 0:
-            path_to_element = path_keywords[:id_locations[id_idx]]
+            path_to_element = path_keywords[:id_indexes[id_idx]]
             element = get_element_from_path_kw(path_to_element, report_location)
+            
+            # Add the attribute to subelement_list[0]
             for subelement in element:
                 if element[subelement]:
-                    subelement_list[id_idx].append(element[subelement])
-                    subelement_list[id_idx][-1]['path'] = path_keywords[0:id_locations[id_idx]] + [subelement]
+                    subelement_list[0].append(element[subelement])
+                    subelement_list[0][-1]['path'] = path_keywords[0:id_indexes[0]] + [subelement]
 
+        # Non-first, non-last attributes at position id_idx = new attribute
         else:
+
+            # Loop through all of the attributes of the previous level
             for idx, element in enumerate(subelement_list[id_idx - 1]):
-                path_to_element = path_keywords[id_locations[id_idx - 1] + 1:id_locations[id_idx]]
+                path_to_element = path_keywords[id_indexes[id_idx - 1] + 1:id_indexes[id_idx]]
                 new_element = get_element_from_path_kw(path_to_element, element)
+
+                # Update the path to new attribute in subelement_list
                 for element_dict in new_element: new_element[element_dict]['path'] = subelement_list[id_idx - 1][idx]['path'] + path_to_element
                 subelement_list[id_idx - 1][idx] = new_element
 
+                # Add the new attribute to subelement_list[id_idx]
                 for subelement in subelement_list[id_idx - 1][idx]:
                     if subelement_list[id_idx - 1][idx][subelement]:
                         subelement_list[id_idx].append(subelement_list[id_idx - 1][idx][subelement])
                         subelement_list[id_idx][-1]['path'] = subelement_list[id_idx - 1][idx][subelement]['path'] + [subelement]
 
-        if id_idx == len(id_locations) - 1:
+        # Last attribute
+        if id_idx == len(id_indexes) - 1:
+
+            # Loop through all of the attributes of the previous level
             for subelement in subelement_list[id_idx]:
-                path_to_element = path_keywords[id_locations[id_idx] + 1:len(path_keywords)]
+                path_to_element = path_keywords[id_indexes[id_idx] + 1:len(path_keywords)]
                 element = get_element_from_path_kw(path_to_element, subelement)
+
+                # If element is a list with more than one element, append each of them as dict in element_list
                 if element: 
                     if len(element) > 1:
                         for individual_element in element:
                             element_list.append({individual_element: element[individual_element]})
                             element_list[-1][individual_element]['path'] = '.'.join(subelement['path'] + path_to_element + [individual_element])
+
+                    # If there is only one element, append to element_list
                     else:
                         element_list.append(element)
                         for element_dict in element:
