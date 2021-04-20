@@ -68,6 +68,7 @@ def run_from_cli():
                    debug=args.get('debug'),
                    quiet=args.get('quiet'),
                    log_file=args.get('log_file'),
+                   no_browser=args.get('no_browser'),
                    server_only=args.get('server_only'),
                    report_only=args.get('report_only'),
                    programmatic_execution=False)
@@ -110,6 +111,7 @@ def run(provider,
         debug=False,
         quiet=False,
         log_file=None,
+        no_browser=False,
         server_only=None,
         report_only=False,
         programmatic_execution=True):
@@ -159,6 +161,7 @@ async def _run(provider,
                debug,
                quiet,
                log_file,
+               no_browser,
                server_only,
                report_only,
                programmatic_execution,
@@ -346,6 +349,11 @@ async def _run(provider,
     except Exception as e:
         print_exception('Failure while generating JSON report: {}'.format(e))
         return 109
+
+    # Open the report by default
+    if not no_browser:
+        print_info('Opening the report at http://localhost:5000')
+        webbrowser.open('http://localhost:5000', new=2)
 
     # Start server for front-end
     if not report_only:

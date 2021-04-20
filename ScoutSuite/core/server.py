@@ -11,11 +11,11 @@ def start_api(results, exceptions=None):
     CORS(app)
 
     # Comment out the following 5 lines to view server requests in shell
-    # cli = sys.modules['flask.cli']
-    # cli.show_server_banner = lambda *x: None
-    # app.logger.disabled = True
-    # log = logging.getLogger('werkzeug')
-    # log.disabled = True
+    cli = sys.modules['flask.cli']
+    cli.show_server_banner = lambda *x: None
+    app.logger.disabled = True
+    log = logging.getLogger('werkzeug')
+    log.disabled = True
 
     @app.route('/', methods=['GET'])
     def home():
