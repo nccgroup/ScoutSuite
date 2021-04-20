@@ -95,123 +95,129 @@ class ScoutSuiteArgumentParser:
                                             parents=[self.common_providers_args_parser],
                                             help="Run Scout against a Google Cloud Platform account")
 
-        gcp_parser = parser.add_argument_group('Authentication modes')
+        common_args = self.parser.parse_args()
+        if not vars(common_args)['server_only']:
 
-        gcp_auth_modes = gcp_parser.add_mutually_exclusive_group(required=True)
+            gcp_parser = parser.add_argument_group('Authentication modes')
 
-        gcp_auth_modes.add_argument('-u',
-                                    '--user-account',
-                                    action='store_true',
-                                    help='Run Scout with a Google Account')
+            gcp_auth_modes = gcp_parser.add_mutually_exclusive_group(required=True)
 
-        gcp_auth_modes.add_argument('-s',
-                                    '--service-account',
-                                    action='store',
-                                    metavar="KEY_FILE",
-                                    help='Run Scout with a Google Service Account with the specified '
-                                         'Google Service Account Application Credentials file')
+            gcp_auth_modes.add_argument('-u',
+                                        '--user-account',
+                                        action='store_true',
+                                        help='Run Scout with a Google Account')
 
-        gcp_scope = parser.add_argument_group('Additional arguments')
+            gcp_auth_modes.add_argument('-s',
+                                        '--service-account',
+                                        action='store',
+                                        metavar="KEY_FILE",
+                                        help='Run Scout with a Google Service Account with the specified '
+                                            'Google Service Account Application Credentials file')
 
-        gcp_scope.add_argument('--project-id',
-                               action='store',
-                               help='ID of the GCP Project to scan')
+            gcp_scope = parser.add_argument_group('Additional arguments')
 
-        gcp_scope.add_argument('--folder-id',
-                               action='store',
-                               help='ID of the GCP Folder to scan')
+            gcp_scope.add_argument('--project-id',
+                                action='store',
+                                help='ID of the GCP Project to scan')
 
-        gcp_scope.add_argument('--organization-id',
-                               action='store',
-                               help='ID of the GCP Organization to scan')
+            gcp_scope.add_argument('--folder-id',
+                                action='store',
+                                help='ID of the GCP Folder to scan')
 
-        gcp_scope.add_argument('--all-projects',
-                               action='store_true',
-                               help='Scan all of the accessible projects')
+            gcp_scope.add_argument('--organization-id',
+                                action='store',
+                                help='ID of the GCP Organization to scan')
+
+            gcp_scope.add_argument('--all-projects',
+                                action='store_true',
+                                help='Scan all of the accessible projects')
 
     def _init_azure_parser(self):
         parser = self.subparsers.add_parser("azure",
                                             parents=[self.common_providers_args_parser],
                                             help="Run Scout against a Microsoft Azure account")
 
-        azure_parser = parser.add_argument_group('Authentication modes')
-        azure_auth_params = parser.add_argument_group('Authentication parameters')
+        common_args = self.parser.parse_args()
+        if not vars(common_args)['server_only']:
 
-        azure_auth_modes = azure_parser.add_mutually_exclusive_group(required=True)
+            azure_parser = parser.add_argument_group('Authentication modes')
+            azure_auth_params = parser.add_argument_group('Authentication parameters')
 
-        # az-cli authentication
-        azure_auth_modes.add_argument('-c',
-                                      '--cli',
-                                      action='store_true',
-                                      help='Run Scout using configured azure-cli credentials')
+            azure_auth_modes = azure_parser.add_mutually_exclusive_group(required=True)
 
-        # username/password authentication
-        azure_auth_modes.add_argument('--user-account',
-                                      action='store_true',
-                                      help='Run Scout with user credentials')
-        azure_auth_params.add_argument('-u',
-                                       '--username',
-                                       action='store',
-                                       default=None,
-                                       dest='username',
-                                       help='Username of the Azure account')
-        azure_auth_params.add_argument('-p',
-                                       '--password',
-                                       action='store',
-                                       default=None,
-                                       dest='password',
-                                       help='Password of the Azure account')
+            # az-cli authentication
+            azure_auth_modes.add_argument('-c',
+                                        '--cli',
+                                        action='store_true',
+                                        help='Run Scout using configured azure-cli credentials')
 
-        # username/password authentication via browser
-        azure_auth_modes.add_argument('--user-account-browser',
-                                      action='store_true',
-                                      help='Run Scout with user credentials, authenticating through a browser (useful when MFA is enforced)')
+            # username/password authentication
+            azure_auth_modes.add_argument('--user-account',
+                                        action='store_true',
+                                        help='Run Scout with user credentials')
+            azure_auth_params.add_argument('-u',
+                                        '--username',
+                                        action='store',
+                                        default=None,
+                                        dest='username',
+                                        help='Username of the Azure account')
+            azure_auth_params.add_argument('-p',
+                                        '--password',
+                                        action='store',
+                                        default=None,
+                                        dest='password',
+                                        help='Password of the Azure account')
 
-        # Service Principal authentication
-        azure_auth_modes.add_argument('-s',
-                                      '--service-principal',
-                                      action='store_true',
-                                      help='Run Scout with an Azure Service Principal')
-        azure_auth_params.add_argument('--client-id',
-                                       action='store',
-                                       dest='client_id',
-                                       help='Client ID of the service principal')
-        azure_auth_params.add_argument('--client-secret',
-                                       action='store',
-                                       dest='client_secret',
-                                       help='Client of the service principal')
-        # Service Principal credentials in an auth file
-        azure_auth_modes.add_argument('--file-auth',
-                                      action='store',
-                                      type=argparse.FileType('rb'),
-                                      dest='file_auth',
-                                      metavar="FILE",
-                                      help='Run Scout with the specified credential file')
+            # username/password authentication via browser
+            azure_auth_modes.add_argument('--user-account-browser',
+                                        action='store_true',
+                                        help='Run Scout with user credentials, authenticating through a browser (useful when MFA is enforced)')
 
-        # Managed Service Identity (MSI) authentication
-        azure_auth_modes.add_argument('-m',
-                                      '--msi',
-                                      action='store_true',
-                                      help='Run Scout with Managed Service Identity')
+            # Service Principal authentication
+            azure_auth_modes.add_argument('-s',
+                                        '--service-principal',
+                                        action='store_true',
+                                        help='Run Scout with an Azure Service Principal')
+            azure_auth_params.add_argument('--client-id',
+                                        action='store',
+                                        dest='client_id',
+                                        help='Client ID of the service principal')
+            azure_auth_params.add_argument('--client-secret',
+                                        action='store',
+                                        dest='client_secret',
+                                        help='Client of the service principal')
+            # Service Principal credentials in an auth file
+            azure_auth_modes.add_argument('--file-auth',
+                                        action='store',
+                                        type=argparse.FileType('rb'),
+                                        dest='file_auth',
+                                        metavar="FILE",
+                                        help='Run Scout with the specified credential file')
 
-        # Additional arguments
-        azure_scope = parser.add_argument_group('Additional arguments')
+            # Managed Service Identity (MSI) authentication
+            azure_auth_modes.add_argument('-m',
+                                        '--msi',
+                                        action='store_true',
+                                        help='Run Scout with Managed Service Identity')
 
-        azure_scope.add_argument('--tenant',
-                                 action='store',
-                                 dest='tenant_id',
-                                 help='ID of the Tenant (Directory) to scan')
-        azure_scope.add_argument('--subscriptions',
-                                 action='store',
-                                 default=[],
-                                 nargs='+',
-                                 dest='subscription_ids',
-                                 help='IDs (separated by spaces) of the Azure subscription(s) to scan. '
-                                      'By default, only the default subscription will be scanned.')
-        azure_scope.add_argument('--all-subscriptions',
-                                 action='store_true',
-                                 dest='all_subscriptions',
-                                 help='Scan all of the accessible subscriptions')
+            # Additional arguments
+            azure_scope = parser.add_argument_group('Additional arguments')
+
+            azure_scope.add_argument('--tenant',
+                                    action='store',
+                                    dest='tenant_id',
+                                    help='ID of the Tenant (Directory) to scan')
+            azure_scope.add_argument('--subscriptions',
+                                    action='store',
+                                    default=[],
+                                    nargs='+',
+                                    dest='subscription_ids',
+                                    help='IDs (separated by spaces) of the Azure subscription(s) to scan. '
+                                        'By default, only the default subscription will be scanned.')
+            azure_scope.add_argument('--all-subscriptions',
+                                    action='store_true',
+                                    dest='all_subscriptions',
+                                    help='Scan all of the accessible subscriptions')
 
     def _init_aliyun_parser(self):
         parser = self.subparsers.add_parser("aliyun",
