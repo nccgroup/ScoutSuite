@@ -4,18 +4,23 @@ import { Button } from '@material-ui/core';
 import { PropTypes } from 'prop-types';
 
 import './style.scss';
+import { BASE_URL } from '../../api/api';
 
 const propTypes = {
   service: PropTypes.string.isRequired,
   resource: PropTypes.string.isRequired,
+  finding: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
 };
 
-const DownloadButton = ({ service, resource, type }) => {
+const DownloadButton = ({ service, resource, finding, type }) => {
+  const source = finding ? `findings/${finding}/items` : `resources/${resource}`;
+  const link = `${BASE_URL}/api/services/${service}/${source}/download`;
+
   return (
     <form
       method="get"
-      action={`http://localhost:5000/api/services/${service}/resources/${resource}/download`}
+      action={link}
     >
       <input 
         type="hidden" name="type" 

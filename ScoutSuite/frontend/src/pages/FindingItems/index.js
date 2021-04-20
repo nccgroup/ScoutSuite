@@ -83,12 +83,12 @@ const FindingItems = () => {
     <>
       <DownloadButton
         service={params.service}
-        resource={params.resource}
+        finding={params.finding}
         type="json"
       />
       <DownloadButton
         service={params.service}
-        resource={params.resource}
+        finding={params.finding}
         type="csv"
       />
     </>
