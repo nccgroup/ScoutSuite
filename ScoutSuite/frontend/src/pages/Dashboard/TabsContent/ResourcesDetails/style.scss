@@ -1,6 +1,20 @@
 @import 'src/variables';
 
 .resources-details {
+  div {
+    h3 {
+      font-size: 1.375rem;
+    }
+  }
+
+  .download-btns {
+    margin-bottom: 1rem;
+    
+    button {
+      margin-right: 0.5rem;
+    }
+  }
+
   .details-card {
     width: 100%;
     border-collapse: collapse;
@@ -8,10 +22,6 @@
     background-color: white;
     border-radius: $border-radius;
     margin-bottom: 2rem;
-
-    a:not(:hover) {
-      text-decoration: none;
-    }
 
     .no-link {
       color: $text-muted;

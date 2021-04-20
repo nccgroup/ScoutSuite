@@ -11,13 +11,29 @@
   display: flex;
   align-items: center;
   justify-content:space-between;
+  padding: 0.5rem 0.75rem;
+
+  .search-bar {
+    input {
+      min-width: 260px;
+    }
+  }
 
   .table-header-right {
-    display: flex;
-    align-items: flex-end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
 
     & > * {
-      margin-right: 0.75rem;
+      margin-left: 0.75rem;
+    }
+
+    .MuiFormControl-root {
+      min-width: 180px;
+      
+      input {
+        font-size: 0.5rem;
+      }
     }
   }
 }
@@ -91,22 +107,11 @@
   }
 }
 
-.search-bar {
+.no-items-in-query {
   padding: 0.75rem 1rem;
-
-  input {
-    width: 18rem;
-    padding: 0.3125rem 1.5rem;
-    border: 1px solid $default-grey-light;
-    outline: none;
-    color: $font-color;
-    caret-color: $default-grey;
-    border-radius: $border-radius;
-
-    &::placeholder {
-      color: $default-grey;
-    }
-  }
+  font-weight: bold;
+  color: $font-color;
+  border-bottom: 1px solid $default-grey-subtle;
 }
 
 .pagination {

@@ -58,7 +58,7 @@ const renderObjACL = (acls) => {
       <ul>
         {acls.map((acl, key) => (
           <li key={key}>
-            <PartialValue valuePath={key + '.' + acl.entity} />
+            <PartialValue valuePath={key + '.entity'} />
             <ul>
               <li>
                 <PartialValue valuePath={key + '.role'} />

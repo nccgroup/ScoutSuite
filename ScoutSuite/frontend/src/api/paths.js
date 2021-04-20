@@ -18,15 +18,22 @@ export const getFindingsEndpoint = (service) => `services/${service}/findings`;
  * Endpoint for a service's External Attack Surface infos 
  * @param {*} service
  */
-export const getExternalAttackServiceEndpoint = (service) =>
-  `services/${service}/external-attack-surface`;
+export const getServiceExternalAttackEndpoint = (service) =>
+  `services/${service}/external_attack_surface`;
+
+/**
+ * Endpoint for a category's External Attack Surface infos 
+ * @param {*} service
+ */
+export const getCategoryExternalAttackEndpoint = (category) =>
+  `categories/${category}/external_attack_surface`;
 
 /**
  * Endpoint for a service's Password Policy infos
  * @param {*} service
  */
 export const getPasswordPolicyEndpoint = service =>
-  `services/${service}/password-policy`;
+  `services/${service}/password_policy`;
 
 /**
  * Endpoint for a service's Permissions infos
@@ -70,6 +77,12 @@ export const getResourcesEndpoint = (service, resource) =>
  */
 export const getResourceEndpoint = (service, resource, id) =>
   `/services/${service}/resources/${resource}/${id}`;
+
+export const getResourceFilterAttributeEndpoint = (service, resource, attribute) =>
+  `services/${service}/resources/${resource}/options/${attribute}`;
+
+export const getFindingFilterAttributeEndpoint = (service, finding, attribute) =>
+  `services/${service}/findings/${finding}/items/options/${attribute}`;  
 
 /**
  * Endpoint for raw access to the JSON report

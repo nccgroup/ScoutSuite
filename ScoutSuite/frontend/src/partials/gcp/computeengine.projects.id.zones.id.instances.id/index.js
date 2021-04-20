@@ -9,7 +9,7 @@ import {
   convertBoolToEnable,
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Tabs';
-import { valueOrNone } from '../../../utils/Partials/index';
+import { valueOrNone, convertBoolToYesOrNo } from '../../../utils/Partials/index';
 import ResourceLink from '../../../components/ResourceLink';
 import InformationsWrapper from '../../../components/InformationsWrapper';
 
@@ -89,7 +89,7 @@ const renderDisks = disks => {
         <li key={i}>
           {disk.source_device_name}
           <ul>
-            <li>Bootable: {disk.bootable}</li>
+            <li>Bootable: {convertBoolToYesOrNo(disk.bootable)}</li>
             <li>Type: {disk.type}</li>
             <li>Mode: {disk.mode}</li>
             <li>
@@ -97,7 +97,7 @@ const renderDisks = disks => {
             </li>
             <li>
               Customer Supplied Encryption:{' '}
-              <span>{valueOrNone(disk.encrypted_with_csek)}</span>
+              <span>{convertBoolToEnable(disk.encrypted_with_csek)}</span>
             </li>
           </ul>
         </li>

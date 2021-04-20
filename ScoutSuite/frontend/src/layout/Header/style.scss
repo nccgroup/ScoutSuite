@@ -12,11 +12,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
     margin: auto  0;
 
     img {
-      height: 2.5rem;
+      height: 2.25rem;
+      margin: 0.2rem 0 0;
     }
 
     .theme-switcher {
@@ -36,7 +37,7 @@
 
   &::after {
     content: ' ';
-    height: 0.625rem;
+    height: 0.4rem;
     width: 100%;
     background-color: $ncc-red;
   }

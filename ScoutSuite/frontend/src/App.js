@@ -1,18 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-
-import {ExceptionsContextProvider} from './components/Exceptions/context';
 import { SnackbarProvider } from 'notistack';
 
+import AppLoader from './components/AppLoader';
+import { ExceptionsContextProvider } from './components/Exceptions/context';
+import Layout from './layout';
+import ErrorBoundary from './components/ErrorBoundary';
 import Findings from './pages/Findings';
 import Resources from './pages/Resources';
 import Dashboard from './pages/Dashboard';
-import ExternalAttack from './pages/ExternalAttack/index';
-import FindingItems from './pages/FindingItems/index';
-import Layout from './layout/index';
-import AppLoader from './components/AppLoader';
+import ExternalAttack from './pages/ExternalAttack';
+import PasswordPolicy from './pages/PasswordPolicy';
+import PasswordPolicyFinding from './pages/PasswordPolicyFinding';
+import Permissions from './pages/Permissions';
+import FindingItems from './pages/FindingItems';
 import ErrorPage from './pages/404';
-import ErrorBoundary from './components/ErrorBoundary';
+
 
 function App() {
   return (
@@ -40,8 +43,22 @@ function App() {
                   <Route path="/services/:service/findings">
                     <Findings />
                   </Route>
-                  <Route path="/services/:service/external-attacks">
+                  <Route
+                    path={[
+                      '/services/:service/external_attack_surface',
+                      '/categories/:category/external_attack_surface',
+                    ]}
+                  >
                     <ExternalAttack />
+                  </Route>
+                  <Route path="/services/:service/password_policy/:finding">
+                    <PasswordPolicyFinding />
+                  </Route>
+                  <Route path="/services/:service/password_policy">
+                    <PasswordPolicy />
+                  </Route>
+                  <Route path="/services/:service/permissions/:id?">
+                    <Permissions />
                   </Route>
                   <Route path="/" exact>
                     <Dashboard />

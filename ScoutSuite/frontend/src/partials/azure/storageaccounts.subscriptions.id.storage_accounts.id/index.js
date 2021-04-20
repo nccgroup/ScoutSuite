@@ -25,7 +25,7 @@ const renderBlobContainer = data => {
     <ul>
       <PartialValue
         label="Public Access Allowed"
-        valuePath={`blob_services.${data.id}.public_access_allowed`}
+        valuePath={`blob_containers.${data.id}.public_access_allowed`}
         renderValue={convertBoolToEnable}
       />
     </ul>

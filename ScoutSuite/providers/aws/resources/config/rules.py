@@ -24,4 +24,4 @@ class Rules(AWSResources):
         rule['input_parameters'] = raw_rule.pop('InputParameters', None)
         rule['maximum_execution_frequency'] = raw_rule.pop('MaximumExecutionFrequency', None)
         rule['state'] = raw_rule.pop('ConfigRuleState', None)
-        return rule['name'], rule
+        return rule['id'], rule

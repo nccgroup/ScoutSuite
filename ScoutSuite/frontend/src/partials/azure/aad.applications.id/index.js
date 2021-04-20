@@ -3,17 +3,34 @@ import PropTypes from 'prop-types';
 
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import { Partial, PartialValue } from '../../../components/Partial';
-import { partialDataShape, valueOrNone } from '../../../utils/Partials';
+import {
+  formatDate,
+  partialDataShape,
+  valueOrNone,
+  renderList,
+  convertBoolToYesOrNo,
+} from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
-import { renderList } from '../../../utils/Partials/index';
 
-const renderPasswordCredentials = (item) => {
+const renderPasswordCredentials = item => {
   return (
     <li key={item.id}>
-      <PartialValue label="ID" value={item.key_id} />
+      <PartialValue label="ID" value={item.keyId} />
       <ul>
-        <li><PartialValue label="Start Date" value={item.start_date} /></li>
-        <li><PartialValue label="End Date" value={item.end_date} /></li>
+        <li>
+          <PartialValue
+            label="Start Date"
+            value={item.startDateTime}
+            renderValue={formatDate}
+          />
+        </li>
+        <li>
+          <PartialValue
+            label="End Date"
+            value={item.endDateTime}
+            renderValue={formatDate}
+          />
+        </li>
       </ul>
     </li>
   );
@@ -80,7 +97,7 @@ const Applications = props => {
         <PartialValue
           label="Public Client"
           valuePath="public_client"
-          renderValue={valueOrNone}
+          renderValue={convertBoolToYesOrNo}
         />
 
         <PartialValue

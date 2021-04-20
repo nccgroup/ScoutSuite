@@ -54,7 +54,10 @@
   a, a:visited {
     display: block;
     color: $white;
-    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
 
     .dark-mode & {
       color: $font-color;

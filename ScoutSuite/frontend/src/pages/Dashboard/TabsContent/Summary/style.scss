@@ -1,10 +1,19 @@
 .dashboard-summary {
   .overview, .services {
     width: 100%;
+  }
+
+  .overview {
     margin-bottom: 2rem;
 
-    & > hr {
-      margin-bottom: 2rem;
+    .title-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      button {
+        margin-left: 0.5rem;
+      }
     }
   }
 

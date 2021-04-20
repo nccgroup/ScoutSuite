@@ -5,8 +5,6 @@
 }
 
 .findings-desc {
-  display: flex;
-  align-items: center;
   color: $link-color;
   font-weight: 600;
   cursor: pointer;
@@ -16,52 +14,3 @@
   }
 }
 
-.desc-bg {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-
-  background-color: rgba(0,0,0,0.24);
-  cursor: pointer;
-}
-
-.desc-overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 10;
-  overflow-y: auto;
-
-  background-color: $white;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-  
-  max-height: calc(100% - 6rem);
-  max-width: 560px;
-  margin: 3rem auto;
-  padding: 0.625rem 1rem;
-
-  ul {
-    padding-left: 1rem;
-    list-style: disc;
-    font-size: 0.9rem;
-  }
-
-  h4 {
-    margin: 0.75rem 0;
-  }
-
-  .desc-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-
-    svg {
-      cursor: pointer;
-    }
-  }
-}
