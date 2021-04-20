@@ -137,6 +137,12 @@
                 "level": "warning"
             }
         ],
+        "computeengine-vpc-flow-logs-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "computeengine-firewall-default-rule-in-use.json": [
             {
                 "enabled": true,
