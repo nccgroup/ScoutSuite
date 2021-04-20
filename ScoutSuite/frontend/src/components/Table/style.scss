@@ -15,7 +15,16 @@
 
   .search-bar {
     input {
+      caret-color: $font-color;
       min-width: 260px;
+    }
+
+    label {
+      color: $font-color;
+    }
+
+    fieldset {
+      border-color: $font-color;
     }
   }
 
@@ -74,7 +83,7 @@
       flex-direction: column;
 
       svg {
-        color: $default-grey;
+        color: $text-muted;
         position: relative;
 
         &.MuiSvgIcon-colorPrimary {

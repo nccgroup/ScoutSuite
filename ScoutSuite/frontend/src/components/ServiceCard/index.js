@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import cx from 'classnames';
 
 import ServiceStatus from '../ServiceStatus';
 import DetailedValue from '../DetailedValue';
@@ -63,18 +62,18 @@ const ServiceCard = props => {
       </div>
       <hr/>
       <div className="footer">
-        <Link
-          className={cx('link', { disabled: !hasFindings })}
-          to={findingsPath}
-        >
-          {hasFindings ? (
-            <>
-              View report <ChevronRightIcon />
-            </>
-          ) : (
-            'No findings'
-          )}
-        </Link>
+        {hasFindings ? (
+          <Link
+            className="findings-link"
+            to={findingsPath}
+          >
+            View report <ChevronRightIcon />
+          </Link>
+        ) : (
+          <span className="no-findings">
+            No findings
+          </span>
+        )}
       </div>
     </div>
   );

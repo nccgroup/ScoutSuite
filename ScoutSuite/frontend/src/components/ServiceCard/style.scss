@@ -45,18 +45,18 @@ div.service-card {
   .footer {
     padding: 0.5rem 1rem 0.75rem 1rem;
 
-    .link {
+    .findings-link {
       color: $link-color;
       font-weight: 500;
       display: flex;
       justify-content: space-between;
       align-items: center;
       user-select: none;
+    }
 
-      &.disabled {
-        pointer-events: none;
-        color: $default-grey;
-      }
+    .no-findings {
+      color: $text-muted;
+      cursor: not-allowed;
     }
   }
 }
