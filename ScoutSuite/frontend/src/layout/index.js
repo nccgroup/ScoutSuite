@@ -45,8 +45,6 @@ const Layout = props => {
       const service = location.pathname.match(/^\/services\/(.*?)\//);
       const category = location.pathname.match(/^\/categories\/(.*?)\//);
 
-      console.log(service, category);
-
       const navOpen = categories.find(({ id, services }) =>
         service 
           ? services.some(s => s.id === get(service, 1, null))

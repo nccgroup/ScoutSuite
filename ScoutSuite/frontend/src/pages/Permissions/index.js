@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
+import get from 'lodash/get';
 
 import { useAPI } from '../../api/useAPI';
 import { getPermissionsEndpoint } from '../../api/paths';
@@ -28,7 +29,7 @@ const Permissions = () => {
         >
           <PermissionsList
             service={service} 
-            list={data.Action}
+            list={get(data, 'Action', {})}
           />
         </TabPane>
         <TabPane
@@ -37,7 +38,7 @@ const Permissions = () => {
         >
           <PermissionsList 
             service={service}
-            list={data.NotAction}
+            list={get(data, 'NotAction', {})}
           />
         </TabPane>
       </TabsMenu>

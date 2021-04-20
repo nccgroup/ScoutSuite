@@ -55,7 +55,6 @@ const RulesList = () => {
                         service="ec2"
                         resource="security_groups"
                         id={value.GroupId}
-                        name={value.GroupId}
                       />
                       {')'}
                     </span>
