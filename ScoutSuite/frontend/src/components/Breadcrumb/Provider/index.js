@@ -14,7 +14,7 @@ const getProviderLogo = (providerCode) => {
 };
 
 const Provider = () => {
-  const params = useParams();
+  const { service, category } = useParams();
   const { data: provider, loading } = useAPI('provider');
 
   if (loading) return null;
@@ -29,7 +29,7 @@ const Provider = () => {
 
       <ChevronRightIcon />
 
-      {params.service ? (
+      {(service || category) ? (
         <span>
           <Link to="/">{provider.account_id}</Link>
         </span>
