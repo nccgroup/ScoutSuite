@@ -32,10 +32,6 @@ def start_api(results, exceptions=None):
 
     @app.route('/api/services/<service>/findings', methods=['GET'])
     def get_findings(service):
-        # If service is in metadata but not in services, it's a pro feature
-        if service not in results['services']:
-            return Response('Pro feature', status=402)
-        
         findings = results['services'][service]['findings']
         for finding in findings:
             findings[finding]['name'] = finding
@@ -114,12 +110,15 @@ def start_api(results, exceptions=None):
                     if 'summaries' in services[service]:
                         for dashboard_type in services[service]['summaries']:
                             service_dashboard.append(dashboard_type)
-
+                    
+                    pro_feature = service not in results['services']
+                    
                     service_info = {
                         'id': service,
                         'name': format_service_name(service),
                         'dashboards': service_dashboard,
-                        'resources': resource_list
+                        'resources': resource_list,
+                        'pro_feature': pro_feature
                     }
                     service_list.append(service_info)
                 
