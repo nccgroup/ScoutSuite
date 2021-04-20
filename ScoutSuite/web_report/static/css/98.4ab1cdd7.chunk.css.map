@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/partials/aws/route53.regions.id.domains.id/style.scss"],"names":[],"mappings":"AAAA,eACE,eAAA,CAEA,gCACE,gBAAA","file":"98.4ab1cdd7.chunk.css","sourcesContent":[".transfer-lock {\n  margin: 0.25rem 0;\n\n  .warning-message {\n    margin-left: 1rem;\n  }\n}\n"]}

@@ -69,9 +69,19 @@
   font-size: 0.9rem;
 
   .title {
+    width: calc(100% - 3.5rem);
     padding: 0.275rem 0;
     margin: 0.275rem 1.5rem;
     border-bottom: 1px solid $ncc-grey-dark;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    .MuiChip-root {
+      font-size: 0.2rem;
+      height: 18px;
+      margin-left: 0.4rem;
+    }
   }
 
   .menu-element {
