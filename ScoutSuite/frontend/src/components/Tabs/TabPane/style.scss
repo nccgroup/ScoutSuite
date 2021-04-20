@@ -1,24 +1,31 @@
 @import 'src/variables';
 
-.tab-pane {
-  color: $text-muted;
+.tab-pane.MuiTab-root {
+  color: $tab-color;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
   font-weight: 700;
-  margin-right: 1rem;
+  letter-spacing: -0.5px;
+  padding: 0.5rem;
   cursor: pointer;
+  max-width: unset;
+  min-width: unset;
+  min-height: unset;
+  text-transform: none;
 
   .tab-content {
     display: none;
   }
 
   &.is-selected {
-    color: $font-color;
+    color: $tab-selected-color;
     padding-bottom: 0.125rem;
-    border-bottom: 2px solid $font-color;
+    border-bottom: 2px solid $tab-selected-color;
     cursor: default;
   }
 
   &.disabled {
-    color: $default-grey-light;
+    color: $tab-disabled-color;
     cursor: not-allowed;
   }
 }

@@ -33,14 +33,14 @@ const TabsMenu = props => {
         <Tabs
           variant="scrollable"
           scrollButtons="auto"
+          value={selectedTab}
         >
           {children.map((child, i) => (
-            <div key={i}>
-              {React.cloneElement(child, {
-                isSelected: i === selectedTab,
-                onClick: () => setSelectedTab(i),
-              })}
-            </div>
+            React.cloneElement(child, {
+              key: i,
+              isSelected: i === selectedTab,
+              onClick: () => setSelectedTab(i),
+            })
           ))}
         </Tabs>
       </div>

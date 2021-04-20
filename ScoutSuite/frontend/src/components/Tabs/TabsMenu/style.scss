@@ -7,6 +7,13 @@
 
   .tabs-menu {
     margin-bottom: 2rem;
-    letter-spacing: -0.5px;
+
+    .MuiTabs-indicator {
+      display: none;
+    }
+  }
+
+  .hidden-content {
+    display: none;
   }
 }

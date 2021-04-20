@@ -16,7 +16,7 @@ const propTypes = {
     name: PropTypes.string.isRequired,
     key: PropTypes.string.isRequired,
   }).isRequired,
-  selected: PropTypes.string.isRequired,
+  selected: PropTypes.string,
   handleChange: PropTypes.func.isRequired,
 };
 

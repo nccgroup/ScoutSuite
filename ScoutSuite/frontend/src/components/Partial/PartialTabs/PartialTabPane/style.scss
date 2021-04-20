@@ -5,6 +5,7 @@
     color: $critical-color;
 
     &.is-selected {
+      color: $critical-color;
       border-bottom-color: $critical-color;
     }
   }
@@ -13,6 +14,7 @@
     color: $high-color;
 
     &.is-selected {
+      color: $high-color;
       border-bottom-color: $high-color;
     }
   }
@@ -21,6 +23,7 @@
     color: $medium-color;
 
     &.is-selected {
+      color: $medium-color;
       border-bottom-color: $medium-color;
     }
   }
@@ -29,13 +32,16 @@
     color: $low-color;
 
     &.is-selected {
+      color: $low-color;
       border-bottom-color: $low-color;
     }
   }
 
-  .tab-title {
+  .MuiTab-wrapper {
     display: inline-flex;
+    flex-direction: row;
     align-items: center;
+    white-space: nowrap;
 
     svg {
       margin-left: 0.25rem;
