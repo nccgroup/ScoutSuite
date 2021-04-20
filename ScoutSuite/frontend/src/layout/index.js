@@ -21,6 +21,7 @@ import Modal from '../components/Modal/index';
 
 import './style.scss';
 
+
 const propTypes = {
   children: PropTypes.node.isRequired,
 };

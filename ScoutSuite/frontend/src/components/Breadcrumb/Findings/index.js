@@ -8,7 +8,7 @@ import { getFindingsEndpoint } from '../../../api/paths';
 
 const propTypes = {
   service: PropTypes.string.isRequired,
-  finding: PropTypes.string.isRequired
+  finding: PropTypes.string,
 };
 
 const Findings = props => {
