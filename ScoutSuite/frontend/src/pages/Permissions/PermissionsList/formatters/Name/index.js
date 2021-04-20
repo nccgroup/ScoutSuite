@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 const propTypes = {
   value: PropTypes.string.isRequired,
-  row: PropTypes.object.isRequired
 };
 
 const Name = props => {
@@ -13,6 +12,10 @@ const Name = props => {
 
   const id = encodeURI(value);
   const link = `/services/${params.service}/permissions/${id}`;
+
+  if (params.id && params.id === value) {
+    return <b>{value}</b>;
+  }
 
   return (
     <Link to={link}>
