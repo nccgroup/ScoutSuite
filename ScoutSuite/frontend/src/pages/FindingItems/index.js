@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
+import uniqBy from 'lodash/uniqBy';
 
 import { useAPI } from '../../api/useAPI';
 import { getItemsEndpoint } from '../../api/paths';
@@ -25,7 +26,7 @@ const FindingItems = () => {
   );
   const [defaultObj, setdefaultObj] = useState({});
   
-  const data = get(response, 'results', []);
+  const data = uniqBy(get(response, 'results', []), 'id');
   useEffect(() => {
     if (
       data &&

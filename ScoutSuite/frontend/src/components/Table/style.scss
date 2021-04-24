@@ -36,6 +36,26 @@
       }
     }
   }
+
+  &, .table-header-right {
+    input {
+      caret-color: $font-color;
+    }
+
+    label {
+      color: $font-color !important;
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+      &, &:hover {
+        border-color: $font-color !important;
+      }
+    }
+
+    svg {
+      color: $font-color;
+    }
+  }
 }
 
 .table {
@@ -74,7 +94,7 @@
       flex-direction: column;
 
       svg {
-        color: $default-grey;
+        color: $text-muted;
         position: relative;
 
         &.MuiSvgIcon-colorPrimary {

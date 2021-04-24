@@ -21,7 +21,7 @@
   overflow-y: auto;
 
   a {
-    padding: 0.275rem 2rem 0.275rem 1.5rem;
+    padding: 0.275rem 1.5rem;
   }
 
   & > * {
@@ -43,7 +43,7 @@
   }
 
   & > .title {
-    padding: 0.675rem 2rem 0.675rem 1.5rem;
+    padding: 0.675rem 1.5rem;
   }
 }
 
@@ -71,7 +71,7 @@
   .title {
     width: calc(100% - 3.5rem);
     padding: 0.275rem 0;
-    margin: 0.275rem 2rem 0.275rem 1.5rem;
+    margin: 0.275rem 1.5rem;
     border-bottom: 1px solid $ncc-grey-dark;
     display: inline-flex;
     justify-content: flex-start;
@@ -100,7 +100,7 @@
   }
   
   &.is-selected {
-    font-weight: 900;
+    font-weight: 700;
     cursor: default;
 
     a {

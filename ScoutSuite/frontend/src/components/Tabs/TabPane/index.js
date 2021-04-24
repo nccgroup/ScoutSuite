@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import Tab from '@material-ui/core/Tab';
 
 import './style.scss';
 
@@ -36,17 +37,19 @@ const TabPane = props => {
   const tabOnClick = disabled ? null : onClick;
 
   return (
-    <span 
-      className={classNames} 
-      onClick={tabOnClick}
-    >
-      <span className="tab-title">
-        {title}
-      </span>
-      <div className="tab-content">
+    <div>
+      <Tab
+        label={title}
+        classes={{
+          root: classNames,
+        }}
+        disableRipple
+        onClick={tabOnClick}
+      />
+      <div className="hidden-content">
         {children}
       </div>
-    </span>
+    </div>
   );
 };
 

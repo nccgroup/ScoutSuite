@@ -16,6 +16,12 @@
   --default-grey-light: #cccccc;
   --default-grey-dark: #343434;
   --white: #ffffff;
+  
+  --informations-background: #f4f4f4;
+
+  --tab-color: #5f5f5f;
+  --tab-selected-color: #1a1a1a;
+  --tab-disabled-color: #b8b8b8;
 
   --link-color: #4990e2;
   --text-muted: #999999;
@@ -29,13 +35,20 @@
 
 body.dark-mode {
   --font-color: #f2f2f2;
-  --background-color: #222222;
-  --ncc-grey-dark: #171618;
+  --background-color: #1a1a1a;
+  --ncc-grey-dark: #212121;
 
   --default-grey: #333333;
-  --default-grey-subtle: #383838;
+  --default-grey-subtle: #3f3f3f;
   --default-grey-light: #5e5e5e;
-  --white: #121212;
+  --default-grey-dark: #2a2a2a;
+  --white: #303030;
+
+  --informations-background: #282828;
+
+  --tab-color: #a0a0a0;
+  --tab-selected-color: #ffffff;
+  --tab-disabled-color: #5a5a5a;
 }
 
 $font-color: var(--font-color);
@@ -55,6 +68,12 @@ $default-grey-subtle: var(--default-grey-subtle);
 $default-grey-light: var(--default-grey-light);
 $default-grey-dark: var(--default-grey-dark);
 $white: var(--white);
+
+$informations-background: var(--informations-background);
+
+$tab-color: var(--tab-color);
+$tab-selected-color: var(--tab-selected-color);
+$tab-disabled-color: var(--tab-disabled-color);
 
 $link-color: var(--link-color);
 $text-muted: var(--text-muted);

@@ -9,7 +9,7 @@ import { Link, useParams, useLocation } from 'react-router-dom';
 
 const propTypes = {
   service: PropTypes.string.isRequired,
-  finding: PropTypes.string.isRequired,
+  finding: PropTypes.string,
 };
 
 const Resources = (props) => {

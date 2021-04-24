@@ -5,7 +5,7 @@ import { Chip } from '@material-ui/core';
 const propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
-  pro_feature: PropTypes.bool.isRequired,
+  pro_feature: PropTypes.bool,
 };
 
 const MenuGroup = props => {

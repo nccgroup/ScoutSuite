@@ -29,8 +29,11 @@
 
     .ncc-footer {
       font-size: 0.75rem;
+      margin-left: 0.25rem;
 
       a {
+        display: inline-flex;
+        align-items: center;
         color: $ncc-red;
 
         &:hover {
@@ -47,14 +50,21 @@
   }
 
   .about-scout {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    padding: 0 1rem 1rem 1rem;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
     font-size: 0.75rem;
+    font-weight: 400;
+    width: max-content;
     cursor: pointer;
 
+    &:hover {
+      font-weight: 700;
+    }
+
     svg {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       margin-right: 0.5rem;
     }
   }

@@ -142,7 +142,6 @@ export const renderSecurityGroupLink = ({ GroupId }) => (
     service="ec2"
     resource="security_groups"
     id={GroupId}
-    name={GroupId}
   />
 );
 

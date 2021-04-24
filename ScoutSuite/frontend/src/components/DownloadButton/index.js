@@ -9,8 +9,8 @@ import { BASE_URL } from '../../api/api';
 const propTypes = {
   service: PropTypes.string.isRequired,
   resource: PropTypes.string.isRequired,
-  finding: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  finding: PropTypes.string,
 };
 
 const DownloadButton = ({ service, resource, finding, type }) => {
@@ -30,7 +30,7 @@ const DownloadButton = ({ service, resource, finding, type }) => {
         className="download-btn"
         variant="outlined"
         type="submit"
-        size="normal"
+        size="medium"
         startIcon={<GetAppOutlinedIcon />}
       >
         {type.toUpperCase()}

@@ -2,14 +2,12 @@
 
 .dashboard {
   .tabs-menu {
-    font-size: 1.75rem;
+    .MuiTab-root {
+      font-size: 1.5rem;
+    }
 
-    .tab-pane {
-      margin-right: 1.5rem;
-
-      &.is-selected {
-        border-bottom-width: 3px;
-      }
+    .tab-pane.is-selected {
+      border-bottom-width: 3px;
     }
   }
 
