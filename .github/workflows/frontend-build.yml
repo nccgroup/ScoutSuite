@@ -5,6 +5,7 @@ on:
   push: 
     branches:
       - v6-master # TO REMOVE - For testing only
+      - v6-alpha # TO REMOVE - For testing only
       - develop
     paths:
      - 'ScoutSuite/frontend/**'
