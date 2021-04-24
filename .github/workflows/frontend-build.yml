@@ -36,7 +36,7 @@ jobs:
       
       # Move into the frontend directory for the next steps
       - name: Move in frontend directory
-        run: cd /ScoutSuite/frontend/
+        run: cd $GITHUB_WORKSPACE/ScoutSuite/frontend/
         
       # Install all NPM packages
       - name: Install NPM packages
@@ -53,4 +53,4 @@ jobs:
           author_email: 41898282+github-actions[bot]@users.noreply.github.com
           message: '[Github Action] Automated frontend build'
           add: '*'
-          cwd: '/ScoutSuite/web_report/'
+          cwd: '$GITHUB_WORKSPACE/ScoutSuite/web_report/'
