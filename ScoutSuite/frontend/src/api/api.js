@@ -6,7 +6,7 @@
 import axios from 'axios';
 import * as Cache from './cache';
 
-const BASE_URL = process.env.SERVER_URL || 'http://localhost:5000';
+export const BASE_URL = process.env.SERVER_URL || 'http://localhost:5000';
 
 /***
  * Make a "GET" call to the server
@@ -19,7 +19,6 @@ export const get = async (path) => {
     return Cache.get(path);
   }
 
- 
   const { data } = await axios.get(BASE_URL + '/api/' + path);
   Cache.set(path, data);
   

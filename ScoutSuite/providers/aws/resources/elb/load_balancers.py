@@ -1,6 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.aws.utils import get_keys
+from ScoutSuite.providers.aws.utils import get_keys, get_partition_name, format_arn
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
@@ -9,6 +9,9 @@ class LoadBalancers(AWSResources):
         super().__init__(facade)
         self.region = region
         self.vpc = vpc
+        self.partition = get_partition_name(facade.session)
+        self.service = 'elb'
+        self.resource_type = 'load-balancer'
 
     async def fetch_all(self):
         raw_load_balancers = await self.facade.elb.get_load_balancers(self.region, self.vpc)
@@ -18,13 +21,13 @@ class LoadBalancers(AWSResources):
 
     def _parse_load_balancer(self, raw_load_balancer):
         load_balancer = {'name': raw_load_balancer['LoadBalancerName']}
+
         get_keys(raw_load_balancer, load_balancer,
                  ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Scheme', 'attributes'])
 
         load_balancer['security_groups'] = []
-        load_balancer['arn'] = 'arn:aws:elb:{}:{}:load-balancer/{}'.format(self.region,
-                                                                           self.facade.owner_id,
-                                                                           raw_load_balancer.get('LoadBalancerName'))
+        load_balancer['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id, raw_load_balancer.get('LoadBalancerName'), self.resource_type)
+
         for sg in raw_load_balancer['SecurityGroups']:
             load_balancer['security_groups'].append({'GroupId': sg})
 

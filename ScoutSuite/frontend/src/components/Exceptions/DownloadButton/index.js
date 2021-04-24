@@ -8,6 +8,7 @@ import { ExceptionsContext } from '../context';
 import { useAPI } from '../../../api/useAPI';
 
 import './style.scss';
+import { exportJSON } from '../../../utils/Export';
 
 const propTypes = {
   service: PropTypes.string,
@@ -40,18 +41,7 @@ const DownloadException = () => {
       });
     });
 
-    var dataStr =
-      'data:text/json;charset=utf-8,' +
-      encodeURIComponent(JSON.stringify(mergedExceptions, null, 2));
-    var downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute('href', dataStr);
-    downloadAnchorNode.setAttribute(
-      'download',
-      `exceptions-${provider.provider_code}.json`,
-    );
-    document.body.appendChild(downloadAnchorNode); // required for firefox
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+    exportJSON(mergedExceptions, `exceptions-${provider.provider_code}`);
   };
 
   return (

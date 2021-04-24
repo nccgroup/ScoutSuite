@@ -7,13 +7,14 @@
         <div class="list-group-item">
             <h4>Information</h4>
             <ul>
-                <li class="list-group-item-text">Region: {{region}}</li>
-                <li class="list-group-item-text">VPC: {{getValueAt 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
-                <li class="list-group-item-text">Id: {{id}}</li>
-                <li class="list-group-item-text">Availability zone: {{Ec2InstanceAttributes.Ec2AvailabilityZone}}</li>
-                <li class="list-group-item-text">Status: {{Status.State}}</li>
-                <li class="list-group-item-text">Instance profile: {{Ec2InstanceAttributes.IamInstanceProfile}}</li>
-                <li class="list-group-item-text">Visible to all users: {{VisibleToAllUsers}}</li>
+                <li class="list-group-item-text">Region: <samp>{{region}}</samp></li>
+                <li class="list-group-item-text">ARN: <samp>{{arn}}</samp></li>
+                <li class="list-group-item-text">VPC: <samp>{{getValueAt 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{getValueAt 'services.ec2.regions' region 'vpcs' vpc 'arn'}})</samp></li>
+                <li class="list-group-item-text">Id: <samp>{{id}}</samp></li>
+                <li class="list-group-item-text">Availability zone: <samp>{{Ec2InstanceAttributes.Ec2AvailabilityZone}}</samp></li>
+                <li class="list-group-item-text">Status: <samp>{{Status.State}}</samp></li>
+                <li class="list-group-item-text">Instance profile: <samp>{{Ec2InstanceAttributes.IamInstanceProfile}}</samp></li>
+                <li class="list-group-item-text">Visible to all users: <samp>{{VisibleToAllUsers}}</samp></li>
             </ul>
         </div>
         <div class="list-group-item">

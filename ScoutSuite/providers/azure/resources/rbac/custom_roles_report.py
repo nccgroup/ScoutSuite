@@ -11,6 +11,7 @@ class CustomRolesReport(AzureResources):
     async def fetch_all(self):
         custom_role_dict = {}
         custom_role_dict['id'] = self.subscription_id
+        custom_role_dict['name'] = self.subscription_id
         custom_role_dict['missing_custom_role_administering_resource_locks'] = True
 
         for raw_role in await self.facade.rbac.get_roles(self.subscription_id):

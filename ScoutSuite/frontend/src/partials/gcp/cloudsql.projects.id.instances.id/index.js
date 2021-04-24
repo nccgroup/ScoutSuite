@@ -8,26 +8,34 @@ import {
   convertBoolToEnable,
   formatDate,
   valueOrNone,
+  renderList,
 } from '../../../utils/Partials';
 import { TabPane, TabsMenu } from '../../../components/Tabs';
 import InformationsWrapper from '../../../components/InformationsWrapper';
+import PartialSection from '../../../components/Partial/PartialSection/index';
 
-const renderAuthorizedNetworks = items => {
-  if (!items || items.length === 0) return <span>None</span>;
-
+const renderAuthorizedNetwork = (value, i) => {
   return (
-    <ul>
-      {items.map((value, i) => {
-        return (
-          <li key={i}>
-            <PartialValue
-              errorPath={`authorized_networks.${i}.open_to_the_world`}
-              value={value}
-            />
-          </li>
-        );
-      })}
-    </ul>
+    <PartialSection path={`authorized_networks.${i}`}>
+      <PartialValue
+        errorPath="open_to_the_world"
+        value={value}
+        renderValue={valueOrNone}
+      />
+    </PartialSection>
+  );
+};
+
+const renderUser = ([key, item]) => {
+  return (
+    <PartialSection path={`users.${key}`}>
+      <PartialValue
+        label={item.name}
+        errorPath="root_access_from_any_host"
+        value={item.host ? `(host: ${item.host})` : ''}
+        renderValue={valueOrNone}
+      />
+    </PartialSection>
   );
 };
 
@@ -83,15 +91,78 @@ const SQLInstances = props => {
         />
 
         <PartialValue
-          label="Authorized Networks"
-          valuePath="authorized_networks"
+          label="Local Infile Flag is Off"
+          valuePath="local_infile_off"
           renderValue={valueOrNone}
         />
+
+        <PartialValue
+          label="Cross db Ownership Chaining Flag is Off"
+          valuePath="cross_db_ownership_chaining_off"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Contained Database Authentication Flag is Off"
+          valuePath="contained_database_authentication_off"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Checkpoints Flag is On"
+          valuePath="log_checkpoints_on"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Connections Flag is On"
+          valuePath="log_connections_on"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Disconnections Flag is On"
+          valuePath="log_disconnections_on"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Lock Waits Flag is On"
+          valuePath="log_lock_waits_on"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Min Messages Flag set Appropriately"
+          valuePath="log_min_messages"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Temp Files Flag set to 0"
+          valuePath="log_temp_files_0"
+          renderValue={valueOrNone}
+        />
+
+        <PartialValue
+          label="Log Min Duration Statement Flag set to -1"
+          valuePath="log_min_duration_statement_-1"
+          renderValue={valueOrNone}
+        />
+
       </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="Authorized Networks">
-          {renderAuthorizedNetworks(item.authorized_networks)}
+          {renderList(item.authorized_networks, '', (value, i) =>
+            renderAuthorizedNetwork(value, i),
+          )}
+        </TabPane>
+
+        <TabPane title="Users">
+          {renderList(Object.entries(item.users), '', (value, i) =>
+            renderUser(value, i),
+          )}
         </TabPane>
       </TabsMenu>
     </Partial>

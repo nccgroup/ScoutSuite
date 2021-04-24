@@ -27,7 +27,6 @@ class Snapshots(AzureResources):
         snapshot_dict['sku'] = raw_snapshot.sku
         snapshot_dict['time_created'] = raw_snapshot.time_created
         snapshot_dict['os_type'] = raw_snapshot.os_type
-        snapshot_dict['hyper_vgeneration'] = raw_snapshot.hyper_vgeneration
         snapshot_dict['creation_data'] = raw_snapshot.creation_data
         snapshot_dict['disk_size_gb'] = raw_snapshot.disk_size_gb
         snapshot_dict['disk_size_bytes'] = getattr(raw_snapshot, 'disk_size_bytes', None)

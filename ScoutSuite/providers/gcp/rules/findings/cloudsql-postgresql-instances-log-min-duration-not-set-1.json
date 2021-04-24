@@ -1,0 +1,27 @@
+{
+    "description": "Log Min Duration Statement Database Flag For PostgreSQL Instance Is Not Set To -1",
+    "rationale": "Logging SQL statements may include sensitive information that should not be recorded in logs. This recommendation is applicable to PostgreSQL database instances.",
+    "remediation": "From console:<ol><li>Go to the Cloud SQL Instances page in the Google Cloud Console by visiting https://console.cloud.google.com/sql/instances.</li><li>Select the PostgreSQL instance where the database flag needs to be enabled.</li><li>Click <samp>Edit</samp></li><li>Scroll down to the <samp>Flags</samp> section.</li><li>To set a flag that has not been set on the instance before, click <samp>Add item</samp>, choose the flag <samp>log_min_duration_statement</samp> from the drop-down menu, and set its value to <samp>-1</samp>.</li><li>Click <samp>Save</samp></li><li>Confirm the changes under <samp>Flags</samp> on the Overview page.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "6.2.7"
+        }
+    ],
+    "references": [
+        "https://www.postgresql.org/docs/current/runtime-config-logging.html#RUNTIME-CONFIG-LOGGING-WHAT",
+        "https://cloud.google.com/sql/docs/postgres/flags"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.log_min_duration_statement_-1",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "log_min_duration_statement_-1"
+}

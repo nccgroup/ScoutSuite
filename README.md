@@ -60,5 +60,7 @@ It features:
 - Multi-vendor support - AWS, Azure and GCP public cloud accounts
 - Agnostic platform - a trusted third-party tool
 
+Additional details can be found in the [wiki](https://github.com/nccgroup/ScoutSuite/wiki/NCC-Scout).
+
 **NCC Scout now has a free tier under our "Freemium" offering**. 
-This offering provides access to NCC Group’s extended scanning rulesets, keeping your cloud environment protected in-line with best practice configuration and cloud technologies. To sign up for the service, head on to https://cyberstore.nccgroup.com/our-services/service-details/16/cloud-account-monitoring.
+This offering provides access to NCC Group’s extended rulesets, keeping your cloud environment protected in-line with best practice configuration and cloud technologies. To sign up for the service, head on to https://cyberstore.nccgroup.com/our-services/service-details/16/cloud-account-monitoring.

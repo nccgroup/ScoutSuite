@@ -1,5 +1,7 @@
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import React from 'react';
+import isEmpty from 'lodash/isEmpty';
+import get from 'lodash/get';
 
 import { useAPI } from '../../api/useAPI';
 import { getResourcesEndpoint } from '../../api/paths';
@@ -11,7 +13,7 @@ import Breadcrumb from '../../components/Breadcrumb/index';
 import DownloadButton from '../../components/DownloadButton/index';
 
 import './style.scss';
-
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 const Resources = () => {
   const params = useParams();
@@ -20,28 +22,35 @@ const Resources = () => {
     [],
     { pagination: true },
   );
-  const data = response.results;
+  const [defaultObj, setdefaultObj] = useState({});
 
-  const fetchData = React.useCallback(({ pageIndex, sortBy, direction }) => {
-    loadPage(pageIndex + 1, sortBy, direction);
-  }, []);
+  const data = get(response, 'results', []);
+  useEffect(() => {
+    if (
+      data &&
+      !isEmpty(data[0]) &&
+      JSON.stringify(data[0]) !== JSON.stringify(defaultObj)
+    ) {
+      setdefaultObj(data[0]);
+    }
+  }, [response]);
 
-  if (loading || !data)
-    return (
-      <>
-        <Breadcrumb />
-      </>
-    );
+  const fetchData = React.useCallback(
+    ({ pageIndex, sortBy, direction, search, filters }) => {
+      loadPage(pageIndex + 1, sortBy, direction, search, filters);
+    },
+    [],
+  );
 
-  const keys = Object.keys(data[0]);
+  if (loading) return null;
+
+  const keys = Object.keys(defaultObj);
 
   const columns = [{ name: 'Name', key: 'name' }];
 
   // AWS columns
-  if (keys.includes('region')) 
-    columns.push({ name: 'Region', key: 'region' });
-  if (keys.includes('vpc')) 
-    columns.push({ name: 'VPC', key: 'vpc' });
+  if (keys.includes('region')) columns.push({ name: 'Region', key: 'region' });
+  if (keys.includes('vpc')) columns.push({ name: 'VPC', key: 'vpc' });
   if (keys.includes('AvailabilityZone'))
     columns.push({ name: 'Availability Zone', key: 'AvailabilityZone' });
   if (keys.includes('availability_zone'))
@@ -89,24 +98,26 @@ const Resources = () => {
   return (
     <>
       <Breadcrumb />
-      <div className="flagged-items">
-        <div className="table-card">
-          <Table
-            columns={columns}
-            data={data}
-            formatters={formatters}
-            sortBy={sortBy}
-            fetchData={fetchData}
-            manualPagination={true}
-            pageCount={response.meta.total_pages}
-            initialState={initialState}
-            headerRight={downloadButtons}
-          />
-        </div>
+      <div className="resources">
+        <ErrorBoundary>
+          <div className="table-card">
+            <Table
+              columns={columns}
+              data={data}
+              formatters={formatters}
+              sortBy={sortBy}
+              fetchData={fetchData}
+              manualPagination={true}
+              pageCount={get(response, ['meta', 'total_pages'])}
+              initialState={initialState}
+              headerRight={downloadButtons}
+            />
+          </div>
+        </ErrorBoundary>
 
         <div className="selected-item">
           {!params.id ? (
-            <span className="no-item">No selected resource</span>
+            <span className="no-item">No resource selected</span>
           ) : (
             <ResourcePartialWrapper title={params.id} />
           )}

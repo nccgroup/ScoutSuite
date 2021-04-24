@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Tooltip from '@material-ui/core/Tooltip';
 import cx from 'classnames';
+import { useParams, useLocation } from 'react-router-dom';
+import Tooltip from '@material-ui/core/Tooltip';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 
@@ -12,10 +13,10 @@ import {
 } from '../context';
 import { concatPaths } from '../../../utils/Partials';
 import DetailedValue from '../../DetailedValue';
+import AddException from '../../Exceptions/AddButton/index';
 
 import './style.scss';
-import AddException from '../../Exceptions/AddButton/index';
-import { useParams } from 'react-router-dom';
+
 
 const propTypes = {
   label: PropTypes.node,
@@ -64,6 +65,7 @@ const PartialValue = props => {
   } = props;
 
   const params = useParams();
+  const searchParams = new URLSearchParams(useLocation().search);
   const ctx = useContext(PartialContext);
   const basePath = useContext(PartialPathContext);
   const setIssueLevel = useContext(PartialTabContext);
@@ -87,9 +89,10 @@ const PartialValue = props => {
     fullErrorPaths = [fullValuePath];
   }
 
-  const hasError = fullErrorPaths.some(path =>
+  const errorIndex = fullErrorPaths.findIndex(path => 
     ctx.path_to_issues.includes(path),
   );
+  const hasError = errorIndex != -1;
   const level = ctx.level;
 
   useEffect(() => {
@@ -102,10 +105,16 @@ const PartialValue = props => {
     return null;
   }
 
+  const exceptionPath = ctx.path 
+    ? `${ctx.path}.${fullErrorPaths[errorIndex]}`
+    : `${fullErrorPaths[errorIndex]}`;
+
   const exceptionButton = (
     <AddException
-      service={params.service} finding={params.finding}
-      path={`${ctx.path}.${fullErrorPaths[0]}`} />
+      service={params.service} 
+      finding={params.finding || searchParams.get('finding')}
+      path={exceptionPath} 
+    />
   );
 
   const content = (

@@ -12,6 +12,10 @@ const Name = props => {
   const params = useParams();
   const { value, row: { original } } = props;
 
+  if (params.id === original.id) {
+    return <b>{value}</b>;
+  }
+
   return (
     <ResourceLink
       service={params.service} 

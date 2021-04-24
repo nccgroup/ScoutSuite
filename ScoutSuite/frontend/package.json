@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^12.6.3",
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
+    "json2csv": "^5.0.6",
     "lodash": "^4.17.20",
     "notistack": "^1.0.5",
     "prop-types": "^15.7.2",
@@ -48,8 +49,8 @@
     "enquirer": "^2.3.6",
     "eslint": "^7.19.0",
     "eslint-plugin-react": "^7.22.0",
-    "prettier-eslint-cli": "^5.0.1",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "husky": "^5.0.9"
+    "husky": "^5.0.9",
+    "prettier-eslint-cli": "^5.0.1"
   }
 }
