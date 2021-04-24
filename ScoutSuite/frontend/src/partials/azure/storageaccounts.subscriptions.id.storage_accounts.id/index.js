@@ -21,7 +21,7 @@ const propTypes = {
 
 const renderBlobContainer = data => {
   return (<li key={data.id}>
-    <h2>{data.id}</h2>
+    <b>{data.id}</b>
     <ul>
       <PartialValue
         label="Public Access Allowed"
@@ -33,7 +33,7 @@ const renderBlobContainer = data => {
 };
 const renderBlobService = data => {
   return (<li key={data.id}>
-    <h2>{data.name}</h2>
+    <b>{data.name}</b>
     <ul>
       <PartialValue
         label="Soft Delete"
