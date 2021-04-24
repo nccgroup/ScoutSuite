@@ -32,7 +32,6 @@ jobs:
       # See the official documentation: https://docs.github.com/en/actions/guides/caching-dependencies-to-speed-up-workflows
       - name: Cache node modules
         uses: actions/cache@v2
-        working-directory: ./ScoutSuite/frontend/
         env:
           cache-name: cache-node-modules
         with:
