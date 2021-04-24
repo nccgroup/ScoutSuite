@@ -33,18 +33,16 @@ jobs:
         with:
           # Version Spec of the version to use.  Examples: 12.x, 10.15.1, >=10.15.0
           node-version: 12.x
-      
-      # Move into the frontend directory for the next steps
-      - name: Move in frontend directory
-        run: cd $GITHUB_WORKSPACE/ScoutSuite/frontend/
         
       # Install all NPM packages
       - name: Install NPM packages
         run: npm install
+        working-directory: ./ScoutSuite/frontend/
 
       # Build the production version of the React app
       - name: Build the React App
         run: npm run build
+        working-directory: ./ScoutSuite/frontend/
     
       # Add files build files 
       - uses: EndBug/add-and-commit@v7
