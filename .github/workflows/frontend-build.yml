@@ -9,8 +9,9 @@ on:
     # - './ScoutSuite/frontend/*' # Only trigger when content in the frontend changed
     
   # We should have a seperate CI for testing the build in PRs 
-  # pull_request: 
-    # branches: [ master, v6-master ]
+  pull_request: 
+    branches:
+      - v6-master
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
