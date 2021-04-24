@@ -9,7 +9,7 @@ import './index.scss';
 ReactDOM.render(
   <React.StrictMode>
     <App />
-    {'Testing the pipeline! v5'}
+    {'Testing the pipeline! v6'}
   </React.StrictMode>,
   document.getElementById('root')
 );
