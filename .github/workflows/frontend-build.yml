@@ -4,7 +4,7 @@ on:
   # Trigger the test when a PR is created for develop
   push: 
     branches:
-      - v6-master
+      - v6-master # TO REMOVE - For testing only
       - develop
     paths:
      - 'ScoutSuite/frontend/**'
