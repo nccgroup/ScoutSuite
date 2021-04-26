@@ -55,12 +55,11 @@
     padding: 0.5rem 1rem;
     margin-top: 0.5rem;
     font-size: 0.75rem;
-    font-weight: 400;
     width: max-content;
     cursor: pointer;
 
     &:hover {
-      font-weight: 700;
+      text-decoration: underline;
     }
 
     svg {
