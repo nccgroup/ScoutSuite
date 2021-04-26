@@ -152,13 +152,6 @@ const K8SClusters = props => {
           renderValue={convertBoolToEnable}
         />
 
-        <PartialValue
-          label="Scopes"
-          valuePath="scopes"
-          errorPath="scopes_not_limited"
-          renderValue={values => renderList(values, '', valueOrNone)}
-        />
-
         {item.labels && (
           <PartialValue
             label="Labels"
@@ -170,6 +163,14 @@ const K8SClusters = props => {
       </InformationsWrapper>
 
       <TabsMenu>
+        <TabPane title="Scopes">
+          <PartialValue
+            valuePath="scopes"
+            errorPath="scopes_not_limited"
+            renderValue={values => renderList(values, '', valueOrNone)}
+          />
+        </TabPane>
+
         <TabPane title="Master Authorized Networks">
           <PartialValue
             label="Status"

@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import sortBy from 'lodash/sortBy';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 import InformationsWrapper from '../../../components/InformationsWrapper';
 import { Partial, PartialValue } from '../../../components/Partial';
@@ -11,7 +13,8 @@ import {
 } from '../../../utils/Partials';
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import ResourceLink from '../../../components/ResourceLink';
-import { convertBoolToCheckmark } from '../../../utils/Partials/index';
+
+import './style.scss';
 
 const renderNetworkInterfaces = id => {
   return (
@@ -72,7 +75,7 @@ const renderSecurityRules = items => {
                 {item.destination_address_prefixes}
               </td>
               <td width="10%" className="text-center">
-                {convertBoolToCheckmark(item.allow)}
+                {item.allow ? <CheckCircleIcon size="inherit" className="allow-valid" /> : <CancelIcon size="inherit" className="allow-invalid" />}
               </td>
             </tr>
           ))}

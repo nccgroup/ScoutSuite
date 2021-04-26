@@ -10,6 +10,7 @@ import {
 import { TabsMenu, TabPane } from '../../../components/Partial/PartialTabs';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+import InformationsWrapper from '../../../components/InformationsWrapper';
 import PartialSection from '../../../components/Partial/PartialSection/index';
 
 const propTypes = {
@@ -82,7 +83,7 @@ const Buckets = (props) => {
 
   return (
     <Partial data={data}>
-      <div>
+      <InformationsWrapper>
         <PartialValue label="Project ID" valuePath="project_id" />
 
         <PartialValue
@@ -106,7 +107,7 @@ const Buckets = (props) => {
           valuePath="versioning_enabled"
           renderValue={convertBoolToEnable}
         />
-      </div>
+      </InformationsWrapper>
 
       <TabsMenu>
         <TabPane title="IAM Permissions">
