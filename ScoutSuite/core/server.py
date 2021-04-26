@@ -99,10 +99,12 @@ def start_api(results, exceptions=None):
                         resources = services[service]['resources']
                         for resource in resources:
                             count = None if 'count' not in services[service]['resources'][resource] else services[service]['resources'][resource]['count']
+                            hidden = False if 'hidden' not in services[service]['resources'][resource] else services[service]['resources'][resource]['hidden']
                             resource_info = {
                                 'id': resource,
                                 'name': format_title(resource),
-                                'count': count
+                                'count': count,
+                                'hidden': hidden
                             }
                             resource_list.append(resource_info)
 
