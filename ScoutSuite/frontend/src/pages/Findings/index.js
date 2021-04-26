@@ -64,7 +64,7 @@ const Findings = () => {
         <Breadcrumb />
         <div className="findings">
           <div className="table-card no-items">
-            <CheckCircleOutlineOutlinedIcon /> <b>Good!</b> No findings for this service.
+            <CheckCircleOutlineOutlinedIcon /> No findings for this service.
           </div>
         </div>
       </>
