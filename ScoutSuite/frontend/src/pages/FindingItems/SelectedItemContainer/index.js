@@ -28,7 +28,8 @@ const SelectedItemContainer = () => {
 
   return <ErrorBoundary>
     <LazyPartial
-      data={partialData} path={path}
+      data={partialData}
+      path={path}
       partial={partialPath} />
   </ErrorBoundary>;
 };
