@@ -105,7 +105,7 @@ const Layout = props => {
                       </MenuElement>
                     ))}
 
-                    {service.resources.map(res => (
+                    {service.resources.map(res => !res.hidden && (
                       <MenuElement
                         link={`services/${service.id}/resources/${res.id}`}
                         disabled={!res.count}
