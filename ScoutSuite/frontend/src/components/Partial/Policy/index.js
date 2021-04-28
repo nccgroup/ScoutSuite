@@ -2,6 +2,9 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Collapsible from 'react-collapsible';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import size from 'lodash/size';
@@ -109,24 +112,18 @@ const Policy = props => {
   return (
     <div className="policy">
       {name ? (
-        <Collapsible
-          trigger={
-            <>
-              {policyTitle}
-              <ExpandMoreIcon fontSize="inherit"/>
-            </>
-          }
-          triggerWhenOpen={
-            <>
-              {policyTitle}
-              <ExpandLessIcon fontSize="inherit"/>
-            </>
-          }
-          transitionTime={1}
-          open={defaultOpen || hasError}
+        <Accordion
+          defaultExpanded={defaultOpen || hasError}
         >
-          {policyContent}
-        </Collapsible>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon/>}
+          >
+            {policyTitle}
+          </AccordionSummary>
+          <AccordionDetails>
+            {policyContent}
+          </AccordionDetails>
+        </Accordion>
       ) : (
         policyContent
       )}
