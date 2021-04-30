@@ -1,0 +1,24 @@
+@import 'src/variables';
+
+.finding-items {
+  .table-card, .selected-item {
+    overflow: hidden;
+    background: $white;
+    border-radius: $border-radius;
+  }
+
+  .table-card {
+    margin-bottom: 2rem;
+  }
+
+  .selected-item {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    min-height: 25rem;
+
+    .no-item {
+      align-self: center;
+    }
+  }
+}

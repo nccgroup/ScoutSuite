@@ -6,6 +6,8 @@ from ScoutSuite.providers.gcp.resources.cloudstorage.base import CloudStorage
 from ScoutSuite.providers.gcp.resources.gce.base import ComputeEngine
 from ScoutSuite.providers.gcp.resources.iam.base import IAM
 from ScoutSuite.providers.gcp.resources.kms.base import KMS
+from ScoutSuite.providers.gcp.resources.dns.base import DNS
+
 from ScoutSuite.providers.gcp.resources.stackdriverlogging.base import StackdriverLogging
 from ScoutSuite.providers.gcp.resources.stackdrivermonitoring.base import StackdriverMonitoring
 from ScoutSuite.providers.gcp.resources.gke.base import KubernetesEngine
@@ -30,6 +32,7 @@ class GCPServicesConfig(BaseServicesConfig):
         self.stackdriverlogging = StackdriverLogging(facade)
         self.stackdrivermonitoring = StackdriverMonitoring(facade)
         self.kubernetesengine = KubernetesEngine(facade)
+        self.dns = DNS(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'gcp'

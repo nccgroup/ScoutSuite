@@ -123,7 +123,7 @@ class IAMFacade(AWSBaseFacade):
     async def _get_and_set_user_groups(self, user: {}):
         groups = await AWSFacadeUtils.get_all_pages(
             'iam', None, self.session, 'list_groups_for_user', 'Groups', UserName=user['UserName'])
-        user['groups'] = [group['GroupName'] for group in groups]
+        user['groups'] = [group['GroupId'] for group in groups]
 
     async def _get_and_set_user_tags(self, user: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)

@@ -1,0 +1,154 @@
+@import 'src/variables';
+
+.table-responsive {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow-x: auto;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+  padding: 0.5rem 0.75rem;
+
+  .search-bar {
+    input {
+      min-width: 260px;
+    }
+  }
+
+  .table-header-right {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    & > * {
+      margin-left: 0.75rem;
+    }
+
+    .MuiFormControl-root {
+      min-width: 180px;
+      
+      input {
+        font-size: 0.5rem;
+      }
+    }
+  }
+
+  &, .table-header-right {
+    input {
+      caret-color: $font-color;
+    }
+
+    label {
+      color: $font-color !important;
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+      &, &:hover {
+        border-color: $font-color !important;
+      }
+    }
+
+    svg {
+      color: $font-color;
+    }
+  }
+}
+
+.table {
+  text-align: left;
+  border: none;
+  border-collapse: collapse;
+  width: 100%;
+
+  thead {
+    background-color: $default-grey-subtle;
+  }
+
+  th, td {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-right: $default-grey-subtle solid 1px;
+    text-align: left;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  th {
+    white-space: nowrap;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-right: $default-grey-light solid 1px;
+
+    * {
+      vertical-align: middle;
+    }
+
+    .sort-icons {
+      display: inline-flex;
+      flex-direction: column;
+
+      svg {
+        color: $text-muted;
+        position: relative;
+
+        &.MuiSvgIcon-colorPrimary {
+          color: $font-color;
+        }
+
+        &:first-child {
+          top: 0.375rem;
+        }
+
+        &:last-child {
+          top: -0.375rem;
+        }
+      }
+    }
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  tr {
+    border: none;
+    border-bottom: $default-grey-subtle solid 1px;
+
+    &:first-child {
+      border-top: $default-grey-light solid 1px;
+      border-bottom: $default-grey-subtle solid 1px;
+    }
+  }
+}
+
+.no-items-in-query {
+  padding: 0.75rem 1rem;
+  font-weight: bold;
+  color: $font-color;
+  border-bottom: 1px solid $default-grey-subtle;
+}
+
+.pagination {
+  padding: 0.75rem 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  .icon {
+    position: relative;
+    cursor: pointer;
+    z-index: 0;
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+}

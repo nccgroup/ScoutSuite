@@ -1,5 +1,4 @@
 import datetime
-
 from azure.mgmt.monitor import MonitorManagementClient
 from azure.mgmt.storage import StorageManagementClient
 
@@ -14,9 +13,9 @@ class StorageAccountsFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        client = StorageManagementClient(self.credentials.get_credentials('arm'),
-                                       subscription_id=subscription_id)
-        client._client.config.add_user_agent(get_user_agent())
+        client = StorageManagementClient(self.credentials.get_credentials(),
+                                         subscription_id=subscription_id,
+                                         user_agent=get_user_agent())
         return client
 
     async def get_storage_accounts(self, subscription_id: str):
@@ -39,15 +38,29 @@ class StorageAccountsFacade:
             containers = await run_concurrently(
                 lambda: list(client.blob_containers.list(resource_group_name, storage_account_name))
             )
+
         except Exception as e:
             print_exception(f'Failed to retrieve blob containers: {e}')
             return []
         else:
             return containers
 
+    async def get_blob_services(self, resource_group_name, storage_account_name, subscription_id: str):
+        try:
+            client = self.get_client(subscription_id)
+            blob_services = await run_concurrently(
+                lambda: list(client.blob_services.list(resource_group_name, storage_account_name))
+            )
+
+        except Exception as e:
+            print_exception(f'Failed to retrieve blob services: {e}')
+            return []
+        else:
+
+            return blob_services
+
     async def _get_and_set_activity_logs(self, storage_account, subscription_id: str):
-        client = MonitorManagementClient(self.credentials.arm_credentials, subscription_id)
-        client._client.config.add_user_agent(get_user_agent())
+        client = MonitorManagementClient(self.credentials.get_credentials(), subscription_id, user_agent=get_user_agent())
 
         # Time format used by Azure API:
         time_format = "%Y-%m-%dT%H:%M:%S.%f"
@@ -87,4 +100,3 @@ class StorageAccountsFacade:
     #     else:
     #         return None
     #         # return queues
-

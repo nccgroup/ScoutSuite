@@ -1,0 +1,17 @@
+.security-group-usage {
+  & > ul {
+    list-style-type: square;
+    margin: 0;
+    padding-left: 1rem;
+
+    .resource-title {
+      margin: 0;
+    }  
+
+    ul {
+      list-style-type: initial;
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+  }
+}

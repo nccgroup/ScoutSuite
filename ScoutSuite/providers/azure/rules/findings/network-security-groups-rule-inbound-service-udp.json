@@ -1,0 +1,37 @@
+{
+    "description": "Security Group Rules Allowing Inbound UDP Access",
+    "rationale": "UDP inbound access should not be allowed to a network security group.",
+    "remediation": "Disable direct UDP access to your Azure Virtual Machines from the Internet. After direct UDP access from the Internet is disabled, you have other options you can use to access UDP based services running on these virtual machines:<ol><li>Point-to-site VPN</li><li>Site-to-site VPN</li><li>ExpressRoute</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "6.6"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-resource-manager-portal",
+        "https://docs.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal",
+        "https://docs.microsoft.com/en-us/azure/expressroute/",
+        "https://docs.microsoft.com/en-us/azure/security/fundamentals/network-best-practices",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic"
+    ],
+    "dashboard_name": "NSGs",
+    "display_path": "network.subscriptions.id.security_groups.id",
+    "path": "network.subscriptions.id.security_groups.id.security_rules.id",
+    "conditions": [
+        "and",
+        [
+            "_INCLUDE_(conditions/exposed-to-the-internet.json)",
+            "",
+            ""
+        ],
+        [
+            "_INCLUDE_(conditions/allow-udp.json)",
+            "",
+            ""
+        ]
+    ],
+    "key": "network-security-groups-rule-inbound-UDP"
+
+}

@@ -1,12 +1,22 @@
 {
     "description": "Standard Tier Not Enabled",
-    "rationale": "Enable Standard Tier pricing for Security Center.",
+    "rationale": "Enabling Azure Defender allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
+    "remediation": "From Azure console:<ol><li>Go to <samp>Security Center</samp></li><li>Click on <samp>Pricing & Settings</samp></li><li>Click on the subscription name</li><li>Select <samp>Azure Defender plans</samp> blade</li><li>On the line in the table for the resource type Select <samp>On</samp> under <samp>Plan</samp></li><li>Click <samp>Save</samp></li></ol>",
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.1.0",
             "reference": "2.1"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "2.1 to 2.6"
         }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
+        "https://docs.microsoft.com/en-us/azure/security-center/security-center-alerts-overview"
     ],
     "dashboard_name": "Pricings",
     "display_path": "securitycenter.subscriptions.id.pricings.id",

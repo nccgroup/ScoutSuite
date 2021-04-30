@@ -1,0 +1,20 @@
+@import 'src/variables';
+
+.authentication-methods {
+  & > ul {
+    padding-left: 2.5rem;
+  }
+
+  .key-infos {
+    padding-left: 0;
+
+    li {
+      font-weight: initial;
+      margin-left: 2rem;
+    }
+  }
+
+  .warnings {
+    margin-top: 1rem;
+  }
+}

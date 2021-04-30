@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/partials/aws/cloudwatch.regions.id.alarms.id/Informations/style.scss"],"names":[],"mappings":"AAAA,eACE,YAAA,CACA,oBAAA,CACA,cAAA","file":"95.c84b31b3.chunk.css","sourcesContent":[".alarm-metrics {\n  display: flex;\n  align-items: baseline;\n  flex-wrap: wrap;\n}\n"]}

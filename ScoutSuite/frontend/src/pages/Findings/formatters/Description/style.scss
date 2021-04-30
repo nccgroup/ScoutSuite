@@ -1,0 +1,16 @@
+@import 'src/variables';
+
+.findings-no-desc {
+  color: $default-grey-light;
+}
+
+.findings-desc {
+  color: $link-color;
+  font-weight: 600;
+  cursor: pointer;
+
+  svg {
+    margin-right: 0.5rem;
+  }
+}
+

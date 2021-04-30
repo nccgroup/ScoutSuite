@@ -1,0 +1,23 @@
+@import 'src/variables';
+
+.execution-details {
+  .details-card {
+    font-size: 1rem;
+    background-color: $white;
+    border-radius: $border-radius;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+    
+    .detailed-value {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .report-version,
+    .ruleset-about {
+      font-size: 0.875rem;
+      margin-top: 1rem;
+      text-align: justify;
+    }
+  }
+}

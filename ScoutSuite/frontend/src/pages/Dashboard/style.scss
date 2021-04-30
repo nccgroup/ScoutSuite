@@ -1,0 +1,23 @@
+@import 'src/variables';
+
+.dashboard {
+  .tabs-menu {
+    .MuiTab-root {
+      font-size: 1.5rem;
+    }
+
+    .tab-pane.is-selected {
+      border-bottom-width: 3px;
+    }
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    margin: 0;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+}

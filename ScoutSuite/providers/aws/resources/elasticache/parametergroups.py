@@ -16,5 +16,5 @@ class ParameterGroups(AWSResources):
 
     def _parse_parameter_group(self, raw_parameter_group):
         raw_parameter_group['name'] = raw_parameter_group.pop('CacheParameterGroupName')
-        raw_parameter_group['id'] = get_non_provider_id(raw_parameter_group['name'])
+        raw_parameter_group['id'] = get_non_provider_id(raw_parameter_group['ARN'])
         return raw_parameter_group['id'], raw_parameter_group

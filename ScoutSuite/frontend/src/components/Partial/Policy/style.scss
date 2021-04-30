@@ -1,0 +1,78 @@
+@import 'src/variables';
+
+.policy {
+  .MuiAccordion-root {
+    box-shadow: none;
+    background-color: $white;
+
+    .MuiAccordionSummary-root {
+      display: flex;
+      justify-content: space-between;
+      min-height: unset;
+      padding: 0 0 1rem 0;
+  
+      .MuiAccordionSummary-content {
+        margin: 0;
+  
+        .policy-title {
+          color: $font-color;
+          font-size: 1rem;
+          margin: 0;
+        }
+      }
+  
+      .MuiIconButton-root {
+        color: $font-color;
+        padding: 0;
+        margin: 0;
+      }
+    }
+  
+    .MuiAccordionDetails-root {
+      padding: 0;
+    }
+  }
+
+
+  .inner-code,
+  code {
+    font-size: 0.875rem;
+  }
+
+  code {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    color: $font-color;
+    background-color: $informations-background;
+    border-radius: $border-radius;
+
+    div.inline {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .Collapsible {
+      display: flex;
+
+      .Collapsible__trigger {
+        display: flex;
+        cursor: pointer;
+
+        &:not(.is-closed) {
+          align-items: flex-start;
+        }
+
+        svg {
+          font-size: 1.125rem;
+        }
+      }
+    }
+
+    & > div, 
+    .Collapsible {
+      margin-left: 1rem;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+.ec2-instances {
+  code {
+    display: block;
+    margin-bottom: 0.25rem;
+
+    &:last-of-type {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .secrets-header {
+    margin-top: 1rem;
+
+    span {
+      font-size: 1rem;
+    }
+  }
+}

@@ -1211,7 +1211,7 @@ function makeTitle(title) {
         return title.toString()
     }
     title = title.toLowerCase()
-    if (['acm', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
+    if (['acm', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr','dns'].indexOf(title) !== -1) {
         return title.toUpperCase()
     } else if (title === 'cloudtrail') {
         return 'CloudTrail'
@@ -1261,8 +1261,12 @@ function makeTitle(title) {
         return 'Azure RBAC'
     } else if (title === 'storageaccounts') {
         return 'Storage Accounts'
+    } else if (title === 'mysqldatabase') {
+        return 'MySQL Database'
     } else if (title === 'sqldatabase') {
         return 'SQL Database'
+    } else if (title === 'postgresqldatabase') {
+        return 'PostreSQL Database'
     } else if (title === 'virtualmachines') {
         return 'Virtual Machines'
     } else if (title === 'securitycenter') {
@@ -1277,6 +1281,8 @@ function makeTitle(title) {
         return 'Redis Cache'
     } else if (title === 'appservice') {
         return 'App Services'
+    } else if (title === 'loggingmonitoring') {
+        return 'Logging Monitoring'
     } else if (title === 'loadbalancer') {
         return 'Load Balancer'
     } else if (title === 'ram') {

@@ -1,5 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Metrics(Resources):
@@ -16,6 +17,7 @@ class Metrics(Resources):
     def _parse_metric(self, raw_metric):
         metric_dict = {}
         metric_dict['name'] = raw_metric.name
+        metric_dict['id'] = get_non_provider_id(metric_dict['name'])
         metric_dict['description'] = raw_metric.description
         metric_dict['filter'] = raw_metric.filter_
         return metric_dict['name'], metric_dict

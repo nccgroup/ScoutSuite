@@ -1,0 +1,35 @@
+@import 'src/variables';
+
+.severity-label {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+
+  svg {
+    margin-right: 0.5rem;
+  }
+
+  &.critical {
+    color: $critical-color;
+  }
+
+  &.high, &.danger {
+    color: $high-color;
+  }
+
+  &.medium, &.warning {
+    color: $medium-color;
+  }
+
+  &.low {
+    color: $low-color;
+  }
+
+  &.success {
+    color: $good-color;
+  }
+
+  &.info {
+    color: $text-muted;
+  }
+}

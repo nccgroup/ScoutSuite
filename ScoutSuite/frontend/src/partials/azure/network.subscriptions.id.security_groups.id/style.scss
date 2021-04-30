@@ -1,0 +1,9 @@
+@import 'src/variables';
+
+.allow-valid {
+  color: $good-color;
+}
+
+.allow-invalid {
+  color: $critical-color;
+}

@@ -1,0 +1,28 @@
+{
+    "description": "Server Parameter Log Checkpoints Not Set To 'ON'",
+    "rationale": "Enabling <samp>log_checkpoints</samp> helps the PostgreSQL Database to Log each checkpoint in turn generates query and error logs. However, access to transaction logs is not supported. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
+    "remediation": "From Azure Console: <ol><li>Login to Azure Portal using https://portal.azure.com</li><li>Go to <samp>Azure Database</samp> for <samp>PostgreSQL server</samp></li><li>For each database, click on <samp>Server parameters</samp></li><li>Search for <samp>log_checkpoints.</samp></li><li>Click <samp>ON</samp> and save.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "4.3.3"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver",
+        "https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+    ],
+    "dashboard_name": "PostgreSQL Servers",
+    "path": "postgresqldatabase.subscriptions.id.servers.id",
+    "conditions": [
+        "and",
+        [
+            "postgresqldatabase.subscriptions.id.servers.id.log_checkpoints.value",
+            "equal",
+            "off"
+        ]
+    ],
+    "id_suffix": "server_log_checkpoints_value"
+}

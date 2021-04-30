@@ -1,0 +1,20 @@
+@import 'src/variables';
+
+.findings {
+  .table-card {
+    position: relative;
+    background: $white;
+    border-radius: $border-radius;
+    margin-bottom: 1rem;
+
+    &.no-items {
+      display: flex;
+      align-items: center;
+      padding: 1rem 2rem;
+
+      svg, b {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}

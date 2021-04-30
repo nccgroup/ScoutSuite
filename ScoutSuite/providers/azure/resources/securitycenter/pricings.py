@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Pricings(AzureResources):
@@ -15,7 +16,7 @@ class Pricings(AzureResources):
 
     def _parse_pricing(self, pricing):
         pricing_dict = {}
-        pricing_dict['id'] = pricing.id
+        pricing_dict['id'] = get_non_provider_id(pricing.id)
         pricing_dict['name'] = pricing.name
         pricing_dict['pricing_tier'] = pricing.pricing_tier
 

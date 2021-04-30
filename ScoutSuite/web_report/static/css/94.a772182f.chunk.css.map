@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/partials/aws/cloudtrail.regions.id.trails.id/style.scss"],"names":[],"mappings":"AACE,oCACE,gBAAA,CAEA,wCACE,cAAA","file":"94.a772182f.chunk.css","sourcesContent":[".cloudtrail-trails {\n  .warning-message {\n    margin-left: 1rem;\n\n    svg {\n      font-size: 1rem;\n    }\n  }\n}\n"]}

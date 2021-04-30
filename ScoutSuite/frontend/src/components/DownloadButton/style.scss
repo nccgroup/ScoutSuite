@@ -1,0 +1,16 @@
+@import 'src/variables';
+
+button.download-btn {
+  border-color: $link-color;
+
+  &:hover {
+    border-color: $link-color;
+    background-color: rgba(73, 144, 226, 0.15);
+  }
+
+  span {
+    &, svg {
+      color: $link-color !important;
+    }
+  }
+}

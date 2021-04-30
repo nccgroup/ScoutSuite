@@ -1,0 +1,44 @@
+@import 'src/variables';
+
+.bucket-policies {
+  table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+
+    th, td {
+      font-size: 0.875rem;
+      font-weight: normal;
+      padding: 0.5rem;
+      border: 1px solid $default-grey-light;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &, div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    th {
+      background: $default-grey-subtle;
+    }
+  }
+
+  .acl-table {
+    th, td {
+      width: 20%;
+    }
+  }
+
+  .policies-table {
+    th, td {
+      width: 40%;
+
+      &:last-of-type {
+        width: 20%;
+      }
+    }
+  }
+}

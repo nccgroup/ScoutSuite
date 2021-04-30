@@ -1,0 +1,50 @@
+@import 'src/variables';
+
+.partial-tab-pane {
+  &.critical {
+    color: $critical-color;
+
+    &.is-selected {
+      color: $critical-color;
+      border-bottom-color: $critical-color;
+    }
+  }
+
+  &.high, &.danger {
+    color: $high-color;
+
+    &.is-selected {
+      color: $high-color;
+      border-bottom-color: $high-color;
+    }
+  }
+
+  &.medium, &.warning {
+    color: $medium-color;
+
+    &.is-selected {
+      color: $medium-color;
+      border-bottom-color: $medium-color;
+    }
+  }
+
+  &.low {
+    color: $low-color;
+
+    &.is-selected {
+      color: $low-color;
+      border-bottom-color: $low-color;
+    }
+  }
+
+  .MuiTab-wrapper {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+
+    svg {
+      margin-left: 0.25rem;
+    }
+  }
+}

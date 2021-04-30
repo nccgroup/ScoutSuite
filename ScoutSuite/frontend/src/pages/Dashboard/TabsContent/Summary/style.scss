@@ -1,0 +1,27 @@
+.dashboard-summary {
+  .overview, .services {
+    width: 100%;
+  }
+
+  .overview {
+    margin-bottom: 2rem;
+
+    .title-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      button {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+
+  .services {
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -1rem;
+    }
+  }
+}

@@ -1,0 +1,57 @@
+@import 'src/variables';
+
+.permissions {
+  .tabs-menu {
+    font-size: 1.5rem;
+
+    .is-selected {
+      border-bottom-width: 3px;
+    }
+  }
+
+  .table-card, .selected-item {
+    overflow: hidden;
+    margin-bottom: 2rem;
+    background: $white;
+    border-radius: $border-radius;
+
+    &.no-items {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+
+      svg, b {
+        margin-right: 0.25rem;
+      }
+    }
+  }
+
+  .informations-card {
+    width: 100%;
+    padding: 1rem 0rem;
+    margin-bottom: 1.5rem;
+    margin-right: 2rem;
+    background-color: $white;
+    border-radius: $border-radius;
+
+    h3 {
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+
+    .type {
+      margin-bottom: 1rem;
+
+      & > span {
+        font-weight: 600;
+      }
+    }
+
+    ul {
+      padding-left: 1.5rem;
+      margin: 0;
+    }
+  }
+}

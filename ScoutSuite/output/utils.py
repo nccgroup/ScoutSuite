@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 
 from ScoutSuite import DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY
@@ -39,28 +40,31 @@ def prompt_for_overwrite(filename, force_write):
     return prompt_for_yes_no(f'File \'{filename}\' already exists. Do you want to overwrite it')
 
 
+def load_from_json_file(file_path):
+    if not file_path: return None
+    with open(file_path) as f:
+        return json.load(f)
+
+
 def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, file_extension=None):
-    if file_type == 'REPORT':
-        name = file_name if file_name else 'report'
-        directory = file_dir if file_dir else DEFAULT_REPORT_DIRECTORY
-        extension = 'html'
-        first_line = None
-    elif file_type == 'RESULTS':
+    # if file_type == 'REPORT':
+    #     name = file_name if file_name else 'report'
+    #     directory = file_dir if file_dir else DEFAULT_REPORT_DIRECTORY
+    #     extension = 'html'
+    if file_type == 'RESULTS':
         name = f'scoutsuite_results_{file_name}' if file_name else 'scoutsuite_results'
         if not relative_path:
             directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
         else:
             directory = DEFAULT_REPORT_RESULTS_DIRECTORY
-        extension = 'js'
-        first_line = 'scoutsuite_results ='
+        extension = 'json'
     elif file_type == 'EXCEPTIONS':
         name = f'scoutsuite_exceptions_{file_name}' if file_name else 'scoutsuite_exceptions'
         if not relative_path:
             directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
         else:
             directory = DEFAULT_REPORT_RESULTS_DIRECTORY
-        extension = 'js'
-        first_line = 'exceptions ='
+        extension = 'json'
     elif file_type == 'ERRORS':
         name = f'scoutsuite_errors_{file_name}' if file_name else 'scoutsuite_errors'
         if not relative_path:
@@ -68,7 +72,6 @@ def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, 
         else:
             directory = DEFAULT_REPORT_RESULTS_DIRECTORY
         extension = 'json'
-        first_line = None
     else:
         raise Exception(f'Invalid file type provided: {file_type}')
 
@@ -76,4 +79,4 @@ def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, 
                              '{}.{}'.format(name,
                                             file_extension if file_extension else extension))
 
-    return full_path, first_line
+    return full_path

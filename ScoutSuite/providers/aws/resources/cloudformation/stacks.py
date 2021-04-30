@@ -2,6 +2,7 @@ import re
 
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Stacks(AWSResources):
@@ -16,12 +17,12 @@ class Stacks(AWSResources):
             self[name] = stack
 
     def _parse_stack(self, raw_stack):
-        raw_stack['id'] = raw_stack.pop('StackId')
+        raw_stack['arn'] = raw_stack.pop('StackId')
+        raw_stack['id'] = get_non_provider_id(raw_stack['arn'])
         raw_stack['name'] = raw_stack.pop('StackName')
         raw_stack['drifted'] = raw_stack.pop('DriftInformation')[
                                    'StackDriftStatus'] == 'DRIFTED'
         raw_stack['termination_protection'] = raw_stack['EnableTerminationProtection']
-        raw_stack['arn'] = raw_stack['id']
         raw_stack['notificationARNs'] = raw_stack['NotificationARNs']
         template = raw_stack.pop('template')
         raw_stack['deletion_policy'] = self.has_deletion_policy(template)
@@ -32,7 +33,7 @@ class Stacks(AWSResources):
                     raw_stack['deletion_policy'] = template[group]
                     break
 
-        return raw_stack['name'], raw_stack
+        return raw_stack['id'], raw_stack
 
     @staticmethod
     def has_deletion_policy(template):

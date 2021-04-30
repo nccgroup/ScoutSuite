@@ -1,12 +1,25 @@
 {
     "description": "Security Group Rules Allowing Inbound _ARG_0_ Access",
     "rationale": "_ARG_0_ (port _ARG_1_) inbound access should not be allowed to a network security group.",
+    "remediation": "Disable direct _ARG_0_ access to your Azure Virtual Machines from the Internet. After direct UDP access from the Internet is disabled, you have other options you can use to access UDP based services running on these virtual machines:<br><ol><li>Point-to-site VPN</li><li>Site-to-site VPN</li><li>ExpressRoute</li></ol>",
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.0.0",
             "reference": "_ARG_2_"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "_ARG_2_"
         }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-resource-manager-portal",
+        "https://docs.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal",
+        "https://docs.microsoft.com/en-us/azure/expressroute/",
+        "https://docs.microsoft.com/en-us/azure/security/fundamentals/network-best-practices#disable-rdpssh-access-to-azure-virtual-machines",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security"
     ],
     "dashboard_name": "NSGs",
     "display_path": "network.subscriptions.id.security_groups.id",

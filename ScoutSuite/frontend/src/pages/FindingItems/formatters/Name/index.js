@@ -1,0 +1,32 @@
+import { Link, useParams } from 'react-router-dom';
+import React from 'react';
+import PropTypes from 'prop-types';
+
+const propTypes = {
+  value: PropTypes.string.isRequired,
+  row: PropTypes.object.isRequired,
+};
+
+const Name = props => {
+  const params = useParams();
+  const {
+    value,
+    row: { original },
+  } = props;
+
+  if (params.item === original.id) {
+    return <b>{value}</b>;
+  }
+
+  return (
+    <Link
+      to={`/services/${params.service}/findings/${params.finding}/items/${original.id}?path=${original.display_path}`}
+    >
+      {value}
+    </Link>
+  );
+};
+
+Name.propTypes = propTypes;
+
+export default Name;
