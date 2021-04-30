@@ -1,4 +1,5 @@
 from flask import Flask, request, Response, make_response, jsonify, abort
+from flask_restx import Api, Resource as RestxResource
 from flask_cors import CORS
 from ScoutSuite.utils import format_service_name
 
@@ -8,6 +9,7 @@ def start_api(results, exceptions=None):
     app = Flask(__name__, 
             static_url_path='', 
             static_folder='../web_report')
+    api = Api(app, title='ScoutSuite API', description='Documentation for ScoutSuite API',doc='/api-docs')
     CORS(app)
 
     # Comment out the following 5 lines to view server requests in shell
@@ -21,254 +23,444 @@ def start_api(results, exceptions=None):
     def home():
         return app.send_static_file('index.html')
 
+    # For all 404 paths, if it starts with /api/ return 404
+    # Else let the front-end display its own 404 page
     @app.errorhandler(404)
     def page_not_found(e):
         if request.path.startswith('/api/'): return Response('Not found', status=404)
         return app.send_static_file('index.html')
 
-    @app.route('/api', methods=['GET'])
-    def api():
-        return jsonify(results)
+    @api.route('/api')
+    @api.doc(
+        description='Return the whole report as JSON object.')
+    class API(RestxResource):  
+        def get(self):
+            return jsonify(results)
 
-    @app.route('/api/services/<service>/findings', methods=['GET'])
-    def get_findings(service):
-        findings = results['services'][service]['findings']
-        for finding in findings:
-            findings[finding]['name'] = finding
-            # Password_policy needs to be redirected to its partial
-            if findings[finding]['dashboard_name'] == 'Password policy':
-                findings[finding]['redirect_to'] = '/services/iam/password_policy'
-        
-        return jsonify(list(findings.values()))
-
-    # Paginated
-    @app.route('/api/services/<service>/findings/<finding>/items', methods=['GET'])
-    def get_items(service, finding):
-        item_list = get_all_items_in_finding(service, finding, results)
-
-        return jsonify(process_results(item_list))
-
-    @app.route('/api/services/<service>/findings/<finding>/items/options/<attribute>')
-    def get_findings_items_attribute_options(service, finding, attribute):
-        item_list = get_all_items_in_finding(service, finding, results)
-        
-        return get_attribute_options(attribute, item_list, results)
-
-    @app.route('/api/services/<service>/findings/<finding>/items/<item_id>', methods=['GET'])
-    def get_issue_paths(service, finding, item_id):
-        element_path = request.args.get('path')
-        items = results['services'][service]['findings'][finding]['items']
-        issue_paths = []
-        for item_path in items:
-            # If the element path is the whole item path, send 'ALL'
-            if (element_path == item_path):
-                issue_paths.append('ALL')
-            # If the element path is a substring of the item path, send the tail of the item path
-            if (element_path in item_path):
-                issue_path = item_path.split(element_path)[1][1:]
-                issue_paths.append(issue_path)
-
-        issue_paths_and_item = {
-            'path_to_issues': issue_paths,
-            'item': get_element_from_path(element_path, results['services'])
-        }
-
-        return jsonify(issue_paths_and_item)
-
-    @app.route('/api/services', methods=['GET'])
-    def get_services():
-        metadata = results['metadata']
-        category_list = []
-
-        for category in metadata:
-            services = metadata[category]
-            service_list = []
-            category_dashboard = []
-            for service in services:
-                resource_list = []
-                # If a dashboard exists in a specific category, append all dashboard types to category_dashboard
-                if service == 'summaries':
-                    for dashboard_type in services['summaries']:
-                        category_dashboard.append(dashboard_type)
-                else:
-                    # The 'findings' dashboard is included for all services
-                    service_dashboard = ['findings']
-
-                    # Get each resource's information and append to resource_list
-                    if 'resources' in services[service]:
-                        resources = services[service]['resources']
-                        for resource in resources:
-                            count = None if 'count' not in services[service]['resources'][resource] else services[service]['resources'][resource]['count']
-                            resource_info = {
-                                'id': resource,
-                                'name': format_title(resource),
-                                'count': count
-                            }
-                            resource_list.append(resource_info)
-
-                    # If a dashboard exists in a specific service, append all dashboard types to category_dashboard
-                    if 'summaries' in services[service]:
-                        for dashboard_type in services[service]['summaries']:
-                            service_dashboard.append(dashboard_type)
-                    
-                    pro_feature = service not in results['services']
-                    
-                    service_info = {
-                        'id': service,
-                        'name': format_service_name(service),
-                        'dashboards': service_dashboard,
-                        'resources': resource_list,
-                        'pro_feature': pro_feature
-                    }
-                    service_list.append(service_info)
-                
-            category_info = {
-                'id': category,
-                'name': category[0].upper() + category[1:],
-                'services': service_list
-            }
-            if category_dashboard: category_info['dashboard'] = category_dashboard
-            category_list.append(category_info)
-        
-        return jsonify(category_list)
-
-    @app.route('/api/provider', methods=['GET'])
-    def get_provider():
-        provider_info = {
-            'account_id':results['account_id'],
-            'environment':results['environment'],
-            'provider_code':results['provider_code'],
-            'provider_name': results['provider_name']
-        }
-        return jsonify(provider_info)
-
-    @app.route('/api/execution-details', methods=['GET'])
-    def get_execution_details():
-        execution_details = {
-            'provider_name': results['provider_name'],
-            'time': results['last_run']['time'],
-            'version': results['last_run']['version'],
-            "ruleset_about": results['last_run']['ruleset_about'],
-            "ruleset_name": results['last_run']['ruleset_name']
-        }
-        return jsonify(execution_details)
-
-    @app.route('/api/dashboard', methods=['GET'])
-    def get_dashboard():
-        summary = results['last_run']['summary']
-        service_list = []
-        for summary_service in summary:
-            issues = {
-                'Critical': 0,
-                'High': 0,
-                'Medium': 0,
-                'Low': 0,
-                'Good': 0
-            }
-            
-            # For every finding where there's at least one item, add it to 'issues'
-            # with its corresponding issue level
-            findings = results['services'][summary_service]['findings']
+    @api.route('/api/services/<service>/findings')
+    @api.doc(
+        params={
+            'service': {
+                'description': 'A provider service',
+                'example':'ec2'}},
+        description='Return the list of findings for a specific service.')
+    class Findings(RestxResource):
+        def get(self, service):
+            findings = results['services'][service]['findings']
             for finding in findings:
-                if findings[finding]['items']:
-                    issue_level = findings[finding]['level']
-                    if issue_level == 'danger': issues['High'] += 1
-                    if issue_level == 'warning': issues['Medium'] += 1
-                else:
-                    issues['Good'] += 1
+                findings[finding]['name'] = finding
+                # Password_policy needs to be redirected to its partial
+                if findings[finding]['dashboard_name'] == 'Password policy':
+                    findings[finding]['redirect_to'] = '/services/iam/password_policy'
+            
+            return jsonify(list(findings.values()))
 
-            summary_service_object = summary[summary_service]
-            service_info = {
-                'id': summary_service,
-                'name': format_service_name(summary_service),
-                'issues': issues,
-                'resources': summary_service_object['resources_count'],
-                'rules': summary_service_object['rules_count'],
-                'flagged-items': summary_service_object['flagged_items']
+    @api.route('/api/services/<service>/findings/<finding>/items')
+    @api.doc(
+        params={
+            'service': {
+                'description': 'A provider service',
+                'example':'ec2'},
+            'finding': {
+                'description': 'A service finding',
+                'example':'ec2-security-group-opens-all-ports'}},
+        description='Return the list of items for a specific finding of a specific service.')
+    class Items(RestxResource):
+        def get(self, service, finding):
+            item_list = get_all_items_in_finding(service, finding, results)
+
+            return jsonify(process_results(item_list))
+
+    @api.route('/api/services/<service>/findings/<finding>/items/options/<attribute>')
+    @api.doc(
+        params={
+            'service': {
+                'description': 'A provider service',
+                'example':'rds'},
+            'finding': {
+                'description': 'A service finding',
+                'example':'rds-instance-single-az'},
+            'attribute': {
+                'description': 'An attribute contained in item',
+                'example':'vpc'}},
+        description='Return a list of values an attribute can take for a specific finding of a specific service.')
+    class ItemsAttributeOptions(RestxResource):
+        def get(self, service, finding, attribute):
+            item_list = get_all_items_in_finding(service, finding, results)
+            
+            return get_attribute_options(attribute, item_list, results)
+
+    @api.route('/api/services/<service>/findings/<finding>/items/<item_id>')
+    @api.doc(
+        params={
+            'service': {
+                'description': 'A provider service',
+                'example':'ec2'},
+            'finding': {
+                'description': 'A service finding',
+                'example':'ec2-security-group-opens-all-ports'},
+            'item_id': {
+                'description': 'The ID of an item',
+                'example':'ec2.regions.ap-northeast-1.vpcs.vpc-edd0d68a.security_groups.sg-495d7a3b.rules.ingress.protocols.ALL.ports.1-65535'}},
+        description='Return a specific item of a specific finding of a specific service.')
+    class Item(RestxResource):
+        def get(self, service, finding, item_id):
+            element_path = request.args.get('path')
+            items = results['services'][service]['findings'][finding]['items']
+            issue_paths = []
+            for item_path in items:
+                # If the element path is the whole item path, send 'ALL'
+                if (element_path == item_path):
+                    issue_paths.append('ALL')
+                # If the element path is a substring of the item path, send the tail of the item path
+                if (element_path in item_path):
+                    issue_path = item_path.split(element_path)[1][1:]
+                    issue_paths.append(issue_path)
+
+            issue_paths_and_item = {
+                'path_to_issues': issue_paths,
+                'item': get_element_from_path(element_path, results['services'])
             }
-            service_list.append(service_info)
 
-        return jsonify(service_list)
+            return jsonify(issue_paths_and_item)
 
-    # Paginated
-    @app.route('/api/services/<service>/resources/<resource>')
-    def get_resources(service, resource):
-        all_resources, resource_path = get_all_resources(service, resource, results)
-        resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
-        for resource_data in resource_list: resource_data['display_path'] = resource_path
+    @api.route('/api/services')
+    @api.doc(
+        description='Return the list of service categories and each of their services with information\
+            extracted from the metadata object of the report.')
+    class Services(RestxResource):
+        def get(self):
+            metadata = results['metadata']
+            category_list = []
 
-        return jsonify(process_results(resource_list))
+            for category in metadata:
+                services = metadata[category]
+                service_list = []
+                category_dashboard = []
+                for service in services:
+                    resource_list = []
+                    # If a dashboard exists in a specific category, append all dashboard types to category_dashboard
+                    if service == 'summaries':
+                        for dashboard_type in services['summaries']:
+                            category_dashboard.append(dashboard_type)
+                    else:
+                        # The 'findings' dashboard is included for all services
+                        service_dashboard = ['findings']
 
-    @app.route('/api/services/<service>/resources/<resource>/options/<attribute>')
-    def get_resources_attribute_options(service, resource, attribute):
-        all_resources, resource_path = get_all_resources(service, resource, results)
-        resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
-        
-        return get_attribute_options(attribute, resource_list, results)
+                        # Get each resource's information and append to resource_list
+                        if 'resources' in services[service]:
+                            resources = services[service]['resources']
+                            for resource in resources:
+                                count = None if 'count' not in services[service]['resources'][resource] else services[service]['resources'][resource]['count']
+                                resource_info = {
+                                    'id': resource,
+                                    'name': format_title(resource),
+                                    'count': count
+                                }
+                                resource_list.append(resource_info)
 
-    @app.route('/api/services/<service>/resources/<resource>/<resource_id>')
-    def get_resource(service, resource, resource_id):
-        all_resources = get_all_resources(service,resource, results)[0]
-        for retrieved_resource in all_resources:
-            if list(retrieved_resource.keys())[0] == resource_id:
-                if not list(retrieved_resource.values())[0]['id']:
-                    retrieved_resource.values()[0]['id'] = resource_id
-                return jsonify(list(retrieved_resource.values())[0])
-        return {}
+                        # If a dashboard exists in a specific service, append all dashboard types to category_dashboard
+                        if 'summaries' in services[service]:
+                            for dashboard_type in services[service]['summaries']:
+                                service_dashboard.append(dashboard_type)
+                        
+                        pro_feature = service not in results['services']
+                        
+                        service_info = {
+                            'id': service,
+                            'name': format_service_name(service),
+                            'dashboards': service_dashboard,
+                            'resources': resource_list,
+                            'pro_feature': pro_feature
+                        }
+                        service_list.append(service_info)
+                    
+                category_info = {
+                    'id': category,
+                    'name': category[0].upper() + category[1:],
+                    'services': service_list
+                }
+                if category_dashboard: category_info['dashboard'] = category_dashboard
+                category_list.append(category_info)
+            
+            return jsonify(category_list)
 
-    @app.route('/api/services/<service>/resources/<resource>/download')
-    def download_resource(service, resource):
-        resource_list = [list(fetched_resource.values())[0] for fetched_resource in get_all_resources(service, resource, results)[0]]
-        response = download_filtered_elements(resource_list, f'{resource}')
+    @api.route('/api/provider')
+    @api.doc(description='Return provider information.')
+    class Provider(RestxResource):
+        def get(self):
+            provider_info = {
+                'account_id':results['account_id'],
+                'environment':results['environment'],
+                'provider_code':results['provider_code'],
+                'provider_name': results['provider_name']
+            }
+            return jsonify(provider_info)
 
-        return response
+    @api.route('/api/execution-details')
+    @api.doc(description='Return report''s execution details.')
+    class ExecutionDetails(RestxResource):
+        def get(self):
+            execution_details = {
+                'provider_name': results['provider_name'],
+                'time': results['last_run']['time'],
+                'version': results['last_run']['version'],
+                "ruleset_about": results['last_run']['ruleset_about'],
+                "ruleset_name": results['last_run']['ruleset_name']
+            }
+            return jsonify(execution_details)
 
-    @app.route('/api/services/<service>/findings/<finding>/items/download')
-    def download_items(service, finding):
-        item_list = get_all_items_in_finding(service, finding, results)
-        response = download_filtered_elements(item_list, f'{finding}_items')
+    @api.route('/api/dashboard')
+    @api.doc(
+        description='Return information used in the main dashboard such as the breakdown of\
+            the issues based on their level of risk.')
+    class Dashboard(RestxResource):
+        def get(self):
+            summary = results['last_run']['summary']
+            service_list = []
+            for summary_service in summary:
+                issues = {
+                    'Critical': 0,
+                    'High': 0,
+                    'Medium': 0,
+                    'Low': 0,
+                    'Good': 0
+                }
+                
+                # For every finding where there's at least one item, add it to 'issues'
+                # with its corresponding issue level
+                findings = results['services'][summary_service]['findings']
+                for finding in findings:
+                    if findings[finding]['items']:
+                        issue_level = findings[finding]['level']
+                        if issue_level == 'danger': issues['High'] += 1
+                        if issue_level == 'warning': issues['Medium'] += 1
+                    else:
+                        issues['Good'] += 1
 
-        return response
+                summary_service_object = summary[summary_service]
+                service_info = {
+                    'id': summary_service,
+                    'name': format_service_name(summary_service),
+                    'issues': issues,
+                    'resources': summary_service_object['resources_count'],
+                    'rules': summary_service_object['rules_count'],
+                    'flagged-items': summary_service_object['flagged_items']
+                }
+                service_list.append(service_info)
 
-    @app.route('/api/categories/<category>/<policy_type>')
-    def get_category_policy_type(category, policy_type):
-        metadata = results['metadata']
-        if policy_type == 'external_attack_surface': policy_type = 'external attack surface'
+            return jsonify(service_list)
 
-        for category_metadata in metadata:
-            if category_metadata == category:
-                summaries = metadata[category]['summaries']
-                policy_path = summaries[policy_type]['path']
+    @api.route('/api/services/<service>/resources/<resource>')
+    @api.doc(
+    params={
+            'service': {
+                'description': 'A provider service',
+                'example':'ec2'},
+            'resource': {
+                'description': 'A resource of a service',
+                'example':'volumes'},
+            'limit': {
+                'description': 'Number of resources to return',
+                'example': 5,
+                'default': 10},
+            'current_page': {
+                'description': 'Page number if return results have multiple pages',
+                'example': 3,
+                'default': 1},
+            'sort_by': {
+                'description': 'Property of the resource to sort by',
+                'example':'id',
+                'default':'name'},
+            'order_by': {
+                'description': 'Sort results in ascending or descending order (asc or desc)',
+                'example': 'desc',
+                'default':'asc'},
+            'search': {
+                'description': 'Search in name or id properties',
+                'example':'test'},
+            'filter_by': {
+                'description': 'Return results containing a specific property value',
+                'example':'{"region":"us-east-1"}'}
+            },
+    description='Return a list of resources of a specific resource type of a specific service.')
+    class Resources(RestxResource):
+        def get(self, service, resource):
+            all_resources, resource_path = get_all_resources(service, resource, results)
+            resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
+            for resource_data in resource_list: resource_data['display_path'] = resource_path
 
-                return get_element_from_path(policy_path, results)
+            return jsonify(process_results(resource_list))
 
-    @app.route('/api/services/<service>/<policy_type>')
-    def get_service_policy_type(service, policy_type):
-        metadata = results['metadata']
-        if policy_type == 'external_attack_surface': policy_type = 'external attack surface'
+    @api.route('/api/services/<service>/resources/<resource>/options/<attribute>')
+    @api.doc(
+        params={
+            'service': {
+                'description': 'A provider service',
+                'example':'ec2'},
+            'resource': {
+                'description': 'A resource of a service',
+                'example':'instances'},
+            'attribute': {
+                'description': 'An attribute contained in item',
+                'example':'SubnetId'}},
+        description='Return a list of values an attribute can take for a specific resource of a specific service.')
+    class ResourcesAttributeOptions(RestxResource):
+        def get(self, service, resource, attribute):
+            all_resources, resource_path = get_all_resources(service, resource, results)
+            resource_list = [list(fetched_resource.values())[0] for fetched_resource in all_resources]
+            
+            return get_attribute_options(attribute, resource_list, results)
 
-        for category in metadata:
-            services = metadata[category]
-            for service_metadata in services:
-                if service_metadata == service:
-                    summaries = services[service]['summaries']
+    @api.route('/api/services/<service>/resources/<resource>/<resource_id>')
+    @api.doc(
+        params={
+            'service': {
+                'description': 'A provider service',
+                'example':'ec2'},
+            'resource': {
+                'description': 'A resource of a service',
+                'example':'instances'},
+            'resource_id': {
+                'description': 'The ID of a resource',
+                'example':'i-0253e40e53cd800a1'}},
+        description='Return the details of a specific resource of a specific service.')
+    class Resource(RestxResource):
+        def get(self, service, resource, resource_id):
+            all_resources = get_all_resources(service,resource, results)[0]
+            for retrieved_resource in all_resources:
+                if list(retrieved_resource.keys())[0] == resource_id:
+                    if not list(retrieved_resource.values())[0]['id']:
+                        retrieved_resource.values()[0]['id'] = resource_id
+                    return jsonify(list(retrieved_resource.values())[0])
+            return {}
+
+    @api.route('/api/services/<service>/resources/<resource>/download')
+    @api.doc(
+        params={
+            'service': {
+                'description': 'A provider service',
+                'example':'ec2'},
+            'resource': {
+                'description': 'A resource of a service',
+                'example':'security_groups'},
+            'type': {
+                'description': 'Download type (CSV or JSON)',
+                'example': 'csv',
+                'default': 'json'},
+            'search': {
+                'description': 'Search in name or id properties',
+                'example':'test'},
+            'filter_by': {
+                'description': 'Return results containing a specific property value',
+                'example':'{"region":"us-east-1"}'}},
+        description='Download a list of resources of a specific resource type of a specific service.')
+    class DownloadResource(RestxResource):
+        def get(self, service, resource):
+            resource_list = [list(fetched_resource.values())[0] for fetched_resource in get_all_resources(service, resource, results)[0]]
+            response = download_filtered_elements(resource_list, f'{resource}')
+
+            return response
+
+    @api.route('/api/services/<service>/findings/<finding>/items/download')
+    @api.doc(
+        params={
+            'service': {
+                'description': 'A provider service',
+                'example':'ec2'},
+            'finding': {
+                'description': 'A service finding',
+                'example':'ec2-security-group-opens-all-ports'},
+            'type': {
+                'description': 'Download type (CSV or JSON)',
+                'example': 'csv',
+                'default': 'json'},
+            'search': {
+                'description': 'Search in name or id properties',
+                'example':'test'},
+            'filter_by': {
+                'description': 'Return results containing a specific property value',
+                'example':'{"region":"us-east-1"}'}},
+        description='Download the list of items for a specific finding of a specific service.')
+    class DownloadItems(RestxResource):
+        def get(self, service, finding):
+            item_list = get_all_items_in_finding(service, finding, results)
+            response = download_filtered_elements(item_list, f'{finding}_items')
+
+            return response
+
+    @api.route('/api/categories/<category>/<policy_type>')
+    @api.doc(
+        params={
+            'category': {
+                'description': 'A service category',
+                'example':'compute'},
+            'policy_type': {
+                'description': 'A vulnerability policy type',
+                'example':'external_attack_surface'}},
+        description='Return information about a policy type for a specific service category.')
+    class CategoryPolicyType(RestxResource):
+        def get(self, category, policy_type):
+            metadata = results['metadata']
+            if policy_type == 'external_attack_surface': policy_type = 'external attack surface'
+
+            for category_metadata in metadata:
+                if category_metadata == category:
+                    summaries = metadata[category]['summaries']
                     policy_path = summaries[policy_type]['path']
 
                     return get_element_from_path(policy_path, results)
 
-    @app.route('/api/exceptions')
-    def get_exceptions():
-        if not exceptions: return {}
-        return exceptions
+    @api.route('/api/services/<service>/<policy_type>')
+    @api.doc(
+        params={
+            'service': {
+                'description': 'A provider service',
+                'example':'ec2'},
+            'policy_type': {
+                'description': 'A vulnerability policy type',
+                'example':'external_attack_surface'}},
+        description='Return information about a policy type for a specific service.')
+    class ServicePolicyType(RestxResource):
+        def get(self, service, policy_type):
+            metadata = results['metadata']
+            if policy_type == 'external_attack_surface': policy_type = 'external attack surface'
 
-    @app.route('/api/raw/<path:path_to_element>', methods=['GET'])
-    def get_raw_info(path_to_element):
-        new_path = path_to_element.replace('/', '.')
-        return jsonify(get_element_from_path(new_path, results))
+            for category in metadata:
+                services = metadata[category]
+                for service_metadata in services:
+                    if service_metadata == service:
+                        summaries = services[service]['summaries']
+                        policy_path = summaries[policy_type]['path']
 
-    @app.route('/health', methods=['GET'])
-    def check_server_health():
-        return 'OK'
+                        return get_element_from_path(policy_path, results)
+
+    @api.route('/api/exceptions')
+    @api.doc(
+        description='Return the exceptions file used to run the report.')
+    class Exception(RestxResource):
+        def get(self):
+            if not exceptions: return {}
+            return exceptions
+
+    @api.route('/api/raw/<path:path_to_element>')
+    @api.doc(
+        params={
+            'path_to_element': {
+                'description': 'A path to specific element in JSON object',
+                'example':'last_run/time'}},
+        description='Return a specific element in the JSON file based on path.')
+    class Raw(RestxResource):
+        def get(self, path_to_element):
+            new_path = path_to_element.replace('/', '.')
+            return jsonify(get_element_from_path(new_path, results))
+
+    @api.route('/health')
+    @api.doc(
+        description='Return the string "OK" if server is up.')
+    class ServerHealth(RestxResource):
+        def get(self):
+            return 'OK'
 
     app.run()
 
