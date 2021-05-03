@@ -97,7 +97,7 @@ class ScoutSuiteArgumentParser:
 
         gcp_parser = parser.add_argument_group('Authentication modes')
 
-        gcp_auth_modes = gcp_parser.add_mutually_exclusive_group(required=True)
+        gcp_auth_modes = gcp_parser.add_mutually_exclusive_group(required=False)
 
         gcp_auth_modes.add_argument('-u',
                                     '--user-account',
