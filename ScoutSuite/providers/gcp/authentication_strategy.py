@@ -29,15 +29,12 @@ class GCPAuthenticationStrategy(AuthenticationStrategy):
             elif service_account:
                 client_secrets_path = os.path.abspath(service_account)
                 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
-            else:
-                raise AuthenticationException('Failed to authenticate to GCP - no supported account type')
 
             credentials, default_project_id = auth.default()
 
             if not credentials:
                 raise AuthenticationException('No credentials')
 
-            credentials.is_service_account = service_account is not None
             credentials.default_project_id = default_project_id
 
             return credentials
