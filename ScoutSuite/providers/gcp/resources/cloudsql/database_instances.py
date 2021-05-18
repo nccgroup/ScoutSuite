@@ -128,8 +128,8 @@ class DatabaseInstances(GCPCompositeResources):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings']['databaseFlags']:
                 if flag['name'] == 'log_min_error_statement' and flag['value'] is not None:
-                    return True
-        return False
+                    return False
+        return True
 
     def _postgres_log_temp_files_flags_0(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
