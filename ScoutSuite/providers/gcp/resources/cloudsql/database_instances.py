@@ -115,39 +115,49 @@ class DatabaseInstances(GCPCompositeResources):
     def _check_database_type(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             return False
-        return True
+        return None
 
     def _postgres_flags_on(self, raw_instance, flag_name: str):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings']['databaseFlags']:
-                if flag['name'] == flag_name and flag['value'] == 'off':
-                    return False
-        return True
+                if flag['name'] == flag_name and flag['value'] != 'off':
+                    return True
+            return False
+        else:
+            return None
 
     def _postgres_log_min_error_statement_flags(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings']['databaseFlags']:
                 if flag['name'] == 'log_min_error_statement' and flag['value'] is not None:
-                    return False
-        return True
+                    return True
+            return False
+        else:
+            return None
 
     def _postgres_log_temp_files_flags_0(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings']['databaseFlags']:
-                if flag['name'] == 'log_temp_files' and flag['value'] != 0:
-                    return False
-        return True
+                if flag['name'] == 'log_temp_files' and flag['value'] == 0:
+                    return True
+            return False
+        else:
+            return None
 
     def _postgres_log_min_duration_statement_flags_1(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings']['databaseFlags']:
-                if flag['name'] == 'log_min_duration_statement' and flag['value'] != -1:
-                    return False
-        return True
+                if flag['name'] == 'log_min_duration_statement' and flag['value'] == -1:
+                    return True
+            return False
+        else:
+            return None
 
     def _sqlservers_cross_db_ownership_chaining_flag_off(self, raw_instance, flag_name: str):
         if 'SQLSERVER' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings']['databaseFlags']:
-                if flag['name'] == flag_name and flag['value'] == 'on':
-                    return False
-        return True
+                if flag['name'] == flag_name and flag['value'] == 'off':
+                    return True
+            return False
+        else:
+            return None
