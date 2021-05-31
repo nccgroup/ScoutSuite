@@ -4,12 +4,10 @@ on:
   push:
     branches:
       - master
+      - feature/855-publish-container
   release:
     types:
       - released
-  push:
-    branches:
-      - feature/855-publish-container
 
 jobs:
   build:
