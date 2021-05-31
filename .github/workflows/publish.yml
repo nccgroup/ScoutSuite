@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - feature/855-publish-container
   release:
     types:
       - released
@@ -42,10 +41,10 @@ jobs:
           images: |
             ghcr.io/${{ github.repository_owner }}/scoutsuite
           tags: |
-            type=semver,prefix=v,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            type=semver,prefix=v,pattern={{major}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            type=semver,prefix=v,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            type=raw,value=latest,enable=${{ !startsWith(github.ref, 'refs/heads/master') }}
+            type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/') }}
+            type=semver,pattern={{major}},enable=${{ startsWith(github.ref, 'refs/tags/') }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/') }}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/heads/master') }}
 
       - name: Container - Build & Push
         uses: docker/build-push-action@v2
