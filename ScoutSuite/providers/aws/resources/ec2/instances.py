@@ -64,7 +64,7 @@ class EC2Instances(AWSResources):
             aws_access_key_regex = re.compile('AKIA[0-9A-Z]{16}')
             aws_secret_access_key_regex = re.compile('[0-9a-zA-Z/+]{40}')
             rsa_private_key_regex = re.compile('(-----BEGIN RSA PRIVATE KEY-----(?s).+?-----END .+?-----)')
-            keywords = ['password', 'secret', 'aws_access_key_id', 'aws_secret_access_key', 'aws_session_token']
+            keywords = ['password', 'aws_access_key_id', 'aws_secret_access_key', 'aws_session_token']
 
             aws_access_key_list = aws_access_key_regex.findall(user_data)
             if aws_access_key_list:
