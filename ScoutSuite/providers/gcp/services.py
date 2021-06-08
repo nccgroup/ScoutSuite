@@ -14,12 +14,12 @@ from ScoutSuite.providers.gcp.resources.gke.base import KubernetesEngine
 class GCPServicesConfig(BaseServicesConfig):
 
     def __init__(self, credentials=None, default_project_id=None,
-                 project_id=None, folder_id=None, organization_id=None, all_projects=None,
+                 project_id=None, folder_id=None, organization_id=None, all_projects=None,exclude_folders=None,
                  **kwargs):
 
         super().__init__(credentials)
 
-        facade = GCPFacade(default_project_id, project_id, folder_id, organization_id, all_projects)
+        facade = GCPFacade(default_project_id, project_id, folder_id, organization_id, all_projects, exclude_folders)
 
         self.cloudsql = CloudSQL(facade)
         self.cloudmemorystore = MemoryStore(facade)

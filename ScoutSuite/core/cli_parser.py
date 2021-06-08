@@ -129,6 +129,10 @@ class ScoutSuiteArgumentParser:
                                action='store_true',
                                help='Scan all of the accessible projects')
 
+        gcp_scope.add_argument('--exclude_folders',
+                               nargs='+',
+                               help='Exclude a list of folders')
+
     def _init_azure_parser(self):
         parser = self.subparsers.add_parser("azure",
                                             parents=[self.common_providers_args_parser],

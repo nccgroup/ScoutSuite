@@ -11,7 +11,7 @@ class GCPProvider(BaseProvider):
     """
 
     def __init__(self,
-                 project_id=None, folder_id=None, organization_id=None, all_projects=None,
+                 project_id=None, folder_id=None, organization_id=None, all_projects=None, exclude_folders=None,
                  report_dir=None, timestamp=None, services=None, skipped_services=None, result_format='json', **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
@@ -24,6 +24,7 @@ class GCPProvider(BaseProvider):
         self.environment = 'default'
 
         self.all_projects = all_projects
+        self.exclude_folders = exclude_folders
         self.project_id = project_id
         self.folder_id = folder_id
         self.organization_id = organization_id
@@ -32,7 +33,7 @@ class GCPProvider(BaseProvider):
         self._set_account_id()
 
         self.services = GCPServicesConfig(self.credentials, self.credentials.default_project_id,
-                                          self.project_id, self.folder_id, self.organization_id, self.all_projects)
+                                          self.project_id, self.folder_id, self.organization_id, self.all_projects, self.exclude_folders)
 
         self.result_format = result_format
 

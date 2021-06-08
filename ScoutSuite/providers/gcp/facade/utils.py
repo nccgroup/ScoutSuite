@@ -16,3 +16,7 @@ class GCPFacadeUtils:
         resources = []
         await GCPFacadeUtils._get_all(resources, resource_key, request, resources_group)
         return resources
+
+    @staticmethod
+    def is_excluded(id, exclude_set):
+        return id in exclude_set
