@@ -82,6 +82,9 @@ class AWSProvider(BaseProvider):
         if 'ec2' in self.service_list and 'vpc' in self.service_list:
             self._match_instances_and_vpcs()
             self._match_instances_and_subnets()
+        
+        if 'ec2' in self.service_list and 'codebuild' in self.service_list:
+            self._update_sg_usage_codebuild()
 
         if 'awslambda' in self.service_list and 'iam' in self.service_list:
             self._match_lambdas_and_roles()
@@ -831,3 +834,17 @@ class AWSProvider(BaseProvider):
                 policy['protocols'] = protocols
                 policy['options'] = options
                 policy['ciphers'] = ciphers
+
+    def _update_sg_usage_codebuild(self):
+        try:
+            for region in self.services['codebuild']['regions']:
+                for codebuild_project in self.services['codebuild']['regions'][region]['build_projects']:
+                    if 'vpc' in self.services['codebuild']['regions'][region]['build_projects'][codebuild_project] and 'security_groups' in self.services['codebuild']['regions'][region]['build_projects'][codebuild_project]:
+                        cb_project = self.services['codebuild']['regions'][region]['build_projects'][codebuild_project]
+                        for cb_project_sg in cb_project['security_groups']:
+                            manage_dictionary(self.services['ec2']['regions'][region]['vpcs'][cb_project['vpc']]['security_groups'][cb_project_sg], 'used_by', {'resource_type': {'codebuild_project': []}})
+                            self.services['ec2']['regions'][region]['vpcs'][cb_project['vpc']]['security_groups'][cb_project_sg]['used_by']['resource_type']['codebuild_project'].append({
+                                'id': cb_project['arn'], 'name': cb_project['name']
+                            })
+        except Exception as e:
+            print_exception(f'Failed to update security group usage for CodeBuild: {e}')
