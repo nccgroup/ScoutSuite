@@ -5,6 +5,7 @@ from ScoutSuite.providers.aws.resources.cloudformation.base import CloudFormatio
 from ScoutSuite.providers.aws.resources.cloudtrail.base import CloudTrail
 from ScoutSuite.providers.aws.resources.cloudwatch.base import CloudWatch
 from ScoutSuite.providers.aws.resources.cloudfront.base import CloudFront
+from ScoutSuite.providers.aws.resources.codebuild.base import CodeBuild
 from ScoutSuite.providers.aws.resources.config.base import Config
 from ScoutSuite.providers.aws.resources.directconnect.base import DirectConnect
 from ScoutSuite.providers.aws.resources.dynamodb.base import DynamoDB
@@ -94,6 +95,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.cloudtrail = CloudTrail(facade)
         self.cloudwatch = CloudWatch(facade)
         self.cloudfront = CloudFront(facade)
+        self.codebuild = CodeBuild(facade)
         self.config = Config(facade)
         self.directconnect = DirectConnect(facade)
         self.dynamodb = DynamoDB(facade)
