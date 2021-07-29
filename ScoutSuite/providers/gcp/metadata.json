@@ -58,7 +58,7 @@
       "resources": {
         "clusters": {
           "cols": 2,
-          "path": "services.kubernetesengine.projects.id.zones.id.clusters"
+          "path": "services.kubernetesengine.projects.id.clusters"
         }
       }
     }
