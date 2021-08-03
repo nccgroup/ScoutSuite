@@ -99,6 +99,9 @@ class AWSProvider(BaseProvider):
         if 'emr' in self.service_list and 'ec2' in self.service_list and 'vpc' in self.service_list:
             self._set_emr_vpc_ids()
 
+        if 'organizations' in self.service_list:
+            self._match_accounts_and_optout_policies()
+
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
 
         super().preprocessing()
@@ -484,6 +487,20 @@ class AWSProvider(BaseProvider):
                 if iam_config['roles'][role_id]['arn'] in awslambda_funtions:
                     iam_config['roles'][role_id]['awslambdas'] = awslambda_funtions[iam_config['roles'][role_id]['arn']]
                     iam_config['roles'][role_id]['awslambdas_count'] = len(awslambda_funtions[iam_config['roles'][role_id]['arn']])
+
+
+    def _match_accounts_and_optout_policies(self):
+        organizations_info = self.services['organizations']
+        targets = {}
+
+        for policy in organizations_info['optout_policies'].items():
+            if 'children' in policy[1]:
+                for child in policy[1]['children']:
+                    for c in child:
+                        targets.update({c['Id']:c})
+                
+                policy[1]['children'] = targets
+          
 
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 

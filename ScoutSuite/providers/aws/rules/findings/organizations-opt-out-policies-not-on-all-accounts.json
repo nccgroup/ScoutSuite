@@ -1,0 +1,15 @@
+{
+  "description": "Opt-out policies not on all accounts",
+  "rationale": "Opt-out policies should be turned on in all accounts",
+  "dashboard_name": "Accounts",
+  "path": "organizations.optout_policies.id.children.id",
+  "conditions": [
+    "and",
+    [
+      "Id",
+      "match",
+      "organizations.accounts.id"
+    ]
+  ],
+  "id_suffix": "Id"
+}

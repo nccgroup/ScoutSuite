@@ -1,7 +1,7 @@
 import asyncio
 
 from ScoutSuite.core.console import print_exception, print_debug, print_info
-from ScoutSuite.providers.aws.utils import get_partition_name
+from ScoutSuite.providers.aws.utils import get_partition_name, is_organizations_root
 from ScoutSuite.utils import format_service_name
 
 
@@ -21,6 +21,11 @@ class BaseServicesConfig:
             # Remove "credentials" as it isn't a service
             if 'credentials' in services:
                 services.remove('credentials')
+
+            if self._is_provider('aws'):
+                if 'organizations' in services:
+                    if not is_organizations_root(self.credentials.session):
+                        services.remove('organizations')
 
             # Print services that are going to get skipped:
             for service in vars(self):

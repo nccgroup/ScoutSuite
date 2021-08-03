@@ -22,6 +22,24 @@ def get_partition_name(session):
     return partition_name
 
 
+def is_organizations_root(session):
+    """
+    Determines whether the provided account is organizations root
+
+    :return:             True if the AWS account ID matches the root account ID and False if it isn't or the Organizations resource couldn't be fetched
+    """
+    try:
+        organizations_client = session.client("organizations")
+        organization = organizations_client.describe_organization()
+        return (
+            get_aws_account_id(session)
+            == organization["Organization"]["MasterAccountId"]
+        )
+    except Exception:
+        # could not fetch resource
+        return False
+
+
 def is_throttled(e):
     """
     Determines whether the exception is due to API throttling.
@@ -111,6 +129,7 @@ def snake_keys(d):
             else:
                 new_table[new_key] = d[k]
     return new_table
+
 
 def format_arn(partition, service, region, account_id, resource_id, resource_type=None):
     """
