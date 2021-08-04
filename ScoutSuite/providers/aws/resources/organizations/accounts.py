@@ -13,11 +13,11 @@ class Accounts(AWSResources):
             return
 
         account = {}
-        account["id"] = raw_account.pop("Id")
-        account["name"] = raw_account.pop("Name")
-        account["arn"] = raw_account.pop("Arn")
-        account["status"] = raw_account.pop("Status")
-        account["joined_method"] = raw_account.pop("JoinedMethod")
-        account["joined_timestamp"] = raw_account.pop("JoinedTimestamp")
+        account["id"] = raw_account.get("Id")
+        account["name"] = raw_account.get("Name")
+        account["arn"] = raw_account.get("Arn")
+        account["status"] = raw_account.get("Status")
+        account["joined_method"] = raw_account.get("JoinedMethod")
+        account["joined_timestamp"] = raw_account.get("JoinedTimestamp")
 
         return account["id"], account

@@ -10,11 +10,11 @@ class ServicePolicies(AWSResources):
 
     def _parse_policy(self, raw_policy):
         policy = {}
-        policy["id"] = raw_policy.pop("Id")
-        policy["name"] = raw_policy.pop("Name")
-        policy["arn"] = raw_policy.pop("Arn")
-        policy["description"] = raw_policy.pop("Description")
-        policy["type"] = raw_policy.pop("Type")
-        policy["aws_managed"] = raw_policy.pop("AwsManaged")
+        policy["id"] = raw_policy.get("Id")
+        policy["name"] = raw_policy.get("Name")
+        policy["arn"] = raw_policy.get("Arn")
+        policy["description"] = raw_policy.get("Description")
+        policy["type"] = raw_policy.get("Type")
+        policy["aws_managed"] = raw_policy.get("AwsManaged")
 
         return policy["id"], policy

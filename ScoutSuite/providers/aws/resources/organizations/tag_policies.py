@@ -10,14 +10,14 @@ class TagPolicies(AWSResources):
 
     def _parse_policy(self, raw_policy):
         policy = {}
-        policy["id"] = raw_policy.pop("Id")
-        policy["name"] = raw_policy.pop("Name")
-        policy["arn"] = raw_policy.pop("Arn")
+        policy["id"] = raw_policy.get("Id")
+        policy["name"] = raw_policy.get("Name")
+        policy["arn"] = raw_policy.get("Arn")
         if "Description" in raw_policy:
-            policy["description"] = raw_policy.pop("Description")
-        policy["type"] = raw_policy.pop("Type")
-        policy["targets"] = raw_policy.pop("Targets")
-        policy["tags"] = raw_policy.pop("Tags")
-        policy["aws_managed"] = raw_policy.pop("AwsManaged")
+            policy["description"] = raw_policy.get("Description")
+        policy["type"] = raw_policy.get("Type")
+        policy["targets"] = raw_policy.get("Targets")
+        policy["tags"] = raw_policy.get("Tags")
+        policy["aws_managed"] = raw_policy.get("AwsManaged")
 
         return policy["id"], policy

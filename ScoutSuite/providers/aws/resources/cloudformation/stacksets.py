@@ -15,14 +15,14 @@ class StackSets(AWSResources):
 
     def _parse_stackset(self, raw_stackset):
         stackset = {}
-        stackset['id'] = raw_stackset.pop('StackSetId')
-        stackset['name'] = raw_stackset.pop('StackSetName')
+        stackset['id'] = raw_stackset.get('StackSetId')
+        stackset['name'] = raw_stackset.get('StackSetName')
         if 'Description' in raw_stackset:
-            stackset['description'] = raw_stackset.pop('Description')
-        stackset['status'] = raw_stackset.pop('Status')
-        stackset['permission_model'] = raw_stackset.pop('PermissionModel')
-        stackset['drift_status'] = raw_stackset.pop('DriftStatus')
+            stackset['description'] = raw_stackset.get('Description')
+        stackset['status'] = raw_stackset.get('Status')
+        stackset['permission_model'] = raw_stackset.get('PermissionModel')
+        stackset['drift_status'] = raw_stackset.get('DriftStatus')
         if 'LastDriftCheckTimestamp' in raw_stackset:
-            stackset['last_drift_check_timestamp'] = raw_stackset.pop('LastDriftCheckTimestamp')
+            stackset['last_drift_check_timestamp'] = raw_stackset.get('LastDriftCheckTimestamp')
         
         return stackset['name'], stackset
