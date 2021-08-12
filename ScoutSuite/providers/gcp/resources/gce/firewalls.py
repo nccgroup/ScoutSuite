@@ -51,7 +51,11 @@ class Firewalls(Resources):
                         firewall_dict[direction_string]["icmp"] = ['Portless Protocol']
                     # protocols that do not support ports
                     elif rule['IPProtocol'] not in firewall_dict[direction_string]:
-                        firewall_dict[direction_string][rule['IPProtocol']] = ['Portless Protocol']
+                        # only including ICMP
+                        if rule['IPProtocol'] == 'all':
+                            firewall_dict[direction_string]["icmp"] = ['Portless Protocol']
+                        else:
+                            pass
                     # protocols that support ports
                     else:
                         if firewall_dict[direction_string][rule['IPProtocol']] != ['0-65535']:
