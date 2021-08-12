@@ -52,7 +52,7 @@ class Firewalls(Resources):
                     # protocols that do not support ports
                     elif rule['IPProtocol'] not in firewall_dict[direction_string]:
                         # only including ICMP
-                        if rule['IPProtocol'] == 'all':
+                        if rule['IPProtocol'] == 'icmp':
                             firewall_dict[direction_string]["icmp"] = ['Portless Protocol']
                         else:
                             pass
@@ -63,6 +63,8 @@ class Firewalls(Resources):
                                 firewall_dict[direction_string][rule['IPProtocol']] += rule['ports']
                             else:
                                 firewall_dict[direction_string][rule['IPProtocol']] = ['0-65535']
+                # remove empty values
+                firewall_dict[direction_string] = {k: v for k, v in firewall_dict[direction_string].items() if v}
 
     def _get_description(self, raw_firewall):
         description = raw_firewall.get('description')
