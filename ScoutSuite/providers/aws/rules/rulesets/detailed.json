@@ -918,6 +918,12 @@
                 "level": "danger"
             }
         ],
+        "rds-instance-publicly-accessible.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "rds-instance-short-backup-retention-period.json": [
             {
                 "enabled": true,
