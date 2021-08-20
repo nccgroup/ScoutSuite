@@ -19,6 +19,11 @@
     "conditions": [
         "and",
         [
+            "kms.projects.id.keyrings.id.keys.id.state",
+            "equal",
+            "ENABLED"
+        ],
+        [
             "or",
             [
                 "kms.projects.id.keyrings.id.keys.id.rotation_period",

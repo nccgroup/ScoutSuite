@@ -21,6 +21,11 @@
     "conditions": [
         "and",
         [
+            "kms.projects.id.keyrings.id.keys.id.state",
+            "equal",
+            "ENABLED"
+        ],
+        [
             "kms.projects.id.keyrings.id.keys.id.kms_iam_policy.id.anonymous_public_accessible",
             "false",
             ""
