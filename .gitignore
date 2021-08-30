@@ -53,6 +53,7 @@ report-*
 
 # PyCharm
 .idea/
+*.iml
 
 # Vs Code
 .vscode/
