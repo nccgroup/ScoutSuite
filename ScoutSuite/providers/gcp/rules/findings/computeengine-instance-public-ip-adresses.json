@@ -10,11 +10,11 @@
         }
     ],
     "references": [
-      "https://cloud.google.com/load-balancing/docs/backend-service#backends_and_external_ip_addresses",
-      "https://cloud.google.com/compute/docs/instances/connecting-advanced#sshbetweeninstances",
-      "https://cloud.google.com/compute/docs/instances/connecting-to-instance",
-      "https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address#unassign_ip",
-      "https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints"
+        "https://cloud.google.com/load-balancing/docs/backend-service#backends_and_external_ip_addresses",
+        "https://cloud.google.com/compute/docs/instances/connecting-advanced#sshbetweeninstances",
+        "https://cloud.google.com/compute/docs/instances/connecting-to-instance",
+        "https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address#unassign_ip",
+        "https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints"
     ],
     "dashboard_name": "Instances",
     "path": "computeengine.projects.id.zones.id.instances.id",

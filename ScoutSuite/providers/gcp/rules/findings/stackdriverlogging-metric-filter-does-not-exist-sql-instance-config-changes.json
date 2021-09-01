@@ -10,14 +10,14 @@
         }
     ],
     "references": [
-      "https://cloud.google.com/logging/docs/logs-based-metrics/",
-      "https://cloud.google.com/monitoring/custom-metrics/",
-      "https://cloud.google.com/monitoring/alerts/",
-      "https://cloud.google.com/logging/docs/reference/tools/gcloud-logging",
-      "https://cloud.google.com/storage/docs",
-      "https://cloud.google.com/sql/docs/",
-      "https://cloud.google.com/sql/docs/mysql/",
-      "https://cloud.google.com/sql/docs/postgres/"
+        "https://cloud.google.com/logging/docs/logs-based-metrics/",
+        "https://cloud.google.com/monitoring/custom-metrics/",
+        "https://cloud.google.com/monitoring/alerts/",
+        "https://cloud.google.com/logging/docs/reference/tools/gcloud-logging",
+        "https://cloud.google.com/storage/docs",
+        "https://cloud.google.com/sql/docs/",
+        "https://cloud.google.com/sql/docs/mysql/",
+        "https://cloud.google.com/sql/docs/postgres/"
     ],
     "dashboard_name": "Logging Configurations",
     "path": "stackdriverlogging.projects.id.logging_metrics.id",
@@ -29,5 +29,5 @@
             ""
         ]
     ],
-  "id_suffix": "sql_instance_conf_change"
+    "id_suffix": "sql_instance_conf_change"
 }

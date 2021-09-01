@@ -56,34 +56,34 @@
             }
         ],
         "cloudsql-postgresql-instances-log-lock-waits-off.json": [
-          {
+            {
                 "enabled": true,
                 "level": "warning"
-           }
+            }
         ],
         "cloudsql-instances-public-ips.json": [
             {
                 "enabled": true,
                 "level": "danger"
             }
-          ],
+        ],
         "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
-           {
+            {
                 "enabled": true,
                 "level": "warning"
-           }
+            }
         ],
         "cloudsql-postgresql-instances-log-min-messages-not-set.json": [
-          {
+            {
                 "enabled": true,
                 "level": "warning"
-           }
+            }
         ],
         "cloudsql-sqlservers-instances-contained-database-authentication-on.json": [
-           {
+            {
                 "enabled": true,
                 "level": "warning"
-           }
+            }
         ],
         "cloudsql-postgresql-instances-log-temp-files-not-set-0.json": [
             {
@@ -92,7 +92,7 @@
             }
         ],
         "cloudsql-postgresql-instances-log-min-duration-not-set-1.json": [
-          {
+            {
                 "enabled": true,
                 "level": "warning"
             }
@@ -225,10 +225,10 @@
             }
         ],
         "computeengine-instance-default-service-account.json": [
-           {
+            {
                 "enabled": true,
                 "level": "warning"
-           }
+            }
         ],
         "computeengine-instance-full-api-access.json": [
             {
@@ -513,7 +513,7 @@
             }
         ],
         "stackdriverlogging-metric-filter-does-not-exist-project-ownership-assignment.json": [
-             {
+            {
                 "enabled": true,
                 "level": "warning"
             }
@@ -610,4 +610,3 @@
         ]
     }
 }
-

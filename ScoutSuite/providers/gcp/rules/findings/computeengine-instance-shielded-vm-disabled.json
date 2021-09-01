@@ -10,9 +10,9 @@
         }
     ],
     "references": [
-      "https://cloud.google.com/compute/docs/instances/modifying-shielded-vm",
-      "https://cloud.google.com/shielded-vm",
-      "https://cloud.google.com/security/shielded-cloud/shielded-vm#organization-policy-constraint"
+        "https://cloud.google.com/compute/docs/instances/modifying-shielded-vm",
+        "https://cloud.google.com/shielded-vm",
+        "https://cloud.google.com/security/shielded-cloud/shielded-vm#organization-policy-constraint"
     ],
     "dashboard_name": "Instances",
     "path": "computeengine.projects.id.zones.id.instances.id",

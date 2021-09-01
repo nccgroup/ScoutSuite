@@ -10,12 +10,12 @@
         }
     ],
     "references": [
-      "https://cloud.google.com/logging/docs/logs-based-metrics/",
-      "https://cloud.google.com/monitoring/custom-metrics/",
-      "https://cloud.google.com/monitoring/alerts/",
-      "https://cloud.google.com/logging/docs/reference/tools/gcloud-logging",
-      "https://cloud.google.com/storage/docs",
-      "https://cloud.google.com/storage/docs/access-control/iam-roles"
+        "https://cloud.google.com/logging/docs/logs-based-metrics/",
+        "https://cloud.google.com/monitoring/custom-metrics/",
+        "https://cloud.google.com/monitoring/alerts/",
+        "https://cloud.google.com/logging/docs/reference/tools/gcloud-logging",
+        "https://cloud.google.com/storage/docs",
+        "https://cloud.google.com/storage/docs/access-control/iam-roles"
     ],
     "dashboard_name": "Monitoring Alerts",
     "path": "stackdrivermonitoring.projects.id.monitoring_alert_policies.id",
@@ -27,5 +27,5 @@
             ""
         ]
     ],
-  "id_suffix": "cloud_storage_iam_permission_change"
+    "id_suffix": "cloud_storage_iam_permission_change"
 }

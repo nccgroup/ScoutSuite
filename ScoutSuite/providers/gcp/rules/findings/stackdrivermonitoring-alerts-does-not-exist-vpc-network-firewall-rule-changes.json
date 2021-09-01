@@ -10,11 +10,11 @@
         }
     ],
     "references": [
-      "https://cloud.google.com/logging/docs/logs-based-metrics/",
-      "https://cloud.google.com/monitoring/custom-metrics/",
-      "https://cloud.google.com/monitoring/alerts/",
-      "https://cloud.google.com/logging/docs/reference/tools/gcloud-logging",
-      "https://cloud.google.com/vpc/docs/firewalls"
+        "https://cloud.google.com/logging/docs/logs-based-metrics/",
+        "https://cloud.google.com/monitoring/custom-metrics/",
+        "https://cloud.google.com/monitoring/alerts/",
+        "https://cloud.google.com/logging/docs/reference/tools/gcloud-logging",
+        "https://cloud.google.com/vpc/docs/firewalls"
     ],
     "dashboard_name": "Monitoring Alerts",
     "path": "stackdrivermonitoring.projects.id.monitoring_alert_policies.id",
@@ -26,5 +26,5 @@
             ""
         ]
     ],
-  "id_suffix": "vpc_network_firewall_rule_change"
+    "id_suffix": "vpc_network_firewall_rule_change"
 }

@@ -10,9 +10,9 @@
         }
     ],
     "references": [
-      "https://cloud.google.com/compute/docs/disks/customer-supplied-encryption#encrypt_a_new_persistent_disk_with_your_own_keys",
-      "https://cloud.google.com/compute/docs/reference/rest/v1/disks/get",
-      "https://cloud.google.com/compute/docs/disks/customer-supplied-encryption#key_file"
+        "https://cloud.google.com/compute/docs/disks/customer-supplied-encryption#encrypt_a_new_persistent_disk_with_your_own_keys",
+        "https://cloud.google.com/compute/docs/reference/rest/v1/disks/get",
+        "https://cloud.google.com/compute/docs/disks/customer-supplied-encryption#key_file"
     ],
     "dashboard_name": "Instances",
     "display_path": "computeengine.projects.id.zones.id.instances.id",
