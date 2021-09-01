@@ -31,6 +31,11 @@
             "iam.credential_reports.id.mfa_active",
             "notTrue",
             ""
+        ],
+        [
+            "iam.credential_reports.id.partition",
+            "notEqual",
+            "aws-us-gov"
         ]
     ],
     "keys": [
