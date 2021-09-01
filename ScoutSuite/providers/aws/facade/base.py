@@ -7,6 +7,7 @@ from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation
 from ScoutSuite.providers.aws.facade.cloudtrail import CloudTrailFacade
 from ScoutSuite.providers.aws.facade.cloudwatch import CloudWatch
 from ScoutSuite.providers.aws.facade.cloudfront import CloudFront
+from ScoutSuite.providers.aws.facade.codebuild import CodeBuild
 from ScoutSuite.providers.aws.facade.config import ConfigFacade
 from ScoutSuite.providers.aws.facade.directconnect import DirectConnectFacade
 from ScoutSuite.providers.aws.facade.dynamodb import DynamoDBFacade
@@ -258,6 +259,7 @@ class AWSFacade(AWSBaseFacade):
         self.elasticache = ElastiCacheFacade(self.session)
         self.route53 = Route53Facade(self.session)
         self.cloudfront = CloudFront(self.session)
+        self.codebuild = CodeBuild(self.session)
         self.elb = ELBFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.iam = IAMFacade(self.session)

@@ -17,6 +17,7 @@ formatted_service_name = {
     'cloudwatch': 'CloudWatch',
     'cloudfront': 'CloudFront',
     'credentials': 'Credentials',
+    'codebuild': 'CodeBuild',
     'cognito': 'Cognito',
     'config': 'Config',
     'directconnect': 'Direct Connect',
