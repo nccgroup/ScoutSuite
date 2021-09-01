@@ -24,6 +24,12 @@ class CloudFormation(AWSBaseFacade):
         finally:
             return stacks
 
+    async def get_stacksets(self, region: str):
+        stacksets = await AWSFacadeUtils.get_all_pages(
+            'cloudformation', region, self.session, 'list_stack_sets', 'Summaries')
+      
+        return stacksets
+
     async def _get_and_set_description(self, stack: {}, region: str):
         client = AWSFacadeUtils.get_client('cloudformation', self.session, region)
         try:
