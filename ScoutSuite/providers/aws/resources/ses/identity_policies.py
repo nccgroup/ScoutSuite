@@ -2,7 +2,7 @@ import json
 
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.aws.utils import get_partition_name, format_arn
+from ScoutSuite.providers.aws.utils import format_arn
 
 
 class IdentityPolicies(AWSResources):
@@ -11,7 +11,7 @@ class IdentityPolicies(AWSResources):
         super().__init__(facade)
         self.region = region
         self.identity_name = identity_name
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'ses'
         self.resource_type = 'identity-policy'
 

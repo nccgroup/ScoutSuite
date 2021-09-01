@@ -26,7 +26,7 @@ from ScoutSuite.providers.aws.facade.ses import SESFacade
 from ScoutSuite.providers.aws.facade.sns import SNSFacade
 from ScoutSuite.providers.aws.facade.sqs import SQSFacade
 from ScoutSuite.providers.aws.facade.secretsmanager import SecretsManagerFacade
-from ScoutSuite.providers.aws.utils import get_aws_account_id
+from ScoutSuite.providers.aws.utils import get_aws_account_id, get_partition_name
 from ScoutSuite.providers.utils import run_concurrently
 
 from ScoutSuite.core.conditions import print_error
@@ -66,6 +66,7 @@ class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials=None):
         super().__init__()
         self.owner_id = get_aws_account_id(credentials.session)
+        self.partition = get_partition_name(credentials.session)
         self.session = credentials.session
         self._instantiate_facades()
 

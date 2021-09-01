@@ -1,14 +1,14 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
-from ScoutSuite.providers.aws.utils import get_partition_name, format_arn
+from ScoutSuite.providers.aws.utils import format_arn
 
 
 class Domains(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
         super().__init__(facade)
         self.region = region
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'route53'
         self.resource_type = 'domain'
 

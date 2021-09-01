@@ -1,6 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.aws.utils import get_partition_name, format_arn
+from ScoutSuite.providers.aws.utils import format_arn
 
 
 class ClusterParameters(AWSResources):
@@ -8,7 +8,7 @@ class ClusterParameters(AWSResources):
         super().__init__(facade)
         self.region = region
         self.parameter_group_name = parameter_group_name
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'redshift'
         self.resource_type = 'cluster-parameter'
 

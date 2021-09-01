@@ -1,6 +1,6 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
-from ScoutSuite.providers.aws.utils import get_partition_name, format_arn
+from ScoutSuite.providers.aws.utils import format_arn
 from ScoutSuite.utils import manage_dictionary
 from ScoutSuite.core.fs import load_data
 
@@ -12,7 +12,7 @@ class SecurityGroups(AWSResources):
         super().__init__(facade)
         self.region = region
         self.vpc = vpc
-        self.partition = get_partition_name(facade.session)
+        self.partition = facade.partition
         self.service = 'ec2'
         self.resource_type = 'security-group'
 
