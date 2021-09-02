@@ -181,6 +181,18 @@ def pass_condition(b, test, a):
             if re.match(c, b):
                 result = True
                 break
+    elif test == 'matchInList':
+        if type(a) != list:
+            a = [a]
+        if type(b) !=list:
+            b = [b]
+        for c in a:
+            for d in b:
+                if re.match(c, d):
+                    result = True
+                    break
+            if result:
+                break
     elif test == 'notMatch':
         result = (not pass_condition(b, 'match', a))
 
