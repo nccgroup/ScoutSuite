@@ -1,6 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.aws.utils import get_name, get_partition_name, format_arn
+from ScoutSuite.providers.aws.utils import get_name, format_arn
 from ScoutSuite.core.fs import load_data
 
 protocols_dict = load_data('protocols.json', 'protocols')
