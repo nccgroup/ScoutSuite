@@ -86,6 +86,7 @@ class TestAWSProviderClass(unittest.TestCase):
 
     # mock two separate places from which get_aws_account_id is called
     @mock.patch("ScoutSuite.providers.aws.facade.base.get_aws_account_id")
+    @mock.patch("ScoutSuite.providers.aws.facade.base.get_partition_name")
     @mock.patch("ScoutSuite.providers.aws.provider.get_aws_account_id")
     @mock.patch("ScoutSuite.providers.aws.provider.get_partition_name")
     def test_get_report_name(
@@ -93,6 +94,7 @@ class TestAWSProviderClass(unittest.TestCase):
             mock_get_partiton_name,
             mock_get_aws_account_id,
             mock_facade_aws_account_id,
+            mock_facade_aws_partition_name,
     ):
         # no account_id, no profile
         mock_get_aws_account_id.return_value = None
