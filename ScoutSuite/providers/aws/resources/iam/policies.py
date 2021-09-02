@@ -15,5 +15,6 @@ class Policies(AWSResources):
         policy['arn'] = raw_policy.pop('Arn')
         policy['PolicyDocument'] = raw_policy.pop('PolicyDocument')
         policy['attached_to'] = raw_policy.pop('attached_to')
+        policy['management'] = 'AWS' if policy['arn'].startswith(f"arn:{self.facade.partition}:iam::aws:") else 'Customer'
 
         return policy['id'], policy
