@@ -1,0 +1,29 @@
+{
+    "description": "Alerts Doesn't Exist For Project Ownership Assignments/Changes",
+    "rationale": "Project ownership has the highest level of privileges on a project. To avoid misuse of project resources, the project ownership assignment/change actions mentioned above should be monitored and alerted to concerned recipients.",
+    "remediation":"From console: <ol><li>Identify the project ownership assignment/changes metric under the section <samp>User-defined Metrics</samp> at https://console.cloud.google.com/logs/metrics.</li><li>Click the 3-dot icon in the rightmost column for the desired metric and select <samp>Create alert from Metric</samp>. A new page opens.</li><li>Fill out the alert policy configuration and click <samp>Save</samp>. Choose the alerting threshold and configuration that makes sense for the user's organization. For example, a threshold of zero(0) for the most recent value will ensure that a notification is triggered for every owner change in the project:: <br> <samp>Set `Aggregator` to `Count`<br> Set `Configuration`: <br> -Condition: above <br> -Threshold: 0 <br> -For: most recent value </samp></li><li>Configure the desired notifications channels in the section <samp>Notifications.</samp></li><li>Name the policy and click <samp>Save</samp>.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "2.4"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/logging/docs/logs-based-metrics/",
+        "https://cloud.google.com/monitoring/custom-metrics/",
+        "https://cloud.google.com/monitoring/alerts/",
+        "https://cloud.google.com/logging/docs/reference/tools/gcloud-logging"
+    ],
+    "dashboard_name": "Monitoring Alerts",
+    "path": "stackdrivermonitoring.projects.id.monitoring_alert_policies.id",
+    "conditions": [
+        "and",
+        [
+            "stackdrivermonitoring.projects.id.monitoring_alert_policies.id.project_ownership_assignments",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "project_ownership_assignments"
+}

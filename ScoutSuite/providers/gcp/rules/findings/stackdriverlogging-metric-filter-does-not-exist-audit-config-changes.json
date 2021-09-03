@@ -1,0 +1,30 @@
+{
+    "description": "Log Metric Filter Doesn't Exist For Audit Configuration Changes",
+    "rationale": "Configuring the metric filter and alerts for audit configuration changes ensures the recommended state of audit configuration is maintained so that all activities in the project are audit-able at any point in time.",
+    "remediation":"From console: <ol><li>Go to <samp>Logging/Logs</samp> by visiting https://console.cloud.google.com/logs/metrics and click \"CREATE METRIC\".</li><li>Click the down arrow symbol on the <samp>Filter Bar</samp> at the rightmost corner and select <samp>Convert to Advanced Filter</samp>.</li><li>Clear any text and add: <br> <samp> protoPayload.methodName=\"SetIamPolicy\" AND protoPayload.serviceData.policyDelta.auditConfigDeltas:*</samp></li><li>Click <samp>Submit Filter</samp>. The logs display based on the filter text entered by the user.</li><li>In the <samp>Metric Editor</samp> menu on the right,fill out the name field. Set <samp>Units</samp> to <samp>1</samp>(default) and the <samp>Type</samp> to <samp>Counter</samp>. This ensures that the log metric counts the number of log entries matching the advanced logs query.</li><li>Click <samp>CreateMetric</samp>.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "2.5"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/logging/docs/logs-based-metrics/",
+        "https://cloud.google.com/monitoring/custom-metrics/",
+        "https://cloud.google.com/monitoring/alerts/",
+        "https://cloud.google.com/logging/docs/reference/tools/gcloud-logging",
+        "https://cloud.google.com/logging/docs/audit/configure-data-access#getiampolicy-setiampolicy"
+    ],
+    "dashboard_name": "Logging Configurations",
+    "path": "stackdriverlogging.projects.id.logging_metrics.id",
+    "conditions": [
+        "and",
+        [
+            "stackdriverlogging.projects.id.logging_metrics.id.audit_config_change",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "audit_config_change"
+}

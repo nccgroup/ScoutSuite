@@ -1,0 +1,29 @@
+{
+    "description": "VM Disks Not Customer-Supplied Encryption Keys (CSEK) Encrypted",
+    "rationale": "By default, Google Compute Engine encrypts all data at rest. Compute Engine handles and manages this encryption for you without any additional actions on your part. However, if you wanted to control and manage this encryption yourself, you can provide your own encryption keys.",
+    "remediation": "From console:<ol><li>Go to Compute Engine <samp>DIsks</samp> by visiting https://console.cloud.google.com/compute/disks.</li><li>Click <samp>CREATE DISK</samp>.</li><li>Set <samp>Encryption type</samp> to <samp>Customer supplied</samp></li><li>Provide the <samp>Key</samp> in the box.</li><li>Select <samp>Wrapped key</samp>.</li><li>Click <samp>Create</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "4.7"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/compute/docs/disks/customer-supplied-encryption#encrypt_a_new_persistent_disk_with_your_own_keys",
+        "https://cloud.google.com/compute/docs/reference/rest/v1/disks/get",
+        "https://cloud.google.com/compute/docs/disks/customer-supplied-encryption#key_file"
+    ],
+    "dashboard_name": "Instances",
+    "display_path": "computeengine.projects.id.zones.id.instances.id",
+    "path": "computeengine.projects.id.zones.id.instances.id.disks.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.zones.id.instances.id.disks.id.encrypted_with_csek",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "encrypted_with_csek"
+}

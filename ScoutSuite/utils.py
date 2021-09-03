@@ -52,6 +52,7 @@ formatted_service_name = {
     'cloudstorage': 'Cloud Storage',
     'cloudmemorystore': 'Cloud Memorystore',
     'cloudsql': 'Cloud SQL',
+    'dns': 'DNS',
     'stackdriverlogging': 'Stackdriver Logging',
     'stackdrivermonitoring': 'Stackdriver Monitoring',
     'computeengine': 'Compute Engine',
