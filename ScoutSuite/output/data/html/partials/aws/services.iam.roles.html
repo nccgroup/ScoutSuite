@@ -12,6 +12,8 @@
             <div class="list-group-item-text item-margin">Creation Date: <span id="iam.roles.{{@key}}.create_date">{{format_date create_date}}</span></div>
             <div class="list-group-item-text item-margin">Path: <span id="iam.roles.{{@key}}.path"><samp>{{value_or_none path}}</samp></span></div>
             <div class="list-group-item-text item-margin">Max Session Duration: <span id="iam.roles.{{@key}}.max_session_duration"><samp>{{value_or_none max_session_duration}}</samp></span></div>
+            <div class="list-group-item-text item-margin">Last Used Date: <span id="iam.roles.{{@key}}.last_used_date"><samp>{{value_or_none last_used_date}}</samp></span></div>
+            <div class="list-group-item-text item-margin">Last Used Region: <span id="iam.roles.{{@key}}.last_used_region"><samp>{{value_or_none last_used_region}}</samp></span></div>
         </div>
         <div class="list-group-item">
             {{> accordion_policy name = 'Role Trust Policy' policy_path = (concat 'iam.roles' @key 'assume_role_policy.PolicyDocument') document = assume_role_policy.PolicyDocument}}

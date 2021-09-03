@@ -140,7 +140,8 @@ class IAMFacade(AWSBaseFacade):
         await get_and_set_concurrently(
             [functools.partial(self._get_and_set_inline_policies, iam_resource_type='role'),
              self._get_and_set_role_profiles,
-             self._get_and_set_role_tags], roles)
+             self._get_and_set_role_tags,
+             self._get_and_set_role_last_used_info], roles)
 
         return roles
 
@@ -160,6 +161,16 @@ class IAMFacade(AWSBaseFacade):
                 'arn', profile['Arn'])
             role['instance_profiles'][profile_id].setdefault(
                 'name', profile['InstanceProfileName'])
+            
+    async def _get_and_set_role_last_used_info(self, role: {}):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        try:
+            role_description = client.get_role(RoleName=role['RoleName'])['Role']
+            last_used_info = role_description.get('RoleLastUsed', {})
+            role['last_used_date'] = last_used_info.get('LastUsedDate', None)
+            role['last_used_region'] = last_used_info.get('Region', None)
+        except Exception as e:
+            print_exception(f'Failed to describe role {e}')
 
     async def get_password_policy(self):
         client = AWSFacadeUtils.get_client('iam', self.session)
