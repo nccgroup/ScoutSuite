@@ -594,6 +594,12 @@
                 "level": "danger"
             }
         ],
+        "iam-lightspin-user-action-denied-for-group.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-managed-policy-allows-NotActions.json": [
             {
                 "enabled": true,
