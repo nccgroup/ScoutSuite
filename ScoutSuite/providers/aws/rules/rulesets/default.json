@@ -88,6 +88,12 @@
                 "level": "danger"
             }
         ],
+        "cloudtrail-partial-data-logging.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudwatch-alarm-without-actions.json": [
             {
                 "enabled": true,
