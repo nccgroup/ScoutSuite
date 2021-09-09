@@ -1,0 +1,15 @@
+name: Fronted Build CI (dummy version)
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ v6-master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Show environment v1
+        run: env | grep ^GITHUB
+      - name: Show ref v1
+        run: echo "===============> Version from $GITHUB_REF"
