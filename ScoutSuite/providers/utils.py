@@ -17,7 +17,7 @@ def get_non_provider_id(name):
     """
     name_hash = sha1()
     name_hash.update(name.encode('utf-8'))
-    return name_hash.hexdigest()
+    return f'scoutid-{name_hash.hexdigest()}'
 
 
 async def run_concurrently(function, backoff_seconds=15):
