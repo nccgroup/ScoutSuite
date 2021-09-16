@@ -45,6 +45,12 @@ class EC2Facade(AWSBaseFacade):
         if value[0:2] == b'\x1f\x8b':  # GZIP magic number
             return zlib.decompress(value, zlib.MAX_WBITS | 32).decode('utf-8')
         else:
+            # Try another run of b64 decoding
+            try:
+                value = base64.b64decode(value)
+            except Exception as e:
+                value = value
+            # Return a string, not a byte string
             try:
                 return value.decode('utf-8')
             except UnicodeDecodeError:

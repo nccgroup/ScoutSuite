@@ -69,7 +69,7 @@ class GCEFacade(GCPBaseFacade):
                 lambda: gce_client.projects().get(project=project_id).execute()
             )
         except Exception as e:
-            print_exception(f'Failed to retrieve project: {e}')
+            print_exception(f'Failed to retrieve GCE project: {e}')
             return None
 
     async def get_regions(self, project_id):

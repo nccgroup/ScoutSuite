@@ -5,7 +5,7 @@ from ScoutSuite import __version__
 class ScoutSuiteArgumentParser:
 
     def __init__(self):
-        self.parser = argparse.ArgumentParser()
+        self.parser = argparse.ArgumentParser(epilog='To get addtional help on a specific provider run: scout.py {provider} -h')
 
         # People will still be able to use the old --provider syntax
         self.parser.add_argument("--provider",

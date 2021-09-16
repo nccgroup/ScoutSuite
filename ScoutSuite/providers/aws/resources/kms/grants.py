@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.aws.utils import format_arn
 
 
 class Grants(AWSResources):
@@ -7,6 +8,9 @@ class Grants(AWSResources):
         super().__init__(facade)
         self.region = region
         self.key_id = key_id
+        self.partition = facade.partition
+        self.service = 'kms'
+        self.resource_type = 'grant'
 
     async def fetch_all(self):
         raw_grants = await self.facade.kms.get_grants(self.region, self.key_id)
@@ -24,6 +28,7 @@ class Grants(AWSResources):
             'retiring_principal': raw_grant.get('ReitirngPrincipal'),
             'issuing_account': raw_grant.get('IssuingAccount'),
             'operations': raw_grant.get('Operations'),
-            'constraints': raw_grant.get('Constraints')
+            'constraints': raw_grant.get('Constraints'),
+            'arn': format_arn(self.partition, self.service, self.region, raw_grant.get('IssuingAccount').split(':')[4], raw_grant.get('GrantId'), self.resource_type) if ':' in raw_grant.get('IssuingAccount') else format_arn(self.partition, self.service, self.region, raw_grant.get('IssuingAccount'), raw_grant.get('GrantId'), self.resource_type)
         }
         return grant_dict['grant_id'], grant_dict

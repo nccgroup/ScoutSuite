@@ -41,4 +41,7 @@ class Topics(AWSCompositeResources):
         for k in ['Policy', 'DeliveryPolicy', 'EffectiveDeliveryPolicy']:
             raw_topic[k] = json.loads(attributes[k]) if k in attributes else None
 
+        if "KmsMasterKeyId" in attributes:
+            raw_topic["KmsMasterKeyId"] = attributes["KmsMasterKeyId"]
+
         return raw_topic['name'], raw_topic

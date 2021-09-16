@@ -1,0 +1,27 @@
+{
+    "description": "Cross DB Ownership Chaining Database Flag For SQLServers Instance Is On",
+    "rationale": "Use the cross db ownership for chaining option to configure cross-database ownership chaining for an instance of Microsoft SQL Server. This server option allows you to control cross-database ownership chaining at the database level or to allow cross-database ownership chaining for all databases. Enabling cross db ownership is not recommended unless all of the databases hosted by the instance of SQL Server must participate in cross-database ownership chaining and you are aware of the security implications of this setting. This recommendation is applicable to SQL Server database instances.",
+    "remediation": "From console:<ol><li>Go to the Cloud SQL Instances page in the Google Cloud Console by visiting https://console.cloud.google.com/sql/instances.</li><li>Select the MySQL instance where the database flag needs to be enabled.</li><li>Click <samp>Edit</samp></li><li>Scroll down to the <samp>Flags</samp> section.</li><li>To set a flag that has not been set on the instance before, click <samp>Add item</samp>, choose the flag <samp>cross db ownership chaining</samp> from the drop-down menu, and set its value to <samp>off</samp>.</li><li>Click <samp>Save</samp></li><li>Confirm the changes under <samp>Flags</samp> on the Overview page.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "6.3.1"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/sql/docs/sqlserver/flags",
+        "https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/cross-db-ownership-chaining-server-configuration-option?view=sql-server-ver15"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.cross_db_ownership_chaining_off",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "cross_db_ownership_chaining_off"
+}

@@ -1,17 +1,25 @@
 {
-    "description": "User with \"Service Account User\" Role at the Project Level",
-    "rationale": "Granting the iam.serviceAccountUser role to a user for a project gives the user access to all service accounts in the project, including service accounts that may be created in the future. This can result into elevation of privileges by using service accounts and corresponding Compute Engine instances.",
+    "description": "User with Privileged Service Account Roles at the Project Level",
+    "rationale": "Granting the iam.serviceAccountUser, iam.serviceAccountTokenCreator, or iam.serviceAccountActor role to a user for a project gives the user access to all service accounts in the project, including service accounts that may be created in the future. This can result into elevation of privileges by using service accounts and corresponding Compute Engine instances.",
+    "remediation": "From console: <ol><li>Go to the IAM page in the GCP Console by visiting: https://console.cloud.google.com/iam-admin/iam.</li><li>Click on the filter table text bar. Type <samp>Role: Service Account User</samp></li><li>Click the <samp>Delete Bin<samp> icon in front of the role <samp>Service Account User</samp> for every user listed as a result of a filter.</li><li>Click on the filter table text bar. Type <samp>Role: Service Account Token Creator<samp></li><li>Click the <samp>Delete Bin</samp> icon in front of the role <samp>Service Account Token Creator</samp> for every user listed as a result of a filter.</li></ol>",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.0.0",
             "reference": "1.5"
+        },
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "1.6"
         }
     ],
     "references": [
-        "https://cloud.google.com/iam/docs/service-accounts#google-managed",
+        "https://cloud.google.com/iam/docs/service-accounts",
+        "https://cloud.google.com/iam/docs/granting-changing-revoking-access",
         "https://cloud.google.com/iam/docs/understanding-roles",
-        "https://cloud.google.com/iam/docs/using-iam-securely"
+        "https://cloud.google.com/iam/docs/granting-changing-revoking-access",
+        "https://console.cloud.google.com/iam-admin/iam"
     ],
     "dashboard_name": "Bindings",
     "path": "iam.projects.id.bindings.id",
@@ -21,7 +29,9 @@
             "iam.projects.id.bindings.id.name",
             "containAtLeastOneOf",
             [
-                "iam.serviceAccountUser"
+                "iam.serviceAccountUser",
+                "iam.serviceAccountTokenCreator",
+                "iam.serviceAccountActor"
             ]
         ]
     ],
