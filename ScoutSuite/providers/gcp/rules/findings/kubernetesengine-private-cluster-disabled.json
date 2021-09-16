@@ -1,6 +1,6 @@
 {
     "description": "Private Cluster Disabled",
-    "rationale": "A private cluster is a cluster that makes your master inaccessible from the public internet. In a private cluster, nodes do not have public IP addresses, so your workloads run in an environment that is isolated from the internet. Nodes have addressed only in the private RFC 1918 address space. Nodes and masters communicate with each other privately using VPC peering.",
+    "rationale": "A private cluster makes the cluster master inaccessible from the public Internet. In a private cluster, nodes do not have public IP addresses, so  workloads run in an environment that is isolated from the internet. Nodes have addressed only in the private RFC 1918 address space. Nodes and masters communicate with each other privately using VPC peering.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
