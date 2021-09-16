@@ -18,10 +18,16 @@ class NodePools(Resources):
     def _parse_node_pool(self, raw_node_pool):
         node_pool_dict = {}
         node_pool_dict['id'] = raw_node_pool['name']
-        node_pool_dict['auto_repair_enabled'] = raw_node_pool.get('management', {}).get('autoRepair', False)
-        node_pool_dict['auto_upgrade_enabled'] = raw_node_pool.get('management', {}).get('autoUpgrade', False)
-        node_pool_dict['legacy_metadata_endpoints_enabled'] = self._is_legacy_metadata_endpoints_enabled(raw_node_pool)
+        node_pool_dict['status'] = raw_node_pool['status']
+        node_pool_dict['auto_repair_enabled'] = \
+            raw_node_pool.get('management', {}).get('autoRepair', False)
+        node_pool_dict['auto_upgrade_enabled'] = \
+            raw_node_pool.get('management', {}).get('autoUpgrade', False)
+        node_pool_dict['secure_boot_enabled'] = \
+            raw_node_pool.get('config', {}).get('shieldedInstanceConfig', {}).get('enableSecureBoot', False)
+        node_pool_dict['integrity_monitoring_enabled'] = \
+            raw_node_pool.get('config', {}).get('shieldedInstanceConfig', {}).get('enableIntegrityMonitoring', False)
+        node_pool_dict['legacy_metadata_endpoints_enabled'] = \
+            raw_node_pool['config'].get('metadata', {}).get('disable-legacy-endpoints') == 'false'
         return node_pool_dict['id'], node_pool_dict
 
-    def _is_legacy_metadata_endpoints_enabled(self, raw_node_pool):
-        return raw_node_pool['config'].get('metadata', {}).get('disable-legacy-endpoints') == 'false'
