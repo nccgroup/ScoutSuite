@@ -1,16 +1,16 @@
 {
     "description": "IAM Role Assigned to Domain",
-    "rationale": "Best practices recommends granting roles to a Google Suite group instead of to individual users when possible. It is easier to add members to and remove members from a group instead of updating a Cloud IAM policy to add or remove users.",
+    "rationale": "Roles granted to Workspace domains grant permissions to all users of the domain's Organization, which goes against the principle of least privilege.",
     "references": [
         "https://cloud.google.com/iam/docs/understanding-roles",
         "https://cloud.google.com/iam/docs/using-iam-securely"
     ],
     "dashboard_name": "Bindings",
-    "path": "iam.projects.id.domains.id",
+    "path": "iam.projects.id.bindings.id",
     "conditions": [
         "and",
         [
-            "iam.projects.id.domains.id.roles",
+            "iam.projects.id.bindings.id.members.domains",
             "notEmpty",
             ""
         ]
