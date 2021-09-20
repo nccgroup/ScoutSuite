@@ -470,6 +470,12 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-binary-authorization-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-legacy-metadata-endpoints-enabled.json": [
             {
                 "enabled": true,

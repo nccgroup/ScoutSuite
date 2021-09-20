@@ -15,6 +15,7 @@
         <div class="list-group-item-text item-margin">Dashboard: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.dashboard_status">{{dashboard_status}}</span></div>
         <div class="list-group-item-text item-margin">Service Account: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.default_service_account_used">{{service_account}}</span></div>
         <div class="list-group-item-text item-margin">Workload Identity: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.workload_identity_enabled">{{convert_bool_to_enabled workload_identity_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Binary Authorization: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.binary_authorization_enabled">{{convert_bool_to_enabled binary_authorization_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Shielded Nodes: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.shielded_nodes_enabled">{{convert_bool_to_enabled shielded_nodes_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Application-Layer Secrets Encryption : <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.application_layer_encryption_enabled">{{convert_bool_to_enabled application_layer_encryption_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Alias IP: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.alias_ip_disabled">{{convert_bool_to_enabled alias_ip_enabled}}</span></div>
