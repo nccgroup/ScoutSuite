@@ -1,6 +1,6 @@
 {
-    "description": "Private Cluster Disabled",
-    "rationale": "A private cluster is a cluster that makes your master inaccessible from the public internet. In a private cluster, nodes do not have public IP addresses, so your workloads run in an environment that is isolated from the internet. Nodes have addressed only in the private RFC 1918 address space. Nodes and masters communicate with each other privately using VPC peering.",
+    "description": "Private Cluster Nodes Disabled",
+    "rationale": "Private Nodes are nodes with no public IP addresses. Disabling public IP addresses on cluster nodes restricts access to only internal networks, forcing attackers to obtain local network access before attempting to compromise the underlying Kubernetes hosts.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
@@ -21,17 +21,18 @@
     "references": [
         "https://www.cisecurity.org/benchmark/kubernetes/",
         "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#restrict_network_access_to_the_control_plane_and_nodes",
-        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters"
     ],
     "dashboard_name": "Clusters",
     "path": "kubernetesengine.projects.id.clusters.id",
     "conditions": [
         "and",
         [
-            "kubernetesengine.projects.id.clusters.id.private_cluster_enabled",
+            "kubernetesengine.projects.id.clusters.id.private_nodes_enabled",
             "false",
             ""
         ]
     ],
-    "id_suffix": "private_cluster_disabled"
+    "id_suffix": "private_nodes_enabled"
 }

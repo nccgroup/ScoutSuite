@@ -26,7 +26,6 @@
         <div class="list-group-item-text item-margin">Master Authorized Networks: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.master_authorized_networks_disabled">{{convert_bool_to_enabled master_authorized_networks_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Pod Security Policy: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.pod_security_policy_enabled">{{convert_bool_to_enabled pod_security_policy_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Network Policy: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.network_policy_disabled">{{convert_bool_to_enabled network_policy_enabled}}</span></div>
-        <div class="list-group-item-text item-margin">Private Cluster: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.private_cluster_disabled" class="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.accessible_cluster">{{convert_bool_to_enabled private_cluster_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Private Google Access: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.private_ip_google_access_disabled">{{convert_bool_to_enabled private_ip_google_access_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Stackdriver Logging: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.logging_disabled">{{convert_bool_to_enabled logging_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Stackdriver Monitoring: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.monitoring_disabled">{{convert_bool_to_enabled monitoring_enabled}}</span></div>
@@ -64,6 +63,7 @@
 
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Node pools</h4>
+        <div class="list-group-item-text item-margin">Private Nodes: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.private_nodes_enabled" class="kubernetesengine.projects.{{@../key}}.nodes.{{@key}}.accessible_cluster">{{convert_bool_to_enabled private_nodes_enabled}}</span></div>
         <div class="list-group-item-text item-margin">
             {{#each node_pools}}
             {{@key}}

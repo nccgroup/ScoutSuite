@@ -38,8 +38,6 @@ class Clusters(Resources):
         cluster_dict['monitoring_enabled'] = self._is_monitoring_enabled(raw_cluster)
         cluster_dict['network_policy_enabled'] = raw_cluster.get('networkPolicy', {}).get('enabled', False)
         cluster_dict['node_pools'] = NodePools(raw_cluster)
-        cluster_dict['private_cluster_enabled'] = raw_cluster.get('privateClusterConfig', {}).get('enablePrivateNodes', False)
-        cluster_dict['private_ip_google_access_enabled'] = raw_cluster.get('privateIpGoogleAccess', False)
         cluster_dict['scopes'] = self._get_scopes(raw_cluster)
         cluster_dict['service_account'] = raw_cluster.get('nodeConfig', {}).get('serviceAccount', None)
         cluster_dict['master_authorized_networks_config'] = self._get_master_authorized_networks_config(raw_cluster)
@@ -49,6 +47,9 @@ class Clusters(Resources):
         cluster_dict['release_channel'] = raw_cluster.get('releaseChannel', {}).get('channel', None)
         cluster_dict['shielded_nodes_enabled'] = raw_cluster.get('shieldedNode', {}).get('enabled', False)
         cluster_dict['binary_authorization_enabled'] = raw_cluster.get('binaryAuthorization', {}).get('enabled', False)
+        cluster_dict['private_ip_google_access_enabled'] = raw_cluster.get('privateIpGoogleAccess', False)
+
+        cluster_dict['private_nodes_enabled'] = raw_cluster.get('privateClusterConfig', {}).get('enablePrivateNodes', False)
 
         return cluster_dict['id'], cluster_dict
 
