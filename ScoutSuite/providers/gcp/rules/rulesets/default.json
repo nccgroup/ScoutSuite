@@ -464,13 +464,13 @@
                 "level": "warning"
             }
         ],
-        "kubernetesengine-shielded-nodes-enabled.json": [
+        "kubernetesengine-cluster-shielded-nodes-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "kubernetesengine-binary-authorization-enabled.json": [
+        "kubernetesengine-cluster-binary-authorization-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
