@@ -458,6 +458,12 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-cluster-release-channel.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-legacy-metadata-endpoints-enabled.json": [
             {
                 "enabled": true,

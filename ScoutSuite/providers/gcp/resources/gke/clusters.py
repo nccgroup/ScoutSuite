@@ -21,6 +21,7 @@ class Clusters(Resources):
         cluster_dict['id'] = get_non_provider_id(raw_cluster['name'])
         cluster_dict['name'] = raw_cluster['name']
         cluster_dict['location'] = raw_cluster['location']
+        cluster_dict['status'] = raw_cluster['status']
         cluster_dict['type'] = "Zonal" if raw_cluster['location'].count("-") > 1 else "Regional"
         cluster_dict['alias_ip_enabled'] = raw_cluster.get('ipAllocationPolicy', {}).get('useIpAliases', False)
         cluster_dict['basic_authentication_enabled'] = self._is_basic_authentication_enabled(raw_cluster)
@@ -47,6 +48,7 @@ class Clusters(Resources):
         cluster_dict['application_layer_encryption_enabled'] = raw_cluster.get('databaseEncryption', {}).get('state', None) == 'ENCRYPTED'
         cluster_dict['workload_identity_enabled'] = raw_cluster.get('workloadIdentityConfig', {}).get('identityNamespace', None) != None
         cluster_dict['metadata_server_enabled'] = self._metadata_server_enabled(raw_cluster.get('nodePools', []))
+        cluster_dict['release_channel'] = raw_cluster.get('releaseChannel', {}).get('channel', None)
 
         return cluster_dict['id'], cluster_dict
 
