@@ -46,9 +46,15 @@ class Clusters(Resources):
 
         cluster_dict['application_layer_encryption_enabled'] = raw_cluster.get('databaseEncryption', {}).get('state', None) == 'ENCRYPTED'
         cluster_dict['workload_identity_enabled'] = raw_cluster.get('workloadIdentityConfig', {}).get('identityNamespace', None) != None
+        cluster_dict['metadata_server_enabled'] = self._metadata_server_enabled(raw_cluster.get('nodePools', []))
 
         return cluster_dict['id'], cluster_dict
 
+    def _metadata_server_enabled(self, node_pools):
+        for pool in node_pools:
+            if pool.get('config', {}).get('workloadMetadataConfig', {}) == {}:
+                return False
+        return True
 
     def _get_master_authorized_networks_config(self, raw_cluster):
         if raw_cluster.get('masterAuthorizedNetworksConfig'):

@@ -16,6 +16,8 @@ class NodePools(Resources):
         del self.cluster
 
     def _parse_node_pool(self, raw_node_pool):
+        # TODO add GKE metadata server and place in div
+
         node_pool_dict = {}
         node_pool_dict['id'] = raw_node_pool['name']
         node_pool_dict['auto_repair_enabled'] = raw_node_pool.get('management', {}).get('autoRepair', False)

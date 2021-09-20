@@ -476,6 +476,12 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-cluster-metadata-server-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-cluster-application-layer-encryption-disabled.json": [
             {
                 "enabled": true,
