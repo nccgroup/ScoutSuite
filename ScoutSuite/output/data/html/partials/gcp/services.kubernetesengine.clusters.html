@@ -29,6 +29,9 @@
         <div class="list-group-item-text item-margin">Private Google Access: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.private_ip_google_access_disabled">{{convert_bool_to_enabled private_ip_google_access_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Stackdriver Logging: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.logging_disabled">{{convert_bool_to_enabled logging_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Stackdriver Monitoring: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.monitoring_disabled">{{convert_bool_to_enabled monitoring_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Private Endpoint Status: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.private_endpoint_enabled"><samp>{{convert_bool_to_enabled private_endpoint_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Private Endpoint: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.private_endpoint"><samp>{{private_endpoint}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Public Endpoint: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.public_endpoint"><samp>{{public_endpoint}}</samp></span></div>
         <div class="list-group-item-text item-margin">Scopes:
             {{#if scopes}}
                 <ul>

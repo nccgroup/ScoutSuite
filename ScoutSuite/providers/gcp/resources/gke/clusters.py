@@ -48,8 +48,11 @@ class Clusters(Resources):
         cluster_dict['shielded_nodes_enabled'] = raw_cluster.get('shieldedNode', {}).get('enabled', False)
         cluster_dict['binary_authorization_enabled'] = raw_cluster.get('binaryAuthorization', {}).get('enabled', False)
         cluster_dict['private_ip_google_access_enabled'] = raw_cluster.get('privateIpGoogleAccess', False)
-
         cluster_dict['private_nodes_enabled'] = raw_cluster.get('privateClusterConfig', {}).get('enablePrivateNodes', False)
+
+        cluster_dict['private_endpoint_enabled'] = raw_cluster.get('privateclusterconfig', {}).get('enablePrivateEndpoint', False)
+        cluster_dict['private_endpoint'] = raw_cluster.get('privateclusterconfig', {}).get('privateEndpoint', None)
+        cluster_dict['public_endpoint'] = raw_cluster.get('privateclusterconfig', {}).get('publicEndpoint', None)
 
         return cluster_dict['id'], cluster_dict
 
