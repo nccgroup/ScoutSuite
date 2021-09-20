@@ -11,6 +11,8 @@
         <div class="list-group-item-text item-margin">Location: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.location"><samp>{{location}}</samp></span></div>
         <div class="list-group-item-text item-margin">Type: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.type"><samp>{{type}}</samp></span></div>
         <div class="list-group-item-text item-margin">Dashboard: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.dashboard_status">{{dashboard_status}}</span></div>
+        <div class="list-group-item-text item-margin">Service Account: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.default_service_account_used">{{service_account}}</span></div>
+        <div class="list-group-item-text item-margin">Workload Identity : <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.workload_identity_enabled">{{convert_bool_to_enabled workload_identity_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Application-Layer Secrets Encryption : <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.application_layer_encryption_enabled">{{convert_bool_to_enabled application_layer_encryption_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Alias IP: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.alias_ip_disabled">{{convert_bool_to_enabled alias_ip_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Basic Authentication: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.basic_authentication_enabled">{{convert_bool_to_enabled basic_authentication_enabled}}</span></div>
@@ -22,7 +24,6 @@
         <div class="list-group-item-text item-margin">Network Policy: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.network_policy_disabled">{{convert_bool_to_enabled network_policy_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Private Cluster: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.private_cluster_disabled" class="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.accessible_cluster">{{convert_bool_to_enabled private_cluster_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Private Google Access: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.private_ip_google_access_disabled">{{convert_bool_to_enabled private_ip_google_access_enabled}}</span></div>
-        <div class="list-group-item-text item-margin">Service Account: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.default_service_account_used">{{service_account}}</span></div>
         <div class="list-group-item-text item-margin">Stackdriver Logging: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.logging_disabled">{{convert_bool_to_enabled logging_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Stackdriver Monitoring: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.monitoring_disabled">{{convert_bool_to_enabled monitoring_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Scopes:

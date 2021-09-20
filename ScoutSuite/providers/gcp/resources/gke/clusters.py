@@ -45,6 +45,7 @@ class Clusters(Resources):
 
 
         cluster_dict['application_layer_encryption_enabled'] = raw_cluster.get('databaseEncryption', {}).get('state', None) == 'ENCRYPTED'
+        cluster_dict['workload_identity_enabled'] = raw_cluster.get('workloadIdentityConfig', {}).get('identityNamespace', None) != None
 
         return cluster_dict['id'], cluster_dict
 

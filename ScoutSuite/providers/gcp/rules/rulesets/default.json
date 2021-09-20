@@ -470,6 +470,12 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-cluster-workload-identity-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-cluster-application-layer-encryption-disabled.json": [
             {
                 "enabled": true,
