@@ -530,6 +530,12 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-cluster-private-endpoint-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-private-nodes-disabled.json": [
             {
                 "enabled": true,

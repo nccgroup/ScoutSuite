@@ -10,11 +10,6 @@
         {
             "name": "CIS GKE Benchmark",
             "version": "1.0.0",
-            "reference": "6.6.4"
-        },
-        {
-            "name": "CIS GKE Benchmark",
-            "version": "1.0.0",
             "reference": "6.6.5"
         }
     ],
