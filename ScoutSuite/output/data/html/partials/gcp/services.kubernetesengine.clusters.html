@@ -7,12 +7,12 @@
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
         <div class="list-group-item-text item-margin">Name: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.name">{{name}}</span></div>
-        <div class="list-group-item-text item-margin">Project ID: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.project_id"><samp>{{project}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Location: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.location"><samp>{{location}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Type: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.type"><samp>{{type}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Status: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.status"><samp>{{status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Project ID: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.project_id"><samp>{{project}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.location"><samp>{{location}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.type"><samp>{{type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.status"><samp>{{status}}</samp></span></div>
         <div class="list-group-item-text item-margin">Image Type: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.container_optimized_os_not_used">{{image_type}}</span></div>
-        <div class="list-group-item-text item-margin">Release Channel: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.release_channel"><samp>{{release_channel}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Release Channel: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.release_channel"><samp>{{release_channel}}</samp></span></div>
         <div class="list-group-item-text item-margin">Basic Authentication: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.basic_authentication_enabled">{{convert_bool_to_enabled basic_authentication_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Client Certificate Authentication: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.client_certificate_enabled">{{convert_bool_to_enabled client_certificate_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Dashboard: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.dashboard_status">{{dashboard_status}}</span></div>
@@ -23,13 +23,13 @@
         <div class="list-group-item-text item-margin">Workload Identity: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.workload_identity_enabled">{{convert_bool_to_enabled workload_identity_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Private Google Access: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.private_ip_google_access_disabled">{{convert_bool_to_enabled private_ip_google_access_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Alias IP: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.alias_ip_disabled">{{convert_bool_to_enabled alias_ip_enabled}}</span></div>
-        <div class="list-group-item-text item-margin">Endpoint: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.endpoint"><samp>{{endpoint}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Private Endpoint Enabled: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.private_endpoint_enabled"><samp>{{convert_bool_to_enabled private_endpoint_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Endpoint: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.endpoint"><samp>{{endpoint}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Private Endpoint Enabled: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.private_endpoint_enabled"><samp>{{convert_bool_to_enabled private_endpoint_enabled}}</samp></span></div>
         {{#if private_endpoint}}
-        <div class="list-group-item-text item-margin">Private Endpoint: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.private_endpoint"><samp>{{private_endpoint}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Private Endpoint: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.private_endpoint"><samp>{{private_endpoint}}</samp></span></div>
         {{/if}}
         {{#if public_endpoint}}
-        <div class="list-group-item-text item-margin">Public Endpoint: <span id="kubernetesengine.projects.{{project}}.keyrings.{{@key}}.public_endpoint"><samp>{{public_endpoint}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Public Endpoint: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.public_endpoint"><samp>{{public_endpoint}}</samp></span></div>
         {{/if}}
         <div class="list-group-item-text item-margin">Binary Authorization: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.binary_authorization_enabled">{{convert_bool_to_enabled binary_authorization_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Shielded Nodes: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.shielded_nodes_enabled">{{convert_bool_to_enabled shielded_nodes_enabled}}</span></div>
