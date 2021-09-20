@@ -32,6 +32,7 @@ class Clusters(Resources):
         cluster_dict['image_type'] = raw_cluster.get('nodeConfig', {}).get('imageType', None)
         cluster_dict['labels'] = raw_cluster.get('resourceLabels', [])
         cluster_dict['has_labels'] = len(cluster_dict['labels']) > 0
+        cluster_dict['endpoint'] = raw_cluster.get('endpoint')
         cluster_dict['legacy_abac_enabled'] = raw_cluster.get('legacyAbac', {}).get('enabled', False)
         cluster_dict['logging_enabled'] = self._is_logging_enabled(raw_cluster)
         cluster_dict['master_authorized_networks_enabled'] = raw_cluster.get('masterAuthorizedNetworksConfig', {}).get('enabled', False)
@@ -50,9 +51,9 @@ class Clusters(Resources):
         cluster_dict['private_ip_google_access_enabled'] = raw_cluster.get('privateIpGoogleAccess', False)
         cluster_dict['private_nodes_enabled'] = raw_cluster.get('privateClusterConfig', {}).get('enablePrivateNodes', False)
 
-        cluster_dict['private_endpoint_enabled'] = raw_cluster.get('privateclusterconfig', {}).get('enablePrivateEndpoint', False)
-        cluster_dict['private_endpoint'] = raw_cluster.get('privateclusterconfig', {}).get('privateEndpoint', None)
-        cluster_dict['public_endpoint'] = raw_cluster.get('privateclusterconfig', {}).get('publicEndpoint', None)
+        cluster_dict['private_endpoint_enabled'] = raw_cluster.get('privateClusterconfig', {}).get('enablePrivateEndpoint', False)
+        cluster_dict['public_endpoint'] = raw_cluster.get('privateClusterConfig', {}).get('publicEndpoint', None)
+        cluster_dict['private_endpoint'] = raw_cluster.get('privateClusterConfig', {}).get('privateEndpoint', None)
 
         return cluster_dict['id'], cluster_dict
 
