@@ -42,6 +42,10 @@ class Clusters(Resources):
         cluster_dict['scopes'] = self._get_scopes(raw_cluster)
         cluster_dict['service_account'] = raw_cluster.get('nodeConfig', {}).get('serviceAccount', None)
         cluster_dict['master_authorized_networks_config'] = self._get_master_authorized_networks_config(raw_cluster)
+
+
+        cluster_dict['application_layer_encryption_enabled'] = raw_cluster.get('databaseEncryption', {}).get('state', None) == 'ENCRYPTED'
+
         return cluster_dict['id'], cluster_dict
 
 

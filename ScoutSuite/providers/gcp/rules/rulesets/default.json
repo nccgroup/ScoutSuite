@@ -470,6 +470,12 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-cluster-application-layer-encryption-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-node-auto-upgrade-disabled.json": [
             {
                 "enabled": true,
