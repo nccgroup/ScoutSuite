@@ -49,6 +49,7 @@ class Clusters(Resources):
         cluster_dict['workload_identity_enabled'] = raw_cluster.get('workloadIdentityConfig', {}).get('identityNamespace', None) != None
         cluster_dict['metadata_server_enabled'] = self._metadata_server_enabled(raw_cluster.get('nodePools', []))
         cluster_dict['release_channel'] = raw_cluster.get('releaseChannel', {}).get('channel', None)
+        cluster_dict['shielded_nodes_enabled'] = raw_cluster.get('shieldedNonde', {}).get('enabled', False)
 
         return cluster_dict['id'], cluster_dict
 

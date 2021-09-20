@@ -464,6 +464,12 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-shielded-nodes-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-legacy-metadata-endpoints-enabled.json": [
             {
                 "enabled": true,
