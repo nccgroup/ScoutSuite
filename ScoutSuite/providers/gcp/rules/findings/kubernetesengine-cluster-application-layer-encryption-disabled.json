@@ -18,7 +18,7 @@
         "and",
         [
             "application_layer_encryption_enabled",
-            "true",
+            "false",
             ""
         ]
     ],

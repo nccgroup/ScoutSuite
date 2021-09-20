@@ -67,15 +67,16 @@ class Clusters(Resources):
         if raw_cluster.get('masterAuthorizedNetworksConfig'):
             config = raw_cluster.get('masterAuthorizedNetworksConfig')
             config['includes_public_cidr'] = False
-            for block in config['cidrBlocks']:
-                if block['cidrBlock'] == '0.0.0.0/0':
+            for block in config.get('cidrBlocks', []):
+                if block.get('cidrBlock') == '0.0.0.0/0':
                     config['includes_public_cidr'] = True
             return config
         else:
-            return {'enabled': False,
-                    'cidrBlocks': [],
-                    'includes_public_cidr': False
-                    }
+            return {
+                'enabled': False,
+                'cidrBlocks': [],
+                'includes_public_cidr': False
+            }
 
     def _is_pod_security_policy_enabled(self, raw_cluster):
         if 'podSecurityPolicyConfig' in raw_cluster:
