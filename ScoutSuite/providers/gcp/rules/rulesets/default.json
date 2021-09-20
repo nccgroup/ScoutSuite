@@ -488,6 +488,18 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-node-secure-boot-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-node-integrity-monitoring-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-cluster-workload-identity-disabled.json": [
             {
                 "enabled": true,

@@ -70,14 +70,22 @@
         <div class="list-group-item-text item-margin">
             {{#each node_pools}}
             {{@key}}
+
             <div class="list-group-item-text item-margin">
-                Automatic node upgrades: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.auto_upgrade_disabled">{{convert_bool_to_enabled auto_upgrade_enabled}}</span>
+                Integrity Monitoring: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.integrity_monitoring_enabled">{{convert_bool_to_enabled integrity_monitoring_enabled}}</span>
             </div>
             <div class="list-group-item-text item-margin">
-                Automatic node repair: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.auto_repair_disabled">{{convert_bool_to_enabled auto_repair_enabled}}</span>
+                Secure Boot: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.secure_boot_enabled">{{convert_bool_to_enabled secure_boot_enabled}}</span>
+            </div>
+
+            <div class="list-group-item-text item-margin">
+                Automatic Node Upgrades: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.auto_upgrade_disabled">{{convert_bool_to_enabled auto_upgrade_enabled}}</span>
             </div>
             <div class="list-group-item-text item-margin">
-                Legacy metadata endpoints: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.legacy_metadata_endpoints_enabled">{{convert_bool_to_enabled legacy_metadata_endpoints_enabled}}</span>
+                Automatic Node Repair: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.auto_repair_disabled">{{convert_bool_to_enabled auto_repair_enabled}}</span>
+            </div>
+            <div class="list-group-item-text item-margin">
+                Legacy Metadata Endpoints: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.legacy_metadata_endpoints_enabled">{{convert_bool_to_enabled legacy_metadata_endpoints_enabled}}</span>
             </div>
             {{/each}}
         </div>
