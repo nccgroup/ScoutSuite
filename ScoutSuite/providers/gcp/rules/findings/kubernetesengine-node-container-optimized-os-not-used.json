@@ -1,6 +1,6 @@
 {
     "description": "Lack of Container-Optimized OS Node Images",
-    "rationale": "The Container-Optimized OS image provides better support, security, and stability than previous images.",
+    "rationale": "It is recommended to use container-optimized OS images, as they provide improved support, security and stability.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",

@@ -1,0 +1,33 @@
+{
+    "description": "Private Cluster Endpoint Disabled",
+    "rationale": "In a private cluster, the master node has two endpoints, a private and public endpoint. The private endpoint is the internal IP address of the master, behind an internal load balancer in the master's VPC network. Nodes communicate with the master using the private endpoint. The public endpoint enables the Kubernetes API to be accessed from outside the master's VPC network.<br>Although Kubernetes API requires an authorized token to perform sensitive actions, a vulnerability could potentially expose the Kubernetes publicly with unrestricted access. Additionally, an attacker may be able to identify the current cluster and Kubernetes API version and determine whether it is vulnerable to an attack.<br>Unless required, disabling public endpoint will help prevent such threats, and require the attacker to be on the master's VPC network to perform any attack on the Kubernetes API.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.15"
+        },
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.6.4"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#restrict_network_access_to_the_control_plane_and_nodes",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.private_endpoint_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "private_endpoint_enabled"
+}

@@ -1,0 +1,26 @@
+{
+    "description": "Application-Layer Secrets Encryption Disabled",
+    "rationale": "By default, GKE encrypts customer content stored at rest, including Secrets. GKE handles and manages this default encryption without any additional action.<br>Application-layer Secrets Encryption provides an additional layer of security for sensitive data, such as user defined Secrets and Secrets required for the operation of the cluster, such as service account keys, which are all stored in etcd.<br>Using this functionality, you can use a key, that you manage in Cloud KMS, to encrypt data at the application layer. This protects against attackers in the event that they manage to gain access to etcd.",
+    "compliance": [
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.3.1"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "application_layer_encryption_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "application_layer_encryption_enabled"
+}

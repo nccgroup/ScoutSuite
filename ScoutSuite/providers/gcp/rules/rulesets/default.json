@@ -464,6 +464,24 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-cluster-release-channel.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-shielded-nodes-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-binary-authorization-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-legacy-metadata-endpoints-enabled.json": [
             {
                 "enabled": true,
@@ -471,6 +489,36 @@
             }
         ],
         "kubernetesengine-node-auto-repair-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-node-secure-boot-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-node-integrity-monitoring-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-workload-identity-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-metadata-server-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-application-layer-encryption-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -488,7 +536,13 @@
                 "level": "warning"
             }
         ],
-        "kubernetesengine-private-cluster-disabled.json": [
+        "kubernetesengine-cluster-private-endpoint-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-private-nodes-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"

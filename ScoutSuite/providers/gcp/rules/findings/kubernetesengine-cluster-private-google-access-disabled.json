@@ -1,6 +1,6 @@
 {
     "description": "Private Google Access Disabled",
-    "rationale": "Enabling Private Google Access allows VMs on a subnetwork to use a private IP address to reach Google APIs rather than an external IP address.",
+    "rationale": "Enabling Private Google Access allows hosts on a subnetwork to use a private IP address to reach Google APIs rather than an external IP address.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
