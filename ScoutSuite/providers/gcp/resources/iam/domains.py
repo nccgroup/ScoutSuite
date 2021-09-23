@@ -3,16 +3,16 @@ from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
-class Groups(Resources):
+class Domains(Resources):
     def __init__(self, facade: GCPFacade, project_id: str):
         super().__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
         raw_bindings = await self.facade.cloudresourcemanager.get_member_bindings(self.project_id)
-        parsed_groups = self._parse_binding(raw_bindings)
-        for group_id in parsed_groups.keys():
-            self[parsed_groups[group_id]['id']] = parsed_groups[group_id]
+        parsed_domains = self._parse_binding(raw_bindings)
+        for domain_id in parsed_domains.keys():
+            self[parsed_domains[domain_id]['id']] = parsed_domains[domain_id]
 
     def _parse_binding(self, raw_bindings):
 
@@ -22,7 +22,7 @@ class Groups(Resources):
             if 'members' in binding:
                 for member in binding['members']:
                     member_type, entity = member.split(':')[:2]
-                    if member_type == 'group':
+                    if member_type == 'domain':
                         if entity not in parsed_groups.keys():
                             parsed_groups[entity] = {'id': get_non_provider_id(entity),
                                                     'name': entity,

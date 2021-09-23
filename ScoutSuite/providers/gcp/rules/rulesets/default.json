@@ -320,6 +320,12 @@
                 "level": "warning"
             }
         ],
+        "iam-role-assigned-to-domain.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-sa-has-admin-privileges.json": [
             {
                 "enabled": true,

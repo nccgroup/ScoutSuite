@@ -51,7 +51,7 @@ inc-scoutsuite-run*
 report-*
 *.db
 
-# PyCharm
+# IntelliJ files
 .idea/
 *.iml
 

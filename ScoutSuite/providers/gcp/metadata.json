@@ -14,6 +14,10 @@
           "cols": 2,
           "path": "services.iam.projects.id.service_accounts"
         },
+        "domains": {
+          "cols": 2,
+          "path": "services.iam.projects.id.domains"
+        },
         "bindings": {
           "cols": 2,
           "path": "services.iam.projects.id.bindings"
