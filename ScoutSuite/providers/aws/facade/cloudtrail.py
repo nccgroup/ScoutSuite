@@ -32,6 +32,7 @@ class CloudTrailFacade(AWSBaseFacade):
     async def _get_and_set_selectors(self, trail: {}, region: str):
         client = AWSFacadeUtils.get_client('cloudtrail', self.session, region)
         try:
+            # this call will fail for organization trails stored in another account
             trail['EventSelectors'] = await run_concurrently(
                 lambda: client.get_event_selectors(TrailName=trail['TrailARN'])['EventSelectors'])
         except Exception as e:
