@@ -712,7 +712,7 @@ class AWSProvider(BaseProvider):
             public_dns = current_config['ConfigurationEndpoint']['Address'].replace(
                 '.cfg', '')
             listeners = [current_config['ConfigurationEndpoint']['Port']]
-            security_groups = current_config['SecurityGroups']
+            security_groups = current_config.get('SecurityGroups', {})
             self._security_group_to_attack_surface(service_config['external_attack_surface'], public_dns,
                                                    current_path, [
                                                        g['SecurityGroupId'] for g in security_groups],
