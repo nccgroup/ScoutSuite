@@ -50,7 +50,10 @@ class Keys(AWSCompositeResources):
         # enabled anyway
         elif key_dict['origin'] == 'AWS_KMS' and key_dict['key_manager'] == 'CUSTOMER':
             rotation_status = await self.facade.kms.get_key_rotation_status(self.region, key_dict['id'])
-            key_dict['rotation_enabled'] = rotation_status.get('KeyRotationEnabled', None)
+            if rotation_status:
+                key_dict['rotation_enabled'] = rotation_status.get('KeyRotationEnabled', None)
+            else:
+                key_dict['rotation_enabled'] = None
         else:
             key_dict['rotation_enabled'] = True
 
