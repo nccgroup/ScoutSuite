@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
 
     steps:
     - uses: actions/checkout@v2
@@ -38,17 +38,11 @@ jobs:
         pip install -U setuptools
         pip install -r dev-requirements.txt
     - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 .
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      run: flake8 . --max-complexity=10 --max-line-length=127
     - name: Autopep 8
-      run: |
-        autopep8 --diff --recursive --max-line-length=127 .
+      run: autopep8 --diff --recursive --max-line-length=127 .
     - name: Test with pytest and generate coverage report
-      run: |
-        python -m pytest --cov=./ --cov-report=xml
+      run: python -m pytest --cov=./ --cov-report=xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
