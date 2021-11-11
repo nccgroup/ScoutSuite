@@ -1,6 +1,6 @@
 #!/bin/bash
 echo -e "\n\nbuild running...\n"
-source ../config/build.env
+source ./config/build.env
 
 BUILD_CMD="docker build \
   -t ${IMAGE_NAME} \
