@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Clusters(AWSResources):
@@ -19,4 +20,4 @@ class Clusters(AWSResources):
         raw_cluster['arn'] = 'arn:aws:elasticache:{}:{}:cluster/{}'.format(self.region,
                                                                              self.facade.owner_id,
                                                                              raw_cluster.get('name'))
-        return raw_cluster['name'], raw_cluster
+        return get_non_provider_id(raw_cluster['name']), raw_cluster
