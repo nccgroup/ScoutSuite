@@ -19,11 +19,11 @@ class Queues(AWSResources):
 
     def _parse_queue(self, queue_url, queue_attributes):
         queue = {}
+        queue['arn'] = queue_attributes.get('QueueArn')
         queue['name'] = queue['arn'].split(':')[-1]
-        queue['arn'] = queue_attributes.pop('QueueArn')
         queue['QueueUrl'] = queue_url
-        queue['kms_master_key_id'] = queue_attributes.pop('KmsMasterKeyId', None)
-        queue['CreatedTimestamp'] = queue_attributes.pop('CreatedTimestamp', None)
+        queue['kms_master_key_id'] = queue_attributes.get('KmsMasterKeyId', None)
+        queue['CreatedTimestamp'] = queue_attributes.get('CreatedTimestamp', None)
 
         if 'Policy' in queue_attributes:
             queue['Policy'] = json.loads(queue_attributes['Policy'])
