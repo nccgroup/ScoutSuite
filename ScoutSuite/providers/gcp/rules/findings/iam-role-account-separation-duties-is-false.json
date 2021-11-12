@@ -1,0 +1,28 @@
+{
+    "description": "Separation Of Duties Not Enforced For Service Account",
+    "rationale": "Separation of duties is the concept of ensuring that one individual does not have all necessary permissions to be able to complete a malicious action. In Cloud IAM-service accounts, this could be an action such as using a service account to access resources that user should not normally have access to. No user should have Service Account Admin and Service Account User roles assigned at the same time.",
+    "remediation": "From console:<ol><li>Go to <samp>IAM & Admin/IAM</samp> using <samp>https://console.cloud.google.com/iam-admin/iam</samp>.</li><li>For any member having both <samp>Service Account Admin</samp> and <samp>Service account User</samp> roles granted/assigned, click the <samp>Delete Bin</samp> icon to remove either role from the member.<br> Removal of a role should be done based on the business requirements.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "1.8"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/iam/docs/service-accounts",
+        "https://cloud.google.com/iam/docs/understanding-roles",
+        "https://cloud.google.com/iam/docs/granting-changing-revoking-access"
+    ],
+    "dashboard_name": "Project",
+    "path": "iam.projects.id.bindings_separation_duties.id",
+    "conditions": [
+        "and",
+        [
+            "iam.projects.id.bindings_separation_duties.id.account_separation_duties",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "account_separation_duties"
+}

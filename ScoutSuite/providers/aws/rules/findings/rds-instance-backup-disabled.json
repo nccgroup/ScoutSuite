@@ -1,8 +1,10 @@
 {
-    "description": "Backup Disabled",
-    "rationale": "Backups should be enabled to enable disaster recovery.",
+    "description": "Instance Backups Disabled",
+    "rationale": "The backup retention period is a period of time between 0 and 35 days for which you can perform a point-in-time restore. Setting the backup retention period to 0 disables automated backups. Backups should be enabled to enable disaster recovery.",
     "references": [
-        "https://aws.amazon.com/rds/details/backup/"
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html",
+        "https://aws.amazon.com/rds/details/backup/",
+        "https://aws.amazon.com/rds/faqs/"
     ],
     "dashboard_name": "Instances",
     "path": "rds.regions.id.vpcs.id.instances.id",

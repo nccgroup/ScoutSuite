@@ -1,15 +1,21 @@
 {
     "description": "Instance Not Requiring SSL for Incoming Connections",
-    "rationale": "All incoming connections to databases should require the use of SSL.",
+    "rationale": "SQL database connections if successfully trapped (MITM); can reveal sensitive data like credentials, database queries, query outputs etc. For security, it is recommended to always use SSL encryption when connecting to your instance.",
+    "remediation": "From console:<ol><li>Go to  https://console.cloud.google.com/sql/instances.</li><li>Click on an instance name to see its configuration overview.</li><li>In the left-side panel, select <samp>Connections</samp></li><li>In the <samp>SSL connections</samp> section, click <samp>Allow only SSL connections.</samp></li><li>Under <samp>Configure SSL server certificates</samp> click <samp>Create new certificate.</samp></li><li>Under <samp>Configure SSL server certificates</samp> click <samp>Create a client certificate.</samp></li><li>Follow the instructions shown to learn how to connect to your instance.</li></ol>",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.0.0",
             "reference": "6.1"
+        },
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "6.4"
         }
     ],
     "references": [
-        "https://cloud.google.com/sql/docs/mysql/authorize-ssl"
+        "https://cloud.google.com/sql/docs/postgres/configure-ssl-instance"
     ],
     "dashboard_name": "Instances",
     "path": "cloudsql.projects.id.instances.id",

@@ -15,7 +15,9 @@ formatted_service_name = {
     'cloudformation': 'CloudFormation',
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
+    'cloudfront': 'CloudFront',
     'credentials': 'Credentials',
+    'codebuild': 'CodeBuild',
     'cognito': 'Cognito',
     'config': 'Config',
     'directconnect': 'Direct Connect',
@@ -32,6 +34,7 @@ formatted_service_name = {
     'route53': 'Route53',
     'secretsmanager': 'Secrets Manager',
     'docdb': 'DocumentDB',
+    'ssm': 'Systems Manager',
     # Azure
     'aad': 'Azure Active Directory',
     'rbac': 'Azure RBAC',
@@ -47,7 +50,9 @@ formatted_service_name = {
     'virtualmachines': 'Virtual Machines',
     # GCP
     'cloudstorage': 'Cloud Storage',
+    'cloudmemorystore': 'Cloud Memorystore',
     'cloudsql': 'Cloud SQL',
+    'dns': 'DNS',
     'stackdriverlogging': 'Stackdriver Logging',
     'stackdrivermonitoring': 'Stackdriver Monitoring',
     'computeengine': 'Compute Engine',

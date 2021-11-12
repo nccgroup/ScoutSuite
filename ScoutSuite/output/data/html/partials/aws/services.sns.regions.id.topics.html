@@ -9,6 +9,7 @@
           <div class="list-group-item-text item-margin">Region: {{region}}</div>
           <div class="list-group-item-text item-margin">ARN: {{arn}}</div>
           <div class="list-group-item-text item-margin">Display name: {{DisplayName}}</div>
+          <div class="list-group-item-text item-margin" id="sns.regions.{{region}}.topics.{{@key}}.encrypted">Encrypted: {{#if KmsMasterKeyId}} True {{else}} False {{/if}}</div>
         </div>
         {{#if Policy}}
           <div class="list-group-item">
@@ -32,14 +33,15 @@
             <h4 class="list-group-item-heading accordion-heading">Subscriptions
                 {{> count_badge count=subscriptions_count}}
             </h4>
-            <div id="sns.regions.{{region}}.topics.{{@key}}.subscriptions" class="accordion-body collapse">
+            <div id="sns.regions.{{region}}.topics.{{@key}}.subscriptions" class="accordion-body">
               <div class="accordion-inner">
                 <ul>
                 {{#each subscriptions.protocol}}
                   <li>{{makeTitle @key}}</li>
                   <ul>
                     {{#each this}}
-                       <li>Endpoint: {{Endpoint}}</li>
+                       <li>Endpoint: <samp>{{Endpoint}}</samp></li>
+                       <li>ARN: <samp>{{arn}}</samp></li>
                     {{/each}}
                   </ul>
                 {{/each}}

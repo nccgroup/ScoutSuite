@@ -17,6 +17,10 @@
         "bindings": {
           "cols": 2,
           "path": "services.iam.projects.id.bindings"
+        },
+        "bindings_separation_duties": {
+          "cols": 2,
+          "path": "services.iam.projects.id.bindings_separation_duties"
         }
       }
     },
@@ -58,11 +62,20 @@
       "resources": {
         "clusters": {
           "cols": 2,
-          "path": "services.kubernetesengine.projects.id.zones.id.clusters"
+          "path": "services.kubernetesengine.projects.id.clusters"
         }
       }
     }
   },
+  "network": {
+    "dns": {
+      "resources": {
+        "managed_zones": {
+          "cols": 2,
+          "path": "services.dns.projects.id.managed_zones"
+        }
+      }
+  }},
   "storage": {
     "cloudstorage": {
       "resources": {
@@ -73,12 +86,21 @@
       }
     }
   },
+
   "database": {
     "cloudsql": {
       "resources": {
         "instances": {
           "cols": 2,
           "path": "services.cloudsql.projects.id.instances"
+        }
+      }
+    },
+    "cloudmemorystore": {
+      "resources": {
+        "redis_instances": {
+          "cols": 2,
+          "path": "services.cloudmemorystore.projects.id.redis_instances"
         }
       }
     }
@@ -93,6 +115,10 @@
         "metrics": {
           "cols": 2,
           "path": "services.stackdriverlogging.projects.id.metrics"
+        },
+        "logging_metrics": {
+          "cols": 2,
+          "path": "services.stackdriverlogging.projects.id.logging_metrics"
         }
       }
     },
@@ -105,6 +131,10 @@
         "alert_policies": {
           "cols": 2,
           "path": "services.stackdrivermonitoring.projects.id.alert_policies"
+        },
+        "monitoring_alert_policies": {
+          "cols": 2,
+          "path": "services.stackdrivermonitoring.projects.id.monitoring_alert_policies"
         }
       }
     }

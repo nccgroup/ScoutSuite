@@ -15,6 +15,11 @@
         "and",
         [
             "sqldatabase.subscriptions.id.servers.id.databases.id.threat_detection.retention_days",
+            "notEqual",
+            "0"
+        ],
+        [
+            "sqldatabase.subscriptions.id.servers.id.databases.id.threat_detection.retention_days",
             "lessThan",
             "_ARG_0_"
         ]

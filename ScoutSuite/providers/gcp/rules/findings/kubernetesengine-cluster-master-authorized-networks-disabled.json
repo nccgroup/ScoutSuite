@@ -20,11 +20,11 @@
         "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
     ],
     "dashboard_name": "Clusters",
-    "path": "kubernetesengine.projects.id.zones.id.clusters.id",
+    "path": "kubernetesengine.projects.id.clusters.id",
     "conditions": [
         "and",
         [
-            "kubernetesengine.projects.id.zones.id.clusters.id.master_authorized_networks_enabled",
+            "kubernetesengine.projects.id.clusters.id.master_authorized_networks_enabled",
             "false",
             ""
         ]

@@ -1,0 +1,26 @@
+{
+    "description": "Block Project SSH Keys Disabled",
+    "rationale": "Project-wide SSH keys are stored in Compute/Project-meta-data. Project wide SSH keys can be used to login into all the instances within project. Using project-wide SSH keys eases the SSH key management but if compromised, poses the security risk which can impact all the instances within project.",
+    "remediation": "From console:<ol><li>Go to the <samp>VM instances</samp> page by visiting https://console.cloud.google.com/compute/instances.</li><li>Click on the name of the Impacted instance</li><li>Click <samp>Edit</samp> in the toolbar.</li><li>Under SSH Keys, go to the <samp>Block project-wide SSH keys</samp> checkbox.</li><li>To block users with project-wide SSH keys from connecting to this instance, select <samp>Block project-wide SSH keys</samp></li><li>Click <samp>Save</samp> at the bottom of the page</li><li>Repeat steps for every impacted Instance</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "4.3"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys"
+    ],
+    "dashboard_name": "Instances",
+    "path": "computeengine.projects.id.zones.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.zones.id.instances.id.block_project_ssh_keys_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "block_project_ssh_keys_disabled"
+}

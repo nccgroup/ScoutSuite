@@ -1,0 +1,26 @@
+{
+    "description": "IP Forwarding Is Enabled",
+    "rationale": "Compute Engine instance cannot forward a packet unless the source IP address of the packet matches the IP address of the instance. Similarly, GCP won't deliver a packet whose destination IP address is different than the IP address of the instance receiving the packet. However, both capabilities are required if you want to use instances to help route packets.",
+    "remediation": "From console:<ol><li>Go to the <samp>VM instances</samp> page by visiting https://console.cloud.google.com/compute/instances.</li><li>Select the <samp>VM Instance</samp> you want to remediate.</li><li>Click the <samp>Delete</samp> button.</li><li>On the 'VM Instances' page, click `CREATE INSTANCE'.</li><li>Create a new instance with the desired configuration. By default, the instance is configured to not allow IP forwarding.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "4.6"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/vpc/docs/using-routes#canipforward"
+    ],
+    "dashboard_name": "Instances",
+    "path": "computeengine.projects.id.zones.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.zones.id.instances.id.ip_forwarding_enabled",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "ip_forwarding_enabled"
+}
