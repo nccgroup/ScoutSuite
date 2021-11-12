@@ -33,6 +33,6 @@ class CloudTrailFacade(AWSBaseFacade):
         client = AWSFacadeUtils.get_client('cloudtrail', self.session, region)
         try:
             trail['EventSelectors'] = await run_concurrently(
-                lambda: client.get_event_selectors(TrailName=trail['TrailARN'])['EventSelectors'])
+                lambda: client.get_event_selectors(TrailName=trail['TrailARN']).get('EventSelectors', []))
         except Exception as e:
             print_exception(f'Failed to get CloudTrail event selectors: {e}')
