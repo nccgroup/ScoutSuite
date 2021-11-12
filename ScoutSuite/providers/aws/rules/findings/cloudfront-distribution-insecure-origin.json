@@ -14,7 +14,7 @@
             "http-only"
         ],
         [
-            "cloudfront.distributions.id.view_certificate.MinimumProtocolVersion.",
+            "cloudfront.distributions.id.viewer_certificate.MinimumProtocolVersion.",
             "containNoneOf",
             [
                 "TLSv1.1",
