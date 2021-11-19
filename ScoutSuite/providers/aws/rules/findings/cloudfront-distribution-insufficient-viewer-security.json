@@ -11,8 +11,8 @@
         [
             "this",
             "withoutKey",
-            "view_certificate"
+            "viewer_certificate"
         ]
     ],
-    "id_suffix": "certificate"
+    "id_suffix": "viewer_certificate"
 }
