@@ -56,6 +56,15 @@
             [
                 "iam.policies.id.PolicyDocument.Statement.id"
             ]
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-poor-condition.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "iam.policies.id.PolicyDocument.Statement.id"
+            ]
         ]
     ],
     "key": "iam-managed-policy-allows-_ARG_0_-_ARG_1_",

@@ -50,6 +50,15 @@
             ]
         ],
         [
+            "_INCLUDE_(conditions/policy-statement-poor-condition.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "iam.policies.id.PolicyDocument.Statement.id"
+            ]
+        ],
+        [
             "iam.policies.id.PolicyDocument.Statement.id.Resource",
             "containAtLeastOneOf",
             [
