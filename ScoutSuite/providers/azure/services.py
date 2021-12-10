@@ -42,6 +42,7 @@ class AzureServicesConfig(BaseServicesConfig):
 
         self.aad = AAD(facade)
 
+        # Currently, only AAD can be used without any subscriptions 
         if len(subscription_ids) > 0:
             self.rbac = RBAC(facade)
             self.securitycenter = SecurityCenter(facade)
