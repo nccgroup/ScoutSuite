@@ -26,18 +26,23 @@
                 {{#each origins.Items}}
                 <li><samp>{{Id}}</samp></li>
                 <ul>
-                    <li>Domain Name: <samp>{{value_or_none DomainName}}</samp></li>
+                    <li>Domain: <samp>{{value_or_none DomainName}}</samp></li>
                     <li>Origin Path: <samp>{{value_or_none OriginPath}}</samp></li>
+                    {{#if S3OriginConfig}}
+                    <li>S3 Origin Access Identity: <samp>{{value_or_none S3OriginConfig.OriginAccessIdentity}}</samp></li>
+                    {{/if}}
+                    {{#if CustomOriginConfig}}
                     <li>Custom Origin Config:</li>
                     <ul>
-                        <li>Protocol Policy: <span class="cloudfront.distributions.{{@key}}.config_policy"><samp>{{value_or_none CustomOriginConfig.OriginProtocolPolicy}}</samp></span></li>
-                        <li><span class="cloudfront.distributions.{{@key}}.config_protocols">SSL/TLS Protocols</span>:
+                        <li>Protocol Policy: <span class="cloudfront.distributions.{{@../key}}.config_policy"><samp>{{value_or_none CustomOriginConfig.OriginProtocolPolicy}}</samp></span></li>
+                        <li><span class="cloudfront.distributions.{{@../key}}.config_protocols">SSL/TLS Protocols</span>:
                             <ul>
                                 {{#each CustomOriginConfig.OriginSslProtocols.Items}}
                                 <li>{{this}}</li>
                                 {{/each}}
                             </ul>
                     </ul>
+                    {{/if}}
                 </ul>
                 {{/each}}
             </ul>
