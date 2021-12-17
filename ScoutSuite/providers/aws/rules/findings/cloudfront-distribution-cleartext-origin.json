@@ -7,11 +7,16 @@
     "dashboard_name": "Distributions",
     "path": "cloudfront.distributions.id",
     "conditions": [
-        "and",
+        "or",
         [
             "cloudfront.distributions.id.origins",
             "containString",
             "http-only"
+        ],
+        [
+            "cloudfront.distributions.id.origins",
+            "containString",
+            "match-viewer"
         ]
     ],
     "class_suffix": "config_policy"
