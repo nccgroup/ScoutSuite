@@ -7,12 +7,7 @@
     "dashboard_name": "Distributions",
     "path": "cloudfront.distributions.id",
     "conditions": [
-        "or",
-        [
-            "cloudfront.distributions.id.origins",
-            "containString",
-            "http-only"
-        ],
+        "and",
         [
             "cloudfront.distributions.id.viewer_certificate.MinimumProtocolVersion.",
             "containNoneOf",
@@ -25,5 +20,5 @@
             ]
         ]
     ],
-    "class_suffix": "config_protocols"
+    "id_suffix": "minimum_ssl_version"
 }
