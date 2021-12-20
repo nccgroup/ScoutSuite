@@ -23,7 +23,7 @@ class CodeBuild(AWSBaseFacade):
             project_details = await run_concurrently(lambda: codebuild_client.batch_get_projects(names=[project]))
         except Exception as e:
             print_exception(f'Failed to get CodeBuild project details: {e}')
-            return project
+            return {}
         else:
             project_details.pop('ResponseMetadata')
             project_details.pop('projectsNotFound')
