@@ -53,7 +53,7 @@ class Instances(GCPCompositeResources):
             instance_dict['default_service_account'] = False
             instance_dict['full_access_apis'] = False
 
-        if hasattr(raw_instance, 'shieldedInstanceConfig'):
+        if 'shieldedInstanceConfig' in raw_instance:
             instance_dict['shielded_enable'] = self._shielded_vm_enabled(raw_instance)
         else:
             instance_dict['shielded_enable'] = False
@@ -91,7 +91,8 @@ class Instances(GCPCompositeResources):
     def _shielded_vm_enabled(self, raw_instance):
         vtpm = raw_instance['shieldedInstanceConfig'].get('enableVtpm', False)
         integrity_monitoring = raw_instance['shieldedInstanceConfig'].get('enableIntegrityMonitoring', False)
-        return vtpm and integrity_monitoring
+        secure_boot = raw_instance['shieldedInstanceConfig'].get('enableSecureBoot', False)
+        return vtpm and integrity_monitoring and secure_boot
 
     def _public_ip_adresses(self, raw_instance):
         for network in raw_instance['networkInterfaces']:
