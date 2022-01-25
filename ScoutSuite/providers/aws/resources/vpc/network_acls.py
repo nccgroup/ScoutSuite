@@ -1,6 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.aws.utils import get_name
+from ScoutSuite.providers.aws.utils import get_name, format_arn
 from ScoutSuite.core.fs import load_data
 
 protocols_dict = load_data('protocols.json', 'protocols')
@@ -10,6 +10,9 @@ class NetworkACLs(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
         self.region = region
         self.vpc = vpc
+        self.partition = facade.partition
+        self.service = 'vpc'
+        self.resource_type = 'network-acl'
 
         super().__init__(facade)
 
@@ -26,7 +29,7 @@ class NetworkACLs(AWSResources):
         raw_network_acl['rules']['ingress'] = self._parse_network_acl_entries(raw_network_acl['Entries'], False)
         raw_network_acl['rules']['egress'] = self._parse_network_acl_entries(raw_network_acl['Entries'], True)
         raw_network_acl.pop('Entries')
-
+        raw_network_acl['arn'] = format_arn(self.partition, self.service, self.region, raw_network_acl.get('OwnerId'), raw_network_acl.get('id'), self.resource_type)
         return raw_network_acl['id'], raw_network_acl
 
     @staticmethod

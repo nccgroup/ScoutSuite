@@ -12,11 +12,11 @@
         "https://cloud.google.com/kubernetes-engine/docs/how-to/access-scopes"
     ],
     "dashboard_name": "Clusters",
-    "path": "kubernetesengine.projects.id.zones.id.clusters.id",
+    "path": "kubernetesengine.projects.id.clusters.id",
     "conditions": [
         "and",
         [
-            "kubernetesengine.projects.id.zones.id.clusters.id.has_limited_scopes",
+            "kubernetesengine.projects.id.clusters.id.has_limited_scopes",
             "false",
             ""
         ]

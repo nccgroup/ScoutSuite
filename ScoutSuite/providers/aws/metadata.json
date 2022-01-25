@@ -62,6 +62,14 @@
                     "path": "services.config.regions.id.rules"
                 }
             }
+        },
+        "ssm" : {
+            "resources": {
+                "parameters": {
+                    "cols": 2,
+                    "path": "services.ssm.regions.id.parameters"
+                }
+            }
         }
     },
     "messaging": {
@@ -143,6 +151,14 @@
                     "path": "services.directconnect.connections"
                 }
             }
+        },
+        "cloudfront": {
+            "resources": {
+                "distributions": {
+                    "cols": 2,
+                    "path": "services.cloudfront.distributions"
+                }
+            }
         }
     },
     "compute": {
@@ -165,12 +181,7 @@
                 "instances": {
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.instances",
-                    "callbacks": [
-                        [
-                            "match_instances_and_subnets_callback",
-                            { }
-                        ]
-                    ]
+                    "callbacks": [  ]
                 },
                 "security_groups": {
                     "cols": 2,

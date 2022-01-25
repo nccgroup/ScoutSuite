@@ -28,4 +28,12 @@ class Subnetworks(Resources):
         subnetwork_dict['subnetwork_url'] = raw_subnetwork['selfLink']
         subnetwork_dict['network_url'] = raw_subnetwork['network']
 
+        if 'logConfig' in raw_subnetwork:
+            subnetwork_dict['flowlogs_enabled'] = raw_subnetwork['logConfig']['enable']
+        else:
+            # Set as UNKNOWN for now. For instance, some projects' 
+            # default networks with flow logs enabled do not have a logConfig 
+            # stanza in JSON output.
+            subnetwork_dict['flowlogs_enabled'] = "UNKNOWN"
+
         return subnetwork_dict['id'], subnetwork_dict

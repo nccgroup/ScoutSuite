@@ -5,4 +5,4 @@ from ScoutSuite.providers.gcp.resources.cloudsql.database_instances import Datab
 class CloudSQL(Projects):
     _children = [ 
         (DatabaseInstances, 'instances')
-     ]
+    ]

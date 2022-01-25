@@ -16,7 +16,18 @@
                     [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "AWS:SourceArn" ],
                     [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "AWS:SourceOwner" ],
                     [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "kms:ViaService" ],
-                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "kms:CallerAccount" ]
+                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "kms:CallerAccount" ],
+                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "iam:PassedToService" ]
+                ]
+            ],
+            [ "or",
+                [ "_STATEMENT_.Condition.", "withoutKey", "StringEqualsIgnoreCase" ],
+                [ "and",
+                    [ "_STATEMENT_.Condition.StringEqualsIgnoreCase.", "withoutKey", "AWS:SourceArn" ],
+                    [ "_STATEMENT_.Condition.StringEqualsIgnoreCase.", "withoutKey", "AWS:SourceOwner" ],
+                    [ "_STATEMENT_.Condition.StringEqualsIgnoreCase.", "withoutKey", "kms:ViaService" ],
+                    [ "_STATEMENT_.Condition.StringEqualsIgnoreCase.", "withoutKey", "kms:CallerAccount" ],
+                    [ "_STATEMENT_.Condition.StringEqualsIgnoreCase.", "withoutKey", "iam:PassedToService" ]
                 ]
             ],
             [ "or",
@@ -25,7 +36,38 @@
                     [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "AWS:SourceArn" ],
                     [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "AWS:SourceOwner" ],
                     [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "kms:ViaService" ],
-                    [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "kms:CallerAccount" ]
+                    [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "kms:CallerAccount" ],
+                    [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "iam:PassedToService" ]
+                ]
+            ],
+            [ "or",
+                [ "_STATEMENT_.Condition.", "withoutKey", "ForAnyValue:StringEquals" ],
+                [ "and",
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringEquals.", "withoutKey", "AWS:SourceArn" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringEquals.", "withoutKey", "AWS:SourceOwner" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringEquals.", "withoutKey", "kms:ViaService" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringEquals.", "withoutKey", "kms:CallerAccount" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringEquals.", "withoutKey", "iam:PassedToService" ]
+                ]
+            ],
+            [ "or",
+                [ "_STATEMENT_.Condition.", "withoutKey", "ForAnyValue:StringEqualsIgnoreCase" ],
+                [ "and",
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringEqualsIgnoreCase.", "withoutKey", "AWS:SourceArn" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringEqualsIgnoreCase.", "withoutKey", "AWS:SourceOwner" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringEqualsIgnoreCase.", "withoutKey", "kms:ViaService" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringEqualsIgnoreCase.", "withoutKey", "kms:CallerAccount" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringEqualsIgnoreCase.", "withoutKey", "iam:PassedToService" ]
+                ]
+            ],
+            [ "or",
+                [ "_STATEMENT_.Condition.", "withoutKey", "ForAnyValue:StringLike" ],
+                [ "and",
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringLike.", "withoutKey", "AWS:SourceArn" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringLike.", "withoutKey", "AWS:SourceOwner" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringLike.", "withoutKey", "kms:ViaService" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringLike.", "withoutKey", "kms:CallerAccount" ],
+                    [ "_STATEMENT_.Condition.ForAnyValue:StringLike.", "withoutKey", "iam:PassedToService" ]
                 ]
             ]
         ]

@@ -1,0 +1,28 @@
+{
+    "description": "Local Infile Database Flag For MySQL Instance Is On",
+    "rationale": "The local_infile flag controls the server-side LOCAL capability for LOAD DATA statements. Depending on the local_infile setting, the server refuses or permits local data loading by clients that have LOCAL enabled on the client side. To explicitly cause the server to refuse LOAD DATA LOCAL statements (regardless of how client programs and libraries are configured at build time or runtime), start mysqld with local_infile disabled. local_infile can also be set at runtime.",
+    "remediation": "From console:<ol><li>Go to the Cloud SQL Instances page in the Google Cloud Console by visiting https://console.cloud.google.com/sql/instances.</li><li>Select the MySQL instance where the database flag needs to be enabled.</li><li>Click <samp>Edit</samp></li><li>Scroll down to the <samp>Flags</samp> section.</li><li>To set a flag that has not been set on the instance before, click <samp>Add item</samp>, choose the flag <samp>local_infile</samp> from the drop-down menu, and set its value to <samp>off</samp>.</li><li>Click <samp>Save</samp></li><li>Confirm the changes under <samp>Flags</samp> on the Overview page.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "6.1.2"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/sql/docs/mysql/flags",
+        "https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_local_infile",
+        "https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.local_infile_off",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "local_infile_off"
+}

@@ -1,6 +1,6 @@
 {
     "description": "Trail Is Not Integrated with CloudWatch",
-    "rationale": "The lack of integration with CloudWatch hinders ral-time and historic activity logging as well as not allowing the configuration of alarms and notifications for anomalous account activity.",
+    "rationale": "The lack of integration with CloudWatch hinders real-time and historic activity logging as well as not allowing the configuration of alarms and notifications for anomalous account activity.",
     "remediation": "Configure each Trail to have a CloudWatch Logs group attached",
     "compliance": [
         {
