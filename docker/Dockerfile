@@ -1,6 +1,6 @@
-FROM python:3.8
+FROM python:3.10
 
-LABEL maintainer="Jason Ross <jason.ross@nccgroup.com>"
+LABEL maintainer="Jason Ross <algorythm@gmail.com>"
 
 ARG VCS_REF
 ARG VCS_URL
