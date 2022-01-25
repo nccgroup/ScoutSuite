@@ -77,11 +77,14 @@ class DatabaseInstances(GCPCompositeResources):
         # network interfaces
         instance_dict['public_ip'] = None
         instance_dict['private_ip'] = None
+        instance_dict['outgoing_ip'] = None
         for address in raw_instance.get('ipAddresses', []):
             if address['type'] == 'PRIMARY':
                 instance_dict['public_ip'] = address['ipAddress']
             elif address['type'] == 'PRIVATE':
                 instance_dict['private_ip'] = address['ipAddress']
+            elif address['type'] == 'OUTGOING':
+                instance_dict['outgoing_ip'] = address['ipAddress']
             else:
                 print_exception('Unknown Cloud SQL instance IP address type: {}'.format(address['type']))
 
