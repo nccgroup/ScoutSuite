@@ -19,6 +19,12 @@
                 "level": "danger"
             }
         ],
+        "cloudsql-instance-is-open-to-public-range.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "cloudsql-instance-no-binary-logging.json": [
             {
                 "enabled": true,
@@ -64,7 +70,7 @@
         "cloudsql-instances-public-ips.json": [
             {
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
