@@ -31,8 +31,8 @@
         ],
         [
             "cloudsql.projects.id.instances.id.authorized_networks.id.value",
-            "notMatch",
-            ".*/32"
+            "isSubnetRange",
+            ""
         ]
     ],
     "id_suffix": "open_to_the_world"

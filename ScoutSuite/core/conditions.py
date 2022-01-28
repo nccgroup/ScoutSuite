@@ -222,6 +222,8 @@ def pass_condition(b, test, a):
                 break
     elif test == 'notInSubnets':
         result = (not pass_condition(b, 'inSubnets', a))
+    elif test == 'isSubnetRange':
+        result = not ipaddress.ip_network(b, strict=False).exploded.endswith("/32")
     elif test == 'isPrivateSubnet':
         result = ipaddress.ip_network(b, strict=False).is_private
     elif test == 'isPublicSubnet':
