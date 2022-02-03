@@ -12,7 +12,7 @@ class AADFacade:
     async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
         scopes = ['https://graph.microsoft.com/.default']
 
-        client = GraphClient(self.credentials.get_credentials(), scopes)
+        client = GraphClient(credential=self.credentials.get_credentials(), scopes=scopes)
         endpoint = 'https://graph.microsoft.com/{}/{}'.format(api_version, api_resource)
         try:
             response = client.get(endpoint)
