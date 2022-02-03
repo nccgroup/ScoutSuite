@@ -1,4 +1,4 @@
-from msgraphcore import GraphSession
+from msgraph.core import GraphClient
 
 from ScoutSuite.core.console import print_exception
 
@@ -12,7 +12,7 @@ class AADFacade:
     async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
         scopes = ['https://graph.microsoft.com/.default']
 
-        client = GraphSession(self.credentials.get_credentials(), scopes)
+        client = GraphClient(self.credentials.get_credentials(), scopes)
         endpoint = 'https://graph.microsoft.com/{}/{}'.format(api_version, api_resource)
         try:
             response = client.get(endpoint)
