@@ -594,6 +594,12 @@
                 "level": "danger"
             }
         ],
+        "iam-lightspin-user-action-denied-for-group.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-managed-policy-allows-NotActions.json": [
             {
                 "enabled": true,
@@ -936,6 +942,12 @@
                 "level": "danger"
             }
         ],
+        "rds-instance-publicly-accessible.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "rds-instance-short-backup-retention-period.json": [
             {
                 "enabled": true,
@@ -1255,6 +1267,12 @@
                 ],
                 "enabled": true,
                 "level": "danger"
+            }
+        ],
+        "sqs-queue-server-side-encryption-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
             }
         ],
         "sqs-queue-world-policy.json": [

@@ -1,12 +1,15 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
-from ScoutSuite.providers.aws.utils import get_name
+from ScoutSuite.providers.aws.utils import get_name, format_arn
 
 
 class Snapshots(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
         super().__init__(facade)
         self.region = region
+        self.partition = facade.partition
+        self.service = 'ec2'
+        self.resource_type = 'snapshot'
 
     async def fetch_all(self):
         raw_snapshots = await self.facade.ec2.get_snapshots(self.region)
@@ -29,11 +32,7 @@ class Snapshots(AWSResources):
         snapshot_dict['volume_id'] = raw_snapshot.get('VolumeId')
         snapshot_dict['volume_size'] = raw_snapshot.get('VolumeSize')
         snapshot_dict['create_volume_permissions'] = raw_snapshot.get('CreateVolumePermissions')
-
-        snapshot_dict['arn'] = 'arn:aws:ec2:{}:{}:snapshot/{}'.format(self.region,
-                                                                      raw_snapshot.get('OwnerId'),
-                                                                      raw_snapshot.get('SnapshotId'))
-
+        snapshot_dict['arn'] = format_arn(self.partition, self.service, self.region, raw_snapshot.get('OwnerId'), raw_snapshot.get('SnapshotId'), self.resource_type)
         return snapshot_dict['id'], snapshot_dict
 
     @staticmethod

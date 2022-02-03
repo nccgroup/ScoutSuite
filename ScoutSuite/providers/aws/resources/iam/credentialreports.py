@@ -37,6 +37,8 @@ class CredentialReports(AWSResources):
         else:
             raw_credential_report['mfa_active_hardware'] = False
 
+        raw_credential_report['partition'] = self.facade.partition
+
         return raw_credential_report['id'], raw_credential_report
 
     async def _user_has_hardware_mfa_devices(self, username):

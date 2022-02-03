@@ -1,0 +1,21 @@
+{
+  "description": "DNSSEC is not enabled for Cloud DNS",
+  "rationale": "Domain Name System Security Extensions (DNSSEC) adds security to the DNS protocol by enabling DNS responses to be validated. Having a trustworthy DNS that translates a domain name like www.example.com into its associated IP address is an increasingly important building block of today’s web-based applications. Attackers can hijack this process of domain/IP lookup and redirect users to a malicious site through DNS hijacking and man-in-the-middle attacks. DNSSEC helps mitigate the risk of such attacks by cryptographically signing DNS records. As a result, it prevents attackers from issuing fake DNS responses that may misdirect browsers to nefarious websites.",
+  "remediation": "From Console:<ol><li>Go to Cloud DNS by visiting https://console.cloud.google.com/net-services/dns/zones.</li><li>For each zone of <samp>Type Public</samp>, set <samp>DNSSEC</samp> to <samp>ON</samp>.</li></ol>",
+  "dashboard_name": "Cloud DNS",
+  "path": "dns.projects.id.managed_zones.id",
+  "references": [
+    "https://cloudplatform.googleblog.com/2017/11/DNSSEC-now-available-in-Cloud-DNS.html",
+    "https://cloud.google.com/dns/dnssec-config#enabling",
+    "https://cloud.google.com/dns/dnssec"
+  ],
+  "conditions": [
+    "and",
+    [
+      "dns.projects.id.managed_zones.id.dnssec_enabled",
+      "false",
+      ""
+    ]
+  ],
+  "id_suffix": "dnssec_enabled"
+}

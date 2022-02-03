@@ -1,0 +1,54 @@
+{
+    "description": "KMS Encryption Not Rotated Within 90 Days",
+    "rationale": "Set a key rotation period and starting time. A key can be created with a specified rotation period, which is the time between when new key versions are generated automatically. A key is used to protect some corpus of data. A collection of files could be encrypted with the same key and people with decrypt permissions on that key would be able to decrypt those files. Therefore, it's necessary to make sure the rotation period is set to a specific time.",
+    "remediation": "From console:<ol><li>Got to <samp>Cryptographic Keys</samp> by visiting: https://console.cloud.google.com/security/kms.</li><li>Click on the specific key ring</li><li>From the list of keys, choose the specific key and Click on <samp>Right side pop up the blade (3 dots).</samp></li><li>Click on <samp>Edit rotation period.</samp></li><li>On the pop-up window, <samp>Select a new rotation period</samp> in days which should be less than 90 and then choose <samp>Starting on</samp> date (date from which the rotation period begins).</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "1.10"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/kms/docs/key-rotation#frequency_of_key_rotation",
+        "https://cloud.google.com/kms/docs/re-encrypt-data"
+    ],
+    "dashboard_name": "Keys",
+    "display_path": "kms.projects.id.keyrings.id",
+    "path": "kms.projects.id.keyrings.id.keys.id",
+    "conditions": [
+        "and",
+        [
+            "kms.projects.id.keyrings.id.keys.id.state",
+            "equal",
+            "ENABLED"
+        ],
+        [
+            "or",
+            [
+                "kms.projects.id.keyrings.id.keys.id.rotation_period",
+                "equal",
+                "None"
+            ],
+            [
+                "kms.projects.id.keyrings.id.keys.id.rotation_period",
+                "moreThan",
+                "90"
+            ]
+        ],
+        [
+            "or",
+            [
+                "kms.projects.id.keyrings.id.keys.id.next_rotation_time_days",
+                "equal",
+                "None"
+            ],
+            [
+                "kms.projects.id.keyrings.id.keys.id.next_rotation_time_days",
+                "moreThan",
+                "90"
+            ]
+        ]
+    ],
+    "id_suffix": "rotation_period"
+}

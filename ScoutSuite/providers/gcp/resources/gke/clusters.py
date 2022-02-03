@@ -5,13 +5,12 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Clusters(Resources):
-    def __init__(self, facade: GCPFacade, project_id, zone):
+    def __init__(self, facade: GCPFacade, project_id):
         super(Clusters, self).__init__(facade)
         self.project_id = project_id
-        self.zone = zone
 
     async def fetch_all(self):
-        raw_clusters = await self.facade.gke.get_clusters(self.project_id, self.zone)
+        raw_clusters = await self.facade.gke.get_clusters(self.project_id)
         for raw_cluster in raw_clusters:
             cluster_id, cluster = await self._parse_cluster(raw_cluster)
             self[cluster_id] = cluster
@@ -21,6 +20,8 @@ class Clusters(Resources):
         cluster_dict = {}
         cluster_dict['id'] = get_non_provider_id(raw_cluster['name'])
         cluster_dict['name'] = raw_cluster['name']
+        cluster_dict['location'] = raw_cluster['location']
+        cluster_dict['type'] = "Zonal" if raw_cluster['location'].count("-") > 1 else "Regional"
         cluster_dict['alias_ip_enabled'] = raw_cluster.get('ipAllocationPolicy', {}).get('useIpAliases', False)
         cluster_dict['basic_authentication_enabled'] = self._is_basic_authentication_enabled(raw_cluster)
         cluster_dict['client_certificate_enabled'] = self._is_client_certificate_enabled(raw_cluster)

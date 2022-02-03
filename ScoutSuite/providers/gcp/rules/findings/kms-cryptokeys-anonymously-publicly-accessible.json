@@ -1,0 +1,35 @@
+{
+    "description": "Cloud KMS Cryptokeys Anonymously Or Publicly Accessible",
+    "rationale": "Granting permissions to allUsers or allAuthenticatedUsers allows anyone to access the data set. Such access might not be desirable if sensitive data is stored at the location. In this case, ensure that anonymous and/or public access to a Cloud KMS cryptokey is not allowed.",
+    "remediation": "From command line:<ol><li>List all Cloud KMS <samp>Cryptokeys</samp>: <br> gcloud kms keys list --keyring=[key_ring_name] --location=global --format=json | jq '.[].name'</li><li>Remove IAM policy binding for a KMS key to remove access to <samp>allUsers</samp> and <samp>allAuthenticatedUsers</samp> using the below command.<br> gcloud kms keys remove-iam-policy-binding [key_name] --keyring=[key_ring_name] --location=global --member='allAuthenticatedUsers' --role='[role]' <br> gcloud kms keys remove-iam-policy-binding [key_name] --keyring=[key_ring_name] --location=global --member='allUsers' --role='[role]'</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "1.9"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/sdk/gcloud/reference/kms/keys/remove-iam-policy-binding",
+        "https://cloud.google.com/sdk/gcloud/reference/kms/keys/set-iam-policy",
+        "https://cloud.google.com/sdk/gcloud/reference/kms/keys/get-iam-policy",
+        "https://cloud.google.com/kms/docs/resource-hierarchy#key_resource_id"
+    ],
+    "dashboard_name": "KMS Bindings",
+    "display_path": "kms.projects.id.keyrings.id",
+    "path": "kms.projects.id.keyrings.id.keys.id.kms_iam_policy.id",
+    "conditions": [
+        "and",
+        [
+            "kms.projects.id.keyrings.id.keys.id.state",
+            "equal",
+            "ENABLED"
+        ],
+        [
+            "kms.projects.id.keyrings.id.keys.id.kms_iam_policy.id.anonymous_public_accessible",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "anonymous_public_accessible"
+}

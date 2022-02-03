@@ -1,0 +1,44 @@
+
+<!-- Cloud DNS zones partial -->
+<script id="services.dns.projects.id.managed_zones.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">ID: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.id">{{id}}</span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.description"><samp>{{description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.creation_timestamp">{{format_date creation_timestamp}}</span></div>
+        <div class="list-group-item-text item-margin">DNSSEC: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.dnssec_enabled">{{convert_bool_to_enabled dnssec_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Visibility: <span id="dns.projects.{{@../key}}.managed_zones{{@key}}.visibility">{{ visibility}}</span></div>
+    <div class="list-group-item">
+        <h5  id="dns.projects.{{@../key}}.managed_zones.{{@key}}.dnssec_keys" class="list-group-item-heading">DNSSEC Keys:</h5>
+        <div class="accordion-inner">
+            <ul>
+                {{#each dnssec_keys}}
+                <li><samp>{{@key}}</samp></li>
+                <ul>
+                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.dnssec_keys.{{@key}}.key_algorithm">Key Algorithm: <samp>{{key_algorithm}}</samp></li>
+                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.dnssec_keys.{{@key}}.key_type">Key Type: <samp>{{key_type}}</samp></li>
+                    <li id="dns.projects.{{@../../key}}.managed_zones.{{@../key}}.dnssec_keys.{{@key}}.length">Length: {{length}}</li>
+                </ul>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.dns.projects.id.managed_zones", $("#services\\.dns\\.projects\\.id\\.managed_zones\\.partial").html());
+</script>
+
+<!-- Single dns zones template -->
+<script id="single_dns_network-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.dns.projects.id.managed_zones'}}
+</script>
+<script>
+    var single_dns_managed_zones_template = Handlebars.compile($("#single_dns_managed_zones-template").html());
+</script>
