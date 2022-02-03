@@ -19,6 +19,8 @@
                 {{/if}}
             </span>
         </div>
+        <div class="list-group-item-text item-margin">Storage encrypted with Customer Managed Key: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.encryption_key_customer_managed">{{convert_bool_to_enabled encryption_key_customer_managed }}</span></div>
+
         <div class="list-group-item-text item-margin">Tags: 
             {{#each tags}}
                 <div style="border-radius: 5px; -webkit-border-radius: 5px; float: center; background-color: #c2c2d6; padding: 0.1px; text-align: center; display: inline-flex;">
@@ -37,9 +39,21 @@
         {{#each blob_containers}}
             <samp>{{@key}}</samp>
             <div class="list-group-item-text item-margin">
-                Public Access: <span id="storageaccounts.subscriptions.{{@../../key}}.storage_accounts.{{@key}}.blob_containers.{{@key}}.public_access_allowed">{{ convert_bool_to_enabled public_access_allowed }}</span>
+                Public Access: <span id="storageaccounts.subscriptions.{{@../../key}}.storage_accounts.{{@../key}}.blob_containers.{{@key}}.public_access_allowed">{{ convert_bool_to_enabled public_access_allowed }}</span>
             </div>
         {{/each}}
+        </div>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Blob Services</h4>
+        <div class="list-group-item-text item-margin">
+            {{#each blob_services}}
+            <samp>{{name}}</samp>
+            <div class="list-group-item-text item-margin">
+                Soft Delete: <span id="storageaccounts.subscriptions.{{@../../key}}.storage_accounts.{{@../key}}.blob_services.{{@key}}.soft_delete_enabled">{{ convert_bool_to_enabled soft_delete_enabled }}</span>
+            </div>
+            {{/each}}
         </div>
     </div>
 

@@ -1,0 +1,27 @@
+{
+    "description": "No Administering Resource Locks Role",
+    "rationale": "Given the resource lock functionality is outside of standard Role Based Access Control(RBAC), it would be prudent to create a resource lock administrator role to prevent inadvertent unlocking of resources.",
+    "remediation": "From Azure Console: <ol><li>In the Azure portal, open a subscription or resource group where you want the custom role to be assignable.</li><li>Select <samp>Access control (IAM)</samp></li> <li> Click <samp> Add</samp></li><li>Select Add custom role</li><li>\n    Select Add custom role\n</li><li>\n    In the Custom Role Name field enter <samp>Resource Lock Administrator</samp>\n</li>\n<li>\n    In the <samp>Description</samp> field enter <samp>Can Administer Resource Locks</samp>\n</li>\n<li>\n    For <samp>Baseline permissions</samp> select <samp> Start from scratch</samp>\n</li>\n<li>\n    Click <samp>next</samp>\n</li>\n<li>\n    In the <samp>Permissions</samp> select <samp>Add permissions</samp>\n</li>\n<li>In the Search for a permission box, type in <samp>Microsoft.Authorization/locks</samp> to search for permissions.</li>\n<li> Select the check box next to the permission called <samp>Microsoft.Authorization/locks</samp></li>\n<li>Click <samp>add</samp></li>\n<li>Click <samp>Review+create</samp></li>\n<li>Click <samp>Create</samp></li>\n<li>Assigne the newly created role to the appropriate user</li> </ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "1.23"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/role-based-access-control/custom-roles",
+        "https://docs.microsoft.com/en-us/azure/role-based-access-control/check-access"
+    ],
+    "dashboard_name": "Roles",
+    "path": "rbac.subscriptions.id.custom_roles_report.id",
+    "conditions": [
+        "and",
+        [
+            "rbac.subscriptions.id.custom_roles_report.id.missing_custom_role_administering_resource_locks",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "missing_custom_role_administering_resource_locks"
+}

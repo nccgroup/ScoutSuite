@@ -6,7 +6,18 @@
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.0.0",
             "reference": "6.5"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "6.5"
         }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview",
+        "https://docs.azure.cn/zh-cn/cli/network/watcher?view=azure-cli-latest",
+        "https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-create",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-asset-management#am-2-ensure-security-team-has-access-to-asset-inventory-and-metadata"
     ],
     "dashboard_name": "Network Configurations",
     "display_path": "network.subscriptions.id.watchers",

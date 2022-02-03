@@ -1,0 +1,25 @@
+<!-- Settings partial -->
+<script id="services.securitycenter.subscriptions.id.settings.partial" type="text/x-handlebars-template">
+    <div id="ressource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="securitycenter.subscriptions.{{@../key}}.settings.{{@key}}.name"><samp>{{ name }}</samp></span></div>
+        <div class="list-group-item-text item-margin">Kind: <span id="securitycenter.subscriptions.{{@../key}}.settings.{{@key}}.kind"><samp>{{ kind }}</samp></span></div>
+        <div class="list-group-item-text item-margin">Enabled: <span id="securitycenter.subscriptions.{{@../key}}.settings.{{@key}}.enabled"><samp>{{ enabled }}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.securitycenter.subscriptions.id.settings", $("#services\\.securitycenter\\.subscriptions\\.id\\.settings\\.partial").html());
+</script>
+
+<!-- Single settings template -->
+<script id="single_securitycenter_settings-template" type="text/x-handlebars-template">
+    {{> modal_template template='services.securitycenter.subscriptions.id.settings'}}
+</script>
+<script>
+    var single_securitycenter_settings_template = Handlebars.compile($("#single_securitycenter_settings-template").html());
+</script>
