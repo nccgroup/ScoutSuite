@@ -54,6 +54,7 @@ formatted_service_name = {
     # GCP
     'cloudstorage': 'Cloud Storage',
     'cloudmemorystore': 'Cloud Memorystore',
+    'memorystore': 'Cloud Memorystore',
     'cloudsql': 'Cloud SQL',
     'dns': 'DNS',
     'stackdriverlogging': 'Stackdriver Logging',
