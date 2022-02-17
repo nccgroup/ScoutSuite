@@ -62,6 +62,10 @@ class IAMFacade(GCPBaseFacade):
                 response = await run_concurrently(
                     lambda: iam_client.projects().roles().get(name=role).execute()
                 )
+            elif 'organizations/' in role:
+                response = await run_concurrently(
+                    lambda: iam_client.organizations().roles().get(name=role).execute()
+                )
             else:
                 response = await run_concurrently(
                     lambda: iam_client.roles().get(name=role).execute()
