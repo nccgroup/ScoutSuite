@@ -1,6 +1,6 @@
 import json
 
-from ScoutSuite.core.console import print_exception, print_info, print_debug, print_error
+from ScoutSuite.core.console import print_exception, print_info, print_warning
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
@@ -151,8 +151,8 @@ class GCPFacade(GCPBaseFacade):
             request = services.list(parent=f'projects/{project_id}')
             services_response = await GCPFacadeUtils.get_all('services', request, services)
         except Exception as e:
-            print_exception(f'Could not fetch the state of services for project \"{project_id}\", '
-                            f'including {format_service_name(service.lower())} in the execution', {'exception': e})
+            print_warning(f'Could not fetch the state of services for project \"{project_id}\", '
+                          f'including {format_service_name(service.lower())} in the execution', {'exception': e})
             return True
 
         # These are hardcoded endpoint correspondences as there's no easy way to do this.
@@ -172,11 +172,11 @@ class GCPFacade(GCPBaseFacade):
             endpoint = 'monitoring'
         elif service == 'MemoryStore':
             endpoint = 'redis'
-        elif service =='DNS':
-            endpoint='dns'
+        elif service == 'DNS':
+            endpoint = 'dns'
         else:
-            print_debug('Could not validate the state of the {} API for project \"{}\", '
-                        'including it in the execution'.format(format_service_name(service.lower()), project_id))
+            print_warning(f'Could not validate the state of the {format_service_name(service.lower())} API for '
+                          f'project \"{project_id}\", including it in the execution')
             return True
 
         for s in services_response:
@@ -184,10 +184,10 @@ class GCPFacade(GCPBaseFacade):
                 if s.get('state') == 'ENABLED':
                     return True
                 else:
-                    print_info('{} API not enabled for project \"{}\", skipping'.format(format_service_name(service.lower()),
-                                                                                        project_id))
+                    print_info(f'{format_service_name(service.lower())} API not enabled for '
+                               f'project \"{project_id}\", skipping')
                     return False
 
-        print_error(f'Could not validate the state of the {format_service_name(service.lower())} API '
-                    f'for project \"{project_id}\", including it in the execution')
+        print_warning(f'Could not validate the state of the {format_service_name(service.lower())} API '
+                      f'for project \"{project_id}\", including it in the execution')
         return True
