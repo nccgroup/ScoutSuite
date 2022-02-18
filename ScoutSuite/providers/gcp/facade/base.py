@@ -152,7 +152,7 @@ class GCPFacade(GCPBaseFacade):
             services_response = await GCPFacadeUtils.get_all('services', request, services)
         except Exception as e:
             print_warning(f'Could not fetch the state of services for project \"{project_id}\", '
-                          f'including {format_service_name(service.lower())} in the execution', {'exception': e})
+                          f'including {format_service_name(service.lower())} in the execution: {e}')
             return True
 
         # These are hardcoded endpoint correspondences as there's no easy way to do this.
