@@ -51,7 +51,9 @@ class Bindings(Resources):
             member_type, entity = member.split(':')[:2]
             if member_type in type_map:
                 members_dict[type_map[member_type]].append(entity)
+            elif member_type == 'deleted':
+                pass
             else:
-                print_exception('Type %s not handled' % member_type)
+                print_exception(f'Type {member_type} not handled')
         
         return members_dict
