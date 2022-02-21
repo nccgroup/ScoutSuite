@@ -151,8 +151,8 @@ class GCPFacade(GCPBaseFacade):
             request = services.list(parent=f'projects/{project_id}')
             services_response = await GCPFacadeUtils.get_all('services', request, services)
         except Exception as e:
-            print_warning(f'Could not fetch the state of services for project \"{project_id}\", '
-                          f'including {format_service_name(service.lower())} in the execution: {e}')
+            print_warning(f"Could not fetch the state of services for project \"{project_id}\", "
+                          f"including {format_service_name(service.lower())} in the execution: {e}")
             return True
 
         # These are hardcoded endpoint correspondences as there's no easy way to do this.
@@ -175,8 +175,8 @@ class GCPFacade(GCPBaseFacade):
         elif service == 'DNS':
             endpoint = 'dns'
         else:
-            print_warning(f'Could not validate the state of the {format_service_name(service.lower())} API for '
-                          f'project \"{project_id}\", including it in the execution')
+            print_warning(f"Could not validate the state of the {format_service_name(service.lower())} API "
+                          f"for project \"{project_id}\", including it in the execution")
             return True
 
         for s in services_response:
@@ -188,6 +188,6 @@ class GCPFacade(GCPBaseFacade):
                                f'project \"{project_id}\", skipping')
                     return False
 
-        print_warning(f'Could not validate the state of the {format_service_name(service.lower())} API '
-                      f'for project \"{project_id}\", including it in the execution')
+        print_warning(f"Could not validate the state of the {format_service_name(service.lower())} API "
+                      f"for project \"{project_id}\", including it in the execution")
         return True
