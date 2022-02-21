@@ -13,5 +13,5 @@ def is_throttled(e):
         else:
             return False
     except Exception as e:
-        print_exception(f'Unable to validate exception for throttling: {e}')
+        print_exception(f'Unable to validate exception for GCP throttling: {e}')
         return False
