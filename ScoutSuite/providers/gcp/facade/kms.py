@@ -42,7 +42,8 @@ class KMSFacade(GCPBaseFacade):
                     lambda: list(self.cloud_client.list_key_rings(parent)))
             return key_rings
         except Exception as e:
-            print_exception(f'Failed to retrieve KMS key rings: {e}')
+            if 'Billing is disabled for project' not in str(e):
+                print_exception(f'Failed to retrieve KMS key rings: {e}')
             return {}
 
     async def list_keys(self, project_id: str, location: str, keyring_name: str):
