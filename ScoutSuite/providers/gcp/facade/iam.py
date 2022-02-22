@@ -72,5 +72,5 @@ class IAMFacade(GCPBaseFacade):
                 )
             return response
         except Exception as e:
-            print_exception(f'Failed to retrieve IAM role definition: {e}')
+            print_exception(f'Failed to retrieve IAM role definition for role {role}: {e}')
             return {}
