@@ -110,16 +110,16 @@ async def map_concurrently(coroutine, entities, **kwargs):
     return results
 
 
-def is_throttled(e):
+def is_throttled(exception):
     """
     Function that tries to determine if an exception was caused by throttling
     TODO - this implementation is incomplete
     """
 
-    if hasattr(e, 'message') and \
-            ('Google Cloud' in e.message or
-             '404' in e.message or
-             'projects/' in e.message):
+    if hasattr(exception, 'message') and \
+            ('Google Cloud' in exception.message or
+             '404' in exception.message or
+             'projects/' in exception.message):
         return False
     else:
-        return aws_is_throttled(e) or gcp_is_throttled(e)
+        return aws_is_throttled(exception) or gcp_is_throttled(exception)

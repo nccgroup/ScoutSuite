@@ -22,23 +22,23 @@ def get_partition_name(session):
     return partition_name
 
 
-def is_throttled(e):
+def is_throttled(exception):
     """
     Determines whether the exception is due to API throttling.
 
-    :param e:                           Exception raised
+    :param exception:                           Exception raised
     :return:                            True if it's a throttling exception else False
     """
     try:
         return (
-            hasattr(e, "response")
-            and e.response
-            and "Error" in e.response
-            and e.response["Error"]["Code"]
-            in ["Throttling", "RequestLimitExceeded", "ThrottlingException"]
+                hasattr(exception, "response")
+                and exception.response
+                and "Error" in exception.response
+                and exception.response["Error"]["Code"]
+                in ["Throttling", "RequestLimitExceeded", "ThrottlingException"]
         )
-    except Exception as e:
-        print_exception(f'Unable to validate exception for AWS throttling: {e}')
+    except Exception as exception:
+        print_exception(f'Unable to validate exception {e} for AWS throttling: {exception}')
         return False
 
 
