@@ -57,6 +57,7 @@ class IAMFacade(GCPBaseFacade):
 
     async def get_role_definition(self, role: str):
         try:
+            role = role.split("_withcond_")[0] # remove the condition key to get the actual role
             iam_client = self._get_client()
             if 'projects/' in role:
                 response = await run_concurrently(
