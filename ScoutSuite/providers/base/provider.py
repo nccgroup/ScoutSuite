@@ -377,15 +377,14 @@ class BaseProvider:
                                 else:
                                     callback(current_config, path, current_path, value, callback_args)
                             except Exception as e:
-                                print_exception(e, {'callback': callback_name,
-                                                    'callback arguments': callback_args,
-                                                    'current path': f'{current_path}',
-                                                    'key': '{}'.format(key if 'key' in locals() else 'not defined'),
-                                                    'value': '{}'.format(
-                                                        value if 'value' in locals() else 'not defined'),
-                                                    'path': f'{path}',
-                                                    }
-                                                )
+                                print_exception(f'Error when calling callback {callback_name} with value {value}: {e}',
+                                                {'callback': callback_name,
+                                                 'callback arguments': callback_args,
+                                                 'current path': f'{current_path}',
+                                                 'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                                 'value': '{}'.format(
+                                                     value if 'value' in locals() else 'not defined'),
+                                                 'path': f'{path}'})
                     else:
                         tmp = copy.deepcopy(current_path)
                         try:
