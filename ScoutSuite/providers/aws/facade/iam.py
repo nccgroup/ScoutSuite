@@ -193,9 +193,10 @@ class IAMFacade(AWSBaseFacade):
         client = AWSFacadeUtils.get_client('iam', self.session)
         try:
             return await run_concurrently(
-                lambda: client.list_virtual_mfa_devices()['VirtualMFADevices'])
+                lambda: client.list_virtual_mfa_devices().get('VirtualMFADevices', []))
         except Exception as e:
             print_exception(f'Failed to list virtual MFA devices: {e}')
+            return []
 
     async def _get_and_set_group_users(self, group: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)

@@ -240,24 +240,27 @@ class AWSProvider(BaseProvider):
             network_acl['use_default_%s_rules' % direction] = False
 
     def list_ec2_network_attack_surface_callback(self, current_config, path, current_path, privateip_id, callback_args):
-        manage_dictionary(self.services['ec2'], 'external_attack_surface', {})
-        if 'Association' in current_config and current_config['Association']:
-            public_ip = current_config['Association']['PublicIp']
-            self._security_group_to_attack_surface(self.services['ec2']['external_attack_surface'],
-                                                   public_ip, current_path,
-                                                   [g['GroupId']
-                                                    for g in current_config['Groups']],
-                                                   [])
-            self._complete_information_on_ec2_attack_surface(current_config, current_path, public_ip)
-
-        # IPv6
-        if 'Ipv6Addresses' in current_config and len(current_config['Ipv6Addresses']) > 0:
-            for ipv6 in current_config['Ipv6Addresses']:
-                ip = ipv6['Ipv6Address']
+        try:
+            manage_dictionary(self.services['ec2'], 'external_attack_surface', {})
+            if 'Association' in current_config and current_config['Association']:
+                public_ip = current_config['Association']['PublicIp']
                 self._security_group_to_attack_surface(self.services['ec2']['external_attack_surface'],
-                                                       ip, current_path,
-                                                       [g['GroupId'] for g in current_config['Groups']], [])
-                self._complete_information_on_ec2_attack_surface(current_config, current_path, ip)
+                                                       public_ip, current_path,
+                                                       [g['GroupId']
+                                                        for g in current_config['Groups']],
+                                                       [])
+                self._complete_information_on_ec2_attack_surface(current_config, current_path, public_ip)
+
+            # IPv6
+            if 'Ipv6Addresses' in current_config and len(current_config['Ipv6Addresses']) > 0:
+                for ipv6 in current_config.get('Ipv6Addresses', []):
+                    ip = ipv6['Ipv6Address']
+                    self._security_group_to_attack_surface(self.services['ec2']['external_attack_surface'],
+                                                           ip, current_path,
+                                                           [g['GroupId'] for g in current_config['Groups']], [])
+                    self._complete_information_on_ec2_attack_surface(current_config, current_path, ip)
+        except Exception as e:
+            print_exception(f"Error listing EC2 network attack surface: {e}")
 
     def _complete_information_on_ec2_attack_surface(self, current_config, current_path, public_ip):
         # Get the EC2 instance info
@@ -558,7 +561,11 @@ class AWSProvider(BaseProvider):
             if 'status_path' in callback_args:
                 status_path = combine_paths(copy.deepcopy(
                     original_resource_path), callback_args['status_path'])
-                resource_status = get_object_at(self, status_path).replace('.', '_')
+                obj = get_object_at(self, status_path)
+                if obj:
+                    resource_status = obj.replace('.', '_')
+                else:
+                    resource_status = obj
             else:
                 resource_status = None
             unknown_vpc_id = True if current_path[4] != 'vpcs' else False
