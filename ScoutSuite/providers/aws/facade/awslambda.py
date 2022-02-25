@@ -1,6 +1,6 @@
 import json
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 
@@ -40,7 +40,10 @@ class LambdaFacade(AWSBaseFacade):
             role['policies'] = managed_policies
             return role
         except Exception as e:
-            print_exception('Failed to get role from managed policies: {}'.format(e))
+            if 'NoSuchEntity' in e:
+                print_warning(f'Failed to get role from managed policies: {e}')
+            else:
+                print_exception(f'Failed to get role from managed policies: {e}')
             return None
 
     async def get_env_variables(self, function_name, region):
