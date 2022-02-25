@@ -1,7 +1,7 @@
 import copy
 import os
 
-from ScoutSuite.core.console import print_error, print_exception, print_debug
+from ScoutSuite.core.console import print_error, print_exception, print_warning, print_debug
 from ScoutSuite.providers.aws.services import AWSServicesConfig
 from ScoutSuite.providers.aws.resources.vpc.base import put_cidr_name
 from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id, get_partition_name
@@ -692,7 +692,7 @@ class AWSProvider(BaseProvider):
             if flow_log_id not in subnet['flow_logs']:
                 subnet['flow_logs'].append(flow_log_id)
         else:
-            print_exception('Resource %s attached to flow logs is not handled' % attached_resource)
+            print_warning('Resource %s attached to flow logs is not handled' % attached_resource)
 
     def get_db_attack_surface(self, current_config, path, current_path, db_id, callback_args):
         service = current_path[1]
