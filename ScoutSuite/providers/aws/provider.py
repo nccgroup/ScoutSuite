@@ -202,7 +202,7 @@ class AWSProvider(BaseProvider):
             # Can't infer the name of the SG in the peered account
             pass
         else:
-            print_exception('Failed to handle EC2 grant: %s' % ec2_grant)
+            print_warning('Failed to handle EC2 grant: %s' % ec2_grant)
 
     def process_network_acls_callback(self, current_config, path, current_path, privateip_id, callback_args):
         # Check if the network ACL allows all traffic from all IP addresses
