@@ -248,8 +248,7 @@ class BaseProvider:
                     for summary in self.metadata[service_group][service]['summaries']:
                         if 'callbacks' in self.metadata[service_group][service]['summaries'][summary]:
                             current_path = ['services', service]
-                            for callback in self.metadata[service_group][service]['summaries'][summary][
-                                'callbacks']:
+                            for callback in self.metadata[service_group][service]['summaries'][summary]['callbacks']:
                                 callback_name = callback[0]
                                 callback_args = copy.deepcopy(callback[1])
                                 target_path = callback_args.pop('path').replace('.id', '').split('.')[2:]

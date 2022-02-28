@@ -263,15 +263,18 @@ class AWSProvider(BaseProvider):
             print_exception(f"Error listing EC2 network attack surface: {e}")
 
     def _complete_information_on_ec2_attack_surface(self, current_config, current_path, public_ip):
-        # Get the EC2 instance info
-        ec2_info = self.services
-        for p in current_path[1:-3]:
-            ec2_info = ec2_info[p]
-        # Fill the rest of the attack surface details on that IP
-        self.services['ec2']['external_attack_surface'][public_ip]['InstanceName'] = ec2_info['name']
-        if 'PublicDnsName' in current_config['Association']:
-            self.services['ec2']['external_attack_surface'][public_ip]['PublicDnsName'] = \
-                current_config['Association']['PublicDnsName']
+        try:
+            # Get the EC2 instance info
+            ec2_info = self.services
+            for p in current_path[1:-3]:
+                ec2_info = ec2_info[p]
+            # Fill the rest of the attack surface details on that IP
+            self.services['ec2']['external_attack_surface'][public_ip]['InstanceName'] = ec2_info.get('name')
+            if 'PublicDnsName' in current_config.get('Association'):
+                self.services['ec2']['external_attack_surface'][public_ip]['PublicDnsName'] = \
+                    current_config['Association'].get('PublicDnsName')
+        except Exception as e:
+            print_exception(f"Error completing EC2 network attack surface information: {e}")
 
     def _map_all_sgs(self):
         sg_map = dict()
