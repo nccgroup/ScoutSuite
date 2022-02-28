@@ -75,7 +75,7 @@ def get_value_at(all_info, current_path, key, to_string=False):
                     else:
                         target_path.append(key)
                 except Exception as e:
-                    print_exception(f'Unable to get index \"{i}\" from path {current_path}: {e}',
+                    print_exception(f'Unable to get index \"{i}\" from path \"{current_path}\": {e}',
                                     additional_details={'current_path': current_path,
                                                         'target_path': target_path,
                                                         'key': key,
@@ -102,7 +102,7 @@ def get_value_at(all_info, current_path, key, to_string=False):
                 else:
                     target_obj = target_obj[p]
             except Exception as e:
-                print_exception(f'Unable to get \"{p}\" from target object {target_obj}: {e}',
+                print_exception(f'Unable to get \"{p}\" from target object \"{target_obj}\": {e}',
                                 additional_details={'current_path': current_path,
                                                     'target_obj': target_obj,
                                                     'p': p})
