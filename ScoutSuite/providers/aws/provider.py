@@ -522,12 +522,15 @@ class AWSProvider(BaseProvider):
         else:
             current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
 
-    def match_roles_and_cloudformation_stacks_callback(self, current_config, path, current_path, stack_id,
-                                                       callback_args):
-        if 'RoleARN' not in current_config:
-            return
-        role_arn = current_config.pop('RoleARN')
-        current_config['iam_role'] = self._get_role_info('arn', role_arn)
+    def match_roles_and_cloudformation_stacks_callback(self,
+                                                       current_config, path, current_path, stack_id, callback_args):
+        try:
+            if 'RoleARN' not in current_config:
+                return
+            role_arn = current_config.pop('RoleARN')
+            current_config['iam_role'] = self._get_role_info('arn', role_arn)
+        except Exception as e:
+            print_exception(f'Unable to match roles and CloudFormation stacks: {e}')
 
     def match_roles_and_vpc_flowlogs_callback(self, current_config, path, current_path, flowlog_id, callback_args):
         if 'DeliverLogsPermissionArn' not in current_config:
@@ -537,13 +540,16 @@ class AWSProvider(BaseProvider):
             'arn', delivery_role_arn)
 
     def _get_role_info(self, attribute_name, attribute_value):
-        iam_role_info = {'name': None, 'id': None}
-        for role_id in self.services['iam']['roles']:
-            if self.services['iam']['roles'][role_id][attribute_name] == attribute_value:
-                iam_role_info['name'] = self.services['iam']['roles'][role_id]['name']
-                iam_role_info['id'] = role_id
-                break
-        return iam_role_info
+        try:
+            iam_role_info = {'name': None, 'id': None}
+            for role_id in self.services['iam'].get('roles', []):
+                if self.services['iam']['roles'][role_id][attribute_name] == attribute_value:
+                    iam_role_info['name'] = self.services['iam']['roles'][role_id]['name']
+                    iam_role_info['id'] = role_id
+                    break
+            return iam_role_info
+        except Exception as e:
+            print_exception(f'Unable to get role info for attribute {attribute_name} with value {attribute_value}: {e}')
 
     def match_security_groups_and_resources_callback(self, current_config, path, current_path, resource_id,
                                                      callback_args):
