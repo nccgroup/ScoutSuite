@@ -1,13 +1,12 @@
 from asyncio import Lock
 
 from botocore.exceptions import ClientError
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
-from ScoutSuite.core.console import print_exception
 
 
 class RDSFacade(AWSBaseFacade):
@@ -114,7 +113,10 @@ class RDSFacade(AWSBaseFacade):
             snapshot['Attributes'] =\
                 attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
         except Exception as e:
-            print_exception(f'Failed to describe RDS snapshot attributes: {e}')
+            if 'DBSnapshotNotFound' in e:
+                print_warning(f'Failed to describe RDS snapshot attributes: {e}')
+            else:
+                print_exception(f'Failed to describe RDS snapshot attributes: {e}')
             snapshot['Attributes'] = {}
 
     async def _get_and_set_cluster_snapshot_attributes(self, snapshot: {}, region: str):

@@ -730,41 +730,45 @@ class AWSProvider(BaseProvider):
             # TODO :: Get Redis endpoint information
 
     def get_lb_attack_surface(self, current_config, path, current_path, elb_id, callback_args):
-        public_dns = current_config['DNSName']
-        elb_config = self.services[current_path[1]]
-        manage_dictionary(elb_config, 'external_attack_surface', {})
-        if current_path[1] == 'elbv2' and current_config['Type'] == 'network':
-            # Network LBs do not have a security group, lookup listeners instead
-            manage_dictionary(
-                elb_config['external_attack_surface'], public_dns, {'protocols': {}})
-            for listener in current_config['listeners']:
-                protocol = current_config['listeners'][listener]['Protocol']
-                manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols'], protocol,
-                                  {'ports': {}})
-                manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols'][protocol]['ports'],
-                                  listener, {'cidrs': []})
-                elb_config['external_attack_surface'][public_dns]['protocols'][protocol]['ports'][listener][
-                    'cidrs'].append({'CIDR': '0.0.0.0/0'})
-        elif current_path[1] == 'elbv2' and current_config['Scheme'] == 'internet-facing':
-            elb_config['external_attack_surface'][public_dns] = {
-                'protocols': {}}
-            security_groups = [g['GroupId']
-                               for g in current_config['security_groups']]
-            listeners = []
-            for listener in current_config['listeners']:
-                listeners.append(listener)
-            self._security_group_to_attack_surface(elb_config['external_attack_surface'], public_dns,
-                                                   current_path, security_groups, listeners)
-        elif current_config['Scheme'] == 'internet-facing':
-            # Classic ELbs do not have a security group, lookup listeners instead
+        try:
             public_dns = current_config['DNSName']
-            manage_dictionary(elb_config['external_attack_surface'], public_dns, {
-                'protocols': {'TCP': {'ports': {}}}})
-            for listener in current_config['listeners']:
-                manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols']['TCP']['ports'],
-                                  listener, {'cidrs': []})
-                elb_config['external_attack_surface'][public_dns]['protocols']['TCP']['ports'][listener][
-                    'cidrs'].append({'CIDR': '0.0.0.0/0'})
+            elb_config = self.services[current_path[1]]
+            manage_dictionary(elb_config, 'external_attack_surface', {})
+            if current_path[1] == 'elbv2' and current_config['Type'] == 'network':
+                # Network LBs do not have a security group, lookup listeners instead
+                manage_dictionary(
+                    elb_config['external_attack_surface'], public_dns, {'protocols': {}})
+                for listener in current_config['listeners']:
+                    protocol = current_config['listeners'][listener]['Protocol']
+                    manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols'], protocol,
+                                      {'ports': {}})
+                    manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols'][protocol]['ports'],
+                                      listener, {'cidrs': []})
+                    elb_config['external_attack_surface'][public_dns]['protocols'][protocol]['ports'][listener][
+                        'cidrs'].append({'CIDR': '0.0.0.0/0'})
+            elif current_path[1] == 'elbv2' and current_config['Scheme'] == 'internet-facing':
+                elb_config['external_attack_surface'][public_dns] = {
+                    'protocols': {}}
+                security_groups = [g['GroupId']
+                                   for g in current_config['security_groups']]
+                listeners = []
+                for listener in current_config['listeners']:
+                    listeners.append(listener)
+                self._security_group_to_attack_surface(elb_config['external_attack_surface'], public_dns,
+                                                       current_path, security_groups, listeners)
+            elif current_config['Scheme'] == 'internet-facing':
+                # Classic ELbs do not have a security group, lookup listeners instead
+                public_dns = current_config['DNSName']
+                manage_dictionary(elb_config['external_attack_surface'], public_dns, {
+                    'protocols': {'TCP': {'ports': {}}}})
+                for listener in current_config['listeners']:
+                    manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols']['TCP']['ports'],
+                                      listener, {'cidrs': []})
+                    elb_config['external_attack_surface'][public_dns]['protocols']['TCP']['ports'][listener][
+                        'cidrs'].append({'CIDR': '0.0.0.0/0'})
+        except Exception as e:
+            print_exception(f'Failed to get LB attack surface: {e}')
+
 
     def _security_group_to_attack_surface(self, attack_surface_config, public_ip, current_path,
                                           security_groups, listeners=None):
