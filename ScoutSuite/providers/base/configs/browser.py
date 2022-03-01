@@ -99,6 +99,8 @@ def get_value_at(all_info, current_path, key, to_string=False):
                     target_obj = p
                 elif p == '':
                     pass
+                elif target_obj is None:
+                    pass
                 else:
                     target_obj = target_obj.get(p)
             except Exception as e:

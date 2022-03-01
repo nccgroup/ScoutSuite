@@ -156,8 +156,10 @@ class EC2Facade(AWSBaseFacade):
                 Attribute='createVolumePermission',
                 SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
         except Exception as e:
-            print_exception(
-                f'Failed to describe EC2 snapshot attributes: {e}')
+            if 'NotFound' in e:
+                print_warning(f'Failed to describe EC2 snapshot attributes: {e}')
+            else:
+                print_exception(f'Failed to describe EC2 snapshot attributes: {e}')
 
     async def get_network_acls(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]

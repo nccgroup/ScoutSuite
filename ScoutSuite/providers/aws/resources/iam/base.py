@@ -46,12 +46,13 @@ class IAM(AWSCompositeResources):
                             try:
                                 entity['id'] = self._get_id_for_resource(entity_type, entity['name'])
                                 entities = self[entity_type]
-                                entities[entity['id']].setdefault('policies', [])
-                                entities[entity['id']].setdefault('policies_counts', 0)
-                                entities[entity['id']]['policies'].append(policy_id)
-                                entities[entity['id']]['policies_counts'] += 1
-                                self._parse_permissions(
-                                    policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
+                                if entity['id'] is not None:
+                                    entities[entity['id']].setdefault('policies', [])
+                                    entities[entity['id']].setdefault('policies_counts', 0)
+                                    entities[entity['id']]['policies'].append(policy_id)
+                                    entities[entity['id']]['policies_counts'] += 1
+                                    self._parse_permissions(
+                                        policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
                             except Exception as e:
                                 print_exception(f'Error setting entity for ID {entity["id"]}: {e}')
                 else:
