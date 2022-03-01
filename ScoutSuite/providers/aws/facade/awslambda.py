@@ -53,6 +53,9 @@ class LambdaFacade(AWSBaseFacade):
             if "Environment" in function_configuration and "Variables" in function_configuration["Environment"]:
                 return function_configuration["Environment"]["Variables"]
         except Exception as e:
-            print_exception('Failed to get Lambda function configuration: {}'.format(e))
+            if 'ResourceNotFoundException' in e:
+                print_warning('Failed to get Lambda function configuration: {}'.format(e))
+            else:
+                print_exception('Failed to get Lambda function configuration: {}'.format(e))
         return []
 
