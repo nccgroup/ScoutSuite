@@ -270,7 +270,7 @@ class AWSProvider(BaseProvider):
                 ec2_info = ec2_info[p]
             # Fill the rest of the attack surface details on that IP
             self.services['ec2']['external_attack_surface'][public_ip]['InstanceName'] = ec2_info.get('name')
-            if 'PublicDnsName' in current_config.get('Association'):
+            if 'PublicDnsName' in current_config.get('Association', {}):
                 self.services['ec2']['external_attack_surface'][public_ip]['PublicDnsName'] = \
                     current_config['Association'].get('PublicDnsName')
         except Exception as e:
@@ -803,8 +803,14 @@ class AWSProvider(BaseProvider):
                             else:
                                 ports = port.split('-')
                                 if len(ports) > 1:
-                                    port_min = int(ports[0])
-                                    port_max = int(ports[1])
+                                    if port[0]:
+                                        port_min = int(ports[0])
+                                    else:
+                                        port_min = None
+                                    if port[1]:
+                                        port_max = int(ports[1])
+                                    else:
+                                        port_max = None
                                 elif port == 'N/A':
                                     port_min = port_max = None
                                 elif port == 'ALL':
