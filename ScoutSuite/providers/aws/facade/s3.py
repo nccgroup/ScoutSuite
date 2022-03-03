@@ -2,7 +2,7 @@ import json
 
 from botocore.exceptions import ClientError
 
-from ScoutSuite.core.console import print_exception, print_debug
+from ScoutSuite.core.console import print_exception, print_debug, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
@@ -63,7 +63,10 @@ class S3Facade(AWSBaseFacade):
         try:
             location = await run_concurrently(lambda: client.get_bucket_location(Bucket=bucket['Name']))
         except Exception as e:
-            print_exception('Failed to get bucket location for {}: {}'.format(bucket['Name'], e))
+            if 'NoSuchBucket' in e:
+                print_warning('Failed to get bucket location for {}: {}'.format(bucket['Name'], e))
+            else:
+                print_exception('Failed to get bucket location for {}: {}'.format(bucket['Name'], e))
             location = None
 
         if location:
@@ -82,7 +85,10 @@ class S3Facade(AWSBaseFacade):
         try:
             logging = await run_concurrently(lambda: client.get_bucket_logging(Bucket=bucket['Name']))
         except Exception as e:
-            print_exception('Failed to get logging configuration for {}: {}'.format(bucket['Name'], e))
+            if 'NoSuchBucket' in e:
+                print_warning('Failed to get logging configuration for {}: {}'.format(bucket['Name'], e))
+            else:
+                print_exception('Failed to get logging configuration for {}: {}'.format(bucket['Name'], e))
             bucket['logging'] = 'Unknown'
         else:
             if 'LoggingEnabled' in logging:
@@ -98,7 +104,10 @@ class S3Facade(AWSBaseFacade):
             bucket['versioning_status_enabled'] = self._status_to_bool(versioning.get('Status'))
             bucket['version_mfa_delete_enabled'] = self._status_to_bool(versioning.get('MFADelete'))
         except Exception as e:
-            print_exception('Failed to get versioning configuration for {}: {}'.format(bucket['Name'], e))
+            if 'NoSuchBucket' in e:
+                print_warning('Failed to get versioning configuration for {}: {}'.format(bucket['Name'], e))
+            else:
+                print_exception('Failed to get versioning configuration for {}: {}'.format(bucket['Name'], e))
             bucket['versioning_status_enabled'] = None
             bucket['version_mfa_delete_enabled'] = None
 
