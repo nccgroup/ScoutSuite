@@ -270,9 +270,9 @@ class AWSProvider(BaseProvider):
                 ec2_info = ec2_info[p]
             # Fill the rest of the attack surface details on that IP
             self.services['ec2']['external_attack_surface'][public_ip]['InstanceName'] = ec2_info.get('name')
-            if current_config and 'PublicDnsName' in current_config.get('Association', {}):
+            if current_config is not None and 'PublicDnsName' in current_config.get('Association', {}):
                 self.services['ec2']['external_attack_surface'][public_ip]['PublicDnsName'] = \
-                    current_config['Association'].get('PublicDnsName')
+                    current_config.get('Association', {}).get('PublicDnsName')
         except Exception as e:
             print_exception(f"Error completing EC2 network attack surface information: {e}")
 
