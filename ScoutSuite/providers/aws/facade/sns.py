@@ -1,6 +1,6 @@
 import asyncio
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
@@ -27,7 +27,10 @@ class SNSFacade(AWSBaseFacade):
                 lambda: sns_client.get_topic_attributes(TopicArn=topic['TopicArn'])['Attributes']
             )
         except Exception as e:
-            print_exception(f'Failed to get SNS topic attributes: {e}')
+            if 'NotFound' in e:
+                print_warning(f'Failed to get SNS topic attributes: {e}')
+            else:
+                print_exception(f'Failed to get SNS topic attributes: {e}')
 
     async def get_subscriptions(self, region: str, topic_name: str):
         await self.cache_subscriptions(region)
