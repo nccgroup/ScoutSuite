@@ -21,6 +21,8 @@ class Trails(AWSResources):
         trail_id = get_non_provider_id(trail['name'])
         
         trail['arn'] = raw_trail.get('TrailARN')
+        trail['is_organization_trail'] = raw_trail.get('IsOrganizationTrail')
+        trail['home_region'] = raw_trail.get('HomeRegion')
 
         # Do not duplicate entries for multiregion trails
         if 'IsMultiRegionTrail' in raw_trail and raw_trail['IsMultiRegionTrail'] and \
