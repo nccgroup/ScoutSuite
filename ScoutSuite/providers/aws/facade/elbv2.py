@@ -58,7 +58,7 @@ class ELBv2Facade(AWSBaseFacade):
         except Exception as e:
             if 'LoadBalancerNotFound' in e:
                 print_warning(f'Failed to describe ELBv2 tags: {e}')
-        else:
+            else:
                 print_exception(f'Failed to describe ELBv2 tags: {e}')
 
     async def get_listeners(self, region: str, load_balancer_arn: str):
