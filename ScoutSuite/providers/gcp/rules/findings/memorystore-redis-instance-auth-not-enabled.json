@@ -1,0 +1,19 @@
+{
+    "description": "Memory Instance Allows Unauthenticated Connections",
+    "rationale": "All incoming connections to Cloud Memorystore databases should require the use of authentication and SSL.",
+    "compliance": [],
+    "references": [
+        "https://cloud.google.com/memorystore/docs/redis/managing-auth"
+    ],
+    "dashboard_name": "Redis Instances",
+    "path": "cloudmemorystore.projects.id.redis_instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudmemorystore.projects.id.redis_instances.id.auth_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "auth_enabled"
+}

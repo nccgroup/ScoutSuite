@@ -129,6 +129,18 @@ class TestOpinelConditionClass(unittest.TestCase):
         assert pass_condition('abcdefg', 'match', ['.*xyx.*', '.*pqr.*']) == False
         assert pass_condition('abcdefg', 'match', ['.*xyx.*', '.*345.*', '.*cde.*']) == True
 
+        assert pass_condition('abcdefg', 'matchInList', '.*cde.*') == True
+        assert pass_condition('abcdefg', 'matchInList', '.*edc.*') == False
+        assert pass_condition('abcdefg', 'matchInList', ['.*cde.*', '.*edc.*']) == True
+        assert pass_condition('abcdefg', 'matchInList', ['.*edc.*', '.*cba.*']) == False
+        assert pass_condition(['abcdefg'], 'matchInList', '.*cde.*') == True
+        assert pass_condition(['abcdefg'], 'matchInList', '.*edc.*') == False
+        assert pass_condition(['abcdefg'], 'matchInList', ['.*cde.*', '.*edc.*']) == True
+        assert pass_condition(['abcdefg'], 'matchInList', ['.*edc.*', '.*cba.*']) == False
+        assert pass_condition(test_list1, 'matchInList', '.*cde.*') == False
+        assert pass_condition('abcdefg', 'matchInList', test_list1) == False
+        assert pass_condition(test_list1, 'matchInList', test_list1) == False
+
         date1 = '2016-04-11 12:20:26.996000+00:00'
         date2 = '2017-04-11 12:20:26.996000+00:00'
         date3 = datetime.datetime.now() - datetime.timedelta(days=1)

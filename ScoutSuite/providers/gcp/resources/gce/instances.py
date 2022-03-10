@@ -39,13 +39,24 @@ class Instances(GCPCompositeResources):
         instance_dict['ip_forwarding_enabled'] = raw_instance.get("canIpForward", False)
         instance_dict['serial_port_enabled'] = self._is_serial_port_enabled(raw_instance)
         instance_dict['disks'] = InstanceDisks(self.facade, raw_instance)
+        instance_dict['public_ip_addresses'] = self._public_ip_adresses(raw_instance)
 
         if 'serviceAccounts' in raw_instance and raw_instance.get('serviceAccounts'):
             instance_dict['service_account'] = raw_instance.get('serviceAccounts')[0].get('email')
             instance_dict['access_scopes'] = raw_instance.get('serviceAccounts')[0].get('scopes')
+            instance_dict['default_service_account'] = \
+                self._is_default_service_account(instance_dict['service_account'])
+            instance_dict['full_access_apis'] = self._allow_full_access_to_all_cloud_api(raw_instance)
         else:
             instance_dict['service_account'] = None
             instance_dict['access_scopes'] = None
+            instance_dict['default_service_account'] = False
+            instance_dict['full_access_apis'] = False
+
+        if 'shieldedInstanceConfig' in raw_instance:
+            instance_dict['shielded_enable'] = self._shielded_vm_enabled(raw_instance)
+        else:
+            instance_dict['shielded_enable'] = False
 
         return instance_dict['id'], instance_dict
 
@@ -64,3 +75,28 @@ class Instances(GCPCompositeResources):
 
     def _is_serial_port_enabled(self, raw_instance):
         return raw_instance['metadata'].get('serial-port-enable') == 'true'
+
+    def _is_default_service_account(self, service_account: str):
+        if '-compute@developer.gserviceaccount.com' in service_account:
+            return True
+        return False
+
+    def _allow_full_access_to_all_cloud_api(self, raw_instance):
+        if '-compute@developer.gserviceaccount.com' in raw_instance.get('serviceAccounts')[0].get('email'):
+            for scope in raw_instance.get('serviceAccounts')[0].get('scopes'):
+                if scope == 'https://www.googleapis.com/auth/cloud-platform':
+                    return True
+        return False
+
+    def _shielded_vm_enabled(self, raw_instance):
+        vtpm = raw_instance['shieldedInstanceConfig'].get('enableVtpm', False)
+        integrity_monitoring = raw_instance['shieldedInstanceConfig'].get('enableIntegrityMonitoring', False)
+        secure_boot = raw_instance['shieldedInstanceConfig'].get('enableSecureBoot', False)
+        return vtpm and integrity_monitoring and secure_boot
+
+    def _public_ip_adresses(self, raw_instance):
+        for network in raw_instance['networkInterfaces']:
+            access_configs = network.get('accessConfigs', None)
+            if access_configs:
+                return True
+        return False

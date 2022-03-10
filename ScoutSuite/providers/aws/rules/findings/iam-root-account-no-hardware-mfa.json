@@ -20,7 +20,8 @@
         }
     ],
     "references": [
-        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-cis-controls-1.13"
+        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-cis-controls-1.13",
+        "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-acct_mfa"
     ],
     "dashboard_name": "Accounts",
     "path": "iam.credential_reports.id",
@@ -43,6 +44,11 @@
                 "false",
                 ""
             ]
+        ],
+        [
+            "iam.credential_reports.id.partition",
+            "notEqual",
+            "aws-us-gov" 
         ]
     ],
     "keys": [

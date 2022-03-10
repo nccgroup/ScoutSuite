@@ -1,0 +1,27 @@
+{
+  "description": "Legacy Network should be removed",
+  "rationale": "Legacy networks have a single network IPv4 prefix range and a single gateway IP address for the whole network. The network is global in scope and spans all cloud regions. Subnetworks cannot be created in a legacy network and are unable to switch from legacy to auto or custom subnet networks. Legacy networks can have an impact for high network traffic projects and are subject to a single point of contention or failure.",
+  "remediation": "For each Google Cloud Platform project,<ol><li>1. Follow the documentation and create a non-legacy network suitable for the organization's requirements.</li><li>Follow the documentation and delete the networks in the <samp>legacy</samp> mode.</li></ol>",
+  "compliance": [
+    {
+      "name": "CIS Google Cloud Platform Foundations",
+      "version": "1.1.0",
+      "reference": "3.2"
+    }
+  ],
+  "dashboard_name": "Networks",
+  "path": "computeengine.projects.id.networks.id",
+  "references": [
+    "https://cloud.google.com/vpc/docs/using-legacy#creating_a_legacy_network",
+    "https://cloud.google.com/vpc/docs/using-legacy#deleting_a_legacy_network"
+  ],
+  "conditions": [
+    "and",
+    [
+      "computeengine.projects.id.networks.id.legacy_mode",
+      "true",
+      ""
+    ]
+  ],
+  "id_suffix": "legacy_mode"
+}

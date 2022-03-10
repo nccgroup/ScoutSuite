@@ -1,0 +1,25 @@
+{
+    "description": "VPC Flow Logs Not Enabled",
+    "rationale": "VPC Flow Logs were not enabled for this subnet. It is best practice to enable Flow Logs to some degree in order to have network visibility in the event of resource compromise, as well as source data for threat detections.",
+    "dashboard_name": "Subnetwork",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "3.8"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/vpc/docs/using-flow-logs#enabling_vpc_flow_logging"
+    ],
+    "path": "computeengine.projects.id.regions.id.subnetworks.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.regions.id.subnetworks.id.flowlogs_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "flowlogs_enabled"
+}

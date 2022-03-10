@@ -38,6 +38,10 @@ Handlebars.registerHelper('displayKey', function (keyName, blob) {
     return key
 })
 
+Handlebars.registerHelper('jsonToString', function (obj) {
+    return JSON.stringify(obj, null, 2)
+})
+
 Handlebars.registerHelper('has_profiles?', function (logins) {
     if (typeof logins !== 'undefined' && logins !== '') {
         return 'Yes'
@@ -317,6 +321,14 @@ Handlebars.registerHelper('concat', function () {
     var path = arguments[0]
     for (var i = 1; i < arguments.length - 1; i++) {
         path = path + '.' + arguments[i]
+    }
+    return path
+})
+
+Handlebars.registerHelper('append', function () {
+    var path = arguments[0]
+    for (var i = 1; i < arguments.length - 1; i++) {
+        path = path + arguments[i]
     }
     return path
 })

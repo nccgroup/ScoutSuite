@@ -302,6 +302,24 @@
                 "enabled": true,
                 "level": "warning"
             }
+        ],
+        "virtual-machines-managed-disks.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "virtual-machines-os-data-encrypted-cmk.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "virtual-machines-unattached-disks-encrypted-cmk.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 }

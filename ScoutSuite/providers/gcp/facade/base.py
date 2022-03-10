@@ -4,8 +4,10 @@ from ScoutSuite.core.console import print_exception, print_info, print_debug, pr
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
+from ScoutSuite.providers.gcp.facade.memorystoreredis import MemoryStoreRedisFacade
 from ScoutSuite.providers.gcp.facade.cloudstorage import CloudStorageFacade
 from ScoutSuite.providers.gcp.facade.gce import GCEFacade
+from ScoutSuite.providers.gcp.facade.dns import DNSFacade
 from ScoutSuite.providers.gcp.facade.iam import IAMFacade
 from ScoutSuite.providers.gcp.facade.kms import KMSFacade
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
@@ -29,9 +31,11 @@ class GCPFacade(GCPBaseFacade):
         self.cloudresourcemanager = CloudResourceManagerFacade()
         self.cloudsql = CloudSQLFacade()
         self.cloudstorage = CloudStorageFacade()
+        self.memorystoreredis = MemoryStoreRedisFacade()
         self.gce = GCEFacade()
         self.iam = IAMFacade()
         self.kms = KMSFacade()
+        self.dns = DNSFacade()
         self.stackdriverlogging = StackdriverLoggingFacade()
         self.stackdrivermonitoring = StackdriverMonitoringFacade()
 
@@ -118,8 +122,8 @@ class GCPFacade(GCPBaseFacade):
                     if project['lifecycleState'] == "ACTIVE":
                         projects.append(project)
             else:
-                print_exception('No Projects Found: '
-                                'You may have specified a non-existing organization/folder/project?')
+                print_exception('No Projects Found, '
+                                'you may have specified a non-existing Organization, Folder or Project')
 
         except Exception as e:
             try:
@@ -137,6 +141,10 @@ class GCPFacade(GCPBaseFacade):
         Given a project ID and service name, this method tries to determine if the service's API is enabled
         """
 
+        # All projects have IAM policies regardless of whether the IAM API is enabled.
+        if service == 'IAM':
+            return True
+
         serviceusage_client = self._build_arbitrary_client('serviceusage', 'v1', force_new=True)
         services = serviceusage_client.services()
         try:
@@ -148,9 +156,7 @@ class GCPFacade(GCPBaseFacade):
             return True
 
         # These are hardcoded endpoint correspondences as there's no easy way to do this.
-        if service == 'IAM':
-            endpoint = 'iam'
-        elif service == 'KMS':
+        if service == 'KMS':
             endpoint = 'cloudkms'
         elif service == 'CloudStorage':
             endpoint = 'storage-component'
@@ -164,6 +170,10 @@ class GCPFacade(GCPBaseFacade):
             endpoint = 'logging'
         elif service == 'StackdriverMonitoring':
             endpoint = 'monitoring'
+        elif service == 'MemoryStore':
+            endpoint = 'redis'
+        elif service =='DNS':
+            endpoint='dns'
         else:
             print_debug('Could not validate the state of the {} API for project \"{}\", '
                         'including it in the execution'.format(format_service_name(service.lower()), project_id))

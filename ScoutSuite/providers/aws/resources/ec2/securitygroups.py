@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.providers.aws.utils import format_arn
 from ScoutSuite.utils import manage_dictionary
 from ScoutSuite.core.fs import load_data
 
@@ -11,6 +12,9 @@ class SecurityGroups(AWSResources):
         super().__init__(facade)
         self.region = region
         self.vpc = vpc
+        self.partition = facade.partition
+        self.service = 'ec2'
+        self.resource_type = 'security-group'
 
     async def fetch_all(self):
         raw_security_groups = await self.facade.ec2.get_security_groups(self.region, self.vpc)
@@ -22,9 +26,7 @@ class SecurityGroups(AWSResources):
         security_group = {}
         security_group['name'] = raw_security_group['GroupName']
         security_group['id'] = raw_security_group['GroupId']
-        security_group['arn'] = 'arn:aws:ec2:{}:{}:security-group/{}'.format(self.region,
-                                                     raw_security_group.get('OwnerId'),
-                                                     raw_security_group.get('GroupId'))
+        security_group['arn'] = format_arn(self.partition, self.service, self.region, raw_security_group.get('OwnerId'), raw_security_group.get('GroupId'), self.resource_type)
         security_group['description'] = raw_security_group['Description']
         security_group['owner_id'] = raw_security_group['OwnerId']
 
