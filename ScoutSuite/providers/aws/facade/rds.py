@@ -54,7 +54,10 @@ class RDSFacade(AWSBaseFacade):
             if e.response['Error']['Code'] != 'NoSuchTagSet':
                 print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
         except Exception as e:
-            print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
+            if 'DBInstanceNotFound' in e:
+                print_warning('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
+            else:
+                print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
             instance['Tags'] = {}
 
     async def _get_and_set_instance_clusters(self, instance: {}, region: str):
