@@ -30,7 +30,7 @@ class CloudFormation(AWSBaseFacade):
             stack_description = await run_concurrently(
                 lambda: client.describe_stacks(StackName=stack['StackName'])['Stacks'][0])
         except Exception as e:
-            if 'does not exist' in e:
+            if 'does not exist' in str(e):
                 print_warning(f'Failed to describe CloudFormation stack: {e}')
             else:
                 print_exception(f'Failed to describe CloudFormation stack: {e}')
@@ -43,7 +43,7 @@ class CloudFormation(AWSBaseFacade):
             stack['template'] = await run_concurrently(
                 lambda: client.get_template(StackName=stack['StackName'])['TemplateBody'])
         except Exception as e:
-            if 'is not ready' not in e:
+            if 'is not ready' not in str(e):
                 print_exception(f'Failed to get CloudFormation template: {e}')
             stack['template'] = None
 

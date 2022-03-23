@@ -40,7 +40,7 @@ class LambdaFacade(AWSBaseFacade):
             role['policies'] = managed_policies
             return role
         except Exception as e:
-            if 'NoSuchEntity' in e:
+            if 'NoSuchEntity' in str(e):
                 print_warning(f'Failed to get role from managed policies: {e}')
             else:
                 print_exception(f'Failed to get role from managed policies: {e}')
@@ -53,7 +53,7 @@ class LambdaFacade(AWSBaseFacade):
             if "Environment" in function_configuration and "Variables" in function_configuration["Environment"]:
                 return function_configuration["Environment"]["Variables"]
         except Exception as e:
-            if 'ResourceNotFoundException' in e:
+            if 'ResourceNotFoundException' in str(e):
                 print_warning('Failed to get Lambda function configuration: {}'.format(e))
             else:
                 print_exception('Failed to get Lambda function configuration: {}'.format(e))
