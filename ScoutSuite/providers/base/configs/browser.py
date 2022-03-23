@@ -42,7 +42,7 @@ def get_object_at(object, path, attribute_name=None):
         else:
             return o
     except Exception as e:
-        raise e
+        print_exception(f'Failed to get object {object} from path {path}: e')
 
 
 def get_value_at(all_info, current_path, key, to_string=False):
