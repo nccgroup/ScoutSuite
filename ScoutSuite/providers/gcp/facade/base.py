@@ -126,12 +126,16 @@ class GCPFacade(GCPBaseFacade):
                                 'you may have specified a non-existing Organization, Folder or Project')
 
         except Exception as e:
+            if 'The service is currently unavailable' in e or 'Internal error encountered' in e:
+                print_level = print_warning
+            else:
+                print_level = print_exception
             try:
                 content = e.content.decode("utf-8")
                 content_dict = json.loads(content)
-                print_exception(f'Unable to list accessible Projects: {content_dict.get("error").get("message")}')
+                print_level(f'Unable to list accessible Projects: {content_dict.get("error").get("message")}')
             except Exception as e:
-                print_exception(f'Unable to list accessible Projects: {e}')
+                print_level(f'Unable to list accessible Projects: {e}')
 
         finally:
             return projects
