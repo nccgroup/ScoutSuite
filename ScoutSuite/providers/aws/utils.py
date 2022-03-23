@@ -37,8 +37,8 @@ def is_throttled(exception):
                 and exception.response["Error"]["Code"]
                 in ["Throttling", "RequestLimitExceeded", "ThrottlingException"]
         )
-    except Exception as exception:
-        print_exception(f'Unable to validate exception {e} for AWS throttling: {exception}')
+    except Exception as e:
+        print_exception(f'Unable to validate exception {exception} for AWS throttling: {e}')
         return False
 
 
