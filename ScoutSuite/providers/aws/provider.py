@@ -592,7 +592,7 @@ class AWSProvider(BaseProvider):
                         sg_id = resource_sg[callback_args['sg_id_attribute_name']]
                     else:
                         sg_id = resource_sg
-                    if unknown_vpc_id:
+                    if unknown_vpc_id and sg_id:
                         vpc_id = self.sg_map[sg_id]['vpc_id']
                         sg_base_path = copy.deepcopy(current_path[0:4])
                         sg_base_path[1] = 'ec2'
