@@ -653,7 +653,7 @@ class AWSProvider(BaseProvider):
             elif 'RequestedEc2SubnetIds' in cluster['Ec2InstanceAttributes']:
                 subnet_id = cluster['Ec2InstanceAttributes']['RequestedEc2SubnetIds']
             else:
-                print_exception('Unable to determine VPC id for EMR cluster %s' % str(cluster_id))
+                print_warning('Unable to determine VPC id for EMR cluster %s' % str(cluster_id))
                 continue
             if sg_id in self.sg_map:
                 vpc_id = self.sg_map[sg_id]['vpc_id']
