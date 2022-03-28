@@ -667,7 +667,7 @@ class AWSProvider(BaseProvider):
                             pop_list.append(cluster_id)
                             sid_found = True
                 if not sid_found:
-                    print_exception('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
+                    print_warning('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
                     continue
             if vpc_id:
                 region_vpcs_config = get_object_at(self, current_path)
