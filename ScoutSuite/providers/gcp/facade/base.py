@@ -1,4 +1,5 @@
 import json
+import asyncio
 
 from ScoutSuite.core.console import print_exception, print_info, print_warning
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
@@ -39,6 +40,10 @@ class GCPFacade(GCPBaseFacade):
         self.stackdriverlogging = StackdriverLoggingFacade()
         self.stackdrivermonitoring = StackdriverMonitoringFacade()
 
+        # lock to minimize concurrent calls to get_services()
+        self.projects_services_lock = False
+        self.projects_services = {}
+
         # Instantiate facades for proprietary services
         try:
             self.gke = GKEFacade(self.gce)
@@ -47,7 +52,6 @@ class GCPFacade(GCPBaseFacade):
 
     async def get_projects(self):
         try:
-
             # All projects to which the user / Service Account has access to
             if self.all_projects:
                 return await self._get_projects_recursively(
@@ -140,6 +144,36 @@ class GCPFacade(GCPBaseFacade):
         finally:
             return projects
 
+    async def get_services(self, project_id, attempt=1):
+        if project_id not in self.projects_services:
+            # not locked, make query
+            if not self.projects_services_lock:
+                self.projects_services_lock = True
+                try:
+                    serviceusage_client = self._build_arbitrary_client('serviceusage', 'v1', force_new=True)
+                    services = serviceusage_client.services()
+                    request = services.list(parent=f'projects/{project_id}')
+                    services_response = await GCPFacadeUtils.get_all('services', request, services)
+                    self.projects_services[project_id] = services_response
+                    self.projects_services_lock = False
+                    return self.projects_services[project_id]
+                except Exception as e:
+                    # hit quota, wait and retry
+                    if 'API_SHARED_QUOTA_EXHAUSTED' in str(e) and attempt <= 10:
+                        await asyncio.sleep(5)
+                        return await self.get_services(project_id, attempt+1)
+                    # unknown error
+                    else:
+                        print_warning(f"Could not fetch the state of services for project \"{project_id}\": {e}")
+                        self.projects_services_lock = False
+                        return {}
+            # locked, wait and retry
+            else:
+                await asyncio.sleep(5)
+                return await self.get_services(project_id, attempt+1)
+        else:
+            return self.projects_services[project_id]
+
     async def is_api_enabled(self, project_id, service):
         """
         Given a project ID and service name, this method tries to determine if the service's API is enabled
@@ -148,19 +182,8 @@ class GCPFacade(GCPBaseFacade):
         # All projects have IAM policies regardless of whether the IAM API is enabled.
         if service == 'IAM':
             return True
-
-        serviceusage_client = self._build_arbitrary_client('serviceusage', 'v1', force_new=True)
-        services = serviceusage_client.services()
-        try:
-            request = services.list(parent=f'projects/{project_id}')
-            services_response = await GCPFacadeUtils.get_all('services', request, services)
-        except Exception as e:
-            print_warning(f"Could not fetch the state of services for project \"{project_id}\", "
-                          f"including {format_service_name(service.lower())} in the execution: {e}")
-            return True
-
         # These are hardcoded endpoint correspondences as there's no easy way to do this.
-        if service == 'KMS':
+        elif service == 'KMS':
             endpoint = 'cloudkms'
         elif service == 'CloudStorage':
             endpoint = 'storage-component'
@@ -180,10 +203,11 @@ class GCPFacade(GCPBaseFacade):
             endpoint = 'dns'
         else:
             print_warning(f"Could not validate the state of the {format_service_name(service.lower())} API "
-                          f"for project \"{project_id}\", including it in the execution")
+                          f"for project \"{project_id}\" (unknown endpoint), including it in the execution")
             return True
 
-        for s in services_response:
+        services = await self.get_services(project_id)
+        for s in services:
             if endpoint in s.get('name'):
                 if s.get('state') == 'ENABLED':
                     return True
@@ -191,7 +215,6 @@ class GCPFacade(GCPBaseFacade):
                     print_info(f'{format_service_name(service.lower())} API not enabled for '
                                f'project \"{project_id}\", skipping')
                     return False
-
         print_warning(f"Could not validate the state of the {format_service_name(service.lower())} API "
-                      f"for project \"{project_id}\", including it in the execution")
+                      f"for project \"{project_id}\" (state not found), including it in the execution")
         return True
