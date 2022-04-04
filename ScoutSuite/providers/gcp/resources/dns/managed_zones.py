@@ -9,7 +9,7 @@ class ManagedZones(Resources):
 
     async def fetch_all(self):
         raw_zones = await self.facade.dns.get_zones(self.project_id)
-        for raw_zone in raw_zones.get('managedZones'):
+        for raw_zone in raw_zones.get('managedZones', []):
             zone_id, zone = self._parse_zone(raw_zone)
             self[zone_id] = zone
 
