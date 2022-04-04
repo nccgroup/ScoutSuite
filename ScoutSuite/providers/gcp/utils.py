@@ -4,11 +4,13 @@ def is_throttled(exception):
     """
     Determines whether the exception is due to API throttling.
 
-    :param exception:                           Exception raised
+    :param exception:                   Exception raised
     :return:                            True if it's a throttling exception else False
     """
     try:
         if 'Quota exceeded' in str(exception):
+            return True
+        elif 'API_SHARED_QUOTA_EXHAUSTED' in str(exception):
             return True
         else:
             return False
