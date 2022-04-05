@@ -1,4 +1,5 @@
 import re
+
 from ScoutSuite.core.console import print_exception
 
 ec2_classic = "EC2-Classic"
@@ -29,27 +30,32 @@ def is_throttled(exception):
     :param exception:                           Exception raised
     :return:                            True if it's a throttling exception else False
     """
+    # taken from botocore.retries.standard.ThrottledRetryableChecker
+    throttled_errors = [
+        'Throttling',
+        'ThrottlingException',
+        'ThrottledException',
+        'RequestThrottledException',
+        'TooManyRequestsException',
+        'ProvisionedThroughputExceededException',
+        'TransactionInProgressException',
+        'RequestLimitExceeded',
+        'BandwidthLimitExceeded',
+        'LimitExceededException',
+        'RequestThrottled',
+        'SlowDown',
+        'PriorRequestNotComplete',
+        'EC2ThrottledException',
+    ]
+
     try:
-        return (
-                hasattr(exception, "response")
-                and exception.response
-                and "Error" in exception.response
-                and exception.response["Error"]["Code"]
-                in ['Throttling',
-                    'ThrottlingException',
-                    'ThrottledException',
-                    'RequestThrottledException',
-                    'TooManyRequestsException',
-                    'ProvisionedThroughputExceededException',
-                    'TransactionInProgressException',
-                    'RequestLimitExceeded',
-                    'BandwidthLimitExceeded',
-                    'LimitExceededException',
-                    'RequestThrottled',
-                    'SlowDown',
-                    'PriorRequestNotComplete',
-                    'EC2ThrottledException']
-        )
+        throttled = (hasattr(exception, "response")
+                     and exception.response
+                     and "Error" in exception.response
+                     and exception.response["Error"]["Code"] in throttled_errors) \
+                    or \
+                    any(error in str(exception) for error in throttled_errors)
+        return throttled
     except Exception as e:
         print_exception(f'Unable to validate exception {exception} for AWS throttling: {e}')
         return False
@@ -124,6 +130,7 @@ def snake_keys(d):
             else:
                 new_table[new_key] = d[k]
     return new_table
+
 
 def format_arn(partition, service, region, account_id, resource_id, resource_type=None):
     """
