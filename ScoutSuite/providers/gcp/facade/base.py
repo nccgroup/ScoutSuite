@@ -169,7 +169,7 @@ class GCPFacade(GCPBaseFacade):
                         return {}
             # locked, wait and retry
             else:
-                await asyncio.sleep(5)
+                await asyncio.sleep(10*attempt)
                 return await self.get_services(project_id, attempt+1)
         else:
             return self.projects_services[project_id]
