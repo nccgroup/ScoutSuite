@@ -35,7 +35,20 @@ def is_throttled(exception):
                 and exception.response
                 and "Error" in exception.response
                 and exception.response["Error"]["Code"]
-                in ["Throttling", "RequestLimitExceeded", "ThrottlingException", "TooManyRequestsException"]
+                in ['Throttling',
+                    'ThrottlingException',
+                    'ThrottledException',
+                    'RequestThrottledException',
+                    'TooManyRequestsException',
+                    'ProvisionedThroughputExceededException',
+                    'TransactionInProgressException',
+                    'RequestLimitExceeded',
+                    'BandwidthLimitExceeded',
+                    'LimitExceededException',
+                    'RequestThrottled',
+                    'SlowDown',
+                    'PriorRequestNotComplete',
+                    'EC2ThrottledException']
         )
     except Exception as e:
         print_exception(f'Unable to validate exception {exception} for AWS throttling: {e}')
