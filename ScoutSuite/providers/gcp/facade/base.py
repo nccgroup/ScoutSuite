@@ -1,7 +1,7 @@
 import json
 import asyncio
 
-from ScoutSuite.core.console import print_exception, print_info, print_warning
+from ScoutSuite.core.console import print_exception, print_info, print_warning, print_debug
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
@@ -144,24 +144,26 @@ class GCPFacade(GCPBaseFacade):
         finally:
             return projects
 
-    async def get_services(self, project_id, attempt=1):
+    async def get_enabled_services(self, project_id, attempt=1, has_lock=False):
+        timeout = 60*attempt
         if project_id not in self.projects_services:
             # not locked, make query
-            if not self.projects_services_lock:
+            if has_lock or not self.projects_services_lock:
                 self.projects_services_lock = True
                 try:
                     serviceusage_client = self._build_arbitrary_client('serviceusage', 'v1', force_new=True)
                     services = serviceusage_client.services()
-                    request = services.list(parent=f'projects/{project_id}')
+                    request = services.list(parent=f'projects/{project_id}', pageSize=200, filter="state:ENABLED")
                     services_response = await GCPFacadeUtils.get_all('services', request, services)
                     self.projects_services[project_id] = services_response
                     self.projects_services_lock = False
                     return self.projects_services[project_id]
                 except Exception as e:
                     # hit quota, wait and retry
-                    if 'API_SHARED_QUOTA_EXHAUSTED' in str(e) and attempt <= 10:
-                        await asyncio.sleep(5)
-                        return await self.get_services(project_id, attempt+1)
+                    if ('API_SHARED_QUOTA_EXHAUSTED' in str(e) or 'RATE_LIMIT_EXCEEDED' in str(e)) and attempt <= 10:
+                        print_warning(f"Service Usage quotas exceeded for project \"{project_id}\":, retrying in {timeout}s")
+                        await asyncio.sleep(timeout)
+                        return await self.get_enabled_services(project_id, attempt + 1, has_lock=True)
                     # unknown error
                     else:
                         print_warning(f"Could not fetch the state of services for project \"{project_id}\": {e}")
@@ -169,8 +171,14 @@ class GCPFacade(GCPBaseFacade):
                         return {}
             # locked, wait and retry
             else:
-                await asyncio.sleep(10*attempt)
-                return await self.get_services(project_id, attempt+1)
+                if attempt <= 100:  # need to set a limit to ensure we don't hit recursion limits
+                    print_debug(f"Lock already acquired for get_services() on project \"{project_id}\", retrying in {timeout}s")
+                    await asyncio.sleep(timeout)
+                    return await self.get_enabled_services(project_id, attempt + 1)
+                else:
+                    print_warning(f"Could not fetch the state of services for project \"{project_id}\", "
+                                  f"exiting before hitting maximum recursion")
+                    return {}
         else:
             return self.projects_services[project_id]
 
@@ -206,15 +214,14 @@ class GCPFacade(GCPBaseFacade):
                           f"for project \"{project_id}\" (unknown endpoint), including it in the execution")
             return True
 
-        services = await self.get_services(project_id)
-        for s in services:
+        for s in await self.get_enabled_services(project_id):
             if endpoint in s.get('name'):
-                if s.get('state') == 'ENABLED':
-                    return True
-                else:
-                    print_info(f'{format_service_name(service.lower())} API not enabled for '
-                               f'project \"{project_id}\", skipping')
-                    return False
+                return True
+            else:
+                print_info(f'{format_service_name(service.lower())} API not enabled for '
+                           f'project \"{project_id}\", skipping')
+                return False
+        # s not in services
         print_warning(f"Could not validate the state of the {format_service_name(service.lower())} API "
                       f"for project \"{project_id}\" (state not found), including it in the execution")
         return True
