@@ -1,5 +1,6 @@
 from ScoutSuite.core.console import print_exception
 
+
 def is_throttled(exception):
     """
     Determines whether the exception is due to API throttling.
@@ -7,10 +8,14 @@ def is_throttled(exception):
     :param exception:                   Exception raised
     :return:                            True if it's a throttling exception else False
     """
+    throttled_errors = [
+        'Quota exceeded',
+        'API_SHARED_QUOTA_EXHAUSTED',
+        'RATE_LIMIT_EXCEEDED'
+    ]
+    print(exception)
     try:
-        if 'Quota exceeded' in str(exception):
-            return True
-        elif 'API_SHARED_QUOTA_EXHAUSTED' in str(exception):
+        if any(error in str(exception) for error in throttled_errors):
             return True
         else:
             return False
