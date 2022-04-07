@@ -222,15 +222,12 @@ class GCPFacade(GCPBaseFacade):
             enabled_services = await self.get_enabled_services(project_id)
             for s in enabled_services:
                 if endpoint in s.get('name'):
+                    print_debug(f'{format_service_name(service.lower())} API enabled for '
+                               f'project \"{project_id}\", including')
                     return True
-                else:
-                    print_info(f'{format_service_name(service.lower())} API not enabled for '
-                               f'project \"{project_id}\", skipping')
-                    return False
-            # s not in services
-            print_warning(f"Could not validate the state of the {format_service_name(service.lower())} API "
-                          f"for project \"{project_id}\" (state not found), including it in the execution")
-            return True
+            print_info(f'{format_service_name(service.lower())} API not enabled for '
+                       f'project \"{project_id}\", skipping')
+            return False
         except Exception as e:
             print_warning(f"Could not validate the state of the {format_service_name(service.lower())} API "
                           f"for project \"{project_id}\": \"{e}\", including it in the execution")
