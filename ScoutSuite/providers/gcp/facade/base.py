@@ -161,7 +161,7 @@ class GCPFacade(GCPBaseFacade):
                 except Exception as e:
                     # hit quota, wait and retry
                     if ('API_SHARED_QUOTA_EXHAUSTED' in str(e) or 'RATE_LIMIT_EXCEEDED' in str(e)) and attempt <= 10:
-                        print_warning(f"Service Usage quotas exceeded for project \"{project_id}\":, retrying in {timeout}s")
+                        print_warning(f"Service Usage quotas exceeded for project \"{project_id}\", retrying in {timeout}s")
                         await asyncio.sleep(timeout)
                         return await self.get_enabled_services(project_id, attempt + 1, has_lock=True)
                     # unknown error
@@ -171,9 +171,13 @@ class GCPFacade(GCPBaseFacade):
                         return {}
             # locked, wait and retry
             else:
-                if attempt <= 100:  # need to set a limit to ensure we don't hit recursion limits
-                    print_debug(f"Lock already acquired for get_services() on project \"{project_id}\", retrying in {timeout}s")
-                    await asyncio.sleep(timeout)
+                if attempt <= 10:  # need to set a limit to ensure we don't hit recursion limits
+                    if attempt != 1:
+                        print_debug(f"Lock already acquired for get_services() on project \"{project_id}\", retrying in {timeout}s")
+                        await asyncio.sleep(timeout)
+                    # set a lower threshold for the first attempt so that execution runs faster when there aren't any issues
+                    else:
+                        await asyncio.sleep(10)
                     return await self.get_enabled_services(project_id, attempt + 1)
                 else:
                     print_warning(f"Could not fetch the state of services for project \"{project_id}\", "
@@ -214,14 +218,20 @@ class GCPFacade(GCPBaseFacade):
                           f"for project \"{project_id}\" (unknown endpoint), including it in the execution")
             return True
 
-        for s in await self.get_enabled_services(project_id):
-            if endpoint in s.get('name'):
-                return True
-            else:
-                print_info(f'{format_service_name(service.lower())} API not enabled for '
-                           f'project \"{project_id}\", skipping')
-                return False
-        # s not in services
-        print_warning(f"Could not validate the state of the {format_service_name(service.lower())} API "
-                      f"for project \"{project_id}\" (state not found), including it in the execution")
-        return True
+        try:
+            enabled_services = await self.get_enabled_services(project_id)
+            for s in enabled_services:
+                if endpoint in s.get('name'):
+                    return True
+                else:
+                    print_info(f'{format_service_name(service.lower())} API not enabled for '
+                               f'project \"{project_id}\", skipping')
+                    return False
+            # s not in services
+            print_warning(f"Could not validate the state of the {format_service_name(service.lower())} API "
+                          f"for project \"{project_id}\" (state not found), including it in the execution")
+            return True
+        except Exception as e:
+            print_warning(f"Could not validate the state of the {format_service_name(service.lower())} API "
+                          f"for project \"{project_id}\": \"{e}\", including it in the execution")
+            return True
