@@ -33,7 +33,7 @@ class DatabaseInstances(GCPCompositeResources):
         instance_dict['id'] = get_non_provider_id(raw_instance['name'])
         instance_dict['name'] = raw_instance['name']
         instance_dict['project_id'] = raw_instance['project']
-        instance_dict['automatic_backup_enabled'] = raw_instance['settings']['backupConfiguration']['enabled']
+        instance_dict['automatic_backup_enabled'] = raw_instance['settings'].get('backupConfiguration', {}).get('enabled')
         instance_dict['database_version'] = raw_instance['databaseVersion']
         instance_dict['log_enabled'] = self._is_log_enabled(raw_instance)
         instance_dict['ssl_required'] = self._is_ssl_required(raw_instance)
@@ -91,7 +91,7 @@ class DatabaseInstances(GCPCompositeResources):
         return instance_dict['id'], instance_dict
 
     def _is_log_enabled(self, raw_instance):
-        return raw_instance['settings']['backupConfiguration'].get('binaryLogEnabled')
+        return raw_instance['settings'].get('backupConfiguration', {}).get('binaryLogEnabled')
 
     def _is_ssl_required(self, raw_instance):
         return raw_instance['settings']['ipConfiguration'].get('requireSsl', False)
