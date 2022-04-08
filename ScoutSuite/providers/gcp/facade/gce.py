@@ -113,7 +113,10 @@ class GCEFacade(GCPBaseFacade):
             subnetworks_group = gce_client.subnetworks()
             return await GCPFacadeUtils.get_all('items', request, subnetworks_group)
         except Exception as e:
-            print_exception(f'Failed to retrieve subnetworks: {e}')
+            if 'was not found' in str(e):
+                print_warning(f'Failed to retrieve subnetworks: {e}')
+            else:
+                print_exception(f'Failed to retrieve subnetworks: {e}')
             return []
 
     async def get_zones(self, project_id):
