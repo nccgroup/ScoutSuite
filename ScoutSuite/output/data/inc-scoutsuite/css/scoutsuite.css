@@ -517,3 +517,10 @@ footer a {
 footer a:hover { 
     color: #ee173a;
 }
+
+.code {
+    font-size: 87.5%;
+    color: #e83e8c;
+    word-break: break-word;
+    white-space: pre-line;
+}

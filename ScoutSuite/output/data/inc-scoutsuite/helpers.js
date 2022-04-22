@@ -38,6 +38,10 @@ Handlebars.registerHelper('displayKey', function (keyName, blob) {
     return key
 })
 
+Handlebars.registerHelper('jsonToString', function (obj) {
+    return JSON.stringify(obj, null, 2)
+})
+
 Handlebars.registerHelper('has_profiles?', function (logins) {
     if (typeof logins !== 'undefined' && logins !== '') {
         return 'Yes'
