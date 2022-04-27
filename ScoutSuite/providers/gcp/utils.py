@@ -13,7 +13,6 @@ def is_throttled(exception):
         'API_SHARED_QUOTA_EXHAUSTED',
         'RATE_LIMIT_EXCEEDED'
     ]
-    print(exception)
     try:
         if any(error in str(exception) for error in throttled_errors):
             return True
