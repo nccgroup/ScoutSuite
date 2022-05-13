@@ -13,6 +13,7 @@ from ScoutSuite.providers.gcp.facade.kms import KMSFacade
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
 from ScoutSuite.providers.gcp.facade.stackdrivermonitoring import StackdriverMonitoringFacade
 from ScoutSuite.providers.gcp.facade.gke import GKEFacade
+from ScoutSuite.providers.gcp.facade.functions import FunctionsFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.utils import format_service_name
 
@@ -33,6 +34,7 @@ class GCPFacade(GCPBaseFacade):
         self.cloudstorage = CloudStorageFacade()
         self.memorystoreredis = MemoryStoreRedisFacade()
         self.gce = GCEFacade()
+        self.functions = FunctionsFacade()
         self.iam = IAMFacade()
         self.kms = KMSFacade()
         self.dns = DNSFacade()
@@ -164,6 +166,10 @@ class GCPFacade(GCPBaseFacade):
             endpoint = 'sql-component'
         elif service == 'ComputeEngine':
             endpoint = 'compute'
+        elif service == 'Functions':
+            endpoint = 'cloudfunctions'
+        elif service == 'BigQuery':
+            endpoint = 'bigquery'
         elif service == 'KubernetesEngine':
             endpoint = 'container'
         elif service == 'StackdriverLogging':
@@ -173,7 +179,7 @@ class GCPFacade(GCPBaseFacade):
         elif service == 'MemoryStore':
             endpoint = 'redis'
         elif service =='DNS':
-            endpoint='dns'
+            endpoint = 'dns'
         else:
             print_debug('Could not validate the state of the {} API for project \"{}\", '
                         'including it in the execution'.format(format_service_name(service.lower()), project_id))
