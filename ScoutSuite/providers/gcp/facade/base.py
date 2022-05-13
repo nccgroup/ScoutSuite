@@ -14,6 +14,7 @@ from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggin
 from ScoutSuite.providers.gcp.facade.stackdrivermonitoring import StackdriverMonitoringFacade
 from ScoutSuite.providers.gcp.facade.gke import GKEFacade
 from ScoutSuite.providers.gcp.facade.functions import FunctionsFacade
+from ScoutSuite.providers.gcp.facade.bigquery import BigQueryFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.utils import format_service_name
 
@@ -35,6 +36,7 @@ class GCPFacade(GCPBaseFacade):
         self.memorystoreredis = MemoryStoreRedisFacade()
         self.gce = GCEFacade()
         self.functions = FunctionsFacade()
+        self.bigquery = BigQueryFacade()
         self.iam = IAMFacade()
         self.kms = KMSFacade()
         self.dns = DNSFacade()
