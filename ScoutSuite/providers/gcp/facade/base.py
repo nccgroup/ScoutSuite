@@ -160,6 +160,7 @@ class GCPFacade(GCPBaseFacade):
             return True
 
         # These are hardcoded endpoint correspondences as there's no easy way to do this.
+        incorrect_endpoints = []
         if service == 'KMS':
             endpoint = 'cloudkms'
         elif service == 'CloudStorage':
@@ -172,6 +173,7 @@ class GCPFacade(GCPBaseFacade):
             endpoint = 'cloudfunctions'
         elif service == 'BigQuery':
             endpoint = 'bigquery'
+            incorrect_endpoints.append('annotation-bigquery-public-data.cloudpartnerservices.goog')
         elif service == 'KubernetesEngine':
             endpoint = 'container'
         elif service == 'StackdriverLogging':
@@ -180,7 +182,7 @@ class GCPFacade(GCPBaseFacade):
             endpoint = 'monitoring'
         elif service == 'MemoryStore':
             endpoint = 'redis'
-        elif service =='DNS':
+        elif service == 'DNS':
             endpoint = 'dns'
         else:
             print_debug('Could not validate the state of the {} API for project \"{}\", '
@@ -188,7 +190,7 @@ class GCPFacade(GCPBaseFacade):
             return True
 
         for s in services_response:
-            if endpoint in s.get('name'):
+            if endpoint in s.get('name') and s.get('config').get('name') not in incorrect_endpoints:
                 if s.get('state') == 'ENABLED':
                     return True
                 else:

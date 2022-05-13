@@ -21,7 +21,6 @@ class BigQueryFacade(GCPBaseFacade):
             datasets = bigquery_client.datasets()
             request = datasets.list(projectId=project_id)
             results = await GCPFacadeUtils.get_all('datasets', request, datasets)
-            print(results)
             return results
 
         except Exception as e:
