@@ -6,12 +6,46 @@
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
         <div class="list-group-item-text item-margin">Name: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Build Config: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.build_config"><samp>{{value_or_none build_config}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Service Config: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.service_config"><samp>{{value_or_none service_config}}</samp></span></div>
-        <div class="list-group-item-text item-margin">State: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.state"><samp>{{value_or_none state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.status"><samp>{{value_or_none status}}</samp></span></div>
         <div class="list-group-item-text item-margin">Update Time: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.update_time"><samp>{{value_or_none update_time}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Labels: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.labels"><samp>{{value_or_none labels}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Bindings: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.bindings"><samp>{{value_or_none bindings}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Version: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.version_id"><samp>{{value_or_none version_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Runtime: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.runtime"><samp>{{value_or_none runtime}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Memory: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.memory"><samp>{{value_or_none memory}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Max Instances: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.max_instances"><samp>{{value_or_none max_instances}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Service Account: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.service_account"><samp>{{value_or_none service_account}}</samp></span></div>
+        <div class="list-group-item-text item-margin" id="functions.projects.{{project}}.functions_v2.{{@key}}.environment_variables">Environment Variables
+            {{#if environment_variables}}
+            <ul>
+                {{#each environment_variables}}
+                <li><samp>{{@key}}: {{this}}</samp></li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <span>None</span>
+            {{/if}}
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Trigger</h4>
+        <div class="list-group-item-text item-margin">URL: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.url"><samp>{{value_or_none url}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Ingress Settings: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.ingress_settings"><samp>{{value_or_none ingress_settings}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading"><span id="functions.projects.{{project}}.functions_v2.{{@key}}.bindings">Bindings:</span></h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each bindings}}
+                <li>Role <samp>{{role}}</samp></li>
+                <ul>
+                    {{#each members}}
+                    <li><samp>{{this}}</samp></li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
     </div>
 </script>
 
