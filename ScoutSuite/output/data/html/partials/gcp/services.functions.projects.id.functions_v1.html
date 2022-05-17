@@ -1,0 +1,40 @@
+<!-- functions functions_v1 -->
+<script id="services.functions.projects.id.functions_v1.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Https Trigger: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.https_trigger"><samp>{{value_or_none https_trigger}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.status"><samp>{{value_or_none status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Entry Point: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.entry_point"><samp>{{value_or_none entry_point}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Timeout: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.timeout"><samp>{{value_or_none timeout}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Available Memory Mb: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.available_memory_mb"><samp>{{value_or_none available_memory_mb}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Service Account Email: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.service_account_email"><samp>{{value_or_none service_account_email}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Update Time: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.update_time"><samp>{{value_or_none update_time}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Version Id: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.version_id"><samp>{{value_or_none version_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Labels: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.labels"><samp>{{value_or_none labels}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Source Upload Url: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.source_upload_url"><samp>{{value_or_none source_upload_url}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Environment Variables: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.environment_variables"><samp>{{value_or_none environment_variables}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Runtime: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.runtime"><samp>{{value_or_none runtime}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Max Instances: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.max_instances"><samp>{{value_or_none max_instances}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Ingress Settings: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.ingress_settings"><samp>{{value_or_none ingress_settings}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Build Id: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.build_id"><samp>{{value_or_none build_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Build Name: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.build_name"><samp>{{value_or_none build_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Docker Registry: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.docker_registry"><samp>{{value_or_none docker_registry}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Bindings: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.bindings"><samp>{{value_or_none bindings}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.functions.projects.id.functions_v1", $("#services\\.functions\\.projects\\.id\\.functions_v1\\.partial").html());
+</script>
+
+<!-- Single functions function_v1 template -->
+<script id="single_functions_function_v1-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.functions.projects.id.functions_v1'}}
+</script>
+<script>
+    var single_functions_function_v1_template = Handlebars.compile($("#single_functions_function_v1-template").html());
+</script>
