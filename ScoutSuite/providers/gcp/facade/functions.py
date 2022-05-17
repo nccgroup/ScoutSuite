@@ -1,11 +1,7 @@
-from google.cloud import kms
-from google.api_core.gapic_v1.client_info import ClientInfo
-
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
-from ScoutSuite.providers.utils import run_concurrently
-from ScoutSuite.utils import get_user_agent
+from ScoutSuite.providers.utils import map_concurrently, run_concurrently
 
 
 class FunctionsFacade(GCPBaseFacade):
@@ -13,24 +9,42 @@ class FunctionsFacade(GCPBaseFacade):
         # The version needs to be set per-function
         super().__init__('cloudfunctions', None)  # API Client
 
-
     async def get_functions_v1(self, project_id: str):
-        results = await self.get_functions_version(project_id, "v1")
-        return results
+        return await self._get_functions_version("v1", project_id)
 
     async def get_functions_v2(self, project_id: str):
-        results = await self.get_functions_version(project_id, "v2alpha")
+        return await self._get_functions_version("v2alpha", project_id)
+
+    async def _get_functions_version(self, api_version: str, project_id: str):
+        try:
+            # get list of functions
+            list_results = await self._list_functions_version(project_id, api_version)
+            # get list of function names
+            functions = [function.get('name') for function in list_results]
+        except Exception as e:
+            print_exception(f'Failed to list Cloud Functions functions ({api_version}): {e}')
+            return []
+        else:
+            return await map_concurrently(self._get_function_version, functions, api_version=api_version,
+                                          project_id=project_id)
+
+    async def _list_functions_version(self, project_id: str, api_version: str):
+        functions_client = self._build_arbitrary_client(self._client_name, api_version, force_new=True)
+        parent = f'projects/{project_id}/locations/-'
+        functions = functions_client.projects().locations().functions()
+        request = functions.list(parent=parent)
+        results = await GCPFacadeUtils.get_all('functions', request, functions)
         return results
 
-    async def get_functions_version(self, project_id: str, api_version: str):
+    async def _get_function_version(self, name: str, api_version: str, project_id: str):
         try:
             functions_client = self._build_arbitrary_client(self._client_name, api_version, force_new=True)
-            parent = f'projects/{project_id}/locations/-'
-            functions = functions_client.projects().locations().functions()
-            request = functions.list(parent=parent)
-            results = await GCPFacadeUtils.get_all('functions', request, functions)
-            return results
 
+            functions = functions_client.projects().locations().functions()
+            request = functions.get(name=name)
+            return await run_concurrently(
+                lambda: request.execute()
+            )
         except Exception as e:
-            print_exception(f'Failed to retrieve Cloud Functions functions ({api_version}): {e}')
-            return []
+            print_exception(f'Failed to get Cloud Functions functions ({api_version}): {e}')
+            return {}
