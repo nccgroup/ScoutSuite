@@ -1,18 +1,13 @@
-from google.cloud import kms
-from google.api_core.gapic_v1.client_info import ClientInfo
-
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.providers.utils import map_concurrently, run_concurrently
-from ScoutSuite.utils import get_user_agent
 
 
 class BigQueryFacade(GCPBaseFacade):
     def __init__(self):
 
         super().__init__('bigquery', 'v2')  # API Client
-
 
     async def get_datasets(self, project_id: str):
         try:
@@ -25,7 +20,7 @@ class BigQueryFacade(GCPBaseFacade):
             # extract ids
             dataset_ids = [dataset.get('id').split(':')[-1] for dataset in results]
         except Exception as e:
-            print_exception(f'Failed to retrieve BigQuery datasets: {e}')
+            print_exception(f'Failed to list BigQuery datasets: {e}')
             return []
         else:
             return await map_concurrently(self._get_dataset, dataset_ids, project_id=project_id)
@@ -40,4 +35,4 @@ class BigQueryFacade(GCPBaseFacade):
             )
         except Exception as e:
             print_exception(f'Failed to retrieve BigQuery datasets {dataset_id}: {e}')
-            return []
+            return {}
