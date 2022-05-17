@@ -21,8 +21,8 @@ class Datasets(Resources):
         dataset_dict['location'] = raw_dataset.get('location')
         dataset_dict['creation_time'] = int(raw_dataset.get('creationTime'))
         dataset_dict['last_modified_time'] = int(raw_dataset.get('lastModifiedTime'))
-        dataset_dict['default_encryption_configuration'] = raw_dataset.get('defaultEncryptionConfiguration', {}).get(
-            'kmsKeyName')
+        dataset_dict['default_encryption_configuration'] = \
+            raw_dataset.get('defaultEncryptionConfiguration', {}).get('kmsKeyName')
 
         # format bindings in a way that's easier to query
         dataset_dict['bindings'] = {}
