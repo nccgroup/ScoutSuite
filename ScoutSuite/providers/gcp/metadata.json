@@ -65,6 +65,18 @@
           "path": "services.kubernetesengine.projects.id.clusters"
         }
       }
+    },
+    "functions": {
+      "resources": {
+        "functions_v1": {
+          "cols": 2,
+          "path": "services.functions.projects.id.functions_v1"
+        },
+        "functions_v2": {
+          "cols": 2,
+          "path": "services.functions.projects.id.functions_v2"
+        }
+      }
     }
   },
   "network": {
@@ -86,7 +98,6 @@
       }
     }
   },
-
   "database": {
     "cloudsql": {
       "resources": {
@@ -101,6 +112,14 @@
         "redis_instances": {
           "cols": 2,
           "path": "services.cloudmemorystore.projects.id.redis_instances"
+        }
+      }
+    },
+    "bigquery": {
+      "resources": {
+        "datasets": {
+          "cols": 2,
+          "path": "services.bigquery.projects.id.datasets"
         }
       }
     }
