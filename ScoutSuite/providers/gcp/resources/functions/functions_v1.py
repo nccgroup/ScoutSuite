@@ -1,5 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class FunctionsV1(Resources):
@@ -14,6 +15,28 @@ class FunctionsV1(Resources):
             self[function_id] = function
 
     def _parse_function(self, raw_function):
-        print()
-        print(raw_function)
-        return None, None
+        function_dict = {}
+
+        function_dict['id'] = get_non_provider_id(raw_function['name'])
+        function_dict['name'] = raw_function['name'].split('/')[-1]
+        function_dict['status'] = raw_function['status']
+        function_dict['update_time'] = raw_function['updateTime']
+        function_dict['version_id'] = raw_function['versionId']
+
+        function_dict['runtime'] = raw_function['runtime']
+        function_dict['memory'] = raw_function['availableMemoryMb']
+        function_dict['timeout'] = raw_function['timeout']
+        function_dict['max_instances'] = raw_function['maxInstances']
+        function_dict['docker_registry'] = raw_function['dockerRegistry']
+
+        function_dict['url'] = raw_function.get('httpsTrigger', {}).get('url')
+        function_dict['security_level'] = raw_function.get('httpsTrigger', {}).get('securityLevel')
+        function_dict['ingress_settings'] = raw_function['ingressSettings']
+
+        function_dict['bindings'] = raw_function['bindings']
+
+        function_dict['environment_variables'] = raw_function['environmentVariables']
+
+        function_dict['labels'] = raw_function['labels']
+
+        return function_dict['id'], function_dict
