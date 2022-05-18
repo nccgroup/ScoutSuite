@@ -1,5 +1,6 @@
 from ScoutSuite.providers.utils import is_secret
 
+
 def get_environment_secrets(environment_variables):
     secrets = []
     for k, v in environment_variables.items():
