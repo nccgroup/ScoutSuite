@@ -25,6 +25,12 @@
                 "level": "warning"
             }
         ],
+        "appservice-ftp-deployment-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "appservice-http-2-disabled.json": [
             {
                 "enabled": true,
@@ -35,12 +41,6 @@
             {
                 "enabled": true,
                 "level": "danger"
-            }
-        ],
-        "appservice-ftp-deployment-enabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
             }
         ],
         "appservice-managed-service-identities-disabled.json": [
@@ -86,7 +86,13 @@
             }
         ],
         "keyvault-not-recoverable.json": [
-                      {
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-diagnostic-setting-does-not-exist.json": [
+            {
                 "enabled": true,
                 "level": "warning"
             }
@@ -134,7 +140,7 @@
                 "enabled": true,
                 "level": "warning"
             },
-             {
+            {
                 "args": [
                     "Create/Update/Delete SQL Server Firewall Rule",
                     "5.2.8",
@@ -170,13 +176,13 @@
                 "level": "warning"
             }
         ],
-        "logging-monitoring-diagnostic-setting-does-not-exist.json": [
+        "logging-monitoring-profile-does-not-capture-all-activities.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "logging-monitoring-profile-does-not-capture-all-activities.json": [
+        "mysql-database-servers-ssl-enforcement-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -186,6 +192,18 @@
             {
                 "enabled": true,
                 "level": "danger"
+            }
+        ],
+        "network-security-groups-rule-inbound-service-mssql.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "network-security-groups-rule-inbound-service-udp.json": [
+            {
+                "enabled": true,
+                "level": "warning"
             }
         ],
         "network-security-groups-rule-inbound-service.json": [
@@ -208,18 +226,6 @@
                 "level": "warning"
             }
         ],
-        "network-security-groups-rule-inbound-service-mssql.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "network-security-groups-rule-inbound-service-udp.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "network-watcher-not-enabled.json": [
             {
                 "enabled": true,
@@ -232,13 +238,61 @@
                 "level": "warning"
             }
         ],
-        "rbac-custom-subscription-owner-role-not-allowed.json": [
+        "postgresql-database-servers-allow-any-ip.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-connection-throttling-not-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-log-checkpoints-not-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-log-connections-not-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-log-disconnections-not-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-log-duration-not-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-log-retention-days-less-than-4.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "postgresql-database-servers-ssl-enforcement-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "rbac-administering-resource-locks-assigned.json": [
             {
                 "enabled": true,
                 "level": "danger"
             }
         ],
-        "rbac-administering-resource-locks-assigned.json": [
+        "rbac-custom-subscription-owner-role-not-allowed.json": [
             {
                 "enabled": true,
                 "level": "danger"
@@ -280,12 +334,6 @@
                 "level": "warning"
             }
         ],
-        "securitycenter-standard-tier-not-enabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "securitycenter-settings-MCAS-integration-disabled.json": [
             {
                 "enabled": true,
@@ -293,7 +341,19 @@
             }
         ],
         "securitycenter-settings-WDATP-integration-disabled.json": [
-             {
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "securitycenter-standard-tier-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-allow-any-ip.json": [
+            {
                 "enabled": true,
                 "level": "warning"
             }
@@ -341,6 +401,12 @@
             }
         ],
         "sqldatabase-databases-threat-detection-send-alerts-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -395,7 +461,13 @@
             }
         ],
         "sqldatabase-servers-vulnerability-assessments-disabled.json": [
-             {
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-vulnerability-email-notif-to-admins-owners-not-set.json": [
+            {
                 "enabled": true,
                 "level": "warning"
             }
@@ -407,25 +479,6 @@
             }
         ],
         "sqldatabase-servers-vulnerability-send-scan-reports-to-not-configured.json": [
-             {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "sqldatabase-servers-TDE-not-encrypted-with-customer-managed-key.json": [
-
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "sqldatabase-servers-vulnerability-email-notif-to-admins-owners-not-set.json": [
-                 {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "sqldatabase-allow-any-ip.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -446,6 +499,12 @@
                 "level": "warning"
             }
         ],
+        "storageaccount-encrypted-not-customer-managed.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "storageaccount-public-blob-container.json": [
             {
                 "enabled": true,
@@ -458,19 +517,13 @@
                 "level": "warning"
             }
         ],
-        "storageaccount-trusted-microsoft-services.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "storageaccount-soft-delete-enabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "storageaccount-encrypted-not-customer-managed.json": [
+        "storageaccount-trusted-microsoft-services.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -489,7 +542,7 @@
             }
         ],
         "virtual-machines-managed-disks.json": [
-             {
+            {
                 "enabled": true,
                 "level": "warning"
             }
@@ -501,61 +554,6 @@
             }
         ],
         "virtual-machines-unattached-disks-encrypted-cmk.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "postgresql-database-servers-log-checkpoints-not-on.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "postgresql-database-servers-log-connections-not-on.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "postgresql-database-servers-log-disconnections-not-on.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "postgresql-database-servers-log-duration-not-on.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "postgresql-database-servers-connection-throttling-not-on.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "postgresql-database-servers-log-retention-days-less-than-4.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "postgresql-database-servers-allow-any-ip.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-
-        "postgresql-database-servers-ssl-enforcement-disabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "mysql-database-servers-ssl-enforcement-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
