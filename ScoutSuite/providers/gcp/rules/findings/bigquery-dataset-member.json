@@ -1,6 +1,6 @@
 {
-    "description": "Dataset Accessible by \"_ARG_0_\"",
-    "rationale": "Allowing anonymous and/or public access grants permissions to anyone to access the dataset's content. Such access might not be desired if you are storing any sensitive data. Hence, ensure that anonymous and/or public access to a bucket is not allowed.",
+    "description": "Datasets Accessible by \"_ARG_0_\"",
+    "rationale": "Allowing anonymous and/or public access grants permissions to anyone to access the dataset's content. Such access might not be desired if you are storing any sensitive data. Hence, ensure that anonymous and/or public access to a dataset is not allowed.",
     "remediation": "Delete any permissions assigned to the <samp>allUsers</samp> and <samp>allAuthenticatedUsers</samp> members.",
     "dashboard_name": "Datasets",
     "display_path": "bigquery.projects.id.datasets.id",
