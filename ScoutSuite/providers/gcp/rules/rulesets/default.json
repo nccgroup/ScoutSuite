@@ -336,6 +336,12 @@
                 "level": "warning"
             }
         ],
+        "functions-v2-public-endpoint.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-gmail-accounts-used.json": [
             {
                 "enabled": true,
