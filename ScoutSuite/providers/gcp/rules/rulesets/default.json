@@ -153,6 +153,12 @@
                 "level": "warning"
             }
         ],
+        "cloudstorage-bucket-no-public-access-prevention.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudstorage-uniform-bucket-level-access-disabled.json": [
             {
                 "enabled": true,

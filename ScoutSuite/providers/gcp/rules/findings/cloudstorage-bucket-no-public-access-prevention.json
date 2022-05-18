@@ -1,0 +1,18 @@
+{
+    "description": "Bucket with Private Access Prevention not Enforced",
+    "rationale": "TODO",
+    "references": [
+        "https://cloud.google.com/storage/docs/public-access-prevention"
+    ],
+    "dashboard_name": "Buckets",
+    "path": "cloudstorage.projects.id.buckets.id",
+    "conditions": [
+        "and",
+        [
+            "cloudstorage.projects.id.buckets.id.public_access_prevention",
+            "notEqual",
+            "enforced"
+        ]
+    ],
+    "id_suffix": "public_access_prevention"
+}
