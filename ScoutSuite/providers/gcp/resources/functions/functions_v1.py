@@ -1,6 +1,7 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.providers.gcp.resources.functions.utils import get_environment_secrets
 
 
 class FunctionsV1(Resources):
@@ -36,6 +37,7 @@ class FunctionsV1(Resources):
         function_dict['bindings'] = raw_function['bindings']
 
         function_dict['environment_variables'] = raw_function['environmentVariables']
+        function_dict['environment_variables_secrets'] = get_environment_secrets(function_dict['environment_variables'])
 
         function_dict['labels'] = raw_function['labels']
 

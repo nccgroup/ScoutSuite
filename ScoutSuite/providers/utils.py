@@ -1,6 +1,7 @@
 import asyncio
-from hashlib import sha1
 import inspect
+from hashlib import sha1
+import re
 
 from ScoutSuite.core.console import print_info
 from ScoutSuite.providers.aws.utils import is_throttled as aws_is_throttled
@@ -29,7 +30,8 @@ async def run_concurrently(function, backoff_seconds=15):
         if is_throttled(e):
             source_file = inspect.getsourcefile(function)
             source_file_line = inspect.getsourcelines(function)[1]
-            print_info(f'Hitting API rate limiting ({"/".join(source_file.split("/")[-2:])} L{source_file_line}), will retry in {backoff_seconds}s')
+            print_info(
+                f'Hitting API rate limiting ({"/".join(source_file.split("/")[-2:])} L{source_file_line}), will retry in {backoff_seconds}s')
             await asyncio.sleep(backoff_seconds)
             return await run_concurrently(function, backoff_seconds + 15)
         else:
@@ -123,3 +125,21 @@ def is_throttled(e):
         return False
     else:
         return aws_is_throttled(e) or gcp_is_throttled(e)
+
+
+secret_patterns = \
+    {
+        "Generic Secret": re.compile(".*password.*")
+    }
+
+
+def is_secret(string):
+    """
+    Given a string, tries to identify if it includes a secret.
+    :param string: String to evaluate
+    :return: None if no secret identified, otherwise the type of secret
+    """
+    for secret_type, secret_regex in secret_patterns.items():
+        if secret_regex.match(string):
+            return secret_type
+    return None
