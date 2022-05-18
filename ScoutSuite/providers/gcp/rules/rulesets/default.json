@@ -318,6 +318,12 @@
                 "level": "warning"
             }
         ],
+        "functions-v1-allowing-http.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-gmail-accounts-used.json": [
             {
                 "enabled": true,
