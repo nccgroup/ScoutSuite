@@ -352,6 +352,12 @@
                 "level": "warning"
             }
         ],
+        "functions-v1-public-endpoint.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "functions-v2-public-endpoint.json": [
             {
                 "enabled": true,

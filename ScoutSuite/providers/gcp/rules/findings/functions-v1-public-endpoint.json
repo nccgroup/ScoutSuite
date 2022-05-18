@@ -1,0 +1,26 @@
+{
+  "description": "Public Function Endpoint (Gen 1)",
+  "rationale": "The Cloud Function's ingress configuration allowed all traffic, potentially exposing undesired functionality. It is recommended that traffic reaching functions be routed via a load balancer, to minimize the attack surface.",
+  "dashboard_name": "Functions",
+  "display_path": "functions.projects.id.functions_v1.id",
+  "path": "functions.projects.id.functions_v1.id.bindings.id",
+  "conditions": [
+    "and",
+    [
+      "functions.projects.id.functions_v1.id.ingress_settings",
+      "equal",
+      "ALLOW_ALL"
+    ],
+    [
+      "functions.projects.id.functions_v1.id.bindings.id.role",
+      "equal",
+      "roles/viewer"
+    ],
+    [
+      "functions.projects.id.functions_v1.id.bindings.id.members",
+      "containString",
+      "allUsers"
+    ]
+  ],
+  "id_suffix": "ingress_settings"
+}
