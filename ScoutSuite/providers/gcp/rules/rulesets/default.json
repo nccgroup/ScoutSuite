@@ -318,6 +318,22 @@
                 "level": "warning"
             }
         ],
+        "functions-v1-member.json": [
+            {
+                "args": [
+                    "allUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "allAuthenticatedUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "functions-v1-allowing-http.json": [
             {
                 "enabled": true,
