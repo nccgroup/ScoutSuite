@@ -1,6 +1,28 @@
 {
     "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
     "rules": {
+        "bigquery-dataset-member.json": [
+            {
+                "args": [
+                    "allUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "allAuthenticatedUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "bigquery-encryption-no-cmk.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudsql-allows-root-login-from-any-host.json": [
             {
                 "enabled": true,
@@ -70,7 +92,7 @@
         "cloudsql-instances-public-ips.json": [
             {
                 "enabled": true,
-                "level": "warning"
+                "level": "danger"
             }
         ],
         "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
@@ -297,6 +319,52 @@
             }
         ],
         "dns-zones-zone-signing-key-using-rsasha1.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v1-allowing-http.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v1-environment-variables-secrets.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v1-member.json": [
+            {
+                "args": [
+                    "allUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "allAuthenticatedUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "functions-v1-public-endpoint.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v2-environment-variables-secrets.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v2-public-endpoint.json": [
             {
                 "enabled": true,
                 "level": "warning"

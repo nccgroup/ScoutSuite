@@ -61,6 +61,8 @@ formatted_service_name = {
     'stackdrivermonitoring': 'Stackdriver Monitoring',
     'computeengine': 'Compute Engine',
     'kubernetesengine': 'Kubernetes Engine',
+    'functions': 'Cloud Functions',
+    'bigquery': 'BigQuery',
     # Aliyun
     'actiontrail': 'ActionTrail',
     # OCI

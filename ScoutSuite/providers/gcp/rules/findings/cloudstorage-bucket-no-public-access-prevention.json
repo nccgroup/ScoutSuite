@@ -1,0 +1,18 @@
+{
+    "description": "Bucket with Private Access Prevention not Enforced",
+    "rationale": "Public access prevention protects Cloud Storage buckets and objects from being accidentally exposed to the public. When you enforce public access prevention, no one can make data in applicable buckets public through IAM policies or ACLs.<br><br>Note that even if a bucket does not have public access prevention explicitly enforced in its settings, it might still inherit public access prevention, which occurs if the organization policy constraint <samp>storage.publicAccessPrevention</samp> is set on the project, folder, or organization that the bucket exists within. For this reason, the bucket state can only be set to <samp>enforced</samp> or <samp>inherited</samp>.",
+    "references": [
+        "https://cloud.google.com/storage/docs/public-access-prevention"
+    ],
+    "dashboard_name": "Buckets",
+    "path": "cloudstorage.projects.id.buckets.id",
+    "conditions": [
+        "and",
+        [
+            "cloudstorage.projects.id.buckets.id.public_access_prevention",
+            "notEqual",
+            "enforced"
+        ]
+    ],
+    "id_suffix": "public_access_prevention"
+}

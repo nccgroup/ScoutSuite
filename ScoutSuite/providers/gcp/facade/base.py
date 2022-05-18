@@ -14,6 +14,8 @@ from ScoutSuite.providers.gcp.facade.kms import KMSFacade
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
 from ScoutSuite.providers.gcp.facade.stackdrivermonitoring import StackdriverMonitoringFacade
 from ScoutSuite.providers.gcp.facade.gke import GKEFacade
+from ScoutSuite.providers.gcp.facade.functions import FunctionsFacade
+from ScoutSuite.providers.gcp.facade.bigquery import BigQueryFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.utils import format_service_name
 
@@ -34,6 +36,8 @@ class GCPFacade(GCPBaseFacade):
         self.cloudstorage = CloudStorageFacade()
         self.memorystoreredis = MemoryStoreRedisFacade()
         self.gce = GCEFacade()
+        self.functions = FunctionsFacade()
+        self.bigquery = BigQueryFacade()
         self.iam = IAMFacade()
         self.kms = KMSFacade()
         self.dns = DNSFacade()
@@ -191,6 +195,8 @@ class GCPFacade(GCPBaseFacade):
         Given a project ID and service name, this method tries to determine if the service's API is enabled
         """
 
+        # These are hardcoded endpoint correspondences as there's no easy way to do this.
+        incorrect_endpoints = []
         # All projects have IAM policies regardless of whether the IAM API is enabled.
         if service == 'IAM':
             return True
@@ -203,6 +209,11 @@ class GCPFacade(GCPBaseFacade):
             endpoint = 'sql-component'
         elif service == 'ComputeEngine':
             endpoint = 'compute'
+        elif service == 'Functions':
+            endpoint = 'cloudfunctions'
+        elif service == 'BigQuery':
+            endpoint = 'bigquery'
+            incorrect_endpoints.append('annotation-bigquery-public-data.cloudpartnerservices.goog')
         elif service == 'KubernetesEngine':
             endpoint = 'container'
         elif service == 'StackdriverLogging':
@@ -221,9 +232,9 @@ class GCPFacade(GCPBaseFacade):
         try:
             enabled_services = await self.get_enabled_services(project_id)
             for s in enabled_services:
-                if endpoint in s.get('name'):
+                if endpoint in s.get('name') and s.get('config').get('name') not in incorrect_endpoints:
                     print_debug(f'{format_service_name(service.lower())} API enabled for '
-                               f'project \"{project_id}\", including')
+                                f'project \"{project_id}\", including')
                     return True
             print_info(f'{format_service_name(service.lower())} API not enabled for '
                        f'project \"{project_id}\", skipping')
