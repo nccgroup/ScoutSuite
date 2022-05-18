@@ -24,6 +24,15 @@
             <span>None</span>
             {{/if}}
         </div>
+        {{#if environment_variables_secrets}}
+        <div class="list-group-item-text item-margin" id="functions.projects.{{project}}.functions_v1.{{@key}}.environment_variables_secrets">Environment Variables Secrets (Potential)
+            <ul>
+                {{#each environment_variables_secrets}}
+                <li><samp>{{this}}</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+        {{/if}}
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Trigger</h4>
