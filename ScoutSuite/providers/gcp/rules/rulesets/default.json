@@ -324,6 +324,18 @@
                 "level": "warning"
             }
         ],
+        "functions-v1-environment-variables-secrets.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v2-environment-variables-secrets.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-gmail-accounts-used.json": [
             {
                 "enabled": true,
