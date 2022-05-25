@@ -35,7 +35,7 @@ azure-cli-core==2.12.0
 ## for RBAC in AAD
 azure-graphrbac==0.61.1
 adal==1.2.4
-PyJWT==1.7.1  # FIXME - this is currently required due to the MSAL dependency but should be removed once we switch to ADAL
+PyJWT==2.4.0  # FIXME - this is currently required due to the MSAL dependency but should be removed once we switch to ADAL
 ## for resources
 azure-mgmt-storage==7.1.0
 azure-mgmt-monitor==0.5.2
