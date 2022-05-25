@@ -84,52 +84,53 @@ class AzureFacade:
         accessible_subscriptions_list = list(subscription_client.subscriptions.list())
 
         if not accessible_subscriptions_list:
-            raise AuthenticationException('The provided credentials do not have access to any subscriptions')
-
-        # Final list, start empty
-        subscriptions_list = []
-
-        # No subscription provided, infer
-        if not (self.subscription_ids or self.all_subscriptions):
-            try:
-                # Tries to read the subscription list
-                print_info('No subscription set, inferring')
-                s = next(subscription_client.subscriptions.list())
-            except StopIteration:
-                print_info('Unable to infer a subscription')
-                # If the user cannot read subscription list, ask Subscription ID:
-                if not self.programmatic_execution:
-                    s = input('Subscription ID: ')
-                else:
-                    print_exception('Unable to infer a Subscription ID')
-                    # raise
-            finally:
-                subscriptions_list.append(s)
-
-        # All subscriptions
-        elif self.all_subscriptions:
-            subscriptions_list = accessible_subscriptions_list
-
-        # A specific set of subscriptions
-        elif self.subscription_ids:
-            # Only include accessible subscriptions
-            subscriptions_list = [s for s in accessible_subscriptions_list if
-                                  s.subscription_id in self.subscription_ids]
-            # Verbose skip
-            for s in self.subscription_ids:
-                if not any(subs.subscription_id == s for subs in accessible_subscriptions_list):
-                    raise AuthenticationException('Subscription {} does not exist or is not accessible '
-                                                  'with the provided credentials'.format(s))
-
-        # Other == error
+            print_info('The provided credentials do not have access to any subscriptions. Script will only run on AAD')
+            self.subscription_list = []
         else:
-            raise AuthenticationException('Unknown Azure subscription option')
+            # Final list, start empty
+            subscriptions_list = []
 
-        if subscriptions_list and len(subscriptions_list) > 0:
-            self.subscription_list = subscriptions_list
-            if len(subscriptions_list) == 1:
-                print_info('Running against subscription {}'.format(subscriptions_list[0].subscription_id))
+            # No subscription provided, infer
+            if not (self.subscription_ids or self.all_subscriptions):
+                try:
+                    # Tries to read the subscription list
+                    print_info('No subscription set, inferring')
+                    s = next(subscription_client.subscriptions.list())
+                except StopIteration:
+                    print_info('Unable to infer a subscription')
+                    # If the user cannot read subscription list, ask Subscription ID:
+                    if not self.programmatic_execution:
+                        s = input('Subscription ID: ')
+                    else:
+                        print_exception('Unable to infer a Subscription ID')
+                        # raise
+                finally:
+                    subscriptions_list.append(s)
+
+            # All subscriptions
+            elif self.all_subscriptions:
+                subscriptions_list = accessible_subscriptions_list
+
+            # A specific set of subscriptions
+            elif self.subscription_ids:
+                # Only include accessible subscriptions
+                subscriptions_list = [s for s in accessible_subscriptions_list if
+                                      s.subscription_id in self.subscription_ids]
+                # Verbose skip
+                for s in self.subscription_ids:
+                    if not any(subs.subscription_id == s for subs in accessible_subscriptions_list):
+                        raise AuthenticationException('Subscription {} does not exist or is not accessible '
+                                                      'with the provided credentials'.format(s))
+
+            # Other == error
             else:
-                print_info('Running against {} subscriptions'.format(len(subscriptions_list)))
-        else:
-            raise AuthenticationException('No subscriptions to scan')
+                raise AuthenticationException('Unknown Azure subscription option')
+
+            if subscriptions_list and len(subscriptions_list) > 0:
+                self.subscription_list = subscriptions_list
+                if len(subscriptions_list) == 1:
+                    print_info('Running against subscription {}'.format(subscriptions_list[0].subscription_id))
+                else:
+                    print_info('Running against {} subscriptions'.format(len(subscriptions_list)))
+            else:
+                raise AuthenticationException('No subscriptions to scan')
