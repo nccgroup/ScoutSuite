@@ -13,7 +13,7 @@ import adal
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
-AUTHORITY_HOST_URI = 'https://login.microsoftonline.com'
+AUTHORITY_HOST_URI = 'https://login.partner.microsoftonline.cn'
 AZURE_CLI_CLIENT_ID = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
 
 
@@ -39,7 +39,7 @@ class AzureCredentials:
             # This is a last resort, e.g. for MSI authentication
             try:
                 h = {'Authorization': 'Bearer {}'.format(self.arm_credentials.token['access_token'])}
-                r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
+                r = requests.get('https://management.chinacloudapi.cn/tenants?api-version=2020-01-01', headers=h)
                 r2 = r.json()
                 return r2.get('value')[0].get('tenantId')
             except Exception as e:
@@ -113,7 +113,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 arm_credentials, subscription_id, tenant_id = \
                     get_azure_cli_credentials(with_tenant=True)
                 aad_graph_credentials, placeholder_1, placeholder_2 = \
-                    get_azure_cli_credentials(with_tenant=True, resource='https://graph.windows.net')
+                    get_azure_cli_credentials(with_tenant=True, resource='https://graph.chinacloudapi.cn')
 
             elif user_account:
 
@@ -126,7 +126,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 arm_credentials = UserPassCredentials(username, password)
                 aad_graph_credentials = UserPassCredentials(username, password,
-                                                            resource='https://graph.windows.net')
+                                                            resource='https://graph.chinacloudapi.cn')
 
             elif user_account_browser:
 
@@ -134,7 +134,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 context = adal.AuthenticationContext(authority_uri, api_version=None)
 
                 # Resource Manager
-                resource_uri = 'https://management.core.windows.net/'
+                resource_uri = 'https://management.core.chinacloudapi.cn/'
                 code = context.acquire_user_code(resource_uri, AZURE_CLI_CLIENT_ID)
                 print_info('To authenticate to the Resource Manager API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
@@ -143,7 +143,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
 
                 # AAD Graph
-                resource_uri = 'https://graph.windows.net'
+                resource_uri = 'https://graph.chinacloudapi.cn'
                 code = context.acquire_user_code(resource_uri, AZURE_CLI_CLIENT_ID)
                 print_info('To authenticate to the Azure AD Graph API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
@@ -181,7 +181,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id,
-                    resource='https://graph.windows.net'
+                    resource='https://graph.chinacloudapi.cn'
                 )
 
             elif file_auth:
@@ -201,13 +201,13 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id,
-                    resource='https://graph.windows.net'
+                    resource='https://graph.chinacloudapi.cn'
                 )
 
             elif msi:
 
                 arm_credentials = MSIAuthentication()
-                aad_graph_credentials = MSIAuthentication(resource='https://graph.windows.net')
+                aad_graph_credentials = MSIAuthentication(resource='https://graph.chinacloudapi.cn')
 
             else:
                 raise AuthenticationException('Unknown authentication method')

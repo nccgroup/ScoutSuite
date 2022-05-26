@@ -15,6 +15,8 @@ from ScoutSuite.utils import get_user_agent
 
 from ScoutSuite.core.console import print_info, print_exception
 
+from msrestazure.azure_cloud import AZURE_CHINA_CLOUD
+
 # Try to import proprietary services
 try:
     from ScoutSuite.providers.azure.facade.appgateway_private import AppGatewayFacade
@@ -78,7 +80,7 @@ class AzureFacade:
     def _set_subscriptions(self):
 
         # Create the client
-        subscription_client = SubscriptionClient(self.credentials.arm_credentials)
+        subscription_client = SubscriptionClient(self.credentials.arm_credentials, base_url=AZURE_CHINA_CLOUD.endpoints.resource_manager)
         subscription_client._client.config.add_user_agent(get_user_agent())
         # Get all the accessible subscriptions
         accessible_subscriptions_list = list(subscription_client.subscriptions.list())

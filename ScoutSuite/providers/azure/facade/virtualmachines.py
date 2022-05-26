@@ -12,7 +12,8 @@ class VirtualMachineFacade:
 
     def get_client(self, subscription_id: str):
         client = ComputeManagementClient(self.credentials.get_credentials('arm'),
-                                       subscription_id=subscription_id)
+                                       subscription_id=subscription_id,
+                                       base_url="https://management.chinacloudapi.cn")
         client._client.config.add_user_agent(get_user_agent())
         return client
 
