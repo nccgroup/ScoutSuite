@@ -7,7 +7,7 @@ from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.aws.authentication_strategy import AWSCredentials
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationException
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
-
+from ScoutSuite.providers.aws.resources.ec2.instances import EC2Instances
 
 class Object(object):
     pass
@@ -116,3 +116,37 @@ class TestAWSProviderClass(unittest.TestCase):
             provider="aws", credentials=mock.MagicMock(session="123"),
         )
         assert aws_provider.get_report_name() == "aws-12345"
+
+    def test_identify_user_data_secrets(self):
+
+        SAMPLE_USER_DATA = """
+# Various AWS Access Key exercisers
+AKIASHORT # too short
+AKIA0123456789ABCDEF # just right
+AKIA0123456789ABCDEF0 # too long
+AKIA0123456789abcdef # invalid characters
+FAKIA0123456789ABCDE # wrong prefix
+in middle AKIAFEDCBA9876543210 of line
+line ends with AKIAFFFFFFFFFFFFFFFF
+
+# Various AWS Secret Access Key exercisers
+ThisIsTooShort
+ThisSequenceIsExactlyTheRightLengthToUse
+ThisOneIsJustALittleBitLongerThanItShouldBe
+middle="0000000000/1111111111/2222222222/3333333" + "of line"
+hats off to TRON: HereIsSomethingThatAppearsAtEndOfLineMCP
+        """
+
+        results = EC2Instances._identify_user_data_secrets(SAMPLE_USER_DATA)
+        print(results)
+        self.maxDiff = None
+        assert results["AWS Access Key IDs"] == [
+            "AKIA0123456789ABCDEF",
+            "AKIAFEDCBA9876543210",
+            "AKIAFFFFFFFFFFFFFFFF"
+        ]
+        assert results["AWS Secret Access Keys"] == [
+            "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",
+            "0000000000/1111111111/2222222222/3333333",
+            "HereIsSomethingThatAppearsAtEndOfLineMCP"
+        ]
