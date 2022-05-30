@@ -29,6 +29,7 @@ class ScoutSuiteArgumentParser:
         self._init_azure_parser()
         self._init_aliyun_parser()
         self._init_oci_parser()
+        self._init_openstack_parser()
 
     def _init_aws_parser(self):
         parser = self.subparsers.add_parser("aws",
@@ -254,6 +255,87 @@ class ScoutSuiteArgumentParser:
                             default=None,
                             help='Name of the profile')
 
+    def _init_openstack_parser(self):
+        openstack_parser = self.subparsers.add_parser("openstack",
+                                               parents=[self.common_providers_args_parser],
+                                               help="Run Scout against an Openstack Infrastructure")
+
+        openstack_auth_parser = openstack_parser.add_argument_group('Authentication parameters')
+        openstack_auth_mode = openstack_parser.add_argument_group('Authentication modes')
+
+        openstack_auth_mode_parser = openstack_auth_mode.add_mutually_exclusive_group(required=True)
+        
+        openstack_auth_mode_parser.add_argument('--clouds_yaml',
+                                         action='store_true',
+                                         dest='openstack_config_mode',
+                                         help='Authenticate using clouds.yaml config file')
+
+        openstack_auth_mode_parser.add_argument('--keywords',
+                                         dest='openstack_keywords_mode',
+                                         action='store_true',
+                                         help='Run with credentials passed by arguments')
+
+        '''
+        openstack_auth_mode_parser.add_argument('--token',
+                                         action='store_true',
+                                         dest='token',
+                                         help='Run with access keys')'''
+
+        openstack_auth_parser.add_argument('-au',
+                                    '--auth_url',
+                                    action='store',
+                                    default=None,
+                                    dest='auth_url',
+                                    help='Keystone authentication endpoint')
+
+        openstack_auth_parser.add_argument('-pn',
+                                    '--project_name',
+                                    action='store',
+                                    default=None,
+                                    dest='openstack_project_name',
+                                    help='')
+
+        openstack_auth_parser.add_argument('-pdn',
+                                    '--project_domain_name',
+                                    action='store',
+                                    default=None,
+                                    dest='openstack_project_domain_name',
+                                    help='')
+
+        openstack_auth_parser.add_argument('-u',
+                                    '--username',
+                                    action='store',
+                                    default=None,
+                                    dest='username',
+                                    help='Username of the Openstack account')
+
+        openstack_auth_parser.add_argument('-udn',
+                                    '--user_domain_name',
+                                    action='store',
+                                    default='Default',
+                                    dest='openstack_user_domain_name',
+                                    help='')
+
+        openstack_auth_parser.add_argument('-p',
+                                    '--password',
+                                    action='store',
+                                    default=None,
+                                    dest='password',
+                                    help='Password of the Openstack account')
+
+        openstack_auth_parser.add_argument('-cp',
+                                    '--config_path',
+                                    action='store',
+                                    default=None,
+                                    dest='openstack_config_path',
+                                    help='Path of the clouds.yaml file [Default: working directory]')
+
+        openstack_auth_parser.add_argument('-cn',
+                                    '--cloud_name',
+                                    action='store',
+                                    default=None,
+                                    dest='openstack_cloud_name',
+                                    help='Cloud name in the clouds.yaml file')
 
     def _init_common_args_parser(self):
         parser = self.common_providers_args_parser.add_argument_group('Scout Arguments')
@@ -402,4 +484,3 @@ class ScoutSuiteArgumentParser:
                 self.parser.error('--subscription-ids and --all-subscriptions are mutually exclusive options')
 
         return args
-

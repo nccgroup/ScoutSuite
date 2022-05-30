@@ -1,0 +1,39 @@
+<!-- keystone projects -->
+<script id="services.keystone.projects.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Id: <span id="keystone.projects.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Name: <span id="keystone.projects.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Domain Id:
+            <span id="keystone.users.{{@key}}.domain_id">
+                <samp><a href="javascript:showObject('services.keystone.domains.{{value_or_none domain_id}}')">{{value_or_none domain_id}}</a>
+                </samp>
+            </span>
+        </div>
+        <div class="list-group-item-text item-margin">Description: <span id="keystone.projects.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Enabled: <span id="keystone.projects.{{@key}}.enabled"><samp>{{value_or_none enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Parent Id:
+            <span id="keystone.users.{{@key}}.parent_id">
+                <samp><a href="javascript:showObject('services.keystone.projects.{{value_or_none parent_id}}')">{{value_or_none parent_id}}</a>
+                </samp>
+            </span>
+        </div>
+        <div class="list-group-item-text item-margin">Is Domain: <span id="keystone.projects.{{@key}}.is_domain"><samp>{{value_or_none is_domain}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Tags: <span id="keystone.projects.{{@key}}.tags"><samp>{{value_or_none tags}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.keystone.projects", $("#services\\.keystone\\.projects\\.partial").html());
+</script>
+
+<!-- Single keystone project template -->
+<script id="single_keystone_project-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.keystone.projects'}}
+</script>
+<script>
+    var single_keystone_project_template = Handlebars.compile($("#single_keystone_project-template").html());
+</script>

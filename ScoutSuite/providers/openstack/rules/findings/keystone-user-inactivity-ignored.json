@@ -1,0 +1,17 @@
+{
+    "description": "Inactivity policy ignored",
+    "rationale": "PCI DSS 8.1.4: Users with prolonged inactivity should be disabled.<br>The usage of 'ignore_user_inactivity' user option could be dangerous and should be limited.",
+    "references": [
+        "https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf",
+        "https://docs.openstack.org/keystone/victoria/admin/configuration.html#disabling-inactive-users"
+    ],
+    "dashboard_name": "Users ignoring inactivity policy",
+    "path": "keystone.users.id",
+    "conditions": ["and",
+        [
+            "keystone.users.id.options.ignore_user_inactivity",
+            "true",
+            ""
+        ]
+    ]
+}

@@ -1,8 +1,18 @@
+import sys
+
+from ScoutSuite.providers.aws.provider import AWSProvider
+from ScoutSuite.providers.azure.provider import AzureProvider
+from ScoutSuite.providers.gcp.provider import GCPProvider
+from ScoutSuite.providers.aliyun.provider import AliyunProvider
+from ScoutSuite.providers.oci.provider import OracleProvider
+from ScoutSuite.providers.openstack.provider import OpenstackProvider
+
 providers_dict = {'aws': 'AWSProvider',
                   'gcp': 'GCPProvider',
                   'azure': 'AzureProvider',
                   'aliyun': 'AliyunProvider',
-                  'oci': 'OracleProvider'}
+                  'oci': 'OracleProvider',
+                  'openstack': 'OpenstackProvider'}
 
 
 def get_provider_object(provider):

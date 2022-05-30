@@ -1,0 +1,12 @@
+{
+    "description": "Insecure token type",
+    "rationale": "Prefer Fernet tokens over UUID tokens.",
+    "references": [
+        "https://docs.openstack.org/security-guide/identity/checklist.html#check-identity-08-use-fernet-token-in-etc-keystone-keystone-conf"
+    ],
+    "path": "keystone.tokens.isFernet",
+    "dashboard_name": "Tokens",
+    "conditions": [ "and",
+        [ "this", "false", "" ]
+    ]
+}

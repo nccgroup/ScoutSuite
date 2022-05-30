@@ -53,6 +53,16 @@ def run_from_cli():
                    organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
                    # Aliyun
                    access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
+                   # Openstack
+                   openstack_config_path=args.get('openstack_config_path'),
+                   openstack_cloud_name=args.get('openstack_cloud_name'),
+                   openstack_keywords_mode=args.get('openstack_keywords_mode'),
+                   openstack_config_mode=args.get('openstack_config_mode'),
+                   openstack_auth_url=args.get('auth_url'),
+                   openstack_user_domain_name=args.get('openstack_user_domain_name'),
+                   openstack_region_name=args.get('openstack_region_name'),
+                   openstack_project_name=args.get('openstack_project_name'),
+                   openstack_project_domain_name=args.get('openstack_project_domain_name'),
                    # General
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
                    timestamp=args.get('timestamp'),
@@ -99,6 +109,16 @@ def run(provider,
         project_id=None, folder_id=None, organization_id=None, all_projects=False,
         # Aliyun
         access_key_id=None, access_key_secret=None,
+        # Openstack
+        openstack_keywords_mode=None,
+        openstack_config_mode=None,
+        openstack_config_path=None,
+        openstack_cloud_name=None,
+        openstack_auth_url=None,
+        openstack_user_domain_name='Default',
+        openstack_region_name=None,
+        openstack_project_name=None,
+        openstack_project_domain_name=None,
         # General
         report_name=None, report_dir=None,
         timestamp=False,
@@ -151,6 +171,16 @@ async def _run(provider,
                project_id, folder_id, organization_id, all_projects,
                # Aliyun
                access_key_id, access_key_secret,
+               # Openstack
+               openstack_keywords_mode,
+               openstack_config_mode,
+               openstack_config_path,
+               openstack_cloud_name,
+               openstack_auth_url,
+               openstack_user_domain_name,
+               openstack_region_name,
+               openstack_project_name,
+               openstack_project_domain_name,
                # General
                report_name, report_dir,
                timestamp,
@@ -199,7 +229,17 @@ async def _run(provider,
                                                  username=username,
                                                  password=password,
                                                  access_key_id=access_key_id,
-                                                 access_key_secret=access_key_secret)
+                                                 access_key_secret=access_key_secret,
+                                                 openstack_keywords_mode=openstack_keywords_mode,
+                                                 openstack_config_mode=openstack_config_mode,
+                                                 openstack_config_path=openstack_config_path,
+                                                 openstack_cloud_name=openstack_cloud_name,
+                                                 openstack_auth_url=openstack_auth_url,
+                                                 openstack_user_domain_name=openstack_user_domain_name,
+                                                 openstack_region_name=openstack_region_name,
+                                                 openstack_project_name=openstack_project_name,
+                                                 openstack_project_domain_name=openstack_project_domain_name,
+                                                 )
 
         if not credentials:
             return 101

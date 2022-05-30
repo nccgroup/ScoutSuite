@@ -62,6 +62,8 @@ formatted_service_name = {
     # OCI
     'identity': 'Identity',
     'objectstorage': 'Object Storage',
+    # Openstack
+    'keystone': 'Keystone'
 }
 
 

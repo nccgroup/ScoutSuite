@@ -1,0 +1,34 @@
+{
+  "security": {
+      "keystone": {
+        "resources": {
+          "domains": {
+            "cols": 2,
+            "path": "services.keystone.domains"
+          },
+          "groups": {
+            "cols": 2,
+            "path": "services.keystone.groups"
+          },
+          "policies": {
+            "cols": 2,
+            "path": "services.keystone.policies"
+          },
+          "projects": {
+            "cols": 2,
+            "path": "services.keystone.projects"
+          },
+          "regions": {
+            "cols": 2,
+            "path": "services.keystone.regions"
+          },
+          "users": {
+            "cols": 2,
+            "path": "services.keystone.users"
+          }
+        },
+        "summaries": {
+        }
+      }
+  }
+}
