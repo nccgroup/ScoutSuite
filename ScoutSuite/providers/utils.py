@@ -26,6 +26,9 @@ async def run_concurrently(function, backoff_seconds=15):
         async with asyncio.get_event_loop().throttler:
             return await run_function_concurrently(function)
     except Exception as e:
+        raise
+        """
+        Commented out so this does not trigger errors from is_throttled, which is not fully implemented
         # Determine whether the exception is due to API throttling
         if is_throttled(e):
             source_file = inspect.getsourcefile(function)
@@ -35,6 +38,7 @@ async def run_concurrently(function, backoff_seconds=15):
             return await run_concurrently(function, backoff_seconds + 15)
         else:
             raise
+        """
 
 
 def run_function_concurrently(function):
