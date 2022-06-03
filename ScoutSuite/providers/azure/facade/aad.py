@@ -18,6 +18,9 @@ class AADFacade:
             response = client.get(endpoint)
             if response.status_code == 200:
                 return response.json()
+            # If response is 404 then it means there is no resource associated with the provided id
+            elif response.status_code == 404:
+                return {}
             else:
                 print_exception('Failed to query Microsoft Graph endpoint \"{}\": status code {}'.
                                 format(api_resource, response.status_code))
@@ -104,5 +107,5 @@ class AADFacade:
             policies_response = await self._get_microsoft_graph_response('policies/authorizationPolicy')
             return policies_response
         except Exception as e:
-            print_exception(f'Failed to retrieve applications: {e}')
+            print_exception(f'Failed to retrieve policies: {e}')
             return []
