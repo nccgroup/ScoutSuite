@@ -6,7 +6,7 @@ import requests
 from ScoutSuite.core.console import print_exception
 
 from azure.identity import UsernamePasswordCredential, AzureCliCredential, ClientSecretCredential, \
-    ManagedIdentityCredential, InteractiveBrowserCredential
+    ManagedIdentityCredential, DeviceCodeCredential
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 AUTHORITY_HOST_URI = 'https://login.microsoftonline.com/'
@@ -86,7 +86,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             elif user_account_browser:
 
-                identity_credentials = InteractiveBrowserCredential()
+                identity_credentials = DeviceCodeCredential(authority=AUTHORITY_HOST_URI,tenant_id=tenant_id,client_id=AZURE_CLI_CLIENT_ID)
 
             elif service_principal:
 
