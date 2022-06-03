@@ -93,7 +93,7 @@
         ],
         "logging-monitoring-diagnostic-setting-does-not-exist.json": [
             {
-                "enabled": true,
+                "enabled": false,
                 "level": "warning"
             }
         ],
@@ -172,7 +172,7 @@
         ],
         "logging-monitoring-logging-key-vault-disabled.json": [
             {
-                "enabled": true,
+                "enabled": false,
                 "level": "warning"
             }
         ],
