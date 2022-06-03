@@ -64,7 +64,10 @@ class Instances(AzureResources):
 
         # TODO process and display the below
         instance_dict['hardware_profile'] = raw_instance.hardware_profile.vm_size
-        instance_dict['diagnostics_profile'] = {'Boot Diagnostics': True if raw_instance.diagnostics_profile.boot_diagnostics.enabled else None}
+        
+        # Handle VMs without diagnostics profile configured
+        if raw_instance.diagnostics_profile is not None:
+            instance_dict['diagnostics_profile'] = {'Boot Diagnostics': True if raw_instance.diagnostics_profile.boot_diagnostics.enabled else None}
         
         instance_dict['os_profile'] = {}
         if raw_instance.os_profile is not None:
