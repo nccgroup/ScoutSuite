@@ -79,12 +79,38 @@ class SecurityCenterFacade:
             print_exception(f'Failed to retrieve alerts: {e}')
             return []
 
+    def remove_last_ItemPage_from_the_list(self, results):
+        p = list()
+        try:
+            for i in results:
+                p.append(i)
+        except Exception:
+        # TODO implement condition to pass only if the triggered error is MissingApiVersionParameter
+            pass
+        return p
+    
+    """
+    Commented out this part since a weird bug causes MissingApiVersionParameter errors to appear in the last response from Azure API. 
+    Workaround bypasses this but obviously not ideal.
+    
     async def get_compliance_results(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
             scope = f'/subscriptions/{subscription_id}'
             return await run_concurrently(
                 lambda: list(client.compliance_results.list(scope=scope))
+            )
+        except Exception as e:
+            print_exception(f'Failed to retrieve compliance results: {e}')
+            return []
+     """
+            
+    async def get_compliance_results(self, subscription_id: str):
+        try:
+            client = self.get_client(subscription_id)
+            scope = f'/subscriptions/{subscription_id}'
+            return await run_concurrently(
+                lambda: self.remove_last_ItemPage_from_the_list(client.compliance_results.list(scope=scope))
             )
         except Exception as e:
             print_exception(f'Failed to retrieve compliance results: {e}')
