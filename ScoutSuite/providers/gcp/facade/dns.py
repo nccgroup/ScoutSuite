@@ -16,4 +16,4 @@ class DNSFacade(GCPBaseFacade):
             )
         except Exception as e:
             print_exception(f'Failed to retrieve zones: {e}')
-            return []
+            return {}

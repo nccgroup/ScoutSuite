@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Functions(AWSResources):
@@ -34,7 +35,7 @@ class Functions(AWSResources):
         await self._add_access_policy_information(function_dict)
         await self._add_env_variables(function_dict)
 
-        return function_dict['name'], function_dict
+        return get_non_provider_id(function_dict['name']), function_dict
 
     async def _add_role_information(self, function_dict, role_id):
         # Make it easier to build rules based on policies attached to execution roles

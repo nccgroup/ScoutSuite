@@ -17,6 +17,11 @@
             "Deny"
         ],
         [
+            "iam.policies.id.PolicyDocument.Statement.id.",
+            "withKey",
+            "Resource"
+        ],
+        [
             "iam.policies.id.PolicyDocument.Statement.id.Resource",
             "matchInList",
             "arn:aws:iam::[0-9]+:group/.*"

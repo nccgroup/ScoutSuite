@@ -11,9 +11,8 @@ class KeyVaultFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        client = KeyVaultManagementClient(self.credentials.get_credentials('arm'),
-                                        subscription_id=subscription_id)
-        client._client.config.add_user_agent(get_user_agent())
+        client = KeyVaultManagementClient(self.credentials.get_credentials(),
+                                          subscription_id=subscription_id, user_agent=get_user_agent())
         return client
 
     async def get_key_vaults(self, subscription_id: str):

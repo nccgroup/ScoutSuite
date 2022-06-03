@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class SubnetGroups(AWSResources):
@@ -17,4 +18,4 @@ class SubnetGroups(AWSResources):
     def _parse_subnet_group(self, raw_subnet_group):
         raw_subnet_group['name'] = raw_subnet_group['DBSubnetGroupName']
         raw_subnet_group['ARN'] = raw_subnet_group.pop('DBSubnetGroupArn')
-        return raw_subnet_group['name'], raw_subnet_group
+        return get_non_provider_id(raw_subnet_group['name']), raw_subnet_group

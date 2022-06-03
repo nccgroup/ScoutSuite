@@ -1,15 +1,25 @@
 {
     "description": "No Security Contact Email Set",
-    "rationale": "At least one security contact email should be set.",
+    "rationale": "Azure Security Center emails the Subscription Owner to notify them about security alerts. Adding your Security Contact's email address to the 'Additional email addresses' field ensures that your organization's Security Team is included in these alerts. This ensures that the proper people are aware of any potential compromise in order to mitigate the risk in a timely fashion.",
+    "remediation": "From Azure console:<ol><li>Go to <samp>Security Center</samp></li><li>Click on <samp>Pricing & Settings</samp></li><li>Click on the appropriate Management Group, Subscription, or Workspace</li><li>Click on <samp>Email notifications</samp></li><li>Enter a valid security contact email address (or multiple addresses separated by commas) in the <samp>Additional email addresses</samp> field</li><li>Click <samp>Save</samp></li></ol>",
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.1.0",
             "reference": "2.16"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "2.11"
         }
     ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/list",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-3-define-security-posture-management-strategy"
+    ],
     "dashboard_name": "Security contacts",
-    "display_path": "securitycenter.subscriptions.id.security_contacts",
     "path": "securitycenter.subscriptions.id.security_contacts.id",
     "conditions": [
         "and",

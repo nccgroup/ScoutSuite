@@ -1,6 +1,28 @@
 {
     "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
     "rules": {
+        "bigquery-dataset-member.json": [
+            {
+                "args": [
+                    "allUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "allAuthenticatedUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "bigquery-encryption-no-cmk.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudsql-allows-root-login-from-any-host.json": [
             {
                 "enabled": true,
@@ -11,6 +33,12 @@
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "cloudsql-instance-is-open-to-public-range.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "cloudsql-instance-is-open-to-the-world.json": [
@@ -32,6 +60,18 @@
             }
         ],
         "cloudsql-instance-with-no-backups.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-instances-public-ips.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cloudsql-mysql-instances-local-infile-on.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -61,13 +101,7 @@
                 "level": "warning"
             }
         ],
-        "cloudsql-instances-public-ips.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
+        "cloudsql-postgresql-instances-log-min-duration-not-set-1.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -79,25 +113,19 @@
                 "level": "warning"
             }
         ],
-        "cloudsql-sqlservers-instances-contained-database-authentication-on.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "cloudsql-postgresql-instances-log-temp-files-not-set-0.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "cloudsql-postgresql-instances-log-min-duration-not-set-1.json": [
+        "cloudsql-sqlservers-instances-contained-database-authentication-on.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "cloudsql-mysql-instances-local-infile-on.json": [
+        "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -132,12 +160,6 @@
             }
         ],
         "cloudstorage-uniform-bucket-level-access-disabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-vpc-flow-logs-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -188,19 +210,67 @@
                 "level": "warning"
             }
         ],
+        "computeengine-instance-block-project-ssh-keys-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-connecting-serial-ports-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-default-service-account.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-disk-not-csek-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "computeengine-instance-disk-with-no-snapshot.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "computeengine-instance-with-deletion-protection-disabled.json": [
+        "computeengine-instance-full-api-access.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "computeengine-network-with-no-instances.json": [
+        "computeengine-instance-ip-forwarding-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-os-login-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-public-ip-adresses.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-shielded-vm-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-with-deletion-protection-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -218,61 +288,19 @@
                 "level": "warning"
             }
         ],
+        "computeengine-network-with-no-instances.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "computeengine-old-disk-snapshot.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "computeengine-instance-default-service-account.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-instance-full-api-access.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-instance-block-project-ssh-keys-disabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-instance-os-login-disabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-instance-connecting-serial-ports-enabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-instance-ip-forwarding-enabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-instance-shielded-vm-disabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-instance-public-ip-adresses.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-instance-disk-not-csek-encrypted.json": [
+        "computeengine-vpc-flow-logs-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -296,6 +324,52 @@
                 "level": "warning"
             }
         ],
+        "functions-v1-allowing-http.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v1-environment-variables-secrets.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v1-member.json": [
+            {
+                "args": [
+                    "allUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "allAuthenticatedUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "functions-v1-public-endpoint.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v2-environment-variables-secrets.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v2-public-endpoint.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-gmail-accounts-used.json": [
             {
                 "enabled": true,
@@ -314,7 +388,25 @@
                 "level": "warning"
             }
         ],
+        "iam-role-account-separation-duties-is-false.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-role-assigned-to-domain.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-role-assigned-to-user.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-role-kms-separation-duties-is-false.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -356,18 +448,6 @@
                 "level": "warning"
             }
         ],
-        "iam-role-account-separation-duties-is-false.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-role-kms-separation-duties-is-false.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "kms-cryptokeys-anonymously-publicly-accessible.json": [
             {
                 "enabled": true,
@@ -398,6 +478,18 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-cluster-application-layer-encryption-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-binary-authorization-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-cluster-has-no-labels.json": [
             {
                 "enabled": true,
@@ -411,6 +503,12 @@
             }
         ],
         "kubernetesengine-cluster-master-authorized-networks-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-metadata-server-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -434,7 +532,31 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-cluster-private-endpoint-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-cluster-private-google-access-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-release-channel.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-shielded-nodes-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-cluster-workload-identity-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -482,7 +604,19 @@
                 "level": "warning"
             }
         ],
-        "kubernetesengine-private-cluster-disabled.json": [
+        "kubernetesengine-node-integrity-monitoring-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-node-secure-boot-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-private-nodes-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -506,7 +640,19 @@
                 "level": "warning"
             }
         ],
-        "stackdriverlogging-no-export-sinks.json": [
+        "stackdriverlogging-metric-filter-does-not-exist-audit-config-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-cloud-storage-iam-permission-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-custom-role-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -518,13 +664,13 @@
                 "level": "warning"
             }
         ],
-        "stackdriverlogging-metric-filter-does-not-exist-audit-config-changes.json": [
+        "stackdriverlogging-metric-filter-does-not-exist-sql-instance-config-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "stackdriverlogging-metric-filter-does-not-exist-custom-role-changes.json": [
+        "stackdriverlogging-metric-filter-does-not-exist-vpc-network-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -542,25 +688,7 @@
                 "level": "warning"
             }
         ],
-        "stackdriverlogging-metric-filter-does-not-exist-vpc-network-changes.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "stackdriverlogging-metric-filter-does-not-exist-cloud-storage-iam-permission-changes.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "stackdriverlogging-metric-filter-does-not-exist-sql-instance-config-changes.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "stackdrivermonitoring-alerts-does-not-exist-project-ownership-assignment.json": [
+        "stackdriverlogging-no-export-sinks.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -572,7 +700,31 @@
                 "level": "warning"
             }
         ],
+        "stackdrivermonitoring-alerts-does-not-exist-cloud-storage-iam-permission-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "stackdrivermonitoring-alerts-does-not-exist-custom-role-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-project-ownership-assignment.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-sql-instance-config-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdrivermonitoring-alerts-does-not-exist-vpc-network-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -585,24 +737,6 @@
             }
         ],
         "stackdrivermonitoring-alerts-does-not-exist-vpc-network-route-changes.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "stackdrivermonitoring-alerts-does-not-exist-vpc-network-changes.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "stackdrivermonitoring-alerts-does-not-exist-cloud-storage-iam-permission-changes.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "stackdrivermonitoring-alerts-does-not-exist-sql-instance-config-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"

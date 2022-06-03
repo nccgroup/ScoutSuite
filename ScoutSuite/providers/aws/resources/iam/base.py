@@ -6,6 +6,7 @@ from ScoutSuite.providers.aws.resources.iam.users import Users
 from ScoutSuite.providers.aws.resources.iam.roles import Roles
 from ScoutSuite.providers.aws.resources.iam.passwordpolicy import PasswordPolicy
 from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.core.console import print_exception
 
 
 class IAM(AWSCompositeResources):
@@ -29,30 +30,36 @@ class IAM(AWSCompositeResources):
         self['password_policy_count'] = 0
 
     async def finalize(self):
-        # Update permissions for managed policies
-        self['permissions'] = {}
-        policies = [policy for policy in self['policies'].values()]
-        self._parse_inline_policies_permissions('groups')
-        self._parse_inline_policies_permissions('users')
-        self._parse_inline_policies_permissions('roles')
+        try:
+            # Update permissions for managed policies
+            self['permissions'] = {}
+            policies = [policy for policy in self['policies'].values()]
+            self._parse_inline_policies_permissions('groups')
+            self._parse_inline_policies_permissions('users')
+            self._parse_inline_policies_permissions('roles')
 
-        for policy in policies:
-            policy_id = policy['id']
-            if 'attached_to' in policy and len(policy['attached_to']) > 0:
-                for entity_type in policy['attached_to']:
-                    for entity in policy['attached_to'][entity_type]:
-                        entity['id'] = self._get_id_for_resource(
-                            entity_type, entity['name'])
-                        entities = self[entity_type]
-                        entities[entity['id']].setdefault('policies', [])
-                        entities[entity['id']].setdefault('policies_counts', 0)
-                        entities[entity['id']]['policies'].append(policy_id)
-                        entities[entity['id']]['policies_counts'] += 1
-                        self._parse_permissions(
-                            policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
-            else:
-                self._parse_permissions(
-                    policy_id, policy['PolicyDocument'], 'policies', None, None)
+            for policy in policies:
+                policy_id = policy['id']
+                if 'attached_to' in policy and len(policy['attached_to']) > 0:
+                    for entity_type in policy['attached_to']:
+                        for entity in policy['attached_to'][entity_type]:
+                            try:
+                                entity['id'] = self._get_id_for_resource(entity_type, entity['name'])
+                                entities = self[entity_type]
+                                if entity['id'] is not None:
+                                    entities[entity['id']].setdefault('policies', [])
+                                    entities[entity['id']].setdefault('policies_counts', 0)
+                                    entities[entity['id']]['policies'].append(policy_id)
+                                    entities[entity['id']]['policies_counts'] += 1
+                                    self._parse_permissions(
+                                        policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
+                            except Exception as e:
+                                print_exception(f'Error setting entity for ID {entity["id"]}: {e}')
+                else:
+                    self._parse_permissions(
+                        policy_id, policy['PolicyDocument'], 'policies', None, None)
+        except Exception as e:
+            print_exception(f'Error finalizing IAM service: {e}')
 
     def _parse_inline_policies_permissions(self, resource_type):
         for resource_id in self[resource_type]:

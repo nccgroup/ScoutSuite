@@ -14,6 +14,11 @@
             "sqs.regions.id.queues.id.kms_master_key_id",
             "null",
             ""
+        ],
+        [
+            "sqs.regions.id.queues.id.sqs_managed_sse_enabled",
+            "false",
+            ""
         ]
     ],
     "id_suffix": "server-side-encryption-disabled"

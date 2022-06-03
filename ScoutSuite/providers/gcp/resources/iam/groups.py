@@ -16,17 +16,17 @@ class Groups(Resources):
 
     def _parse_binding(self, raw_bindings):
 
-        parsed_users = {}
+        parsed_groups = {}
         for binding in raw_bindings:
             role = binding['role'].split('/')[-1]
             if 'members' in binding:
                 for member in binding['members']:
                     member_type, entity = member.split(':')[:2]
                     if member_type == 'group':
-                        if entity not in parsed_users.keys():
-                            parsed_users[entity] = {'id': get_non_provider_id(entity),
+                        if entity not in parsed_groups.keys():
+                            parsed_groups[entity] = {'id': get_non_provider_id(entity),
                                                     'name': entity,
                                                     'roles': [role]}
                         else:
-                            parsed_users[entity]['roles'].append(role)
-        return parsed_users
+                            parsed_groups[entity]['roles'].append(role)
+        return parsed_groups

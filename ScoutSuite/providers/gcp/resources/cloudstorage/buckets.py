@@ -27,6 +27,8 @@ class Buckets(Resources):
         bucket_dict['versioning_enabled'] = raw_bucket.versioning_enabled
         bucket_dict['logging_enabled'] = raw_bucket.logging is not None
 
+        bucket_dict['public_access_prevention'] = raw_bucket.iam_configuration.public_access_prevention
+
         iam_configuration = raw_bucket.iam_configuration.get('uniformBucketLevelAccess') or \
             raw_bucket.iam_configuration.get('bucketPolicyOnly')
         if iam_configuration:

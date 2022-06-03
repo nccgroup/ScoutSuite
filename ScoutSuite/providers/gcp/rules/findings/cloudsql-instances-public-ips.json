@@ -1,5 +1,5 @@
 {
-    "description": "Cloud SQL Database Instances Have Public IPs",
+    "description": "Database Instances with Public IPs",
     "rationale": "To lower the organization's attack surface, Cloud SQL databases should not have public IPs. Private IPs provide improved network security and lower latency for your application.",
     "remediation": "From console:<ol><li>Go to the Cloud SQL Instances page in the Google Cloud Console by visiting https://console.cloud.google.com/sql/instances.</li><li>Click the instance name to open its Instance details page.</li><li>Select the <samp>Connections</samp> tab.</li><li>Deselect the <samp>Public IP</samp> checkbox.</li><li>Click <samp>Save</samp> to update the instance.</li></ol>",
     "compliance": [

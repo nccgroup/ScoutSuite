@@ -1,0 +1,28 @@
+{
+    "description": "Server Parameter Log Duration Not Set To 'ON'",
+    "rationale": "Enabling <samp>log_duration</samp> helps the PostgreSQL Database to <samp>Logs the duration of each completed SQL statement</samp> which in turn generates query and error logs. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
+    "remediation": "From Azure Console: <ol><li>Login to Azure Portal using https://portal.azure.com</li><li>Go to <samp>Azure Database</samp> for <samp>PostgreSQL server</samp></li><li>For each database, click on <samp>Server parameters</samp></li><li>Search for <samp>log_duration.</samp></li><li>Click <samp>ON</samp> and save.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "4.3.6"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver",
+        "https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+    ],
+    "dashboard_name": "PostgreSQL Servers",
+    "path": "postgresqldatabase.subscriptions.id.servers.id",
+    "conditions": [
+        "and",
+        [
+            "postgresqldatabase.subscriptions.id.servers.id.log_duration.value",
+            "equal",
+            "off"
+        ]
+    ],
+    "id_suffix": "server_log_duration_value"
+}
