@@ -26,9 +26,10 @@ class FunctionsFacade(GCPBaseFacade):
             return []
         else:
             functions = await map_concurrently(self._get_function_version, functions_list, api_version=api_version)
-            await get_and_set_concurrently([self._get_and_set_function_iam_policy],
-                                           functions,
-                                           api_version=api_version)
+            if functions:
+                await get_and_set_concurrently([self._get_and_set_function_iam_policy],
+                                               functions,
+                                               api_version=api_version)
             return functions
 
     async def _list_functions_version(self, project_id: str, api_version: str):
