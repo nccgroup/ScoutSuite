@@ -50,7 +50,7 @@ class IAMFacade(AWSBaseFacade):
 
             return credential_reports
         except Exception as e:
-            if 'ReportNotPresent' in e:
+            if 'ReportNotPresent' in str(e):
                 print_warning(f'Failed to download credential report: {e}')
             else:
                 print_exception(f'Failed to download credential report: {e}')

@@ -127,7 +127,7 @@ class EC2Facade(AWSBaseFacade):
                 volume['KeyManager'] = await run_concurrently(
                     lambda: kms_client.describe_key(KeyId=key_id)['KeyMetadata']['KeyManager'])
             except Exception as e:
-                if 'NotFoundException' in e:
+                if 'NotFoundException' in str(e):
                     print_warning(f'Failed to describe KMS key: {e}')
                 else:
                     print_exception(f'Failed to describe KMS key: {e}')
@@ -156,7 +156,7 @@ class EC2Facade(AWSBaseFacade):
                 Attribute='createVolumePermission',
                 SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
         except Exception as e:
-            if 'NotFound' in e:
+            if 'NotFound' in str(e):
                 print_warning(f'Failed to describe EC2 snapshot attributes: {e}')
             else:
                 print_exception(f'Failed to describe EC2 snapshot attributes: {e}')

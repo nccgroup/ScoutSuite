@@ -56,7 +56,7 @@ class ELBv2Facade(AWSBaseFacade):
                     ResourceArns=[load_balancer['LoadBalancerArn']])['TagDescriptions'][0]['Tags']
             )
         except Exception as e:
-            if 'LoadBalancerNotFound' in e:
+            if 'LoadBalancerNotFound' in str(e):
                 print_warning(f'Failed to describe ELBv2 tags: {e}')
             else:
                 print_exception(f'Failed to describe ELBv2 tags: {e}')

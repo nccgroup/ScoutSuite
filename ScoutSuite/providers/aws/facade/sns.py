@@ -27,7 +27,7 @@ class SNSFacade(AWSBaseFacade):
                 lambda: sns_client.get_topic_attributes(TopicArn=topic['TopicArn'])['Attributes']
             )
         except Exception as e:
-            if 'NotFound' in e:
+            if 'NotFound' in str(e):
                 print_warning(f'Failed to get SNS topic attributes: {e}')
             else:
                 print_exception(f'Failed to get SNS topic attributes: {e}')

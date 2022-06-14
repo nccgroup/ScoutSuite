@@ -54,7 +54,7 @@ class RDSFacade(AWSBaseFacade):
             if e.response['Error']['Code'] != 'NoSuchTagSet':
                 print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
         except Exception as e:
-            if 'DBInstanceNotFound' in e:
+            if 'DBInstanceNotFound' in str(e):
                 print_warning('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
             else:
                 print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
@@ -116,7 +116,7 @@ class RDSFacade(AWSBaseFacade):
             snapshot['Attributes'] =\
                 attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
         except Exception as e:
-            if 'DBSnapshotNotFound' in e:
+            if 'DBSnapshotNotFound' in str(e):
                 print_warning(f'Failed to describe RDS snapshot attributes: {e}')
             else:
                 print_exception(f'Failed to describe RDS snapshot attributes: {e}')

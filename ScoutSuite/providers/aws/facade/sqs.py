@@ -28,7 +28,7 @@ class SQSFacade(AWSBaseFacade):
                     'Attributes']
             )
         except Exception as e:
-            if 'NonExistentQueue' in e:
+            if 'NonExistentQueue' in str(e):
                 print_warning(f'Failed to get SQS queue attributes: {e}')
             else:
                 print_exception(f'Failed to get SQS queue attributes: {e}')
