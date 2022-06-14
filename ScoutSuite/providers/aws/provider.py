@@ -67,42 +67,75 @@ class AWSProvider(BaseProvider):
         # Note that order of processing can matter
 
         # TODO - this should be moved to the `finalize` method of the base resource, as it's not cross-service
-        self._map_all_subnets()
+        try:
+            self._map_all_subnets()
+        except Exception as e:
+            print_exception(f"Error processing _map_all_subnets: {e}")
 
         # TODO - this should be moved to the `finalize` method of the base resource, as it's not cross-service
-        if 'ec2' in self.service_list:
-            self._map_all_sgs()
-            self._add_security_group_name_to_ec2_grants()
-            self._check_ec2_zone_distribution()
-            self._add_last_snapshot_date_to_ec2_volumes()
+        try:
+            if 'ec2' in self.service_list:
+                self._map_all_sgs()
+                self._add_security_group_name_to_ec2_grants()
+                self._check_ec2_zone_distribution()
+                self._add_last_snapshot_date_to_ec2_volumes()
+        except Exception as e:
+            print_exception(f"Error processing EC2 functions: {e}")
 
-        if 'ec2' in self.service_list and 'iam' in self.service_list:
-            self._match_instances_and_roles()
-        
-        if 'ec2' in self.service_list and 'vpc' in self.service_list:
-            self._match_instances_and_vpcs()
-            self._match_instances_and_subnets()
-        
-        if 'ec2' in self.service_list and 'codebuild' in self.service_list:
-            self._update_sg_usage_codebuild()
+        try:
+            if 'ec2' in self.service_list and 'iam' in self.service_list:
+                self._match_instances_and_roles()
+        except Exception as e:
+            print_exception(f"Error processing EC2 & IAM functions: {e}")
 
-        if 'awslambda' in self.service_list and 'iam' in self.service_list:
-            self._match_lambdas_and_roles()
+        try:
+            if 'ec2' in self.service_list and 'vpc' in self.service_list:
+                self._match_instances_and_vpcs()
+                self._match_instances_and_subnets()
+        except Exception as e:
+            print_exception(f"Error processing EC2 & VPC functions: {e}")
 
-        if 'elbv2' in self.service_list and 'ec2' in self.service_list:
-            self._add_security_group_data_to_elbv2()
+        try:
+            if 'ec2' in self.service_list and 'codebuild' in self.service_list:
+                self._update_sg_usage_codebuild()
+        except Exception as e:
+            print_exception(f"Error processing EC2 & CodeBuild functions: {e}")
 
-        if 's3' in self.service_list and 'iam' in self.service_list:
-            self._match_iam_policies_and_buckets()
+        try:
+            if 'awslambda' in self.service_list and 'iam' in self.service_list:
+                self._match_lambdas_and_roles()
+        except Exception as e:
+            print_exception(f"Error processing IAM and Lambda functions: {e}")
+
+        try:
+            if 'elbv2' in self.service_list and 'ec2' in self.service_list:
+                self._add_security_group_data_to_elbv2()
+        except Exception as e:
+            print_exception(f"Error processing EC2 & ELBv2 functions: {e}")
+
+        try:
+            if 's3' in self.service_list and 'iam' in self.service_list:
+                self._match_iam_policies_and_buckets()
+        except Exception as e:
+            print_exception(f"Error processing IAM & S3 functions: {e}")
 
         # TODO - this should be moved to the `finalize` method of the base resource, as it's not cross-service
-        if 'elb' in self.services:
-            self._parse_elb_policies()
+        try:
+            if 'elb' in self.services:
+                self._parse_elb_policies()
+        except Exception as e:
+            print_exception(f"Error processing ELB functions: {e}")
 
-        if 'emr' in self.service_list and 'ec2' in self.service_list and 'vpc' in self.service_list:
-            self._set_emr_vpc_ids()
+        try:
+            if 'emr' in self.service_list and 'ec2' in self.service_list and 'vpc' in self.service_list:
+                self._set_emr_vpc_ids()
+        except Exception as e:
+            print_exception(f"Error processing EC2 & EMR & VPC functions: {e}")
 
-        self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
+        try:
+            self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
+        except Exception as e:
+            print_exception(f"Error processing _add_cidr_display_name: {e}")
 
         super().preprocessing()
 

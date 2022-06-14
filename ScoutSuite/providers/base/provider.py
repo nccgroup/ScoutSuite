@@ -58,7 +58,10 @@ class BaseProvider:
         Used for adding cross-services configs.
         """
         # Preprocessing dictated by metadata
-        self._process_metadata_callbacks()
+        try:
+            self._process_metadata_callbacks()
+        except Exception as e:
+            print_exception(f"Error processing metadata callbacks: {e}")
 
     def postprocessing(self, current_time, ruleset, run_parameters):
         """
