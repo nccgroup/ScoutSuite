@@ -31,7 +31,8 @@
       "appservice.subscriptions.id.web_apps.id.programming_language_version",
       "containNoneOf",
       [
-        "v4.0"
+        "v6.0",
+        "6.0"
       ]
     ]
   ],
