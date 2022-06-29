@@ -22,11 +22,13 @@ from ScoutSuite.utils import format_service_name
 
 class GCPFacade(GCPBaseFacade):
     def __init__(self,
-                 default_project_id=None, project_id=None, folder_id=None, organization_id=None, all_projects=None):
+                 default_project_id=None, project_id=None, folder_id=None, organization_id=None, all_projects=None, 
+                 exclude_folders=None):
         super().__init__('cloudresourcemanager', 'v1')
 
         self.default_project_id = default_project_id
         self.all_projects = all_projects
+        self.exclude_folders = exclude_folders
         self.project_id = project_id
         self.folder_id = folder_id
         self.organization_id = organization_id
@@ -66,6 +68,10 @@ class GCPFacade(GCPBaseFacade):
                     parent_type='project', parent_id=self.project_id)
             # Folder passed through the CLI
             elif self.folder_id:
+                # Check that the root folder is not excluded
+                if  self.exclude_folders and GCPFacadeUtils.is_excluded(self.folder_id.strip('folders/'), self.exclude_folders):
+                    print_info("{} (root_folder) excluded because of CLI Arguments exclude_folders" .format (self.folder_id))
+                    return []
                 return await self._get_projects_recursively(
                     parent_type='folder', parent_id=self.folder_id)
             # Organization passed through the CLI
@@ -122,6 +128,10 @@ class GCPFacade(GCPBaseFacade):
                 folder_request = resourcemanager_client_v2.folders().list(parent=f'{parent_type}s/{parent_id}')
                 folder_response = await GCPFacadeUtils.get_all('folders', folder_request, projects_group)
                 for folder in folder_response:
+                    # Check that the folder is not excluded
+                    if  self.exclude_folders and GCPFacadeUtils.is_excluded(folder['name'].strip('folders/'), self.exclude_folders):
+                        print_info("{} ({}) excluded because of CLI Arguments exclude_folders".format(folder["displayName"], folder['name']))
+                        continue
                     projects.extend(await self._get_projects_recursively("folder", folder['name'].strip('folders/')))
 
             project_response = await GCPFacadeUtils.get_all('projects', request, projects_group)

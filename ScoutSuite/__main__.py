@@ -50,6 +50,7 @@ def run_from_cli():
                    # GCP
                    project_id=args.get('project_id'), folder_id=args.get('folder_id'),
                    organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
+                   exclude_folders=args.get('exclude_folders'),
                    # Aliyun
                    access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
                    # General
@@ -95,7 +96,7 @@ def run(provider,
         subscription_ids=None, all_subscriptions=None,
         # GCP
         service_account=None,
-        project_id=None, folder_id=None, organization_id=None, all_projects=False,
+        project_id=None, folder_id=None, organization_id=None, all_projects=False,exclude_folders=None,
         # Aliyun
         access_key_id=None, access_key_secret=None,
         # General
@@ -147,7 +148,7 @@ async def _run(provider,
                username, password,
                # GCP
                service_account,
-               project_id, folder_id, organization_id, all_projects,
+               project_id, folder_id, organization_id, all_projects,exclude_folders,
                # Aliyun
                access_key_id, access_key_secret,
                # General
@@ -219,6 +220,7 @@ async def _run(provider,
                                       folder_id=folder_id,
                                       organization_id=organization_id,
                                       all_projects=all_projects,
+                                      exclude_folders=  set(exclude_folders) if exclude_folders else  set(),
                                       # Other
                                       report_dir=report_dir,
                                       timestamp=timestamp,
