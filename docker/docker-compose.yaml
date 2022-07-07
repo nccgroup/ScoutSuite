@@ -16,5 +16,3 @@ services:
         - NAME=${NAME}
         - IMAGE_NAME=${IMAGE_NAME}
         - DESCRIPTION=${DESCRIPTION}
-      env_file:
-        - config/build.env
