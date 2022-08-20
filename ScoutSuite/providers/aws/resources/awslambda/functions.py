@@ -68,6 +68,14 @@ class Functions(AWSResources):
         # to detect a potential secret and write a constant value instead of the 
         # actual secret value.
         function_dict["env_variables"] = {}
+        function_dict["env_variable_names"] = []
+        function_dict["env_variable_values"] = []
+        redacted_string = "<redacted>"
         if env_variables:
             for env_var_name, env_var_value in env_variables.items():
-                function_dict["env_variables"][env_var_name] = "<redacted>"
+                function_dict["env_variables"][env_var_name] = redacted_string
+                function_dict["env_variable_names"].append(env_var_name)
+                function_dict["env_variable_values"].append(env_var_value)
+
+
+
