@@ -75,7 +75,7 @@ class Functions(AWSResources):
             for env_var_name, env_var_value in env_variables.items():
                 function_dict["env_variables"][env_var_name] = redacted_string
                 function_dict["env_variable_names"].append(env_var_name)
-                function_dict["env_variable_values"].append(env_var_value)
+                function_dict["env_variable_values"].append(redacted_string)
 
 
 
