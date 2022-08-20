@@ -61,11 +61,12 @@ class Functions(AWSResources):
 
     async def _add_env_variables(self, function_dict):
         env_variables = await self.facade.awslambda.get_env_variables(function_dict['name'], self.region)
-        function_dict["env_variables"] = env_variables
-        # The following properties are for easier rule creation
+        # This can be expanded upon, but by default do not store the runtime
+        # variable values in the report JSON.
+        # For a non-default configuration, use something like detect-secrets 
+        # to detect a potential secret and write a constant value instead of
+        # the actual secret value.
+        function_dict["env_variables"] = {}
         if env_variables:
-            function_dict["env_variable_names"] = list(env_variables.keys())
-            function_dict["env_variable_values"] = list(env_variables.values())
-        else:
-            function_dict["env_variable_names"] = []
-            function_dict["env_variable_values"] = []
+            for env_var_name, env_var_value in env_variables.items():
+                function_dict["env_variables"][env_var_name] = "<redacted>"
