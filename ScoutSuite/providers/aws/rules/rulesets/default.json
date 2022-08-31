@@ -1206,13 +1206,6 @@
             },
             {
                 "args": [
-                    "Receive"
-                ],
-                "enabled": true,
-                "level": "danger"
-            },
-            {
-                "args": [
                     "AddPermission"
                 ],
                 "enabled": true,
@@ -1227,7 +1220,21 @@
             },
             {
                 "args": [
+                    "GetTopicAttributes"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
                     "SetTopicAttributes"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "ListSubscriptionsByTopic"
                 ],
                 "enabled": true,
                 "level": "danger"

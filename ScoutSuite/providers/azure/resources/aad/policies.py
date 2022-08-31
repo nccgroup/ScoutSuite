@@ -17,10 +17,10 @@ class Policies(AzureResources):
         policy_dict['allowed_to_use_SSPR'] = raw_policy.get('allowedToUseSSPR')
         policy_dict['allow_email_verified_users_to_join_organization'
                     ] = raw_policy.get('allowEmailVerifiedUsersToJoinOrganization')
-        policy_dict['allowed_to_create_apps'] = raw_policy['defaultUserRolePermissions'].get('allowedToCreateApps')
+        policy_dict['allowed_to_create_apps'] = raw_policy.get('defaultUserRolePermissions', {}).get('allowedToCreateApps')
         policy_dict['allowed_to_create_security_groups'
-                    ] = raw_policy['defaultUserRolePermissions'].get('allowedToCreateSecurityGroups')
+                    ] = raw_policy.get('defaultUserRolePermissions', {}).get('allowedToCreateSecurityGroups')
         policy_dict[
-            'allowed_to_read_other_users'] = raw_policy['defaultUserRolePermissions'].get('allowedToReadOtherUsers')
+            'allowed_to_read_other_users'] = raw_policy.get('defaultUserRolePermissions', {}).get('allowedToReadOtherUsers')
 
         return policy_dict['id'], policy_dict
