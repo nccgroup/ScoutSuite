@@ -174,7 +174,6 @@ async def _run(provider,
     """
     Run a scout job.
     """
-    print("china_region", china_region)
     # Configure the debug level
     set_logger_configuration(debug, quiet, log_file)
 
