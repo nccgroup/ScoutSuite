@@ -1,6 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.aws.utils import format_arn
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Clusters(AWSResources):
@@ -20,4 +20,4 @@ class Clusters(AWSResources):
 
     def _parse_cluster(self, raw_cluster):
         raw_cluster['name'] = raw_cluster.pop('CacheClusterId')
-        return raw_cluster['name'], raw_cluster
+        return get_non_provider_id(raw_cluster['name']), raw_cluster

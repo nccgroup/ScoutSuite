@@ -1,0 +1,29 @@
+{
+  "description": "FTP Deployment Enabled",
+  "rationale": "Azure FTP deployment endpoints are public. An attacker listening to traffic on a wifi network used by a remote employee or a corporate network could see login traffic in clear-text which would then grant them full control of the code base of the app or service. This finding is more severe if User Credentials for deployment are set at the subscription level rather than using the default Application Credentials which are unique per App.",
+  "remediation": "Using Console:\n<ol>\n    <li>Go to <samp>App Services</samp></li>\n    <li>Click on an App</li>\n    <li>Select Settings > Configuration</li>\n    <li>Under Platform Settings, FTP state should be <samp>Disabled</samp> or <samp>FTPS Only</samp></li>\n</ol>",
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.20",
+      "reference": "9.11"
+    }
+  ],
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/app-service/deploy-ftp",
+    "https://docs.microsoft.com/en-us/azure/app-service/overview-security",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-1-standardize-azure-active-directory-as-the-central-identity-and-authentication-system"
+  ],
+  "dashboard_name": "Web Apps",
+  "path": "appservice.subscriptions.id.web_apps.id",
+  "conditions": [
+    "and",
+    [
+      "appservice.subscriptions.id.web_apps.id.ftp_deployment_enabled",
+      "true",
+      ""
+    ]
+  ],
+  "id_suffix": "ftp_deployment_enabled"
+}

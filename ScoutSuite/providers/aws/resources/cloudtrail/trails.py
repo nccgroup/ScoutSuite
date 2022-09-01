@@ -21,6 +21,8 @@ class Trails(AWSResources):
         trail_id = get_non_provider_id(trail['name'])
         
         trail['arn'] = raw_trail.get('TrailARN')
+        trail['is_organization_trail'] = raw_trail.get('IsOrganizationTrail')
+        trail['home_region'] = raw_trail.get('HomeRegion')
 
         # Do not duplicate entries for multiregion trails
         if 'IsMultiRegionTrail' in raw_trail and raw_trail['IsMultiRegionTrail'] and \
@@ -45,14 +47,14 @@ class Trails(AWSResources):
         # using trail ARN instead of name as with Organizations the trail would be located in another account
         trail['wildcard_data_logging'] = self.data_logging_status(trail)
 
-        for event_selector in trail['EventSelectors']:
+        for event_selector in trail.get('EventSelectors', []):
             trail['DataEventsEnabled'] = len(event_selector['DataResources']) > 0
             trail['ManagementEventsEnabled'] = event_selector['IncludeManagementEvents']
 
         return trail_id, trail
 
     def data_logging_status(self, trail):
-        for event_selector in trail['EventSelectors']:
+        for event_selector in trail.get('EventSelectors', []):
             has_wildcard = \
                 {'Values': ['arn:aws:s3'], 'Type': 'AWS::S3::Object'} in event_selector['DataResources'] or \
                 {'Values': ['arn:aws:lambda'], 'Type': 'AWS::Lambda::Function'} in event_selector['DataResources']

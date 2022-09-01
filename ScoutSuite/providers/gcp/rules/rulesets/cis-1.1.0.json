@@ -1,6 +1,18 @@
 {
     "about": "This ruleset attempts to cover as many recommendations from the CIS Google Cloud Platform Foundation v1.1.0.",
     "rules": {
+        "cloudsql-instances-public-ips.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cloudsql-mysql-instances-local-infile-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudsql-postgresql-instances-log-checkpoints-off.json": [
             {
                 "enabled": true,
@@ -25,6 +37,12 @@
                 "level": "warning"
             }
         ],
+        "cloudsql-postgresql-instances-log-min-duration-not-set-1.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudsql-postgresql-instances-log-min-messages-not-set.json": [
             {
                 "enabled": true,
@@ -37,31 +55,13 @@
                 "level": "warning"
             }
         ],
-        "cloudsql-postgresql-instances-log-min-duration-not-set-1.json": [
+        "cloudsql-sqlservers-instances-contained-database-authentication-on.json": [
             {
                 "enabled": true,
                 "level": "warning"
-            }
-        ],
-        "cloudsql-instances-public-ips.json": [
-            {
-                "enabled": true,
-                "level": "danger"
             }
         ],
         "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "cloudsql-mysql-instances-local-infile-on.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "cloudsql-sqlservers-instances-contained-database-authentication-on.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -73,25 +73,7 @@
                 "level": "warning"
             }
         ],
-        "computeengine-instance-default-service-account.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-instance-full-api-access.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "computeengine-instance-block-project-ssh-keys-disabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-instance-os-login-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -103,7 +85,37 @@
                 "level": "warning"
             }
         ],
+        "computeengine-instance-default-service-account.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-disk-not-csek-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-full-api-access.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "computeengine-instance-ip-forwarding-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-os-login-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-public-ip-adresses.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -127,13 +139,19 @@
                 "level": "warning"
             }
         ],
-        "computeengine-instance-disk-not-csek-encrypted.json": [
+        "dns-zones-dnssec-not-enabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "computeengine-instance-public-ip-adresses.json": [
+        "dns-zones-key-signing-key-using-rsasha1": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "dns-zones-zone-signing-key-using-rsasha1": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -163,19 +181,19 @@
                 "level": "warning"
             }
         ],
-        "dns-zones-dnssec-not-enabled.json": [
+        "stackdriverlogging-metric-filter-does-not-exist-audit-config-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "dns-zones-key-signing-key-using-rsasha1": [
+        "stackdriverlogging-metric-filter-does-not-exist-cloud-storage-iam-permission-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "dns-zones-zone-signing-key-using-rsasha1": [
+        "stackdriverlogging-metric-filter-does-not-exist-custom-role-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -187,13 +205,13 @@
                 "level": "warning"
             }
         ],
-        "stackdriverlogging-metric-filter-does-not-exist-audit-config-changes.json": [
+        "stackdriverlogging-metric-filter-does-not-exist-sql-instance-config-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "stackdriverlogging-metric-filter-does-not-exist-custom-role-changes.json": [
+        "stackdriverlogging-metric-filter-does-not-exist-vpc-network-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -211,19 +229,19 @@
                 "level": "warning"
             }
         ],
-        "stackdriverlogging-metric-filter-does-not-exist-vpc-network-changes.json": [
+        "stackdrivermonitoring-alerts-does-not-exist-audit-config-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "stackdriverlogging-metric-filter-does-not-exist-cloud-storage-iam-permission-changes.json": [
+        "stackdrivermonitoring-alerts-does-not-exist-cloud-storage-iam-permission-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "stackdriverlogging-metric-filter-does-not-exist-sql-instance-config-changes.json": [
+        "stackdrivermonitoring-alerts-does-not-exist-custom-role-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -235,13 +253,13 @@
                 "level": "warning"
             }
         ],
-        "stackdrivermonitoring-alerts-does-not-exist-audit-config-changes.json": [
+        "stackdrivermonitoring-alerts-does-not-exist-sql-instance-config-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "stackdrivermonitoring-alerts-does-not-exist-custom-role-changes.json": [
+        "stackdrivermonitoring-alerts-does-not-exist-vpc-network-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -254,24 +272,6 @@
             }
         ],
         "stackdrivermonitoring-alerts-does-not-exist-vpc-network-route-changes.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "stackdrivermonitoring-alerts-does-not-exist-vpc-network-changes.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "stackdrivermonitoring-alerts-does-not-exist-cloud-storage-iam-permission-changes.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "stackdrivermonitoring-alerts-does-not-exist-sql-instance-config-changes.json": [
             {
                 "enabled": true,
                 "level": "warning"

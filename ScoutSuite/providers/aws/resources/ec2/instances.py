@@ -62,8 +62,8 @@ class EC2Instances(AWSResources):
         secrets = {}
 
         if user_data:
-            aws_access_key_regex = re.compile('AKIA[0-9A-Z]{16}')
-            aws_secret_access_key_regex = re.compile('[0-9a-zA-Z/+]{40}')
+            aws_access_key_regex = re.compile(r'(?:^|[^0-9A-Z])(AKIA[0-9A-Z]{16})(?:[^0-9A-Z]|$)')
+            aws_secret_access_key_regex = re.compile(r'(?:^|[^0-9a-zA-Z/+])([0-9a-zA-Z/+]{40})(?:[^0-9a-zA-Z/+]|$)')
             rsa_private_key_regex = re.compile('(-----BEGIN RSA PRIVATE KEY-----(?s).+?-----END .+?-----)')
             keywords = ['password', 'secret', 'aws_access_key_id', 'aws_secret_access_key', 'aws_session_token']
 

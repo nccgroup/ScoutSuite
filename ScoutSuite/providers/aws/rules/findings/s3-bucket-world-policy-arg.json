@@ -42,6 +42,15 @@
             [
                 "s3.buckets.id.policy.Statement.id"
             ]
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-poor-condition.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "s3.buckets.id.policy.Statement.id"
+            ]
         ]
     ],
     "key": "s3-bucket-world-_ARG_0_-policy",

@@ -3,6 +3,7 @@ import dateutil.parser
 import json
 import netaddr
 import re
+import ipaddress
 
 from policyuniverse.expander_minimizer import get_actions_from_statement, _expand_wildcard_action
 
@@ -221,6 +222,12 @@ def pass_condition(b, test, a):
                 break
     elif test == 'notInSubnets':
         result = (not pass_condition(b, 'inSubnets', a))
+    elif test == 'isSubnetRange':
+        result = not ipaddress.ip_network(b, strict=False).exploded.endswith("/32")
+    elif test == 'isPrivateSubnet':
+        result = ipaddress.ip_network(b, strict=False).is_private
+    elif test == 'isPublicSubnet':
+        result = not ipaddress.ip_network(b, strict=False).is_private
 
     # Port/port ranges tests
     elif test == 'portsInPortList':

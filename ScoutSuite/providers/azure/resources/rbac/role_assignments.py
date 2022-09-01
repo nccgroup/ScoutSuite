@@ -17,11 +17,11 @@ class RoleAssignments(AzureResources):
         role_assignment_dict = {}
         role_assignment_dict['id'] = raw_role_assignment.name
         role_assignment_dict['name'] = raw_role_assignment.name
-        role_assignment_dict['role_definition_id'] = raw_role_assignment.role_definition_id
+        role_assignment_dict['role_definition_id'] = raw_role_assignment.properties.role_definition_id
         role_assignment_dict['type'] = raw_role_assignment.type
-        role_assignment_dict['scope'] = raw_role_assignment.scope
-        role_assignment_dict['principal_id'] = raw_role_assignment.principal_id
-        role_assignment_dict['principal_type'] = raw_role_assignment.principal_type
-        role_assignment_dict['can_delegate'] = raw_role_assignment.can_delegate
+        role_assignment_dict['scope'] = raw_role_assignment.properties.scope
+        role_assignment_dict['principal_id'] = raw_role_assignment.properties.principal_id
+        role_assignment_dict['principal_type'] = "None"
+        role_assignment_dict['can_delegate'] = "None"
         role_assignment_dict['additional_properties'] = raw_role_assignment.additional_properties
         return role_assignment_dict['id'], role_assignment_dict

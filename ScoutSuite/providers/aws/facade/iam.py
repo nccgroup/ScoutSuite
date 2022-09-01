@@ -3,7 +3,7 @@ import functools
 
 from botocore.exceptions import ClientError
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import get_non_provider_id, run_concurrently, get_and_set_concurrently
@@ -50,7 +50,10 @@ class IAMFacade(AWSBaseFacade):
 
             return credential_reports
         except Exception as e:
-            print_exception(f'Failed to download credential report: {e}')
+            if 'ReportNotPresent' in e:
+                print_warning(f'Failed to download credential report: {e}')
+            else:
+                print_exception(f'Failed to download credential report: {e}')
             return []
 
     async def get_groups(self):
@@ -193,9 +196,10 @@ class IAMFacade(AWSBaseFacade):
         client = AWSFacadeUtils.get_client('iam', self.session)
         try:
             return await run_concurrently(
-                lambda: client.list_virtual_mfa_devices()['VirtualMFADevices'])
+                lambda: client.list_virtual_mfa_devices().get('VirtualMFADevices', []))
         except Exception as e:
             print_exception(f'Failed to list virtual MFA devices: {e}')
+            return []
 
     async def _get_and_set_group_users(self, group: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)

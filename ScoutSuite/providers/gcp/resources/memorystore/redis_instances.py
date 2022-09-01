@@ -19,7 +19,7 @@ class RedisInstances(GCPCompositeResources):
         instance_dict = {}
 
         instance_dict['id'] = get_non_provider_id(raw_instance['name'])
-        instance_dict['name'] = raw_instance['displayName']
+        instance_dict['name'] = raw_instance.get('displayName')
         instance_dict['project_id'] = self.project_id
         instance_dict['location'] = raw_instance['locationId']
         instance_dict['redis_version'] = raw_instance['redisVersion']

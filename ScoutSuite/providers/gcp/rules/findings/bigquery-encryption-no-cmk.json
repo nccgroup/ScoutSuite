@@ -1,0 +1,16 @@
+{
+    "description": "Dataset Not Encrypted with Customer-Managed Keys (CMKs)",
+    "rationale": "Encrypting datasets with Cloud KMS Customer-Managed Keys (CMKs) will allow for a more granular control over data encryption/decryption process.",
+    "dashboard_name": "Datasets",
+    "display_path": "bigquery.projects.id.datasets.id",
+    "path": "bigquery.projects.id.datasets.id",
+    "conditions": [
+        "or",
+        [
+            "bigquery.projects.id.datasets.id.default_encryption_configuration",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "default_encryption_configuration"
+}

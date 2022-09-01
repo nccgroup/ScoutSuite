@@ -1,6 +1,6 @@
 import json
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import get_and_set_concurrently
@@ -30,7 +30,10 @@ class CloudFormation(AWSBaseFacade):
             stack_description = await run_concurrently(
                 lambda: client.describe_stacks(StackName=stack['StackName'])['Stacks'][0])
         except Exception as e:
-            print_exception(f'Failed to describe CloudFormation stack: {e}')
+            if 'does not exist' in str(e):
+                print_warning(f'Failed to describe CloudFormation stack: {e}')
+            else:
+                print_exception(f'Failed to describe CloudFormation stack: {e}')
         else:
             stack.update(stack_description)
 
@@ -40,7 +43,8 @@ class CloudFormation(AWSBaseFacade):
             stack['template'] = await run_concurrently(
                 lambda: client.get_template(StackName=stack['StackName'])['TemplateBody'])
         except Exception as e:
-            print_exception(f'Failed to get CloudFormation template: {e}')
+            if 'is not ready' not in str(e):
+                print_exception(f'Failed to get CloudFormation template: {e}')
             stack['template'] = None
 
     async def _get_and_set_policy(self, stack: {}, region: str):

@@ -1,5 +1,4 @@
 import asyncio
-import copy
 import os
 import webbrowser
 
@@ -172,7 +171,6 @@ async def _run(provider,
     """
     Run a scout job.
     """
-
     # Configure the debug level
     set_logger_configuration(debug, quiet, log_file)
 
@@ -180,6 +178,10 @@ async def _run(provider,
 
     print_info('Authenticating to cloud provider')
     auth_strategy = get_authentication_strategy(provider)
+
+    authenticate_in_china_region = False
+    if 'cn-north-1' in regions or 'cn-northwest-1' in regions:
+        authenticate_in_china_region = True
 
     try:
         credentials = auth_strategy.authenticate(profile=profile,
@@ -199,7 +201,8 @@ async def _run(provider,
                                                  username=username,
                                                  password=password,
                                                  access_key_id=access_key_id,
-                                                 access_key_secret=access_key_secret)
+                                                 access_key_secret=access_key_secret,
+                                                 authenticate_in_china_region=authenticate_in_china_region)
 
         if not credentials:
             return 101

@@ -1,0 +1,18 @@
+{
+  "description": "Functions Allowing HTTP Traffic (Gen 1)",
+  "rationale": "Use of a secure protocol (HTTPS) is best practice for encrypted communication. A function allowing HTTP traffic can be vulnerable to eavesdropping and man-in-the-middle attacks.",
+  "references": [
+    "https://cloud.google.com/logging/docs/reference/audit/appengine/rest/Shared.Types/SecurityLevel"
+  ],
+  "dashboard_name": "Functions",
+  "path": "functions.projects.id.functions_v1.id",
+  "conditions": [
+    "or",
+    [
+      "functions.projects.id.functions_v1.id.security_level",
+      "notEqual",
+      "SECURE_ALWAYS"
+    ]
+  ],
+  "id_suffix": "security_level"
+}

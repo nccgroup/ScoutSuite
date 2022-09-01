@@ -33,11 +33,11 @@ class DatabaseInstances(GCPCompositeResources):
         instance_dict['id'] = get_non_provider_id(raw_instance['name'])
         instance_dict['name'] = raw_instance['name']
         instance_dict['project_id'] = raw_instance['project']
-        instance_dict['automatic_backup_enabled'] = raw_instance['settings']['backupConfiguration']['enabled']
+        instance_dict['automatic_backup_enabled'] = raw_instance['settings'].get('backupConfiguration', {}).get('enabled')
         instance_dict['database_version'] = raw_instance['databaseVersion']
         instance_dict['log_enabled'] = self._is_log_enabled(raw_instance)
         instance_dict['ssl_required'] = self._is_ssl_required(raw_instance)
-        instance_dict['authorized_networks'] = raw_instance['settings']['ipConfiguration']['authorizedNetworks']
+        instance_dict['authorized_networks'] = raw_instance['settings'].get('ipConfiguration', {}).get('authorizedNetworks', [])
 
         if raw_instance['settings'].get('databaseFlags', None):
             instance_dict['local_infile_off'] = self._mysql_local_infile_flag_off(raw_instance)
@@ -77,21 +77,24 @@ class DatabaseInstances(GCPCompositeResources):
         # network interfaces
         instance_dict['public_ip'] = None
         instance_dict['private_ip'] = None
+        instance_dict['outgoing_ip'] = None
         for address in raw_instance.get('ipAddresses', []):
             if address['type'] == 'PRIMARY':
                 instance_dict['public_ip'] = address['ipAddress']
             elif address['type'] == 'PRIVATE':
                 instance_dict['private_ip'] = address['ipAddress']
+            elif address['type'] == 'OUTGOING':
+                instance_dict['outgoing_ip'] = address['ipAddress']
             else:
                 print_exception('Unknown Cloud SQL instance IP address type: {}'.format(address['type']))
 
         return instance_dict['id'], instance_dict
 
     def _is_log_enabled(self, raw_instance):
-        return raw_instance['settings']['backupConfiguration'].get('binaryLogEnabled')
+        return raw_instance['settings'].get('backupConfiguration', {}).get('binaryLogEnabled')
 
     def _is_ssl_required(self, raw_instance):
-        return raw_instance['settings']['ipConfiguration'].get('requireSsl', False)
+        return raw_instance['settings'].get('ipConfiguration', {}).get('requireSsl', False)
 
     def _set_last_backup_timestamps(self, instances):
         for instance_id, _ in instances:
@@ -107,7 +110,7 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _mysql_local_infile_flag_off(self, raw_instance):
         if 'MYSQL' in raw_instance['databaseVersion']:
-            for flag in raw_instance['settings']['databaseFlags']:
+            for flag in raw_instance['settings'].get('databaseFlags', []):
                 if flag['name'] == 'local_infile' and flag['value'] == 'on':
                     return False
         return True
@@ -119,7 +122,7 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _postgres_flags_on(self, raw_instance, flag_name: str):
         if 'POSTGRES' in raw_instance['databaseVersion']:
-            for flag in raw_instance['settings']['databaseFlags']:
+            for flag in raw_instance['settings'].get('databaseFlags', []):
                 if flag['name'] == flag_name and flag['value'] != 'off':
                     return True
             return False
@@ -128,7 +131,7 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _postgres_log_min_error_statement_flags(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
-            for flag in raw_instance['settings']['databaseFlags']:
+            for flag in raw_instance['settings'].get('databaseFlags', []):
                 if flag['name'] == 'log_min_error_statement' and flag['value'] is not None:
                     return True
             return False
@@ -137,7 +140,7 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _postgres_log_temp_files_flags_0(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
-            for flag in raw_instance['settings']['databaseFlags']:
+            for flag in raw_instance['settings'].get('databaseFlags', []):
                 if flag['name'] == 'log_temp_files' and flag['value'] == 0:
                     return True
             return False
@@ -146,7 +149,7 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _postgres_log_min_duration_statement_flags_1(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
-            for flag in raw_instance['settings']['databaseFlags']:
+            for flag in raw_instance['settings'].get('databaseFlags', []):
                 if flag['name'] == 'log_min_duration_statement' and flag['value'] == -1:
                     return True
             return False
@@ -155,7 +158,7 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _sqlservers_cross_db_ownership_chaining_flag_off(self, raw_instance, flag_name: str):
         if 'SQLSERVER' in raw_instance['databaseVersion']:
-            for flag in raw_instance['settings']['databaseFlags']:
+            for flag in raw_instance['settings'].get('databaseFlags', []):
                 if flag['name'] == flag_name and flag['value'] == 'off':
                     return True
             return False

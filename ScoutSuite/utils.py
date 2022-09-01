@@ -48,15 +48,21 @@ formatted_service_name = {
     'appservice': 'App Services',
     'loadbalancer': 'Load Balancer',
     'virtualmachines': 'Virtual Machines',
+    'postgresqldatabase': 'PostgresSQL Database',
+    'mysqldatabase': 'MySQL Database',
+    'loggingmonitoring': 'Logging Monitoring',
     # GCP
     'cloudstorage': 'Cloud Storage',
     'cloudmemorystore': 'Cloud Memorystore',
+    'memorystore': 'Cloud Memorystore',
     'cloudsql': 'Cloud SQL',
     'dns': 'DNS',
     'stackdriverlogging': 'Stackdriver Logging',
     'stackdrivermonitoring': 'Stackdriver Monitoring',
     'computeengine': 'Compute Engine',
     'kubernetesengine': 'Kubernetes Engine',
+    'functions': 'Cloud Functions',
+    'bigquery': 'BigQuery',
     # Aliyun
     'actiontrail': 'ActionTrail',
     # OCI

@@ -1,0 +1,71 @@
+<!-- functions functions_v2 -->
+<script id="services.functions.projects.id.functions_v2.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.status"><samp>{{value_or_none status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Update Time: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.update_time"><samp>{{value_or_none update_time}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Version: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.version_id"><samp>{{value_or_none version_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Runtime: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.runtime"><samp>{{value_or_none runtime}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Memory: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.memory"><samp>{{value_or_none memory}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Max Instances: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.max_instances"><samp>{{value_or_none max_instances}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Service Account: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.service_account"><samp>{{value_or_none service_account}}</samp></span></div>
+        <div class="list-group-item-text item-margin" id="functions.projects.{{project}}.functions_v2.{{@key}}.environment_variables">Environment Variables
+            {{#if environment_variables}}
+            <ul>
+                {{#each environment_variables}}
+                <li><samp>{{@key}}: {{this}}</samp></li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <span>None</span>
+            {{/if}}
+        </div>
+        {{#if environment_variables_secrets}}
+        <div class="list-group-item-text item-margin" id="functions.projects.{{project}}.functions_v2.{{@key}}.environment_variables_secrets">Environment Variables Secrets (Potential)
+            <ul>
+                {{#each environment_variables_secrets}}
+                <li><samp>{{this}}</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+        {{/if}}
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Trigger</h4>
+        <div class="list-group-item-text item-margin">URL: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.url"><samp>{{value_or_none url}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Ingress Settings: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.ingress_settings"><samp>{{value_or_none ingress_settings}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading"><span id="functions.projects.{{project}}.functions_v2.{{@key}}.bindings">Bindings:</span></h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each bindings}}
+                <li>Role <samp>{{role}}</samp></li>
+                <ul>
+                    {{#each members}}
+                    <li><samp>{{this}}</samp></li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.functions.projects.id.functions_v2", $("#services\\.functions\\.projects\\.id\\.functions_v2\\.partial").html());
+</script>
+
+<!-- Single functions function_v2 template -->
+<script id="single_functions_function_v2-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.functions.projects.id.functions_v2'}}
+</script>
+<script>
+    var single_functions_function_v2_template = Handlebars.compile($("#single_functions_function_v2-template").html());
+</script>

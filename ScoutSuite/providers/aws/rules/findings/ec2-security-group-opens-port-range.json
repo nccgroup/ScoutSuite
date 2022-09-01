@@ -29,6 +29,11 @@
             "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
             "notEqual",
             "0-65535"
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+            "notEqual",
+            "1-65535"
         ]
     ]
 }

@@ -1,0 +1,39 @@
+{
+    "description": "Database Instances Allowing Access from Public Ranges",
+    "rationale": "To minimize attack surface on a Database server instance, only trusted/known and required IP(s) should be allow-listed to connect to it. An authorized network should not have IPs/networks configured to broad public ranges which will allow access to the instance from arbitrary hosts.",
+    "remediation": "From console:<ol><li>Go to the Cloud SQL Instances page in the Google Cloud Console by visiting https://console.cloud.google.com/sql/instances.</li><li>Click the instance name to open its Instance details page.</li><li>Under the <samp>Configuration</samp> section click <samp>Edit configurations</samp>.</li><li>Under <samp>Configuration options</samp> expand the <samp>Connectivity</samp> section.</li><li>Click the <samp>delete</samp> icon for the egregious authorized network</li><li>Click <samp>Save</samp> to update the instance.</li></ol>",
+    "compliance": [],
+    "references": [
+        "https://cloud.google.com/sql/docs/mysql/configure-ip",
+        "https://console.cloud.google.com/iam-admin/orgpolicies/sql-restrictAuthorizedNetworks",
+        "https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints",
+        "https://cloud.google.com/sql/docs/mysql/connection-org-policy"
+    ],
+    "dashboard_name": "Authorized Networks",
+    "display_path": "cloudsql.projects.id.instances.id",
+    "path": "cloudsql.projects.id.instances.id.authorized_networks.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.public_ip",
+            "notEmpty",
+            ""
+        ],
+        [
+            "cloudsql.projects.id.instances.id.public_ip",
+            "notEqual",
+            "None"
+        ],
+        [
+            "cloudsql.projects.id.instances.id.authorized_networks.id.value",
+            "isPublicSubnet",
+            ""
+        ],
+        [
+            "cloudsql.projects.id.instances.id.authorized_networks.id.value",
+            "isSubnetRange",
+            ""
+        ]
+    ],
+    "id_suffix": "open_to_the_world"
+}

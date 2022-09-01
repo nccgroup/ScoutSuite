@@ -49,6 +49,16 @@
                 {{/each}}
             </ul>
         </div>
+        <h5  id="iam.projects.{{@../key}}.bindings.{{@key}}.domains" class="list-group-item-heading">Attached Domains:</h5>
+        <div class="accordion-inner">
+            <ul>
+                {{#each members.domains}}
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
     </div>
 </script>
 

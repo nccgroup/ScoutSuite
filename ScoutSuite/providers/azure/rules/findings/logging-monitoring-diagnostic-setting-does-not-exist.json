@@ -1,0 +1,28 @@
+{
+    "description": "Diagnostic Setting Does Not Exist",
+    "rationale": "A diagnostic setting controls how a diagnostic log is exported. By default, logs are retained only for 90 days. Diagnostic settings should be defined so that logs can be exported and stored for a longer duration in order to analyze security activities within an Azure subscription.",
+    "remediation": "In the Azure console: <ol> <li>Go to <samp>Diagnostic settings</samp></li> <li>Click on <samp>Add diagnostic setting</samp>.</li> <li></li> <li>Add rules to allow traffic from specific network.</li>Configure the setting including the export location (This may be Log Analytics/Storage account or Event Hub) <li>Click on <samp>Save</samp></li> </ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "5.1.1"
+        }
+    ],
+    "references": [
+      "https://docs.microsoft.com/en-us/azure/azure-monitor/essentials/platform-logs-overview#export-the-activity-log-with-a-log-profile",
+      "https://docs.microsoft.com/en-us/cli/azure/monitor/log-profiles?view=azure-cli-latest#az_monitor_log_profiles_create",
+      "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-5-centralize-security-log-management-and-analysis"
+    ],
+    "dashboard_name": "Diagnostic Settings",
+    "path": "loggingmonitoring.subscriptions.id.diagnostic_settings.id",
+    "conditions": [
+        "and",
+        [
+            "loggingmonitoring.subscriptions.id.diagnostic_settings.id.diagnostic_exist",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "diagnostic_exist"
+}

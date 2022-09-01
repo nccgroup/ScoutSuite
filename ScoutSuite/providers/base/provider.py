@@ -248,8 +248,7 @@ class BaseProvider:
                     for summary in self.metadata[service_group][service]['summaries']:
                         if 'callbacks' in self.metadata[service_group][service]['summaries'][summary]:
                             current_path = ['services', service]
-                            for callback in self.metadata[service_group][service]['summaries'][summary][
-                                'callbacks']:
+                            for callback in self.metadata[service_group][service]['summaries'][summary]['callbacks']:
                                 callback_name = callback[0]
                                 callback_args = copy.deepcopy(callback[1])
                                 target_path = callback_args.pop('path').replace('.id', '').split('.')[2:]
@@ -377,15 +376,14 @@ class BaseProvider:
                                 else:
                                     callback(current_config, path, current_path, value, callback_args)
                             except Exception as e:
-                                print_exception(e, {'callback': callback_name,
-                                                    'callback arguments': callback_args,
-                                                    'current path': f'{current_path}',
-                                                    'key': '{}'.format(key if 'key' in locals() else 'not defined'),
-                                                    'value': '{}'.format(
-                                                        value if 'value' in locals() else 'not defined'),
-                                                    'path': f'{path}',
-                                                    }
-                                                )
+                                print_exception(f'Error when calling callback {callback_name} with value {value}: {e}',
+                                                {'callback': callback_name,
+                                                 'callback arguments': callback_args,
+                                                 'current path': f'{current_path}',
+                                                 'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                                 'value': '{}'.format(
+                                                     value if 'value' in locals() else 'not defined'),
+                                                 'path': f'{path}'})
                     else:
                         tmp = copy.deepcopy(current_path)
                         try:

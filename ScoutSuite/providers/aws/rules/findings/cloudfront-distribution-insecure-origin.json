@@ -7,7 +7,7 @@
     "dashboard_name": "Distributions",
     "path": "cloudfront.distributions.id",
     "conditions": [
-        "or",
+        "and",
         [
             "cloudfront.distributions.id.origins",
             "containString",
@@ -20,9 +20,10 @@
                 "TLSv1.1",
                 "TLSv1.1_2016",
                 "TLSv1.2_2018",
-                "TLSv1.2_2019"
+                "TLSv1.2_2019",
+                "TLSv1.2_2021"
             ]
         ]
     ],
-    "class_suffix": "config_protocols"
+    "id_suffix": "minimum_ssl_version"
 }
