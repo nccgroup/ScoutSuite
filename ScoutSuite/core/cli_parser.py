@@ -67,12 +67,7 @@ class ScoutSuiteArgumentParser:
                                      help='AWS Session Token')
 
         aws_additional_parser = parser.add_argument_group('Additional arguments')
-        
-        aws_additional_parser.add_argument('-cr',
-                                            '--china-region',
-                                            action='store_true',
-                                            dest='china_region',
-                                            help='Authenticate against a China region')
+
         aws_additional_parser.add_argument('-r',
                                            '--regions',
                                            dest='regions',

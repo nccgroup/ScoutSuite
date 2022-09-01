@@ -20,7 +20,7 @@ class AWSAuthenticationStrategy(AuthenticationStrategy):
     def authenticate(self,
                      profile=None,
                      aws_access_key_id=None, aws_secret_access_key=None, aws_session_token=None,
-                     china_region=False,
+                     authenticate_in_china_region=False,
                      **kwargs):
 
         try:
@@ -33,13 +33,13 @@ class AWSAuthenticationStrategy(AuthenticationStrategy):
             # There are two AWS regions in china cn-northwest-1 and cn-north-1, an access key created in either of these two regions can be used to call sts get-caller-identity
 
             if profile:
-                if china_region:
+                if authenticate_in_china_region:
                     session = boto3.Session(profile_name=profile, region_name='cn-north-1')
                 else:
                     session = boto3.Session(profile_name=profile)
             elif aws_access_key_id and aws_secret_access_key:
                 if aws_session_token:
-                    if china_region:
+                    if authenticate_in_china_region:
                         session = boto3.Session(
                             aws_access_key_id=aws_access_key_id,
                             aws_secret_access_key=aws_secret_access_key,
@@ -53,7 +53,7 @@ class AWSAuthenticationStrategy(AuthenticationStrategy):
                             aws_session_token=aws_session_token,
                         )
                 else:
-                    if china_region:
+                    if authenticate_in_china_region:
                         session = boto3.Session(
                             aws_access_key_id=aws_access_key_id,
                             aws_secret_access_key=aws_secret_access_key,
