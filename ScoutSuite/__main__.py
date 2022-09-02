@@ -64,6 +64,7 @@ def run_from_cli():
                    max_workers=args.get('max_workers'),
                    regions=args.get('regions'),
                    excluded_regions=args.get('excluded_regions'),
+                   china_region=args.get('china_region'),
                    fetch_local=args.get('fetch_local'), update=args.get('update'),
                    max_rate=args.get('max_rate'),
                    ip_ranges=args.get('ip_ranges'), ip_ranges_name_key=args.get('ip_ranges_name_key'),
@@ -107,6 +108,7 @@ def run(provider,
         max_workers=10,
         regions=[],
         excluded_regions=[],
+        china_region=False,
         fetch_local=False, update=False,
         max_rate=None,
         ip_ranges=[], ip_ranges_name_key='name',
@@ -158,6 +160,7 @@ async def _run(provider,
                database_name, host_ip, host_port,
                regions,
                excluded_regions,
+               china_region,
                fetch_local, update,
                ip_ranges, ip_ranges_name_key,
                ruleset, exceptions,
@@ -179,10 +182,6 @@ async def _run(provider,
     print_info('Authenticating to cloud provider')
     auth_strategy = get_authentication_strategy(provider)
 
-    authenticate_in_china_region = False
-    if 'cn-north-1' in regions or 'cn-northwest-1' in regions:
-        authenticate_in_china_region = True
-
     try:
         credentials = auth_strategy.authenticate(profile=profile,
                                                  aws_access_key_id=aws_access_key_id,
@@ -202,7 +201,7 @@ async def _run(provider,
                                                  password=password,
                                                  access_key_id=access_key_id,
                                                  access_key_secret=access_key_secret,
-                                                 authenticate_in_china_region=authenticate_in_china_region)
+                                                 china_region=china_region)
 
         if not credentials:
             return 101
