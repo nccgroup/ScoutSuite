@@ -35,5 +35,8 @@ class CloudSQLFacade(GCPBaseFacade):
             )
             return response.get('items', [])
         except Exception as e:
-            print_exception(f'Failed to retrieve database instance users: {e}')
+            if 'The requested operation is not valid for an on-premises instance.' in str(e):
+                return []
+            if 'Invalid request since instance is not running' not in str(e):
+                print_exception(f'Failed to retrieve database instance users: {e}')
             return []

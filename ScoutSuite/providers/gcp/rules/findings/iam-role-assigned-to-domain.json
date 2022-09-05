@@ -1,0 +1,19 @@
+{
+    "description": "IAM Role Assigned to Domain",
+    "rationale": "Roles granted to Workspace domains grant permissions to all users of the domain's Organization, which goes against the principle of least privilege.",
+    "references": [
+        "https://cloud.google.com/iam/docs/understanding-roles",
+        "https://cloud.google.com/iam/docs/using-iam-securely"
+    ],
+    "dashboard_name": "Bindings",
+    "path": "iam.projects.id.bindings.id",
+    "conditions": [
+        "and",
+        [
+            "iam.projects.id.bindings.id.members.domains",
+            "notEmpty",
+            ""
+        ]
+    ],
+    "id_suffix": "domains"
+}

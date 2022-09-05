@@ -14,6 +14,7 @@
         {{/if}}
         </li>
         {{#unless scout_link}}
+        <li class="list-group-item-text">Organization Trail: {{is_organization_trail}}</li>
         <li class="list-group-item-text">Logging: <span class="cloudtrail.regions.{{region}}.trails.{{@key}}.IsLogging">{{convert_bool_to_enabled IsLogging}}</span></li>
         <li class="list-group-item-text">Start Logging Time: {{format_date StartLoggingTime}}</li>
         <li class="list-group-item-text">Stop Logging Time: {{format_date StopLoggingTime}}</li>

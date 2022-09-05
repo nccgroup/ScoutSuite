@@ -9,6 +9,11 @@
     "conditions": [
         "and",
         [
+            "cloudsql.projects.id.instances.id",
+            "withKey",
+            "backups"
+        ],
+        [
             "cloudsql.projects.id.instances.id.backups",
             "empty",
             ""

@@ -1,6 +1,12 @@
 {
     "about": "This ruleset covers most of the recommendations from the CIS Microsoft Azure Foundation v1.0.0.",
     "rules": {
+        "network-security-groups-rule-inbound-service-mssql.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "network-security-groups-rule-inbound-service.json": [
             {
                 "args": [
@@ -16,15 +22,6 @@
                     "SSH",
                     "22",
                     "6.2"
-                ],
-                "enabled": true,
-                "level": "warning"
-            },
-            {
-                "args": [
-                    "MsSQL",
-                    "1433",
-                    "6.3"
                 ],
                 "enabled": true,
                 "level": "warning"

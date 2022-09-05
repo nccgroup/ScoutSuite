@@ -2,6 +2,7 @@ import re
 
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Stacks(AWSResources):
@@ -32,7 +33,7 @@ class Stacks(AWSResources):
                     raw_stack['deletion_policy'] = template[group]
                     break
 
-        return raw_stack['name'], raw_stack
+        return get_non_provider_id(raw_stack['name']), raw_stack
 
     @staticmethod
     def has_deletion_policy(template):

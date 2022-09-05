@@ -67,6 +67,10 @@
         "applications": {
           "cols": 2,
           "path": "services.aad.applications"
+        },
+        "policies": {
+          "cols": 2,
+          "path": "services.aad.policies"
         }
       }
     },
@@ -75,6 +79,10 @@
         "roles": {
           "cols": 2,
           "path": "services.rbac.subscriptions.id.roles"
+        },
+        "custom_roles_report": {
+          "cols": 2,
+          "path": "services.rbac.subscriptions.id.custom_roles_report"
         }
       }
     },
@@ -107,6 +115,10 @@
         "regulatory_compliance_results": {
           "cols": 2,
           "path": "services.securitycenter.subscriptions.id.regulatory_compliance_results"
+        },
+        "settings": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.settings"
         }
       }
     }
@@ -155,6 +167,48 @@
         "web_apps": {
           "cols": 2,
           "path": "services.appservice.subscriptions.id.web_apps"
+        }
+      }
+    }
+  },
+  "mysql": {
+    "mysqldatabase": {
+      "resources": {
+        "servers": {
+          "cols": 2,
+          "path": "services.mysqldatabase.subscriptions.id.servers"
+        }
+      }
+    }
+  },
+  "postgres": {
+    "postgresqldatabase": {
+      "resources": {
+        "servers": {
+          "cols": 2,
+          "path": "services.postgresqldatabase.subscriptions.id.servers"
+        }
+      }
+    }
+  },
+ "logging": {
+    "loggingmonitoring": {
+      "resources": {
+        "resources_logging": {
+          "cols": 2,
+          "path": "services.loggingmonitoring.subscriptions.id.resources_logging"
+        },
+        "log_alerts": {
+          "cols": 2,
+          "path": "services.loggingmonitoring.subscriptions.id.log_alerts"
+        },
+        "diagnostic_settings": {
+          "cols": 2,
+          "path": "services.loggingmonitoring.subscriptions.id.diagnostic_settings"
+        },
+        "log_profiles": {
+          "cols": 2,
+          "path": "services.loggingmonitoring.subscriptions.id.log_profiles"
         }
       }
     }

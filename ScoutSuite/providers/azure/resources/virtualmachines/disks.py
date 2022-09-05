@@ -28,13 +28,13 @@ class Disks(AzureResources):
         disk_dict['zones'] = raw_disk.zones
         disk_dict['time_created'] = raw_disk.time_created
         disk_dict['os_type'] = raw_disk.os_type
-        disk_dict['hyper_vgeneration'] = raw_disk.hyper_vgeneration
+        disk_dict['hyper_vgeneration'] = raw_disk.hyper_v_generation
         disk_dict['creation_data'] = raw_disk.creation_data
         disk_dict['disk_size_gb'] = raw_disk.disk_size_gb
         disk_dict['disk_size_bytes'] = getattr(raw_disk, 'disk_size_bytes', None)
         disk_dict['provisioning_state'] = raw_disk.provisioning_state
         disk_dict['disk_iops_read_write'] = raw_disk.disk_iops_read_write
-        disk_dict['disk_mbps_read_write'] = raw_disk.disk_mbps_read_write
+        disk_dict['disk_mbps_read_write'] = raw_disk.disk_m_bps_read_write
         disk_dict['disk_state'] = raw_disk.disk_state
         disk_dict['additional_properties'] = raw_disk.additional_properties
 
@@ -44,4 +44,5 @@ class Disks(AzureResources):
             disk_dict['encryption_type'] = None
 
         return disk_dict['id'], disk_dict
+
 

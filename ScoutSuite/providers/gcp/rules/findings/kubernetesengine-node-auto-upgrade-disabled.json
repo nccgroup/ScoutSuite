@@ -1,5 +1,5 @@
 {
-    "description": "Nodes Auto-Upgrade Disabled",
+    "description": "Nodes with Auto-Upgrade Disabled",
     "rationale": "Auto-upgrades automatically ensures that security updates are applied and kept up to date.",
     "compliance": [
         {

@@ -22,6 +22,11 @@
             "MYSQL.*"
         ],
         [
+            "cloudsql.projects.id.instances.id.",
+            "withKey",
+            "users"
+        ],
+        [
             "cloudsql.projects.id.instances.id.users",
             "withKey",
             "root"

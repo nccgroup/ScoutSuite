@@ -64,7 +64,10 @@ class Instances(AzureResources):
 
         # TODO process and display the below
         instance_dict['hardware_profile'] = raw_instance.hardware_profile.vm_size
-        instance_dict['diagnostics_profile'] = {'Boot Diagnostics': True if raw_instance.diagnostics_profile.boot_diagnostics.enabled else None}
+        
+        # Handle VMs without diagnostics profile configured
+        if raw_instance.diagnostics_profile is not None:
+            instance_dict['diagnostics_profile'] = {'Boot Diagnostics': True if raw_instance.diagnostics_profile.boot_diagnostics.enabled else None}
         
         instance_dict['os_profile'] = {}
         if raw_instance.os_profile is not None:
@@ -92,8 +95,14 @@ class Instances(AzureResources):
             instance_dict['storage_profile']['OS Disk Size (GB)'] = raw_instance.storage_profile.os_disk.disk_size_gb
             instance_dict['storage_profile']['OS Disk Name'] = raw_instance.storage_profile.os_disk.name
             instance_dict['storage_profile']['OS Disk VHD'] = raw_instance.storage_profile.os_disk.vhd
-            instance_dict['storage_profile']['OS Managed Disk ID'] = raw_instance.storage_profile.os_disk.managed_disk.id.split('/')[-1]
-            instance_dict['storage_profile']['OS Managed Disk Storage Account Type'] = raw_instance.storage_profile.os_disk.managed_disk.storage_account_type
+            if raw_instance.storage_profile.os_disk.managed_disk:
+                instance_dict['storage_profile'][
+                    'OS Managed Disk ID'] = raw_instance.storage_profile.os_disk.managed_disk.id.split('/')[-1]
+                instance_dict['storage_profile'][
+                    'OS Managed Disk Storage Account Type'] = raw_instance.storage_profile.os_disk.managed_disk.storage_account_type
+            else:
+                instance_dict['storage_profile']['OS Managed Disk ID'] = None
+                instance_dict['storage_profile']['OS Managed Disk Storage Account Type'] = None
             if raw_instance.storage_profile.data_disks is not None and raw_instance.storage_profile.data_disks:
                 instance_dict['storage_profile']['Data Disks'] = ["{} ({}GB)".format(disk.name, disk.disk_size_gb) for disk in raw_instance.storage_profile.data_disks]
         else:

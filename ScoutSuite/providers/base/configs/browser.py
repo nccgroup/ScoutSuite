@@ -27,26 +27,19 @@ def get_object_at(object, path, attribute_name=None):
     :return:
     """
     o = object
-    try:
-        for p in path:
-            if type(o) is dict:
-                o = o[p]
-            else:
-                o = getattr(o, p)
-
-        if attribute_name:
-            if type(o) is dict:
-                return o[attribute_name]
-            else:
-                return getattr(o, attribute_name)
+    for p in path:
+        if type(o) is dict:
+            o = o[p]
         else:
-            return o
-    except Exception as e:
-        # print_exception("Failed to get object at path \"{}\"".format(path),
-        #                 additional_details={'object': object,
-        #                                     'path': path,
-        #                                     'attribute_name': attribute_name})
-        raise e
+            o = getattr(o, p)
+
+    if attribute_name:
+        if type(o) is dict:
+            return o[attribute_name]
+        else:
+            return getattr(o, attribute_name)
+    else:
+        return o
 
 
 def get_value_at(all_info, current_path, key, to_string=False):
@@ -79,7 +72,7 @@ def get_value_at(all_info, current_path, key, to_string=False):
                     else:
                         target_path.append(key)
                 except Exception as e:
-                    print_exception(f'Unable to get index \"{i}\" from path {current_path}: {e}',
+                    print_exception(f'Unable to get index \"{i}\" from path \"{current_path}\": {e}',
                                     additional_details={'current_path': current_path,
                                                         'target_path': target_path,
                                                         'key': key,
@@ -103,10 +96,12 @@ def get_value_at(all_info, current_path, key, to_string=False):
                     target_obj = p
                 elif p == '':
                     pass
+                elif target_obj is None:
+                    pass
                 else:
-                    target_obj = target_obj[p]
+                    target_obj = target_obj.get(p)
             except Exception as e:
-                print_exception(f'Unable to get \"{p}\" from target object {target_obj}: {e}',
+                print_exception(f'Unable to get \"{p}\" from target object \"{target_obj}\" in path \"{target_path}\": {e}',
                                 additional_details={'current_path': current_path,
                                                     'target_obj': target_obj,
                                                     'p': p})

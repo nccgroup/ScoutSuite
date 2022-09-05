@@ -1,0 +1,22 @@
+{
+  "description": "Functions Accessible by \"_ARG_0_\"",
+  "rationale": "Allowing anonymous and/or public access grants permissions to anyone to access the function's configuration and content. This configuration should be restricted to follow the principle of least privilege",
+  "references": [
+    "https://cloud.google.com/logging/docs/reference/audit/appengine/rest/Shared.Types/SecurityLevel"
+  ],
+  "dashboard_name": "Functions",
+  "path": "functions.projects.id.functions_v1.id",
+  "conditions": [
+    "or",
+    [
+      "functions.projects.id.functions_v1.id.bindings",
+      "containString",
+      "_ARG_0_"
+    ]
+  ],
+  "key": "functions-v1-function-_ARG_0_",
+  "arg_names": [
+    "Member"
+  ],
+  "id_suffix": "bindings"
+}

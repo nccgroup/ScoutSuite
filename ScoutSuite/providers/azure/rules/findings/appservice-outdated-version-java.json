@@ -1,16 +1,23 @@
 {
     "description": "Web App Running an Outdated Java Version",
     "rationale": "Periodically, newer versions are released for Java software either due to security flaws or to include additional functionality. Using the latest Java version for web apps is recommended in order to to take advantage of security fixes, if any, and/or new functionalities of the latest version.",
-    "remediation": "Set <samp>Java Framework version</samp> to latest version available under <samp>General settings</samp> of the management console",
+    "remediation": "Using Console:\n<ol>\n    <li>Go to <samp>App Services</samp></li>\n    <li>Click on each App</li>\n    <li>Under <samp>Setting</samp> section, Click on <samp>Application Settings</samp></li>\n    <li>Set  <samp>Java version</samp>  to latest version available under <samp>General Settings</samp></li>\n    <li>Set <samp>Java minor version</samp> to latest version available</li>\n    <li>Set <samp>Java web container</samp> to the latest version of web container available</li>\n    NOTE: No action is required if <samp>Java version</samp> is set to <samp>Off</samp> \n</ol>",
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "9.9"
+        },
+        {
+
+            "name": "CIS Microsoft Azure Foundations",
             "version": "1.1.0",
-            "reference": "9.6"
+            "reference": "9.9"
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings"
+        "https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
     ],
     "dashboard_name": "Web Apps",
     "path": "appservice.subscriptions.id.web_apps.id",

@@ -1,15 +1,29 @@
 {
     "description": "No Automatic Provisioning of Monitoring Agent",
-    "rationale": "Automatic provisioning of monitoring agent should be set.",
+    "rationale": "When Automatic provisioning of monitoring agentis turned on, Azure Security Center provisions the Microsoft Monitoring Agent on all existing supported Azure virtual machines and any new ones that are created. The Microsoft Monitoring Agent scans for various security-related configurations and events such as system updates, OS vulnerabilities, endpoint protection, and provides alerts.",
+    "remediation": "From Azure console:<ol><li>Go to <samp>Security Center</samp></li><li>Click on <samp>Pricing & Settings</samp></li><li>Click on subscription</li><li>Click on <samp>Data Collection</samp></li><li>Set <samp>Automatic provisioning</samp> to <samp>On</samp></li><li>Click <samp>Save</samp></li></ol>",
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.1.0",
             "reference": "2.2"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "2.9"
         }
     ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/security-center/security-center-data-security",
+        "https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection",
+        "https://docs.microsoft.com/en-us/previous-versions/azure/reference/mt704062(v=azure.100)?redirectedfrom=MSDN",
+        "https://docs.microsoft.com/en-us/previous-versions/azure/reference/mt704063(v=azure.100)?redirectedfrom=MSDN",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/list",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/create",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-posture-vulnerability-management#pv-6-perform-software-vulnerability-assessments"
+    ],
     "dashboard_name": "Security Center",
-    "display_path": "securitycenter.subscriptions.id.auto_provisioning_settings",
     "path": "securitycenter.subscriptions.id.auto_provisioning_settings.id",
     "conditions": [
         "and",

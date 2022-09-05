@@ -28,7 +28,10 @@ class GKEFacade(GCPBaseFacade):
         try:
             region = self._get_cluster_region(cluster)
             subnetwork = await self._gce_facade.get_subnetwork(project_id, region, cluster['subnetwork'])
-            cluster['privateIpGoogleAccess'] = subnetwork.get('privateIpGoogleAccess')
+            if subnetwork:
+                cluster['privateIpGoogleAccess'] = subnetwork.get('privateIpGoogleAccess')
+            else:
+                cluster['privateIpGoogleAccess'] = None
         except Exception as e:
             print_exception('Failed to retrieve cluster private IP Google access config: {}'.format(e))
             cluster['privateIpGoogleAccess'] = None
