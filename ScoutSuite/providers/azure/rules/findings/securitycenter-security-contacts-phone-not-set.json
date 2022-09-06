@@ -1,6 +1,6 @@
 {
     "description": "No Security Contact Phone Set",
-    "rationale": "Set at least one security contact email.",
+    "rationale": "Set at least one security contact phone number.",
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
