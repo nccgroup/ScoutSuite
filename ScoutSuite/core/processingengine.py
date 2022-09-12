@@ -42,9 +42,7 @@ class ProcessingEngine:
                 
                 # manage_dictionary(cloud_provider.services[service], self.ruleset.rule_type, {})
 
-                finding_result = {}
-                finding_result['description'] = rule.description
-                finding_result['path'] = rule.path
+                finding_result = {'description': rule.description, 'path': rule.path}
 
                 for attr in ['level', 'id_suffix', 'class_suffix', 'display_path']:
                     if hasattr(rule, attr):
@@ -76,8 +74,7 @@ class ProcessingEngine:
                     finding_result['checked_items'] = 0
                     finding_result['flagged_items'] = 0
 
-                # FIXME this only works when re-running locally?
-                cloud_provider.services[service][self.ruleset.rule_type][rule.key] = finding_result
+                cloud_provider.services[service][self.ruleset.rule_type] = cloud_provider.services[service][self.ruleset.rule_type] | {rule.key: finding_result}
 
     @staticmethod
     def _filter_rules(rules, services):
