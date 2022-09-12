@@ -8,8 +8,11 @@ used to reflect that.
 import abc
 import asyncio
 
+from sqlitedict import SqliteDict
+import json
 
-class Resources(dict, metaclass=abc.ABCMeta):
+
+class Resources(SqliteDict, metaclass=abc.ABCMeta):
 
     """This is the base class of a hierarchical structure. Everything is basically `Resources`.
     It stores in its internal dictionary instances of a given type of resources, with instance ids as keys and
@@ -19,7 +22,7 @@ class Resources(dict, metaclass=abc.ABCMeta):
     def __init__(self, service_facade):
         self.facade = service_facade
 
-        super().__init__()
+        super().__init__(autocommit=True, encode=json.dumps, decode=json.loads)
 
     @abc.abstractmethod
     async def fetch_all(self, **kwargs):
@@ -89,5 +92,6 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
                     resource_parent[child_name] = {}
                     resource_parent[child_name + '_count'] = 0
 
-                resource_parent[child_name].update(child)
+                # .update() doesn't work, converting everything to a dict and merging
+                resource_parent[child_name] = dict(resource_parent[child_name]) | dict(child)  # FIXME do we need to explicitly convert to dict?
                 resource_parent[child_name + '_count'] += len(child)

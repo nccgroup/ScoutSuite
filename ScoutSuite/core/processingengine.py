@@ -39,39 +39,45 @@ class ProcessingEngine:
                 finding_path = rule.path
                 path = finding_path.split('.')
                 service = path[0]
-                manage_dictionary(cloud_provider.services[service], self.ruleset.rule_type, {})
-                cloud_provider.services[service][self.ruleset.rule_type][rule.key] = {}
-                cloud_provider.services[service][self.ruleset.rule_type][rule.key]['description'] = rule.description
-                cloud_provider.services[service][self.ruleset.rule_type][rule.key]['path'] = rule.path
+                
+                # manage_dictionary(cloud_provider.services[service], self.ruleset.rule_type, {})
+
+                finding_result = {}
+                finding_result['description'] = rule.description
+                finding_result['path'] = rule.path
+
                 for attr in ['level', 'id_suffix', 'class_suffix', 'display_path']:
                     if hasattr(rule, attr):
-                        cloud_provider.services[service][self.ruleset.rule_type][rule.key][attr] = getattr(rule, attr)
+                        finding_result[attr] = getattr(rule, attr)
                 try:
                     setattr(rule, 'checked_items', 0)
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'] = recurse(
+                    finding_result['items'] = recurse(
                         cloud_provider.services, cloud_provider.services, path, [], rule, True)
                     if skip_dashboard:
                         continue
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['dashboard_name'] = \
+                    finding_result['dashboard_name'] = \
                         rule.dashboard_name
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = \
+                    finding_result['checked_items'] = \
                         rule.checked_items
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = \
-                        len(cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'])
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['service'] = rule.service
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['rationale'] = \
+                    finding_result['flagged_items'] = \
+                        len(finding_result['items'])
+                    finding_result['service'] = rule.service
+                    finding_result['rationale'] = \
                         rule.rationale if hasattr(rule, 'rationale') else None
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['remediation'] = \
+                    finding_result['remediation'] = \
                         rule.remediation if hasattr(rule, 'remediation') else None
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['compliance'] = \
+                    finding_result['compliance'] = \
                         rule.compliance if hasattr(rule, 'compliance') else None
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['references'] = \
+                    finding_result['references'] = \
                         rule.references if hasattr(rule, 'references') else None
                 except Exception as e:
                     print_exception(f'Failed to process rule defined in {rule.filename}: {e}')
                     # Fallback if process rule failed to ensure report creation and data dump still happen
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = 0
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0
+                    finding_result['checked_items'] = 0
+                    finding_result['flagged_items'] = 0
+
+                # FIXME this only works when re-running locally?
+                cloud_provider.services[service][self.ruleset.rule_type][rule.key] = finding_result
 
     @staticmethod
     def _filter_rules(rules, services):

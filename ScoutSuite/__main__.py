@@ -30,50 +30,62 @@ def run_from_cli():
     #  (e.g. aws_profile, azure_user_account)
 
     try:
-        return run(provider=args.get('provider'),
-                   # AWS
-                   profile=args.get('profile'),
-                   aws_access_key_id=args.get('aws_access_key_id'),
-                   aws_secret_access_key=args.get('aws_secret_access_key'),
-                   aws_session_token=args.get('aws_session_token'),
-                   # Azure
-                   cli=args.get('cli'),
-                   user_account=args.get('user_account'),
-                   user_account_browser=args.get('user_account_browser'),
-                   service_account=args.get('service_account'),
-                   msi=args.get('msi'),
-                   service_principal=args.get('service_principal'), file_auth=args.get('file_auth'),
-                   client_id=args.get('client_id'), client_secret=args.get('client_secret'),
-                   username=args.get('username'), password=args.get('password'),
-                   tenant_id=args.get('tenant_id'),
-                   subscription_ids=args.get('subscription_ids'), all_subscriptions=args.get('all_subscriptions'),
-                   # GCP
-                   project_id=args.get('project_id'), folder_id=args.get('folder_id'),
-                   organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
-                   # Aliyun
-                   access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
-                   # General
-                   report_name=args.get('report_name'), report_dir=args.get('report_dir'),
-                   timestamp=args.get('timestamp'),
-                   services=args.get('services'), skipped_services=args.get('skipped_services'),
-                   list_services=args.get('list_services'),
-                   result_format=args.get('result_format'),
-                   database_name=args.get('database_name'),
-                   host_ip=args.get('host_ip'),
-                   host_port=args.get('host_port'),
-                   max_workers=args.get('max_workers'),
-                   regions=args.get('regions'),
-                   excluded_regions=args.get('excluded_regions'),
-                   fetch_local=args.get('fetch_local'), update=args.get('update'),
-                   max_rate=args.get('max_rate'),
-                   ip_ranges=args.get('ip_ranges'), ip_ranges_name_key=args.get('ip_ranges_name_key'),
-                   ruleset=args.get('ruleset'), exceptions=args.get('exceptions'),
-                   force_write=args.get('force_write'),
-                   debug=args.get('debug'),
-                   quiet=args.get('quiet'),
-                   log_file=args.get('log_file'),
-                   no_browser=args.get('no_browser'),
-                   programmatic_execution=False)
+
+        import psutil
+        import time
+        start_time = time.time()
+        start_mem =  psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2
+
+        r = run(provider=args.get('provider'),
+                # AWS
+                profile=args.get('profile'),
+                aws_access_key_id=args.get('aws_access_key_id'),
+                aws_secret_access_key=args.get('aws_secret_access_key'),
+                aws_session_token=args.get('aws_session_token'),
+                # Azure
+                cli=args.get('cli'),
+                user_account=args.get('user_account'),
+                user_account_browser=args.get('user_account_browser'),
+                service_account=args.get('service_account'),
+                msi=args.get('msi'),
+                service_principal=args.get('service_principal'), file_auth=args.get('file_auth'),
+                client_id=args.get('client_id'), client_secret=args.get('client_secret'),
+                username=args.get('username'), password=args.get('password'),
+                tenant_id=args.get('tenant_id'),
+                subscription_ids=args.get('subscription_ids'), all_subscriptions=args.get('all_subscriptions'),
+                # GCP
+                project_id=args.get('project_id'), folder_id=args.get('folder_id'),
+                organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
+                # Aliyun
+                access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
+                # General
+                report_name=args.get('report_name'), report_dir=args.get('report_dir'),
+                timestamp=args.get('timestamp'),
+                services=args.get('services'), skipped_services=args.get('skipped_services'),
+                list_services=args.get('list_services'),
+                result_format=args.get('result_format'),
+                database_name=args.get('database_name'),
+                host_ip=args.get('host_ip'),
+                host_port=args.get('host_port'),
+                max_workers=args.get('max_workers'),
+                regions=args.get('regions'),
+                excluded_regions=args.get('excluded_regions'),
+                fetch_local=args.get('fetch_local'), update=args.get('update'),
+                max_rate=args.get('max_rate'),
+                ip_ranges=args.get('ip_ranges'), ip_ranges_name_key=args.get('ip_ranges_name_key'),
+                ruleset=args.get('ruleset'), exceptions=args.get('exceptions'),
+                force_write=args.get('force_write'),
+                debug=args.get('debug'),
+                quiet=args.get('quiet'),
+                log_file=args.get('log_file'),
+                no_browser=args.get('no_browser'),
+                programmatic_execution=False)
+
+        end_mem = psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2
+        print("--- %s seconds ---" % (time.time() - start_time))
+        print("--- %s MB ---" % (end_mem - start_mem))
+
+        return r
     except (KeyboardInterrupt, SystemExit):
         print_info('Exiting')
         return 130
@@ -272,11 +284,12 @@ async def _run(provider,
         if update:
             try:
                 print_info('Updating existing data')
-                #Load previous results
+                # Load previous results
                 last_run_dict = report.encoder.load_from_file('RESULTS')
-                #Get list of previous services which were not updated during this run
-                previous_services = [prev_service for prev_service in last_run_dict['service_list'] if prev_service not in cloud_provider.service_list]
-                #Add previous services
+                # Get list of previous services which were not updated during this run
+                previous_services = [prev_service for prev_service in last_run_dict['service_list'] if
+                                     prev_service not in cloud_provider.service_list]
+                # Add previous services
                 for service in previous_services:
                     cloud_provider.service_list.append(service)
                     cloud_provider.services[service] = last_run_dict['services'][service]
