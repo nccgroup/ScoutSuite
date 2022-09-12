@@ -7,6 +7,7 @@ import copy
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.core.conditions import pass_conditions, fix_path_string
 
+from sqlitedict import SqliteDict
 
 def recurse(all_info, current_info, target_path, current_path, config, add_suffix=False):
     """
@@ -31,6 +32,8 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
     :return:
     """
     results = []
+    if isinstance(current_info, SqliteDict):
+        current_info = dict(current_info)
     if len(target_path) == 0:
         # Dashboard: count the number of processed resources here
         setattr(config, 'checked_items', getattr(config, 'checked_items') + 1)
