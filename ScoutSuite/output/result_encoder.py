@@ -29,7 +29,14 @@ class ScoutJsonEncoder(json.JSONEncoder):
                     del o.metadata_path
                 if hasattr(o, 'services_config'):
                     del o.services_config
-                return vars(o)
+                # convert back to dict
+                if hasattr(o, 'services'):
+                    s = {}
+                    for k, v in o.services.items():
+                        s[k] = dict(v)
+                    setattr(o, 'services', s)
+                d = vars(o)
+                return d
         except Exception as e:
             return str(o)
 
@@ -44,8 +51,14 @@ class ScoutResultEncoder:
         self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
 
     @staticmethod
-    def to_dict(config):
-        return json.loads(json.dumps(config, separators=(',', ': '), cls=ScoutJsonEncoder))
+    def to_dict(obj):
+        # return json.loads(json.dumps(config, separators=(',', ': '), cls=ScoutJsonEncoder))
+        d = {}
+        for attribute in dir(obj):
+            if '_' not in attribute and \
+                    attribute not in ['profile', 'credentials', 'metadata_path', 'services_config', 'fetch']:
+                d[attribute] = getattr(obj, attribute)
+        return d
 
 
 class SqlLiteEncoder(ScoutResultEncoder):
