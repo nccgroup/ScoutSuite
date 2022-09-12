@@ -1,6 +1,8 @@
 from __future__ import print_function
 from ScoutSuite import __version__
 
+from sqlitedict import SqliteDict
+
 formatted_provider_name = {
     'aliyun': 'Aliyun',
     'aws': 'AWS',
@@ -79,7 +81,7 @@ def manage_dictionary(dictionary, key, init, callback=None):
     :param callback:
     :return:
     """
-    if not isinstance(dictionary, dict):
+    if not isinstance(dictionary, dict) and not isinstance(dictionary, SqliteDict):
         raise TypeError()
 
     if str(key) in dictionary:
