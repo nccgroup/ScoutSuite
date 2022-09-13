@@ -107,16 +107,14 @@ class IAM(AWSCompositeResources):
 
     def _parse_actions(self, effect, action_string, actions, resource_string, resources, iam_resource_type,
                        iam_resource_name, policy_name, policy_type, condition):
-        for action in actions:
-            self['permissions'][action_string].setdefault(action, {})
-            self['permissions'][action_string][action].setdefault(
-                iam_resource_type, {})
-            self['permissions'][action_string][action][iam_resource_type].setdefault(
-                effect, {})
-            self['permissions'][action_string][action][iam_resource_type][effect].setdefault(
-                iam_resource_name, {})
-            self._parse_action(effect, action_string, action, resource_string, resources, iam_resource_type,
-                               iam_resource_name, policy_name, policy_type, condition)
+        if action_string in self['permissions']:
+            for action in actions:
+                self['permissions'][action_string].setdefault(action, {})
+                self['permissions'][action_string][action].setdefault(iam_resource_type, {})
+                self['permissions'][action_string][action][iam_resource_type].setdefault(effect, {})
+                self['permissions'][action_string][action][iam_resource_type][effect].setdefault(iam_resource_name, {})
+                self._parse_action(effect, action_string, action, resource_string, resources, iam_resource_type,
+                                   iam_resource_name, policy_name, policy_type, condition)
 
     def _parse_action(self, effect, action_string, action, resource_string, resources, iam_resource_type,
                       iam_resource_name, policy_name, policy_type, condition):
