@@ -9,7 +9,6 @@ import abc
 import asyncio
 
 from sqlitedict import SqliteDict
-import json
 
 
 class Resources(SqliteDict, metaclass=abc.ABCMeta):
@@ -22,7 +21,7 @@ class Resources(SqliteDict, metaclass=abc.ABCMeta):
     def __init__(self, service_facade):
         self.facade = service_facade
 
-        super().__init__(autocommit=True, encode=json.dumps, decode=json.loads)
+        super().__init__(autocommit=True)
 
     @abc.abstractmethod
     async def fetch_all(self, **kwargs):
