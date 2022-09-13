@@ -52,6 +52,7 @@ class ScoutResultEncoder:
 
     @staticmethod
     def to_dict(obj):
+        # FIXME revisit this code
         # return json.loads(json.dumps(config, separators=(',', ': '), cls=ScoutJsonEncoder))
         d = {}
         for attribute in dir(obj):
