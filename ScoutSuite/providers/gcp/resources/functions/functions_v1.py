@@ -27,9 +27,9 @@ class FunctionsV1(Resources):
         function_dict['runtime'] = raw_function['runtime']
         function_dict['memory'] = raw_function['availableMemoryMb']
         function_dict['timeout'] = raw_function['timeout']
-        function_dict['max_instances'] = raw_function['maxInstances']
+        if raw_function['maxInstances']:
+            function_dict['max_instances'] = raw_function['maxInstances']
         function_dict['docker_registry'] = raw_function['dockerRegistry']
-
         function_dict['url'] = raw_function.get('httpsTrigger', {}).get('url')
         function_dict['security_level'] = raw_function.get('httpsTrigger', {}).get('securityLevel')
         function_dict['ingress_settings'] = raw_function['ingressSettings']
