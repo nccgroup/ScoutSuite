@@ -10,9 +10,9 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/postgresql/concepts-ssl-connection-security",
-        "https://docs.microsoft.com/en-us/azure/mysql/howto-configure-ssl",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit"
+        "https://learn.microsoft.com/en-us/azure/postgresql/concepts-ssl-connection-security",
+        "https://learn.microsoft.com/en-us/azure/mysql/howto-configure-ssl",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit"
     ],
     "dashboard_name": "MySQL Servers",
     "path": "mysqldatabase.subscriptions.id.servers.id",

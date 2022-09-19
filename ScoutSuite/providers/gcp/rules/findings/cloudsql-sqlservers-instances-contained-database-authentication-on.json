@@ -11,8 +11,8 @@
     ],
     "references": [
         "https://cloud.google.com/sql/docs/sqlserver/flags",
-        "https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/contained-database-authentication-server-configuration-option?view=sql-server-ver15",
-        "https://docs.microsoft.com/en-us/sql/relational-databases/databases/security-best-practices-with-contained-databases?view=sql-server-ver15"
+        "https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/contained-database-authentication-server-configuration-option?view=sql-server-ver15",
+        "https://learn.microsoft.com/en-us/sql/relational-databases/databases/security-best-practices-with-contained-databases?view=sql-server-ver15"
     ],
     "dashboard_name": "Instances",
     "path": "cloudsql.projects.id.instances.id",

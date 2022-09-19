@@ -10,10 +10,10 @@
         }
     ],
     "references": [
-      "https://docs.microsoft.com/en-us/azure/azure-sql/database/transparent-data-encryption-byok-overview?view=sql-server-ver15",
+      "https://learn.microsoft.com/en-us/azure/azure-sql/database/transparent-data-encryption-byok-overview?view=sql-server-ver15",
       "https://azure.microsoft.com/en-in/blog/preview-sql-transparent-data-encryption-tde-with-bring-your-own-key-support/",
       "https://winterdom.com/2017/09/07/azure-sql-tde-protector-keyvault",
-      "https://docs.microsoft.com/en-us/azure/azure-sql/database/transparent-data-encryption-byok-overview?view=sql-server-ver15"
+      "https://learn.microsoft.com/en-us/azure/azure-sql/database/transparent-data-encryption-byok-overview?view=sql-server-ver15"
     ],
     "dashboard_name": "SQL Databases",
     "display_path": "sqldatabase.subscriptions.id.servers.id",

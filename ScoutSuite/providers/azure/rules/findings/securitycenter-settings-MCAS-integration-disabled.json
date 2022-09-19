@@ -10,9 +10,9 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-in/azure/security-center/azure-defender#azure-management-layer-azure-resource-manager-preview",
-        "https://docs.microsoft.com/en-us/rest/api/securitycenter/settings/list",
-        "https://docs.microsoft.com/en-us/rest/api/securitycenter/settings/update"
+        "https://learn.microsoft.com/en-in/azure/security-center/azure-defender#azure-management-layer-azure-resource-manager-preview",
+        "https://learn.microsoft.com/en-us/rest/api/securitycenter/settings/list",
+        "https://learn.microsoft.com/en-us/rest/api/securitycenter/settings/update"
     ],
     "dashboard_name": "Security Settings",
     "path": "securitycenter.subscriptions.id.settings.id",

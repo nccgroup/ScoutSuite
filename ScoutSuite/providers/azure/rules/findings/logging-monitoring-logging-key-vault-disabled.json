@@ -10,8 +10,8 @@
         }
     ],
     "references": [
-      "https://docs.microsoft.com/en-us/azure/key-vault/general/logging?tabs=Vault",
-      "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+      "https://learn.microsoft.com/en-us/azure/key-vault/general/logging?tabs=Vault",
+      "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
     ],
     "dashboard_name": "Key Vaults",
     "path": "loggingmonitoring.subscriptions.id.resources_logging.id" ,

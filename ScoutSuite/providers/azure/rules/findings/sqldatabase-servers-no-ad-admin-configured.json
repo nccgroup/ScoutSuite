@@ -15,11 +15,11 @@
         }
     ],
     "references": [
-      "https://docs.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-configure?tabs=azure-powershell",
-      "https://docs.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-overview",
-      "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserveractivedirectoryadministrator?view=azurermps-6.13.0&viewFallbackFrom=azurermps-5.2.0",
-      "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserveractivedirectoryadministrator?view=azurermps-6.13.0&viewFallbackFrom=azurermps-5.2.0",
-      "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-1-standardize-azure-active-directory-as-the-central-identity-and-authentication-system"
+      "https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-configure?tabs=azure-powershell",
+      "https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-overview",
+      "https://learn.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserveractivedirectoryadministrator?view=azurermps-6.13.0&viewFallbackFrom=azurermps-5.2.0",
+      "https://learn.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserveractivedirectoryadministrator?view=azurermps-6.13.0&viewFallbackFrom=azurermps-5.2.0",
+      "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-1-standardize-azure-active-directory-as-the-central-identity-and-authentication-system"
     ],
     "dashboard_name": "SQL Databases",
     "display_path": "sqldatabase.subscriptions.id.servers.id",

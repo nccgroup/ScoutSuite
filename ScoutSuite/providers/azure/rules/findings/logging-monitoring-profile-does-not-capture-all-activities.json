@@ -10,8 +10,8 @@
         }
     ],
     "references": [
-      "https://docs.microsoft.com/en-us/cli/azure/monitor/log-profiles?view=azure-cli-latest#az-monitor-log-profiles-update",
-      "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+      "https://learn.microsoft.com/en-us/cli/azure/monitor/log-profiles?view=azure-cli-latest#az-monitor-log-profiles-update",
+      "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
     ],
     "dashboard_name": "Profile",
     "path": "loggingmonitoring.subscriptions.id.log_profiles.id" ,

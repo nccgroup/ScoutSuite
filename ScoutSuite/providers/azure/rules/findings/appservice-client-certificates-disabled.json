@@ -15,7 +15,7 @@
     }
   ],
   "references": [
-    "https://docs.microsoft.com/bs-latn-ba/azure/app-service/app-service-web-configure-tls-mutual-auth"
+    "https://learn.microsoft.com/bs-latn-ba/azure/app-service/app-service-web-configure-tls-mutual-auth"
   ],
   "dashboard_name": "Web Apps",
   "path": "appservice.subscriptions.id.web_apps.id",

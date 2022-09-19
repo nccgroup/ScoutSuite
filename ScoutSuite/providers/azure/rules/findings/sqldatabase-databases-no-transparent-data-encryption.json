@@ -14,8 +14,8 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/transparent-data-encryption-with-azure-sql-database",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest"
+        "https://learn.microsoft.com/en-us/sql/relational-databases/security/encryption/transparent-data-encryption-with-azure-sql-database",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest"
     ],
     "dashboard_name": "SQL Databases",
     "display_path": "sqldatabase.subscriptions.id.servers.id",
