@@ -11,10 +11,10 @@
     ],
     "references": [
       "https://azure.microsoft.com/en-us/updates/classic-alerting-monitoring-retirement/",
-      "https://docs.microsoft.com/en-in/azure/azure-monitor/alerts/alerts-activity-log",
-      "https://docs.microsoft.com/en-in/rest/api/monitor/activitylogalerts/createorupdate",
-      "https://docs.microsoft.com/en-in/rest/api/monitor/activitylogalerts/listbysubscriptionid",
-      "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+      "https://learn.microsoft.com/en-in/azure/azure-monitor/alerts/alerts-activity-log",
+      "https://learn.microsoft.com/en-in/rest/api/monitor/activitylogalerts/createorupdate",
+      "https://learn.microsoft.com/en-in/rest/api/monitor/activitylogalerts/listbysubscriptionid",
+      "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
     ],
     "dashboard_name": "Alert Rules",
     "path": "loggingmonitoring.subscriptions.id.log_alerts.id",

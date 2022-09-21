@@ -15,11 +15,11 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-resource-manager-portal",
-        "https://docs.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal",
-        "https://docs.microsoft.com/en-us/azure/expressroute/",
-        "https://docs.microsoft.com/en-us/azure/security/fundamentals/network-best-practices#disable-rdpssh-access-to-azure-virtual-machines",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security"
+        "https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-resource-manager-portal",
+        "https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal",
+        "https://learn.microsoft.com/en-us/azure/expressroute/",
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices#disable-rdpssh-access-to-azure-virtual-machines",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security"
     ],
     "dashboard_name": "NSGs",
     "display_path": "network.subscriptions.id.security_groups.id",

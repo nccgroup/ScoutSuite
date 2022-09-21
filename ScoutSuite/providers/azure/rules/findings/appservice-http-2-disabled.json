@@ -15,8 +15,8 @@
     }
   ],
   "references": [
-    "https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
+    "https://learn.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings",
+    "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
   ],
   "dashboard_name": "Web Apps",
   "path": "appservice.subscriptions.id.web_apps.id",

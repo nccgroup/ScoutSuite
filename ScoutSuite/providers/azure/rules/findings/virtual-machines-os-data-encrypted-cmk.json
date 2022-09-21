@@ -10,12 +10,12 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/security/fundamentals/azure-disk-encryption-vms-vmss",
-        "https://docs.microsoft.com/en-us/azure/security-center/asset-inventory?toc=%2Fazure%2Fsecurity%2Ftoc.json",
-        "https://docs.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest",
-        "https://docs.microsoft.com/en-us/rest/api/compute/disks/delete",
-        "https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest"
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/azure-disk-encryption-vms-vmss",
+        "https://learn.microsoft.com/en-us/azure/security-center/asset-inventory?toc=%2Fazure%2Fsecurity%2Ftoc.json",
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest",
+        "https://learn.microsoft.com/en-us/rest/api/compute/disks/delete",
+        "https://learn.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest"
     ],
     "dashboard_name": "Disks",
     "path": "virtualmachines.subscriptions.id.disks.id",

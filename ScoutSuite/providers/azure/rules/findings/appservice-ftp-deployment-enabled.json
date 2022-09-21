@@ -10,10 +10,10 @@
     }
   ],
   "references": [
-    "https://docs.microsoft.com/en-us/azure/app-service/deploy-ftp",
-    "https://docs.microsoft.com/en-us/azure/app-service/overview-security",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-1-standardize-azure-active-directory-as-the-central-identity-and-authentication-system"
+    "https://learn.microsoft.com/en-us/azure/app-service/deploy-ftp",
+    "https://learn.microsoft.com/en-us/azure/app-service/overview-security",
+    "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit",
+    "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-1-standardize-azure-active-directory-as-the-central-identity-and-authentication-system"
   ],
   "dashboard_name": "Web Apps",
   "path": "appservice.subscriptions.id.web_apps.id",

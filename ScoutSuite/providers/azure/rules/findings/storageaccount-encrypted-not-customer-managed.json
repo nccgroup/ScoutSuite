@@ -10,8 +10,8 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption",
-        "https://docs.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest"
+        "https://learn.microsoft.com/en-us/azure/storage/common/storage-service-encryption",
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest"
     ],
     "dashboard_name": "Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",

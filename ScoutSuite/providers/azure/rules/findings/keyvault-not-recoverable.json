@@ -10,9 +10,9 @@
     }
   ],
   "references": [
-    "https://docs.microsoft.com/en-us/azure/key-vault/key-vault-soft-delete-cli",
+    "https://learn.microsoft.com/en-us/azure/key-vault/key-vault-soft-delete-cli",
     "https://blogs.technet.microsoft.com/kv/2017/05/10/azure-key-vault-recovery-options/",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-8-define-backup-and-recovery-strategy"
+    "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-8-define-backup-and-recovery-strategy"
   ],
   "dashboard_name": "PostgreSQL Servers",
   "path": "keyvault.subscriptions.id.vaults.id",

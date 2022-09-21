@@ -10,8 +10,8 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/postgresql/concepts-ssl-connection-security",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit"
+        "https://learn.microsoft.com/en-us/azure/postgresql/concepts-ssl-connection-security",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit"
     ],
     "dashboard_name": "PostgreSQL Servers",
     "path": "postgresqldatabase.subscriptions.id.servers.id",

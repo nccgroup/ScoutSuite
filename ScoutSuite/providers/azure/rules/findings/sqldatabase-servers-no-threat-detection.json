@@ -17,8 +17,8 @@
   "display_path": "sqldatabase.subscriptions.id.servers.id",
   "path": "sqldatabase.subscriptions.id.servers.id",
   "references": [
-    "https://docs.microsoft.com/en-us/azure/sql-database/sql-advanced-threat-protection",
-    "https://docs.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql"
+    "https://learn.microsoft.com/en-us/azure/sql-database/sql-advanced-threat-protection",
+    "https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql"
   ],
   "conditions": [
     "and",

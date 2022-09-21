@@ -15,8 +15,8 @@
     }
   ],
   "references": [
-    "https://docs.microsoft.com/en-gb/azure/app-service/app-service-web-tutorial-connect-msi",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-1-standardize-azure-active-directory-as-the-central-identity-and-authentication-system"
+    "https://learn.microsoft.com/en-gb/azure/app-service/app-service-web-tutorial-connect-msi",
+    "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-1-standardize-azure-active-directory-as-the-central-identity-and-authentication-system"
   ],
   "dashboard_name": "Web Apps",
   "path": "appservice.subscriptions.id.web_apps.id",

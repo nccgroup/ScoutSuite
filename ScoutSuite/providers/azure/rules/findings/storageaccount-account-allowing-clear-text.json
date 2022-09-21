@@ -15,12 +15,12 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/storage/common/storage-security-guide",
-        "https://docs.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer",
-        "https://docs.microsoft.com/en-us/azure/storage/blobs/security-recommendations#encryption-in-transit",
-        "https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_list",
-        "https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_update",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit"
+        "https://learn.microsoft.com/en-us/azure/storage/common/storage-security-guide",
+        "https://learn.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer",
+        "https://learn.microsoft.com/en-us/azure/storage/blobs/security-recommendations#encryption-in-transit",
+        "https://learn.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_list",
+        "https://learn.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_update",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit"
     ],
     "dashboard_name": "Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",

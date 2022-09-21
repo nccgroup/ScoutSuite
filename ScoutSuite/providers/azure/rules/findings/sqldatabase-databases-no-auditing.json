@@ -15,11 +15,11 @@
     }
   ],
   "references": [
-    "https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-auditing-on-sql-servers",
-    "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverauditing?view=azurermps-5.2.0",
-    "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserverauditingpolicy?view=azurermps-5.2.0",
-    "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+    "https://learn.microsoft.com/en-us/azure/security-center/security-center-enable-auditing-on-sql-servers",
+    "https://learn.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverauditing?view=azurermps-5.2.0",
+    "https://learn.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserverauditingpolicy?view=azurermps-5.2.0",
+    "https://learn.microsoft.com/en-us/azure/sql-database/sql-database-auditing",
+    "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
   ],
   "dashboard_name": "SQL Databases",
   "display_path": "sqldatabase.subscriptions.id.servers.id",
