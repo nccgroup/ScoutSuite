@@ -12,8 +12,9 @@ class FunctionsV1(Resources):
     async def fetch_all(self):
         raw_functions = await self.facade.functions.get_functions_v1(self.project_id)
         for raw_function in raw_functions:
-            function_id, function = self._parse_function(raw_function)
-            self[function_id] = function
+            if raw_function:
+                function_id, function = self._parse_function(raw_function)
+                self[function_id] = function
 
     def _parse_function(self, raw_function):
         function_dict = {}
