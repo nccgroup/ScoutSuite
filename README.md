@@ -29,6 +29,7 @@ The following cloud providers are currently supported:
 - Google Cloud Platform
 - Alibaba Cloud (alpha)
 - Oracle Cloud Infrastructure (alpha)
+- Kubernetes clusters on a cloud provider (alpha)
 
 ## Installation
 

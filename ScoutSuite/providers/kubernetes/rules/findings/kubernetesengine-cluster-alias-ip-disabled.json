@@ -1,0 +1,32 @@
+{
+    "description": "Alias IP Disabled",
+    "rationale": "With Alias IPs ranges enabled, Kubernetes Engine clusters can allocate IP addresses from a CIDR block known to Google Cloud Platform. This makes your cluster more scalable and allows your cluster to better interact with other GCP products and entities.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.13"
+        },
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.6.2"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#restrict_network_access_to_the_control_plane_and_nodes",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.alias_ip_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "alias_ip_disabled"
+}

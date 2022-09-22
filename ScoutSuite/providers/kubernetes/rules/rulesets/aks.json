@@ -1,0 +1,870 @@
+{
+    "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
+    "rules": {
+        "configmap-unnecessary-secrets.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cron-job-apparmor-annotation-missing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cron-job-automounted-service-account-token.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cron-job-container-ability-to-modify-root-filesystem.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cron-job-container-allowing-privilege-escalation.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cron-job-container-running-as-root-group.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cron-job-container-running-as-root-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cron-job-container-with-overly-permissive-capabilities.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cron-job-container-with-possible-root-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cron-job-host-ipc-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cron-job-host-network-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cron-job-host-pid-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cron-job-privileged-container-running.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cron-job-resources-without-defined-cpu-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cron-job-resources-without-defined-limits.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cron-job-resources-without-defined-memory-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "daemonset-apparmor-annotation-missing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "daemonset-automounted-service-account-token.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "daemonset-container-ability-to-modify-root-filesystem.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "daemonset-container-allowing-privilege-escalation.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "daemonset-container-running-as-root-group.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "daemonset-container-running-as-root-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "daemonset-container-with-overly-permissive-capabilities.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "daemonset-container-with-possible-root-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "daemonset-host-ipc-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "daemonset-host-network-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "daemonset-host-pid-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "daemonset-privileged-container-running.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "daemonset-resources-without-defined-cpu-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "daemonset-resources-without-defined-limits.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "daemonset-resources-without-defined-memory-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "deployment-apparmor-annotation-missing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "deployment-automounted-service-account-token.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "deployment-container-ability-to-modify-root-filesystem.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "deployment-container-allowing-privilege-escalation.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "deployment-container-running-as-root-group.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "deployment-container-running-as-root-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "deployment-container-with-overly-permissive-capabilities.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "deployment-container-with-possible-root-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "deployment-host-ipc-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "deployment-host-network-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "deployment-host-pid-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "deployment-privileged-container-running.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "deployment-resources-without-defined-cpu-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "deployment-resources-without-defined-limits.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "deployment-resources-without-defined-memory-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "job-apparmor-annotation-missing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "job-automounted-service-account-token.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "job-container-ability-to-modify-root-filesystem.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "job-container-allowing-privilege-escalation.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "job-container-running-as-root-group.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "job-container-running-as-root-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "job-container-with-overly-permissive-capabilities.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "job-container-with-possible-root-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "job-host-ipc-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "job-host-network-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "job-host-pid-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "job-privileged-container-running.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "job-resources-without-defined-cpu-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "job-resources-without-defined-limits.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "job-resources-without-defined-memory-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-diagnostic-setting-does-not-exist.json": [
+            {
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-log-alert-not-exist-create-policy-assignment.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-log-alert-not-exist-nsg.json": [
+            {
+                "args": [
+                    "Create/Update Network Security Group",
+                    "5.2.2",
+                    "create_update_NSG_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "Delete Network Security Group",
+                    "5.2.3",
+                    "delete_NSG_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "Create/Update Network Security Group Rule",
+                    "5.2.4",
+                    "create_update_NSG_rule_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "Delete Network Security Group Rule",
+                    "5.2.5",
+                    "delete_NSG_rule_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "Create/Update/Delete SQL Server Firewall Rule",
+                    "5.2.8",
+                    "create_delete_firewall_rule_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-log-alert-not-exist-security-solution.json": [
+            {
+                "args": [
+                    "Create/Update Security Solution",
+                    "5.2.6",
+                    "create_update_security_solution_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "Delete Security Solution",
+                    "5.2.7",
+                    "delete_security_solution_exist"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-logging-key-vault-disabled.json": [
+            {
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
+        "logging-monitoring-profile-does-not-capture-all-activities.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "networkpolicy-unrestricted-cluster-network-access.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "networkpolicy-unrestricted-cluster-network-egress.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "networkpolicy-unrestricted-cluster-network-ingress.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "pod-apparmor-annotation-missing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "pod-automounted-service-account-token.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "pod-container-ability-to-modify-root-filesystem.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "pod-container-allowing-privilege-escalation.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "pod-container-running-as-root-group.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "pod-container-running-as-root-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "pod-container-with-overly-permissive-capabilities.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "pod-container-with-possible-root-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "pod-helm-tiller-in-use.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "pod-host-ipc-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "pod-host-network-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "pod-host-pid-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "pod-privileged-container-running.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "pod-resources-without-defined-cpu-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "pod-resources-without-defined-limits.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "pod-resources-without-defined-memory-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "podtemplate-automounted-service-account-token.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "podtemplate-container-ability-to-modify-root-filesystem.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "podtemplate-container-allowing-privilege-escalation.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "podtemplate-container-running-as-root-group.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "podtemplate-container-running-as-root-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "podtemplate-container-with-overly-permissive-capabilities.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "podtemplate-container-with-possible-root-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "podtemplate-host-ipc-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "podtemplate-host-network-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "podtemplate-host-pid-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "podtemplate-privileged-container-running.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "podtemplate-resources-without-defined-cpu-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "podtemplate-resources-without-defined-limits.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "podtemplate-resources-without-defined-memory-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "rbac-dangerous-grants.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "rbac-dodgy-subjects.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "rbac-permissive-bindings.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "replicaset-apparmor-annotation-missing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "replicaset-automounted-service-account-token.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "replicaset-container-ability-to-modify-root-filesystem.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "replicaset-container-allowing-privilege-escalation.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "replicaset-container-running-as-root-group.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "replicaset-container-running-as-root-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "replicaset-container-with-overly-permissive-capabilities.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "replicaset-container-with-possible-root-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "replicaset-host-ipc-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "replicaset-host-network-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "replicaset-host-pid-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "replicaset-privileged-container-running.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "replicaset-resources-without-defined-cpu-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "replicaset-resources-without-defined-limits.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "replicaset-resources-without-defined-memory-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "service-helm-tiller-in-use.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "serviceaccount-automounted-service-account-token.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "statefulset-apparmor-annotation-missing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "statefulset-automounted-service-account-token.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "statefulset-container-ability-to-modify-root-filesystem.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "statefulset-container-allowing-privilege-escalation.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "statefulset-container-running-as-root-group.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "statefulset-container-running-as-root-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "statefulset-container-with-overly-permissive-capabilities.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "statefulset-container-with-possible-root-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "statefulset-host-ipc-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "statefulset-host-network-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "statefulset-host-pid-true.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "statefulset-privileged-container-running.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "statefulset-resources-without-defined-cpu-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "statefulset-resources-without-defined-limits.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "statefulset-resources-without-defined-memory-limit.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ]
+    }
+}

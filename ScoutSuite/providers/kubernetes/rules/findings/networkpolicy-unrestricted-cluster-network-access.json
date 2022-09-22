@@ -1,0 +1,19 @@
+{
+    "description": "Unrestricted Cluster Network Access",
+    "rationale": "Unrestricted cluster networks allow any compromised pod to interact with any other pods.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/cluster-administration/networking/",
+        "https://kubernetes.io/docs/concepts/services-networking/network-policies/"
+    ],
+    "dashboard_name": "Network Policies",
+    "path": "network_policy",
+    "display_path": "network_policy.v1.id",
+    "conditions": [
+        "or",
+        [
+            "network_policy.v1_count",
+            "equal",
+            "0"
+        ]
+    ]
+}

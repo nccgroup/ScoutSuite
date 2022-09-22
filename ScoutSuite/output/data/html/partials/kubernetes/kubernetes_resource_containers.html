@@ -1,0 +1,26 @@
+<script id="kubernetes_resource_containers_partial" type="text/x-handlebars-template">
+    <div class="list-group-item">
+        <h5><b>Containers</b></h5>
+
+        {{#each spec.containers}}
+        <div class="list-group-item-text">
+            <h6><b><u>{{ name }}</u></b></h6>
+        </div>
+
+        <ul class="list-group-item-text">
+            <li>
+                Security Context
+                {{> kubernetes_container_security_context sc=securityContext id_prefix=(concat ../id_prefix @../key 'spec.containers' @key) }}
+            </li>
+            <li>
+                Resource Limits
+                {{> kubernetes_resource_limits limits=resources.limits id_prefix=(concat ../id_prefix @../key 'spec.containers' @key) }}
+            </li>
+        </ul>
+        {{/each}}
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial('kubernetes_resource_containers', $('#kubernetes_resource_containers_partial').html())
+</script>

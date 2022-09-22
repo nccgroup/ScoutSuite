@@ -64,3 +64,5 @@ oss2>=2.8.0
 # Oracle Cloud Infrastructure Provider
 oci>=2.2.4
 
+# Kubernetes SDK
+kubernetes

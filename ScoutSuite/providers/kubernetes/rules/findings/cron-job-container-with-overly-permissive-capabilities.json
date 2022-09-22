@@ -1,0 +1,40 @@
+{
+    "description": "Container/InitContainer/EphemeralContainer With Permissive Capabilities",
+    "rationale": "A container should drop all and add the necessary capabilities by default.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "CronJobs",
+    "path": "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id",
+    "display_path": "cron_job.v1-batch.id",
+    "id_suffix": "capabilities.drop",
+    "conditions": [
+        "or",
+        [
+            "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id",
+            "withoutKey",
+            "securityContext"
+        ],
+        [
+            "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id.securityContext",
+            "null",
+            ""
+        ],
+        [
+            "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "capabilities"
+        ],
+        [
+            "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id.securityContext.capabilities",
+            "null",
+            ""
+        ],
+        [
+            "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id.securityContext.capabilities.drop",
+            "null",
+            ""
+        ]
+    ]
+}

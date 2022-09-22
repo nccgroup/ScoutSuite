@@ -1,0 +1,62 @@
+<!-- services.cluster_role_binding.v1-rbac-authorization-k8s-io -->
+<script id="details_for_kubernetes_resource.partial" type="text/x-handlebars-template">
+    <div id="services.{{ service_name }}.{{ resource_type }}.details">
+        {{#each items.resources}}
+        <div class="list-group" id="services.{{ ../service_name }}.{{ ../resource_type }}.{{ @key }}.view">
+            <div class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    {{#if metadata.namespace}}[{{ metadata.namespace }}]{{/if}}
+                    {{ metadata.name }}
+                </h4>
+            </div>
+
+            {{#if roleRef}}
+                <div class="list-group-item">
+                    <b>Role Reference:</b>
+                    <a href="{{ roleRef.href }}">
+                        {{ roleRef.text }}
+                    </a>
+                </div>
+            {{/if}}
+
+            {{#if ownerReferences}}
+                <div class="list-group-item">
+                    <b>Owner References</b>
+                    <ul style="list-style: none">
+                        {{#each ownerReferences}}
+                            <li class="list-group-item-text no-margin">
+                                <a href="{{ href }}">
+                                    {{ text }}
+                                </a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            {{/if}}
+
+            {{#if data.spec.template.spec}}
+                {{> kubernetes_pod_security_context id_prefix=(concat ../../service_name ../../resource_type) sc=data.spec.template.spec.securityContext }}
+                {{> kubernetes_resource_containers id_prefix=(concat ../../service_name ../../resource_type) spec=data.spec.template.spec }}
+                {{> kubernetes_resource_host id_prefix=(concat ../../service_name ../../resource_type) spec=data.spec.template.spec }}
+            {{else if data.spec}}
+                {{> kubernetes_pod_security_context id_prefix=(concat ../../../service_name ../../../resource_type) sc=data.spec.securityContext }}
+                {{> kubernetes_resource_containers id_prefix=(concat ../../../service_name ../../../resource_type) spec=data.spec }}
+                {{> kubernetes_resource_host id_prefix=(concat ../../../service_name ../../../resource_type) spec=data.spec }}
+            {{/if}}
+
+            {{#each stringified_data}}
+            {{> kubernetes_code title=@key code=this id_prefix=(concat 'services' ../../service_name ../../resource_type ../id 'section' @key) }}
+            {{/each}}
+
+            {{> kubernetes_code title='metadata' code=stringified_metadata id_prefix=(concat 'services' ../service_name ../resource_type @key 'metadata') hide=1 }}
+
+            {{> kubernetes_code title='JSON' code=json id_prefix=(concat 'services' ../service_name ../resource_type @key 'json') hide=1 }}
+            {{> kubernetes_code title='YAML' code=yaml id_prefix=(concat 'services' ../service_name ../resource_type @key 'yaml') hide=1 }}
+        </div>
+        {{/each}}
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("details_for_kubernetes_resource", $("#details_for_kubernetes_resource\\.partial").html())
+</script>

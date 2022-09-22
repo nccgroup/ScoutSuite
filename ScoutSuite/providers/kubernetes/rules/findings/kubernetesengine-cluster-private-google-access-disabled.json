@@ -1,0 +1,25 @@
+{
+    "description": "Private Google Access Disabled",
+    "rationale": "Enabling Private Google Access allows hosts on a subnetwork to use a private IP address to reach Google APIs rather than an external IP address.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.16"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#restrict_network_access_to_the_control_plane_and_nodes"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.private_ip_google_access_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "private_ip_google_access_disabled"
+}
