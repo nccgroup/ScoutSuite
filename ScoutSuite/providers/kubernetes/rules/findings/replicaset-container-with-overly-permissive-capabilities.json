@@ -1,0 +1,40 @@
+{
+    "description": "Container/InitContainer/EphemeralContainer With Permissive Capabilities",
+    "rationale": "A container should drop all and add the necessary capabilities by default.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "ReplicaSets",
+    "path": "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+    "display_path": "replica_set.v1-apps.id",
+    "id_suffix": "capabilities.drop",
+    "conditions": [
+        "or",
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+            "withoutKey",
+            "securityContext"
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "null",
+            ""
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "capabilities"
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities",
+            "null",
+            ""
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities.drop",
+            "null",
+            ""
+        ]
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "description": "Cluster Monitoring Disabled",
+    "rationale": "You should enable cluster monitoring and use a monitoring service so your cluster can export metrics about its activities.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.2"
+        },
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.7.1"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#stackdriver_logging",
+        "https://cloud.google.com/monitoring/kubernetes-engine#about-skm",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.monitoring_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "monitoring_disabled"
+}

@@ -1,0 +1,29 @@
+{
+    "description": "Resources Without Defined Memory Limit",
+    "rationale": "Unset resource limits could result in service denial through resource exhaustion.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+    ],
+    "dashboard_name": "ReplicaSets",
+    "path": "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+    "display_path": "replica_set.v1-apps.id",
+    "id_suffix": "memory",
+    "conditions": [
+        "or",
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources.limits",
+            "null",
+            ""
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources.limits",
+            "withoutKey",
+            "memory"
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources.limits.memory",
+            "null",
+            ""
+        ]
+    ]
+}

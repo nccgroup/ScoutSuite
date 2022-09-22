@@ -1,0 +1,29 @@
+{
+    "description": "Resources Without Defined Memory Limit",
+    "rationale": "Unset resource limits could result in service denial through resource exhaustion.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+    ],
+    "dashboard_name": "Jobs",
+    "path": "job.v1-batch.resources.id.data.spec.template.spec.containers.id",
+    "display_path": "job.v1-batch.id",
+    "id_suffix": "memory",
+    "conditions": [
+        "or",
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.resources.limits",
+            "null",
+            ""
+        ],
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.resources.limits",
+            "withoutKey",
+            "memory"
+        ],
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.resources.limits.memory",
+            "null",
+            ""
+        ]
+    ]
+}

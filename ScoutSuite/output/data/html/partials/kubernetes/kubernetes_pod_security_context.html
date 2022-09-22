@@ -1,0 +1,62 @@
+<script id="kubernetes_pod_security_context_partial" type="text/x-handlebars-template">
+    <div class="list-group-item">
+        <h5><b>Security Context</b></h5>
+        <ul>
+            <samp>
+                <li class="list-group-item-text">
+                    capabilities:
+                    {{#if sc.capabilities}}
+                    <ul>
+                        {{#each sc.capabilities}}
+                        <li class="list-group-item-text">
+                            {{ @key }}:
+                            <ul>
+                            {{#each this}}
+                                <li class="list-group-item-text">{{ this }}</li>
+                            {{/each}}
+                            </ul>
+                        </li>
+                        {{/each}}
+                    </ul>
+                    {{else}}
+                        {{sc.capabilities}}
+                    {{/if}}
+                </li>
+                <li class="list-group-item-text">
+                    runAsGroup:
+                    <span id="{{id_prefix}}.securityContext.runAsGroup">
+                        {{sc.runAsGroup}}
+                    </span>
+                </li>
+                <li class="list-group-item-text">
+                    runAsNonRoot:
+                    <span id="{{id_prefix}}.securityContext.runAsNonRoot">
+                        {{sc.runAsNonRoot}}
+                    </span>
+                </li>
+                <li class="list-group-item-text">
+                    runAsUser:
+                    <span id="{{id_prefix}}.securityContext.runAsUser">
+                        {{sc.runAsUser}}
+                    </span>
+                </li>
+                <li class="list-group-item-text">
+                    seLinuxOptions:
+                    <span id="{{id_prefix}}.securityContext.seLinuxOptions">
+                        {{sc.seLinuxOptions}}
+                    </span>
+                </li>
+                <li class="list-group-item-text">
+                    seccompProfile:
+                    <span id="{{id_prefix}}.securityContext.seccompProfile">
+                        {{sc.seccompProfile}}
+                    </span>
+                </li>
+            </samp>
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial('kubernetes_pod_security_context', $('#kubernetes_pod_security_context_partial').html())
+</script>
