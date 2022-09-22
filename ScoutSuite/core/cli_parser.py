@@ -29,6 +29,7 @@ class ScoutSuiteArgumentParser:
         self._init_azure_parser()
         self._init_aliyun_parser()
         self._init_oci_parser()
+        self._init_salesforce_parser()
 
     def _init_aws_parser(self):
         parser = self.subparsers.add_parser("aws",
@@ -253,6 +254,30 @@ class ScoutSuiteArgumentParser:
                             dest='profile',
                             default=None,
                             help='Name of the profile')
+
+
+    def _init_salesforce_parser(self):
+        salesforce_parser = self.subparsers.add_parser("salesforce",
+                                                parents=[self.common_providers_args_parser],
+                                                help="Run Scout against a Salesforce instance")
+
+        parser = salesforce_parser.add_argument_group('Authentication parameters')
+
+        parser.add_argument('-u',
+                            '--username',
+                            dest='salesforce_username',
+                            default=None,
+                            help='Username')
+        parser.add_argument('-p',
+                            '--password',
+                            dest='salesforce_password',
+                            default=None,
+                            help='Password')
+        parser.add_argument('-e',
+                            '--endpoint',
+                            dest='salesforce_endpoint',
+                            default=None,
+                            help='Connection endpoint')
 
 
     def _init_common_args_parser(self):

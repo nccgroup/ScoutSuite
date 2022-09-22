@@ -20,7 +20,7 @@ class OracleCredentials:
 
 class OracleAuthenticationStrategy(AuthenticationStrategy):
     """
-    Implements authentication for the AWS provider
+    Implements authentication for the OCI provider
     """
 
     def authenticate(self, profile=None, **kwargs):

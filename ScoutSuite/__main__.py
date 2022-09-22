@@ -52,6 +52,10 @@ def run_from_cli():
                    organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
                    # Aliyun
                    access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
+                   # Salesforce
+                   sf_username=args.get('salesforce_username'),
+                   sf_password=args.get('salesforce_password'),
+                   sf_endpoint=args.get('salesforce_endpoint'),
                    # General
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
                    timestamp=args.get('timestamp'),
@@ -98,6 +102,10 @@ def run(provider,
         project_id=None, folder_id=None, organization_id=None, all_projects=False,
         # Aliyun
         access_key_id=None, access_key_secret=None,
+        # Salesforce
+        sf_username=None,
+        sf_password=None,
+        sf_endpoint=None,
         # General
         report_name=None, report_dir=None,
         timestamp=False,
@@ -150,6 +158,10 @@ async def _run(provider,
                project_id, folder_id, organization_id, all_projects,
                # Aliyun
                access_key_id, access_key_secret,
+               # Salesforce
+               sf_username,
+               sf_password,
+               sf_endpoint,
                # General
                report_name, report_dir,
                timestamp,
@@ -181,24 +193,29 @@ async def _run(provider,
     auth_strategy = get_authentication_strategy(provider)
 
     try:
-        credentials = auth_strategy.authenticate(profile=profile,
-                                                 aws_access_key_id=aws_access_key_id,
-                                                 aws_secret_access_key=aws_secret_access_key,
-                                                 aws_session_token=aws_session_token,
-                                                 user_account=user_account,
-                                                 user_account_browser=user_account_browser,
-                                                 service_account=service_account,
-                                                 cli=cli,
-                                                 msi=msi,
-                                                 service_principal=service_principal,
-                                                 file_auth=file_auth,
-                                                 tenant_id=tenant_id,
-                                                 client_id=client_id,
-                                                 client_secret=client_secret,
-                                                 username=username,
-                                                 password=password,
-                                                 access_key_id=access_key_id,
-                                                 access_key_secret=access_key_secret)
+        credentials = auth_strategy.authenticate(
+            profile=profile,  # AWS
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            aws_session_token=aws_session_token,
+            user_account=user_account,  # Azure
+            user_account_browser=user_account_browser,
+            cli=cli,
+            msi=msi,
+            service_principal=service_principal,
+            file_auth=file_auth,
+            tenant_id=tenant_id,
+            client_id=client_id,
+            client_secret=client_secret,
+            username=username,
+            password=password,
+            service_account=service_account,  # GCP
+            access_key_id=access_key_id,  # Aliyun
+            access_key_secret=access_key_secret,
+            sf_username=sf_username,  # Salesforce
+            sf_password=sf_password,
+            sf_endpoint=sf_endpoint,
+        )
 
         if not credentials:
             return 101

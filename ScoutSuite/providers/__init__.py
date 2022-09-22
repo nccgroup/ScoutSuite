@@ -1,8 +1,11 @@
-providers_dict = {'aws': 'AWSProvider',
-                  'gcp': 'GCPProvider',
-                  'azure': 'AzureProvider',
-                  'aliyun': 'AliyunProvider',
-                  'oci': 'OracleProvider'}
+providers_dict = {
+    'aws': 'AWSProvider',
+    'gcp': 'GCPProvider',
+    'azure': 'AzureProvider',
+    'aliyun': 'AliyunProvider',
+    'oci': 'OracleProvider',
+    'salesforce': 'SalesforceProvider'
+}
 
 
 def get_provider_object(provider):
