@@ -32,8 +32,9 @@ class CoreFacade(KubernetesBaseFacade):
                 # Redact sensitive resources
                 if kind in ['Secret']:
                     for i in range(len(resources)):
-                        for key in resources[i]['data']:
-                            resources[i]['data'][key] = 'REDACTED'
+                        if 'data' in resources[i]:
+                            for key in resources[i]['data']:
+                                resources[i]['data'][key] = 'REDACTED'
 
                 data[kind] = data.get(kind, {})
                 data[kind][version] = resources
