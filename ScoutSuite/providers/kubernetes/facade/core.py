@@ -42,6 +42,9 @@ class CoreFacade(KubernetesBaseFacade):
                                 resources[i]['data'][key] = 'REDACTED'
                         elif type(secret_data) == str:
                             resources[i]['data'] = 'REDACTED'
+                        elif type(secret_data) == list:
+                            for j in range(len(secret_data)):
+                                resources[i]['data'][j] = 'REDACTED'
 
                 data[kind] = data.get(kind, {})
                 data[kind][version] = resources
