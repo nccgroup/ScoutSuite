@@ -1,5 +1,4 @@
 from json import dumps, loads
-from typing import Callable
 from yaml import safe_dump
 
 from google.auth.credentials import Credentials as GCPCredentials
@@ -16,7 +15,7 @@ from ScoutSuite import __version__
 
 
 class KubernetesBaseFacade:
-    def continue_upon_exception(function: Callable):
+    def continue_upon_exception(function):
         def continue_upon_exception_callback(self, **kwargs):
             try:
                 return function(self, **kwargs)
