@@ -128,3 +128,23 @@ class GCEFacade(GCPBaseFacade):
         except Exception as e:
             print_exception(f'Failed to retrieve zones: {e}')
             return []
+
+    async def get_forwarding_rules(self, project_id, region):
+        try:
+            gce_client = self._get_client()
+            request = gce_client.forwardingRules().list(project=project_id, region=region)
+            forwarding_rules = gce_client.forwardingRules()
+            return await GCPFacadeUtils.get_all('items', request, forwarding_rules)
+        except Exception as e:
+            print_exception(f'Failed to retrieve forwarding_rules: {e}')
+            return []
+
+    async def get_global_forwarding_rules(self, project_id):
+        try:
+            gce_client = self._get_client()
+            request = gce_client.globalForwardingRules().list(project=project_id)
+            forwarding_rules = gce_client.globalForwardingRules()
+            return await GCPFacadeUtils.get_all('items', request, forwarding_rules)
+        except Exception as e:
+            print_exception(f'Failed to retrieve forwarding_rules: {e}')
+            return []
