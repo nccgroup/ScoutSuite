@@ -5,8 +5,8 @@
         "https://kubernetes.io/docs/tutorials/security/apparmor/"
     ],
     "dashboard_name": "ReplicaSets",
-    "path": "replica_set.v1-apps.resources.id",
     "display_path": "replica_set.v1-apps.id",
+    "path": "replica_set.v1-apps.resources.id",
     "conditions": [
         "or",
         [

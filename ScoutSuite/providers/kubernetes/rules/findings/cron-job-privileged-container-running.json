@@ -5,8 +5,8 @@
         "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/"
     ],
     "dashboard_name": "CronJobs",
-    "path": "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id",
     "display_path": "cron_job.v1-batch.id",
+    "path": "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id",
     "conditions": [
         "and",
         [

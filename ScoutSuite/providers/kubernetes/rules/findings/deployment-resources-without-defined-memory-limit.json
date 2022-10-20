@@ -1,13 +1,12 @@
 {
-    "description": "Resources Without Defined Memory Limit",
+    "description": "Resources without Defined Memory Limit",
     "rationale": "Unset resource limits could result in service denial through resource exhaustion.",
     "references": [
         "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
     ],
     "dashboard_name": "Deployments",
-    "path": "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id",
     "display_path": "deployment.v1-apps.id",
-    "id_suffix": "memory",
+    "path": "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id",
     "conditions": [
         "or",
         [
@@ -25,5 +24,6 @@
             "null",
             ""
         ]
-    ]
+    ],
+    "id_suffix": "memory"
 }

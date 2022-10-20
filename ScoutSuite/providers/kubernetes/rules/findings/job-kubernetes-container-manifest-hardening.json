@@ -6,8 +6,8 @@
         "https://www.cisecurity.org/benchmark/docker/"
     ],
     "dashboard_name": "Jobs",
-    "path": "job.v1-batch.resources.id.data.spec.template.spec.containers.id",
     "display_path": "job.v1-batch.id",
+    "path": "job.v1-batch.resources.id.data.spec.template.spec.containers.id",
     "conditions": [
         "or",
         [

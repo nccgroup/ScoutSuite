@@ -1,12 +1,12 @@
 {
-    "description": "Resources Without Defined Limits",
+    "description": "Resources without Defined Limits",
     "rationale": "Unset resource limits could result in service denial through resource exhaustion.",
     "references": [
         "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
     ],
     "dashboard_name": "Jobs",
-    "path": "job.v1-batch.resources.id.data.spec.template.spec.containers.id.resources",
     "display_path": "job.v1-batch.id",
+    "path": "job.v1-batch.resources.id.data.spec.template.spec.containers.id.resources",
     "conditions": [
         "or",
         [

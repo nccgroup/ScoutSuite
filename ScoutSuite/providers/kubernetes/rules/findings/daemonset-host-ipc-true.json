@@ -5,8 +5,8 @@
         "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
     ],
     "dashboard_name": "DaemonSets",
-    "path": "daemon_set.v1-apps.resources.id.data.spec.template.spec",
     "display_path": "daemon_set.v1-apps.id",
+    "path": "daemon_set.v1-apps.resources.id.data.spec.template.spec",
     "conditions": [
         "and",
         [

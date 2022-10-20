@@ -5,8 +5,8 @@
         "https://kubernetes.io/docs/tutorials/security/apparmor/"
     ],
     "dashboard_name": "Deployments",
-    "path": "deployment.v1-apps.resources.id",
     "display_path": "deployment.v1-apps.id",
+    "path": "deployment.v1-apps.resources.id",
     "conditions": [
         "or",
         [

@@ -1,14 +1,13 @@
 {
-    "description": "Container/InitContainer/EphemeralContainer With Permissive Capabilities",
+    "description": "Container/InitContainer/EphemeralContainer with Permissive Capabilities",
     "rationale": "A container should drop all and add the necessary capabilities by default.",
     "references": [
         "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
         "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
     ],
     "dashboard_name": "PodTemplates",
-    "path": "pod_template.v1.resources.id.data.spec.template.spec.containers.id",
     "display_path": "pod_template.v1.id",
-    "id_suffix": "capabilities.drop",
+    "path": "pod_template.v1.resources.id.data.spec.template.spec.containers.id",
     "conditions": [
         "or",
         [
@@ -36,5 +35,6 @@
             "null",
             ""
         ]
-    ]
+    ],
+    "id_suffix": "capabilities.drop"
 }

@@ -6,9 +6,8 @@
         "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
     ],
     "dashboard_name": "PodTemplates",
-    "path": "pod_template.v1.resources.id.data.spec.template.spec.containers.id",
     "display_path": "pod_template.v1.id",
-    "id_suffix": "allowPrivilegeEscalation",
+    "path": "pod_template.v1.resources.id.data.spec.template.spec.containers.id",
     "conditions": [
         "or",
         [
@@ -31,5 +30,6 @@
             "true",
             ""
         ]
-    ]
+    ],
+    "id_suffix": "allowPrivilegeEscalation"
 }

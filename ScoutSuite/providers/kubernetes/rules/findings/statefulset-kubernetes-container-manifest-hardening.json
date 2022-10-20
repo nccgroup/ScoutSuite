@@ -6,8 +6,8 @@
         "https://www.cisecurity.org/benchmark/docker/"
     ],
     "dashboard_name": "StatefulSets",
-    "path": "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
     "display_path": "stateful_set.v1-apps.id",
+    "path": "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
     "conditions": [
         "or",
         [
