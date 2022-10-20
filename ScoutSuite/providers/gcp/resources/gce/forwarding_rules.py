@@ -11,10 +11,7 @@ class ForwardingRules(Resources):
     async def fetch_all(self):
         raw_rules = await self.facade.gce.get_forwarding_rules(self.project_id, self.region)
         for raw_rule in raw_rules:
-            try:
-                rule_id, rule = self._parse_forwarding_rule(raw_rule)
-            except Exception as e:
-                print(e)
+            rule_id, rule = self._parse_forwarding_rule(raw_rule)
             self[rule_id] = rule
 
     def _parse_forwarding_rule(self, raw_forwarding_rule):
@@ -30,4 +27,16 @@ class ForwardingRules(Resources):
         forwarding_rule_dict['target'] = raw_forwarding_rule.get("target")
         forwarding_rule_dict['load_balancing_scheme'] = raw_forwarding_rule.get("loadBalancingScheme")
         forwarding_rule_dict['network_tier'] = raw_forwarding_rule.get("networkTier")
+
+        forwarding_rule_dict['ports'] = raw_forwarding_rule.get("ports")
+        forwarding_rule_dict['subnetwork'] = raw_forwarding_rule.get("subnetwork")
+        forwarding_rule_dict['network'] = raw_forwarding_rule.get("network")
+        forwarding_rule_dict['backend_service'] = raw_forwarding_rule.get("backendService")
+        forwarding_rule_dict['service_label'] = raw_forwarding_rule.get("serviceLabel")
+        forwarding_rule_dict['service_name'] = raw_forwarding_rule.get("serviceName")
+        forwarding_rule_dict['labels'] = raw_forwarding_rule.get("labels")
+        forwarding_rule_dict['ip_version'] = raw_forwarding_rule.get("ipVersion")
+        forwarding_rule_dict['all_ports'] = raw_forwarding_rule.get("allPorts")
+        forwarding_rule_dict['allow_global_access'] = raw_forwarding_rule.get("allowGlobalAccess")
+
         return forwarding_rule_dict['id'], forwarding_rule_dict
