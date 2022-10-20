@@ -48,11 +48,11 @@
         [
             "iam.credential_reports.id.partition",
             "notEqual",
-            "aws-us-gov" 
+            "aws-us-gov"
         ]
     ],
     "keys": [
         "this"
     ],
     "id_suffix": "mfa_active_hardware"
-}
+}}
