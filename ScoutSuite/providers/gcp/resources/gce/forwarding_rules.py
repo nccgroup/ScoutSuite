@@ -23,12 +23,13 @@ class ForwardingRules(Resources):
         forwarding_rule_dict['region'] = raw_forwarding_rule.get("region")
         forwarding_rule_dict['ip_address'] = raw_forwarding_rule.get("IPAddress")
         forwarding_rule_dict['ip_protocol'] = raw_forwarding_rule.get("IPProtocol")
-        forwarding_rule_dict['port_range'] = raw_forwarding_rule.get("portRange")
+        forwarding_rule_dict['all_ports'] = raw_forwarding_rule.get("allPorts", False)
+        forwarding_rule_dict['port_range'] = raw_forwarding_rule.get("portRange", "")
+        forwarding_rule_dict['ports'] = raw_forwarding_rule.get("ports", [])
         forwarding_rule_dict['target'] = raw_forwarding_rule.get("target")
         forwarding_rule_dict['load_balancing_scheme'] = raw_forwarding_rule.get("loadBalancingScheme")
         forwarding_rule_dict['network_tier'] = raw_forwarding_rule.get("networkTier")
 
-        forwarding_rule_dict['ports'] = raw_forwarding_rule.get("ports")
         forwarding_rule_dict['subnetwork'] = raw_forwarding_rule.get("subnetwork")
         forwarding_rule_dict['network'] = raw_forwarding_rule.get("network")
         forwarding_rule_dict['backend_service'] = raw_forwarding_rule.get("backendService")
@@ -36,7 +37,6 @@ class ForwardingRules(Resources):
         forwarding_rule_dict['service_name'] = raw_forwarding_rule.get("serviceName")
         forwarding_rule_dict['labels'] = raw_forwarding_rule.get("labels")
         forwarding_rule_dict['ip_version'] = raw_forwarding_rule.get("ipVersion")
-        forwarding_rule_dict['all_ports'] = raw_forwarding_rule.get("allPorts")
         forwarding_rule_dict['allow_global_access'] = raw_forwarding_rule.get("allowGlobalAccess")
 
         return forwarding_rule_dict['id'], forwarding_rule_dict

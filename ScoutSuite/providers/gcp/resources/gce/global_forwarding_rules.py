@@ -21,12 +21,13 @@ class GlobalForwardingRules(Resources):
         global_forwarding_rule_dict['description'] = raw_global_forwarding_rule.get("description")
         global_forwarding_rule_dict['ip_address'] = raw_global_forwarding_rule.get("IPAddress")
         global_forwarding_rule_dict['ip_protocol'] = raw_global_forwarding_rule.get("IPProtocol")
-        global_forwarding_rule_dict['port_range'] = raw_global_forwarding_rule.get("portRange")
+        global_forwarding_rule_dict['all_ports'] = raw_global_forwarding_rule.get("allPorts", False)
+        global_forwarding_rule_dict['port_range'] = raw_global_forwarding_rule.get("portRange", "")
+        global_forwarding_rule_dict['ports'] = raw_global_forwarding_rule.get("ports", [])
         global_forwarding_rule_dict['target'] = raw_global_forwarding_rule.get("target")
         global_forwarding_rule_dict['load_balancing_scheme'] = raw_global_forwarding_rule.get("loadBalancingScheme")
         global_forwarding_rule_dict['network_tier'] = raw_global_forwarding_rule.get("networkTie")
 
-        global_forwarding_rule_dict['ports'] = raw_global_forwarding_rule.get("ports")
         global_forwarding_rule_dict['subnetwork'] = raw_global_forwarding_rule.get("subnetwork")
         global_forwarding_rule_dict['network'] = raw_global_forwarding_rule.get("network")
         global_forwarding_rule_dict['backend_service'] = raw_global_forwarding_rule.get("backendService")
@@ -34,7 +35,6 @@ class GlobalForwardingRules(Resources):
         global_forwarding_rule_dict['service_name'] = raw_global_forwarding_rule.get("serviceName")
         global_forwarding_rule_dict['labels'] = raw_global_forwarding_rule.get("labels")
         global_forwarding_rule_dict['ip_version'] = raw_global_forwarding_rule.get("ipVersion")
-        global_forwarding_rule_dict['all_ports'] = raw_global_forwarding_rule.get("allPorts")
         global_forwarding_rule_dict['allow_global_access'] = raw_global_forwarding_rule.get("allowGlobalAccess")
 
         return global_forwarding_rule_dict['id'], global_forwarding_rule_dict
