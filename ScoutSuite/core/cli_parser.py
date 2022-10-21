@@ -29,6 +29,7 @@ class ScoutSuiteArgumentParser:
         self._init_azure_parser()
         self._init_aliyun_parser()
         self._init_oci_parser()
+        self._init_kubernetes_parser()
 
     def _init_aws_parser(self):
         parser = self.subparsers.add_parser("aws",
@@ -254,6 +255,37 @@ class ScoutSuiteArgumentParser:
                             default=None,
                             help='Name of the profile')
 
+    def _init_kubernetes_parser(self):
+        kubernetes_parser = self.subparsers.add_parser("kubernetes",
+                                                       parents=[self.common_providers_args_parser],
+                                                       help="Run Scout against a Kubernetes cluster")
+
+        kubernetes_scope = kubernetes_parser.add_argument_group('Additional arguments')
+
+        kubernetes_scope.add_argument('-c',
+                                      '--cluster-provider',
+                                      dest='kubernetes_cluster_provider',
+                                      default=None,
+                                      choices=['aks', 'eks', 'gke'],
+                                      help='Cluster contexts to scan. If no cloud provider is specified, ScoutSuite will use the default Kubernetes configuration.')
+        kubernetes_scope.add_argument('--config-file',
+                                      dest='kubernetes_config_file',
+                                      default=None,
+                                      help='Name of the kube-config file. By default, it will use Kubernetes\' default directory.')
+        kubernetes_scope.add_argument('--context',
+                                      dest='kubernetes_context',
+                                      default=None,
+                                      help='Cluster context to scan. By default, current_context from config file will be used.')
+        kubernetes_scope.add_argument('--do-not-persist-config',
+                                      dest='kubernetes_persist_config',
+                                      action='store_false',
+                                      default=True,
+                                      help='If specified, config file will NOT be updated when changed (e.g GCP token refresh).')
+        kubernetes_scope.add_argument('--subscription-id',
+                                      dest='kubernetes_azure_subscription_id',
+                                      action='store',
+                                      default=None,
+                                      help='If unspecified, the default subscription will be used.')
 
     def _init_common_args_parser(self):
         parser = self.common_providers_args_parser.add_argument_group('Scout Arguments')
@@ -403,5 +435,16 @@ class ScoutSuiteArgumentParser:
                 self.parser.error('You must provide --tenant when using --user-account authentication')
             if v.get('subscription_ids') and v.get('all_subscriptions'):
                 self.parser.error('--subscription-ids and --all-subscriptions are mutually exclusive options')
+
+        # Kubernetes
+        elif v.get('provider') == 'kubernetes':
+            cluster_provider = v.get('kubernetes_cluster_provider')
+            # change ruleset based on cluster provider
+            if cluster_provider:
+                args.ruleset = f'{cluster_provider}.json'
+
+            # only use subscription_id if kubernetes_cluster_provider is 'aks'
+            if cluster_provider != 'aks' and v.get('kubernetes_azure_subscription_id'):
+                self.parser.error('--subscription-id is only used when analyzing AKS clusters')
 
         return args

@@ -2,7 +2,8 @@ providers_dict = {'aws': 'AWSProvider',
                   'gcp': 'GCPProvider',
                   'azure': 'AzureProvider',
                   'aliyun': 'AliyunProvider',
-                  'oci': 'OracleProvider'}
+                  'oci': 'OracleProvider',
+                  'kubernetes': 'KubernetesProvider'}
 
 
 def get_provider_object(provider):

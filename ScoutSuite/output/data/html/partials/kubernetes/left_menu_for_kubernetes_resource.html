@@ -1,0 +1,52 @@
+<!-- Generic left-menu link partial for kubernetes_resource-then-resource -->
+<script id="left_menu_for_kubernetes_resource.partial" type="text/x-handlebars-template">
+    <div id="services.{{service_name}}.{{resource_type}}.list">
+        <div class="list-group">
+            <div class="list-group-item">
+                <a href="javascript:updateHash(`services.{{ service_name }}.{{ resource_type }}`)">
+                    Show all
+                    <span style="font-size:small" class="float-right">
+                        ({{ getValueAt 'metadata' service_group service_name 'resources' resource_type 'count' }})
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        {{#if items.namespaced}}
+
+            {{#each items.namespaces}}
+                <div class="list-group" id="services.{{ ../service_name }}.{{ ../resource_type }}.--{{ @key }}--.list">
+                    <div class="list-group-item active">
+                        <a href="javascript:showNamespacedResources(`services.{{ ../service_name }}.{{ ../resource_type }}`, `{{ @key }}`)">{{ this }}</a>
+                        <span class="float-right">
+                            <a href="javascript:hideList(`services.{{ ../service_name }}.{{ ../resource_type }}.--{{ @key }}--.list`)">
+                                <i class="fa fa-times-circle"></i>
+                            </a>
+                        </span>
+                    </div>
+                    {{#each ../items.resources}}
+                        {{#if (resource_is_in_namespace @key @../key) }}
+                            <div class="list-group-item" id="services.{{ ../../../service_name }}.{{ ../../../resource_type }}.{{ @key }}.link">
+                                <a href="#services.{{ ../../../service_name }}.{{ ../../../resource_type }}.{{ @key }}.view">{{ metadata.name }}</a>
+                            </div>
+                        {{/if}}
+                    {{/each}}
+                </div>
+            {{/each}}
+
+        {{else}}
+
+            {{#each items.resources}}
+                <div class="list-group-item" id="services.{{ ../service_name }}.{{ ../resource_type }}.{{ @key }}.link">
+                    <a href="#services.{{ ../service_name }}.{{ ../resource_type }}.{{ @key }}.view">{{ metadata.name }}</a>
+                </div>
+            {{/each}}
+
+        {{/if}}
+
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("left_menu_for_kubernetes_resource", $("#left_menu_for_kubernetes_resource\\.partial").html())
+</script>

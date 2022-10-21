@@ -10,8 +10,8 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/role-based-access-control/custom-roles",
-        "https://docs.microsoft.com/en-us/azure/role-based-access-control/check-access"
+        "https://learn.microsoft.com/en-us/azure/role-based-access-control/custom-roles",
+        "https://learn.microsoft.com/en-us/azure/role-based-access-control/check-access"
     ],
     "dashboard_name": "Roles",
     "path": "rbac.subscriptions.id.custom_roles_report.id",

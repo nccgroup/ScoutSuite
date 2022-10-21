@@ -2,7 +2,7 @@
     "description": "Send Advanced Threat Protection Alerts Disabled for SQL Servers",
     "rationale": "Providing the email address and enable Administrator and subscription owner to receive alerts ensures that any detection of anomalous activities is reported as soon as possible, making it more likely to mitigate any potential risk sooner.",
     "compliance": [
-       {
+        {
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.2.0",
             "reference": "4.2.3"
@@ -23,9 +23,9 @@
             "reference": "4.1.5"
         }
     ],
-    "references":[
-        "https://docs.microsoft.com/en-us/azure/sql-database/sql-advanced-threat-protection",
-        "https://docs.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql"
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/sql-database/sql-advanced-threat-protection",
+        "https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql"
     ],
     "dashboard_name": "SQL Servers",
     "display_path": "sqldatabase.subscriptions.id.servers.id",

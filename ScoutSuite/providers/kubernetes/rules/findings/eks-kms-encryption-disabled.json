@@ -1,0 +1,22 @@
+{
+    "description": "KMS Encryption Disabled",
+    "rationale": "Without KMS encryption, it may be easier to obtain Kubernetes cluster secrets unauthorized.",
+    "references": [
+        "https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html",
+        "https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/",
+        "https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html",
+        "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html",
+        "https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html"
+    ],
+    "dashboard_name": "Configurations",
+    "display_path": "eks.encryption.id",
+    "path": "eks",
+    "conditions": [
+        "or",
+        [
+            "eks.encryption_count",
+            "equal",
+            "0"
+        ]
+    ]
+}

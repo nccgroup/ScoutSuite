@@ -1,7 +1,7 @@
 {
     "description": "Short Auditing Retention Period for SQL Databases",
     "rationale": "Auditing retention period should be greater than _ARG_0_ days. Audit Logs can be used to check for anomalies and give insight into suspected breaches or misuse of information and access.",
-    "remediation":"From Azure Console:\n<ol>\n    <li>Go to <samp>SQL servers</samp></li>\n    <li>For each server instance</li>\n    <li>Click on <samp>Auditing</samp></li>\n    <li>Select <samp>Storage Details</samp> </li>\n    <li>Ensure <samp>Retention (days) </samp>setting <samp>greater than 90 days</samp></li>\n</ol>",
+    "remediation": "From Azure Console:\n<ol>\n    <li>Go to <samp>SQL servers</samp></li>\n    <li>For each server instance</li>\n    <li>Click on <samp>Auditing</samp></li>\n    <li>Select <samp>Storage Details</samp> </li>\n    <li>Ensure <samp>Retention (days) </samp>setting <samp>greater than 90 days</samp></li>\n</ol>",
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
@@ -15,10 +15,10 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing",
-        "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverauditing?view=azurermps-5.2.0",
-        "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserverauditing?view=azurermps-5.2.0",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-6-configure-log-storage-retention"
+        "https://learn.microsoft.com/en-us/azure/sql-database/sql-database-auditing",
+        "https://learn.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverauditing?view=azurermps-5.2.0",
+        "https://learn.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserverauditing?view=azurermps-5.2.0",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-6-configure-log-storage-retention"
     ],
     "dashboard_name": "SQL Databases",
     "display_path": "sqldatabase.subscriptions.id.servers.id",

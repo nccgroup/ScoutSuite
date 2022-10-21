@@ -276,6 +276,18 @@
                 "level": "warning"
             }
         ],
+        "computeengine-loadbalancer-forwarding-rule-forwards-sensitive-port.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-loadbalancer-global-forwarding-rule-forwards-sensitive-port.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "computeengine-network-default-in-use.json": [
             {
                 "enabled": true,
