@@ -165,18 +165,6 @@
                 "level": "warning"
             }
         ],
-        "computeengine-loadbalancer-forwarding-rule-forwards-sensitive-port.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "computeengine-loadbalancer-global-forwarding-rule-forwards-sensitive-port.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "computeengine-firewall-default-rule-in-use.json": [
             {
                 "enabled": true,
@@ -283,6 +271,18 @@
             }
         ],
         "computeengine-instance-with-deletion-protection-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-loadbalancer-forwarding-rule-forwards-sensitive-port.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-loadbalancer-global-forwarding-rule-forwards-sensitive-port.json": [
             {
                 "enabled": true,
                 "level": "warning"

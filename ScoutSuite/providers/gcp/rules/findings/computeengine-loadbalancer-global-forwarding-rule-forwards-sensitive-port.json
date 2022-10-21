@@ -5,21 +5,20 @@
     "path": "computeengine.projects.id.global_forwarding_rules.id",
     "conditions": [
         "and",
-
         [
             "computeengine.projects.id.global_forwarding_rules.id.load_balancing_scheme",
             "equal",
             "EXTERNAL"
         ],
-
-        [ "or",
-
+        [
+            "or",
             [
                 "computeengine.projects.id.global_forwarding_rules.id.all_ports",
                 "true",
                 ""
             ],
-            [ "and",
+            [
+                "and",
                 [
                     "computeengine.projects.id.global_forwarding_rules.id.port_range",
                     "notEqual",
@@ -46,17 +45,11 @@
                     "computeengine.projects.id.global_forwarding_rules.id.ports",
                     "containNoneOf",
                     [
-                        "80", "443"
+                        "80",
+                        "443"
                     ]
                 ]
             ]
-
-
         ]
-
-
-
-
     ]
-
 }
