@@ -13,6 +13,11 @@
     "conditions": [
         "and",
         [
+            "elbv2.regions.id.vpcs.id.lbs.id.Type",
+            "equal",
+            "application"
+        ],
+        [
             "Key",
             "equal",
             "routing.http.drop_invalid_header_fields.enabled"
