@@ -172,7 +172,7 @@ class GCPFacade(GCPBaseFacade):
                     else:
                         print_warning(f"Could not fetch the state of services for project \"{project_id}\": {e}")
                         self.projects_services_lock = False
-                        return {}
+                        return None
             # locked, wait and retry
             else:
                 if attempt <= 10:  # need to set a limit to ensure we don't hit recursion limits
@@ -186,7 +186,7 @@ class GCPFacade(GCPBaseFacade):
                 else:
                     print_warning(f"Could not fetch the state of services for project \"{project_id}\", "
                                   f"exiting before hitting maximum recursion")
-                    return {}
+                    return None
         else:
             return self.projects_services[project_id]
 
@@ -231,6 +231,9 @@ class GCPFacade(GCPBaseFacade):
 
         try:
             enabled_services = await self.get_enabled_services(project_id)
+            if enabled_services == None:
+                print_warning(f"Could not identify enabled services, including {service}")
+                return True
             for s in enabled_services:
                 if endpoint in s.get('name') and s.get('config').get('name') not in incorrect_endpoints:
                     print_debug(f'{format_service_name(service.lower())} API enabled for '
