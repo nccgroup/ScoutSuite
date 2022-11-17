@@ -100,7 +100,7 @@ class Clusters(Resources):
         return scope_url.split('/')[-1]
 
     def _get_scopes(self, raw_cluster):
-        return [self._parse_scope(scope_url) for scope_url in raw_cluster['nodeConfig'].get('oauthScopes', [])]
+        return [self._parse_scope(scope_url) for scope_url in raw_cluster.get('nodeConfig', {}).get('oauthScopes', [])]
 
     def _has_limited_scopes(self, raw_cluster):
         minimum_scopes = {'devstorage.read_only', 'logging.write', 'monitoring'}

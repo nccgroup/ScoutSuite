@@ -11,7 +11,7 @@ class BuildProjects(AWSResources):
     async def fetch_all(self):
         raw_projects = await self.facade.codebuild.get_projects(self.region)
         for list_raw_project in raw_projects:
-            for raw_project in list_raw_project.get('projects'):
+            for raw_project in list_raw_project.get('projects', []):
                 id, build_project = self._parse_build_projects(raw_project)
                 self[id] = build_project
 

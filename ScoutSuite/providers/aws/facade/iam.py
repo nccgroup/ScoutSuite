@@ -149,20 +149,26 @@ class IAMFacade(AWSBaseFacade):
 
     async def _get_and_set_role_tags(self, role: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)
-        role['tags'] = client.list_role_tags(RoleName=role['RoleName'])
+        try:
+            role['tags'] = client.list_role_tags(RoleName=role['RoleName'])
+        except Exception as e:
+            print_exception(f'Failed to list role tags: {e}')
 
     async def _get_and_set_role_profiles(self, role: {}):
-        profiles = await AWSFacadeUtils.get_all_pages(
-            'iam', None, self.session, 'list_instance_profiles_for_role', 'InstanceProfiles',
-            RoleName=role['RoleName'])
-        role.setdefault('instance_profiles', {})
-        for profile in profiles:
-            profile_id = profile['InstanceProfileId']
-            role['instance_profiles'].setdefault(profile_id, {})
-            role['instance_profiles'][profile_id].setdefault(
-                'arn', profile['Arn'])
-            role['instance_profiles'][profile_id].setdefault(
-                'name', profile['InstanceProfileName'])
+        try:
+            profiles = await AWSFacadeUtils.get_all_pages(
+                'iam', None, self.session, 'list_instance_profiles_for_role', 'InstanceProfiles',
+                RoleName=role['RoleName'])
+            role.setdefault('instance_profiles', {})
+            for profile in profiles:
+                profile_id = profile['InstanceProfileId']
+                role['instance_profiles'].setdefault(profile_id, {})
+                role['instance_profiles'][profile_id].setdefault(
+                    'arn', profile['Arn'])
+                role['instance_profiles'][profile_id].setdefault(
+                    'name', profile['InstanceProfileName'])
+        except Exception as e:
+            print_exception(f'Failed to list instance profiles: {e}')
 
     async def get_password_policy(self):
         client = AWSFacadeUtils.get_client('iam', self.session)
@@ -239,7 +245,7 @@ class IAMFacade(AWSBaseFacade):
                     policy = await task
                     policy_name = policy['PolicyName']
                     policy_id = get_non_provider_id(policy_name)
-                    policy_document = policy['PolicyDocument']
+                    policy_document = policy.get('PolicyDocument')
 
                     resource['inline_policies'][policy_id] = {}
                     resource['inline_policies'][policy_id]['PolicyDocument'] = self._normalize_statements(
