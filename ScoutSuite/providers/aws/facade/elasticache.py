@@ -17,7 +17,7 @@ class ElastiCacheFacade(AWSBaseFacade):
 
     async def get_clusters(self, region, vpc):
         await self.cache_clusters(region)
-        return [cluster for cluster in self.clusters_cache[region] if cluster['VpcId'] == vpc]
+        return [cluster for cluster in self.clusters_cache[region] if cluster.get('VpcId') == vpc]
 
     async def cache_clusters(self, region):
         async with self.regional_clusters_cache_locks.setdefault(region, Lock()):

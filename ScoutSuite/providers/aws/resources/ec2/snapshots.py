@@ -37,4 +37,4 @@ class Snapshots(AWSResources):
 
     @staticmethod
     def _is_public(snapshot):
-        return any([permission.get('Group') == 'all' for permission in snapshot['CreateVolumePermissions']])
+        return any([permission.get('Group') == 'all' for permission in snapshot.get('CreateVolumePermissions')])

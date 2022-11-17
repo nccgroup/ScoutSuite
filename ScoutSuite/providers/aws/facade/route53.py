@@ -18,6 +18,7 @@ class Route53Facade(AWSBaseFacade):
                                                       'list_hosted_zones', 'HostedZones')
         except Exception as e:
             print_exception(f'Failed to get Route53 hosted zones: {e}')
+            return []
 
     async def get_resource_records(self, hosted_zone_id):
         try:
@@ -26,3 +27,4 @@ class Route53Facade(AWSBaseFacade):
                                                       HostedZoneId=hosted_zone_id)
         except Exception as e:
             print_exception(f'Failed to get Route53 resource records: {e}')
+            return []

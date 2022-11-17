@@ -386,9 +386,9 @@ class AWSProvider(BaseProvider):
             allowed_buckets.append(bucket_name)
         if policy_type == 'InlinePolicies':
             policy = iam_info[iam_entity.title(
-            )][allowed_iam_entity]['Policies'][policy_name]['PolicyDocument']
+            )][allowed_iam_entity]['Policies'][policy_name].get('PolicyDocument')
         elif policy_type == 'ManagedPolicies':
-            policy = iam_info['ManagedPolicies'][policy_name]['PolicyDocument']
+            policy = iam_info['ManagedPolicies'][policy_name].get('PolicyDocument')
         else:
             print_error('Error, found unknown policy type.')
         for statement in policy['Statement']:

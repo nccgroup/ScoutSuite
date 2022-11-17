@@ -69,7 +69,7 @@ class Instances(GCPCompositeResources):
 
     def _is_oslogin_enabled(self, raw_instance):
         instance_logging_enabled = raw_instance['metadata'].get('enable-oslogin')
-        project_logging_enabled = raw_instance['commonInstanceMetadata'].get('enable-oslogin')
+        project_logging_enabled = raw_instance.get('commonInstanceMetadata', {}).get('enable-oslogin')
         return instance_logging_enabled == 'TRUE' \
                or instance_logging_enabled is None and project_logging_enabled == 'TRUE'
 

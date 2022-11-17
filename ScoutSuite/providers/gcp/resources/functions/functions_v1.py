@@ -33,13 +33,13 @@ class FunctionsV1(Resources):
         function_dict['docker_registry'] = raw_function['dockerRegistry']
         function_dict['url'] = raw_function.get('httpsTrigger', {}).get('url')
         function_dict['security_level'] = raw_function.get('httpsTrigger', {}).get('securityLevel')
-        function_dict['ingress_settings'] = raw_function['ingressSettings']
+        function_dict['ingress_settings'] = raw_function.get('ingressSettings')
 
         function_dict['bindings'] = raw_function['bindings']
 
         function_dict['environment_variables'] = raw_function.get('environmentVariables', {})
         function_dict['environment_variables_secrets'] = get_environment_secrets(function_dict['environment_variables'])
 
-        function_dict['labels'] = raw_function['labels']
+        function_dict['labels'] = raw_function.get('labels')
 
         return function_dict['id'], function_dict

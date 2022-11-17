@@ -16,7 +16,7 @@ class RedshiftFacade(AWSBaseFacade):
 
         try:
             await self.cache_clusters(region)
-            return [cluster for cluster in self.clusters_cache[region] if cluster['VpcId'] == vpc]
+            return [cluster for cluster in self.clusters_cache[region] if cluster.get('VpcId') == vpc]
         except Exception as e:
             print_exception(f'Failed to get Redshift clusters: {e}')
             return []
@@ -52,6 +52,11 @@ class RedshiftFacade(AWSBaseFacade):
             return []
 
     async def get_cluster_parameters(self, region: str, parameter_group: str):
-        return await AWSFacadeUtils.get_all_pages(
-            'redshift', region, self.session, 'describe_cluster_parameters', 'Parameters',
-            ParameterGroupName=parameter_group)
+        try:
+            return await AWSFacadeUtils.get_all_pages(
+                'redshift', region, self.session, 'describe_cluster_parameters', 'Parameters',
+                ParameterGroupName=parameter_group)
+
+        except Exception as e:
+            print_exception(f'Failed to get Redshift cluster parameters: {e}')
+            return []
