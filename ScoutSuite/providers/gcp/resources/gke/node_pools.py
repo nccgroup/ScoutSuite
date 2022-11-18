@@ -7,7 +7,7 @@ class NodePools(Resources):
         self.cluster = cluster
 
     def fetch_all(self):
-        raw_node_pools = self.cluster['nodePools']
+        raw_node_pools = self.cluster.get('nodePools', [])
         for raw_node_pool in raw_node_pools:
             node_pool_id, node_pool = self._parse_node_pool(raw_node_pool)
             self[node_pool_id] = node_pool
