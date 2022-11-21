@@ -75,7 +75,7 @@ class RDSFacade(AWSBaseFacade):
     async def get_snapshots(self, region: str, vpc: str):
         try:
             await self._cache_snapshots(region)
-            if self._cache_snapshots[region]:
+            if self._snapshots_cache[region]:
                 return [snapshot for snapshot in self._snapshots_cache[region] if snapshot['VpcId'] == vpc]
             else:
                 return []
