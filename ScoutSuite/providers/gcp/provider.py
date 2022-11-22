@@ -170,7 +170,7 @@ class GCPProvider(BaseProvider):
             if 'computeengine' in self.service_list:
                 for project in self.services['computeengine']['projects'].values():
                     for region in project['regions'].values():
-                        for subnetwork in region['subnetworks'].values():
+                        for subnetwork in region.get('subnetworks', {}).values():
                             subnetwork['instances'] = []
                             for zone in project['zones'].values():
                                 # Skip the counts contained in the zones dictionary
