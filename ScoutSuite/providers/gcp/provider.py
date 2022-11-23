@@ -179,9 +179,9 @@ class GCPProvider(BaseProvider):
                                 for instance in zone['instances'].values():
                                     instance['subnetwork_id'] = None
                                     for network_interface in instance['network_interfaces']:
-                                        if network_interface['subnetwork'] == subnetwork['subnetwork_url']:
+                                        if network_interface.get('subnetwork') == subnetwork['subnetwork_url']:
                                             subnetwork['instances'].append({'instance_id': instance['id'],
-                                                                         'instance_zone': instance['zone']})
+                                                                            'instance_zone': instance['zone']})
                                             network_interface['subnetwork_id'] = subnetwork['id']
                                             network_interface['subnetwork_region'] = subnetwork['region']
         except Exception as e:

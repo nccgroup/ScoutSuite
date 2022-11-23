@@ -52,12 +52,12 @@ class IAM(AWSCompositeResources):
                                     entities[entity['id']]['policies'].append(policy_id)
                                     entities[entity['id']]['policies_counts'] += 1
                                     self._parse_permissions(
-                                        policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
+                                        policy_id, policy.get('PolicyDocument'), 'policies', entity_type, entity['id'])
                             except Exception as e:
                                 print_exception(f'Error setting entity for ID {entity["id"]}: {e}')
                 else:
                     self._parse_permissions(
-                        policy_id, policy['PolicyDocument'], 'policies', None, None)
+                        policy_id, policy.get('PolicyDocument'), 'policies', None, None)
         except Exception as e:
             print_exception(f'Error finalizing IAM service: {e}')
 
@@ -70,7 +70,7 @@ class IAM(AWSCompositeResources):
             for policy_id in resource['inline_policies']:
                 policy = resource['inline_policies'][policy_id]
                 self._parse_permissions(
-                    policy_id, policy['PolicyDocument'], 'inline_policies', resource_type, resource_id)
+                    policy_id, policy.get('PolicyDocument'), 'inline_policies', resource_type, resource_id)
 
     def _get_id_for_resource(self, iam_resource_type, resource_name):
         for resource_id in self[iam_resource_type]:
