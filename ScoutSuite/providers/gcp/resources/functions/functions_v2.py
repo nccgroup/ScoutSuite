@@ -11,9 +11,10 @@ class FunctionsV2(Resources):
 
     async def fetch_all(self):
         raw_functions = await self.facade.functions.get_functions_v2(self.project_id)
-        for raw_function in raw_functions:
-            function_id, function = self._parse_function(raw_function)
-            self[function_id] = function
+        if raw_functions:
+            for raw_function in raw_functions:
+                function_id, function = self._parse_function(raw_function)
+                self[function_id] = function
 
     def _parse_function(self, raw_function):
         function_dict = {}
@@ -38,6 +39,6 @@ class FunctionsV2(Resources):
         function_dict['environment_variables'] = raw_function.get('serviceConfig', {}).get('environmentVariables')
         function_dict['environment_variables_secrets'] = get_environment_secrets(function_dict.get('environment_variables', {}))
 
-        function_dict['labels'] = raw_function['labels']
+        function_dict['labels'] = raw_function.get('labels')
 
         return function_dict['id'], function_dict

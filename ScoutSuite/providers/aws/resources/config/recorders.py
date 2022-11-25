@@ -20,8 +20,8 @@ class Recorders(AWSResources):
         recorder['region'] = self.region
         recorder['role_ARN'] = raw_recorder['roleARN']
         recorder['recording_group'] = raw_recorder['recordingGroup']
-        recorder['enabled'] = raw_recorder['ConfigurationRecordersStatus']['recording']
-        recorder['last_status'] = raw_recorder['ConfigurationRecordersStatus'].get('lastStatus')
-        recorder['last_start_time'] = raw_recorder['ConfigurationRecordersStatus'].get('lastStartTime')
-        recorder['last_status_change_time'] = raw_recorder['ConfigurationRecordersStatus'].get('lastStatusChangeTime')
+        recorder['enabled'] = raw_recorder.get('ConfigurationRecordersStatus', {})['recording']
+        recorder['last_status'] = raw_recorder.get('ConfigurationRecordersStatus', {}).get('lastStatus')
+        recorder['last_start_time'] = raw_recorder.get('ConfigurationRecordersStatus', {}).get('lastStartTime')
+        recorder['last_status_change_time'] = raw_recorder.get('ConfigurationRecordersStatus', {}).get('lastStatusChangeTime')
         return get_non_provider_id(recorder['name']), recorder

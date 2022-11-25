@@ -10,9 +10,10 @@ class Snapshots(AWSResources):
 
     async def fetch_all(self):
         raw_snapshots = await self.facade.rds.get_snapshots(self.region, self.vpc)
-        for raw_snapshot in raw_snapshots:
-            name, resource = self._parse_snapshot(raw_snapshot)
-            self[name] = resource
+        if raw_snapshots:
+            for raw_snapshot in raw_snapshots:
+                name, resource = self._parse_snapshot(raw_snapshot)
+                self[name] = resource
 
     def _parse_snapshot(self, raw_snapshot):
         is_cluster = 'DBClusterIdentifier' in raw_snapshot
