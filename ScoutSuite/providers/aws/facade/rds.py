@@ -112,6 +112,7 @@ class RDSFacade(AWSBaseFacade):
 
     async def _get_and_set_snapshot_attributes(self, snapshot: {}, region: str):
         client = AWSFacadeUtils.get_client('rds', self.session, region)
+        snapshot['Attributes'] = {}
         try:
             attributes = await run_concurrently(
                 lambda: client.describe_db_snapshot_attributes(
@@ -123,10 +124,10 @@ class RDSFacade(AWSBaseFacade):
                 print_warning(f'Failed to describe RDS snapshot attributes: {e}')
             else:
                 print_exception(f'Failed to describe RDS snapshot attributes: {e}')
-            snapshot['Attributes'] = {}
 
     async def _get_and_set_cluster_snapshot_attributes(self, snapshot: {}, region: str):
         client = AWSFacadeUtils.get_client('rds', self.session, region)
+        snapshot['Attributes'] = {}
         try:
             attributes = await run_concurrently(
                 lambda: client.describe_db_cluster_snapshot_attributes(
@@ -135,7 +136,6 @@ class RDSFacade(AWSBaseFacade):
                 attributes['DBClusterSnapshotAttributes'] if 'DBClusterSnapshotAttributes' in attributes else {}
         except Exception as e:
             print_exception(f'Failed to describe RDS cluster snapshot attributes: {e}')
-            snapshot['Attributes'] = {}
 
     async def get_subnet_groups(self, region: str, vpc: str):
         try:
@@ -167,10 +167,10 @@ class RDSFacade(AWSBaseFacade):
 
     async def _get_and_set_db_parameters(self, parameter_group: {}, region: str):
         name = parameter_group['DBParameterGroupName']
+        parameter_group['Parameters'] = {}
         try:
             parameters = await AWSFacadeUtils.get_all_pages(
                 'rds', region, self.session, 'describe_db_parameters', 'Parameters', DBParameterGroupName=name)
-            parameter_group['Parameters'] = {}
             for parameter in parameters:
                 # Discard non-modifiable parameters
                 if not parameter['IsModifiable']:

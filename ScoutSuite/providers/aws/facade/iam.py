@@ -71,6 +71,7 @@ class IAMFacade(AWSBaseFacade):
 
     async def _get_and_set_policy_details(self, policy):
         client = AWSFacadeUtils.get_client('iam', self.session)
+        policy['PolicyDocument'] = None
         try:
             policy_version = await run_concurrently(
                 lambda: client.get_policy_version(PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId']))
@@ -129,8 +130,13 @@ class IAMFacade(AWSBaseFacade):
         user['groups'] = [group['GroupName'] for group in groups]
 
     async def _get_and_set_user_tags(self, user: {}):
-        client = AWSFacadeUtils.get_client('iam', self.session)
-        user['tags'] = client.list_user_tags(UserName=user['UserName'])
+        user['tags'] = None
+        try:
+            client = AWSFacadeUtils.get_client('iam', self.session)
+            user['tags'] = client.list_user_tags(UserName=user['UserName'])
+        except Exception as e:
+            print_exception(f'Failed to list user tags: {e}')
+
 
     async def get_roles(self):
         roles = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_roles', 'Roles')
@@ -138,8 +144,7 @@ class IAMFacade(AWSBaseFacade):
             role['instances_count'] = 'N/A'
             # Get trust relationship
             role['assume_role_policy'] = {}
-            role['assume_role_policy']['PolicyDocument'] = role.pop(
-                'AssumeRolePolicyDocument')
+            role['assume_role_policy']['PolicyDocument'] = role.pop('AssumeRolePolicyDocument')
         await get_and_set_concurrently(
             [functools.partial(self._get_and_set_inline_policies, iam_resource_type='role'),
              self._get_and_set_role_profiles,
@@ -148,8 +153,9 @@ class IAMFacade(AWSBaseFacade):
         return roles
 
     async def _get_and_set_role_tags(self, role: {}):
-        client = AWSFacadeUtils.get_client('iam', self.session)
+        role['tags'] = None
         try:
+            client = AWSFacadeUtils.get_client('iam', self.session)
             role['tags'] = client.list_role_tags(RoleName=role['RoleName'])
         except Exception as e:
             print_exception(f'Failed to list role tags: {e}')

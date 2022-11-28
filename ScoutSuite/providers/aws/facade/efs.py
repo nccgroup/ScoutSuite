@@ -23,7 +23,7 @@ class EFSFacade(AWSBaseFacade):
         client = AWSFacadeUtils.get_client('efs', self.session, region)
         try:
             file_system['Tags'] = await run_concurrently(
-                lambda: client.describe_tags(FileSystemId=file_system['FileSystemId'])['Tags'])
+                lambda: client.describe_tags(FileSystemId=file_system['FileSystemId']).get('Tags'))
         except Exception as e:
             print_exception(f'Failed to describe EFS tags: {e}')
 

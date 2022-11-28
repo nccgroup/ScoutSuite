@@ -26,7 +26,7 @@ class Snapshots(AWSResources):
         snapshot['id'] = snapshot_id,
         snapshot['name'] = snapshot_id,
         snapshot['vpc_id'] = raw_snapshot['VpcId']
-        snapshot['attributes'] = raw_snapshot['Attributes']
+        snapshot['attributes'] = raw_snapshot.get('Attributes')
         snapshot['is_cluster'] = is_cluster
 
         attributes = [
