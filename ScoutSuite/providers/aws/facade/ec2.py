@@ -151,7 +151,7 @@ class EC2Facade(AWSBaseFacade):
 
     async def _get_and_set_snapshot_attributes(self, snapshot: {}, region: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
-        snapshot['CreateVolumePermissions'] = None
+        snapshot['CreateVolumePermissions'] = {}
         try:
             snapshot['CreateVolumePermissions'] = await run_concurrently(lambda: ec2_client.describe_snapshot_attribute(
                 Attribute='createVolumePermission',

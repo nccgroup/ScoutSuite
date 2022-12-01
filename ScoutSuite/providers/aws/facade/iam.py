@@ -130,7 +130,7 @@ class IAMFacade(AWSBaseFacade):
         user['groups'] = [group['GroupName'] for group in groups]
 
     async def _get_and_set_user_tags(self, user: {}):
-        user['tags'] = None
+        user['tags'] = {}
         try:
             client = AWSFacadeUtils.get_client('iam', self.session)
             user['tags'] = client.list_user_tags(UserName=user['UserName'])
@@ -153,7 +153,7 @@ class IAMFacade(AWSBaseFacade):
         return roles
 
     async def _get_and_set_role_tags(self, role: {}):
-        role['tags'] = None
+        role['tags'] = {}
         try:
             client = AWSFacadeUtils.get_client('iam', self.session)
             role['tags'] = client.list_role_tags(RoleName=role['RoleName'])
