@@ -211,6 +211,7 @@ class S3Facade(AWSBaseFacade):
 
     async def _get_and_set_s3_bucket_tags(self, bucket: {}):
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
+        bucket['tags'] = {}
         try:
             bucket_tagset = await run_concurrently(lambda: client.get_bucket_tagging(Bucket=bucket['Name']))
             bucket['tags'] = {x['Key']: x['Value'] for x in bucket_tagset['TagSet']}
@@ -225,7 +226,6 @@ class S3Facade(AWSBaseFacade):
                 print_warning('Failed to get bucket tags for {}: {}'.format(bucket['Name'], e))
             else:
                 print_exception('Failed to get bucket tags for {}: {}'.format(bucket['Name'], e))
-            bucket['tags'] = {}
 
     async def _get_and_set_s3_bucket_block_public_access(self, bucket: {}):
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
