@@ -174,7 +174,7 @@ class IAMFacade(AWSBaseFacade):
                 role['instance_profiles'][profile_id].setdefault(
                     'name', profile['InstanceProfileName'])
         except Exception as e:
-            print_exception(f'Failed to list instance profiles: {e}')
+            print_warning(f'Failed to list instance profiles: {e}')
 
     async def get_password_policy(self):
         client = AWSFacadeUtils.get_client('iam', self.session)

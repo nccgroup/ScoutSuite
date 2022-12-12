@@ -34,11 +34,12 @@ class FunctionsFacade(GCPBaseFacade):
             return []
         else:
             functions = await map_concurrently(self._get_function_version, functions_list, api_version=api_version)
-            if list(filter(None, functions)):
+            not_none_functions = [f for f in functions if f is not None]
+            if not_none_functions:
                 await get_and_set_concurrently([self._get_and_set_function_iam_policy],
-                                               functions,
+                                               not_none_functions,
                                                api_version=api_version)
-            return functions
+            return not_none_functions
 
     async def _list_functions_version(self, project_id: str, api_version: str):
         functions_client = self._build_arbitrary_client(self._client_name, api_version, force_new=True)
@@ -55,8 +56,8 @@ class FunctionsFacade(GCPBaseFacade):
             request = functions.get(name=name)
             return await run_concurrently(lambda: request.execute())
         except Exception as e:
-            print_exception(f'Failed to get Cloud Functions functions ({api_version}): {e}')
-            return {}
+            # Ignore as it likely means the function name isn't of the correct version'
+            return None
 
     async def _get_and_set_function_iam_policy(self, function, api_version: str):
         try:
