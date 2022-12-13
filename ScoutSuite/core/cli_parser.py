@@ -305,6 +305,11 @@ class ScoutSuiteArgumentParser:
                             default='default.json',
                             nargs='?',
                             help='Set of rules to be used during the analysis.')
+        parser.add_argument('--additional-rule-dirs',
+                            dest="rules_dir",
+                            nargs="*",
+                            default=None,
+                            help="Additional folders comma separated from where we should parse custom rules.")
         parser.add_argument('--no-browser',
                             dest='no_browser',
                             default=False,
