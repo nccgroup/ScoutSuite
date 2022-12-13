@@ -306,7 +306,7 @@ class ScoutSuiteArgumentParser:
                             nargs='?',
                             help='Set of rules to be used during the analysis.')
         parser.add_argument('--additional-rule-dirs',
-                            dest="rules_dir",
+                            dest="rule_dirs",
                             nargs="*",
                             default=None,
                             help="Additional folders comma separated from where we should parse custom rules.")
