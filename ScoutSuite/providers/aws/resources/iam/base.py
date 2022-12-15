@@ -52,12 +52,11 @@ class IAM(AWSCompositeResources):
                                     entities[entity['id']]['policies'].append(policy_id)
                                     entities[entity['id']]['policies_counts'] += 1
                                     self._parse_permissions(
-                                        policy_id, policy.get('PolicyDocument'), 'policies', entity_type, entity['id'])
+                                        policy_id, policy.get('PolicyDocument', []), 'policies', entity_type, entity['id'])
                             except Exception as e:
                                 print_exception(f'Error setting entity for ID {entity["id"]}: {e}')
                 else:
-                    self._parse_permissions(
-                        policy_id, policy.get('PolicyDocument'), 'policies', None, None)
+                    self._parse_permissions(policy_id, policy.get('PolicyDocument', []), 'policies', None, None)
         except Exception as e:
             print_exception(f'Error finalizing IAM service: {e}')
 
@@ -70,7 +69,7 @@ class IAM(AWSCompositeResources):
             for policy_id in resource['inline_policies']:
                 policy = resource['inline_policies'][policy_id]
                 self._parse_permissions(
-                    policy_id, policy.get('PolicyDocument'), 'inline_policies', resource_type, resource_id)
+                    policy_id, policy.get('PolicyDocument', []), 'inline_policies', resource_type, resource_id)
 
     def _get_id_for_resource(self, iam_resource_type, resource_name):
         for resource_id in self[iam_resource_type]:
@@ -78,12 +77,13 @@ class IAM(AWSCompositeResources):
                 return resource_id
 
     def _parse_permissions(self, policy_name, policy_document, policy_type, iam_resource_type, resource_name):
-        # Enforce list of statements (Github issue #99)
-        if type(policy_document['Statement']) != list:
-            policy_document['Statement'] = [policy_document['Statement']]
-        for statement in policy_document['Statement']:
-            self._parse_statement(policy_name, statement,
-                                  policy_type, iam_resource_type, resource_name)
+        if policy_document:
+            # Enforce list of statements (GitHub issue #99)
+            if type(policy_document.get('Statement', [])) != list:
+                policy_document['Statement'] = [policy_document.get('Statement')]
+            for statement in policy_document['Statement']:
+                self._parse_statement(policy_name, statement,
+                                      policy_type, iam_resource_type, resource_name)
 
     def _parse_statement(self, policy_name, statement, policy_type, iam_resource_type, resource_name):
         # Effect
