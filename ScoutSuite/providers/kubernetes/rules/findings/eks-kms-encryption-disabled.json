@@ -9,8 +9,8 @@
         "https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html"
     ],
     "dashboard_name": "Configurations",
-    "path": "eks",
     "display_path": "eks.encryption.id",
+    "path": "eks",
     "conditions": [
         "or",
         [

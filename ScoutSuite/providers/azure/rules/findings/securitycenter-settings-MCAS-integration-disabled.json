@@ -17,17 +17,17 @@
     "dashboard_name": "Security Settings",
     "path": "securitycenter.subscriptions.id.settings.id",
     "conditions": [
-          "and",
-          [
-              "securitycenter.subscriptions.id.settings.id.name",
-              "equal",
-              "MCAS"
-          ],
-          [
-              "securitycenter.subscriptions.id.settings.id.enabled",
-              "false",
-              ""
-          ]
-      ],
-      "id_suffix": "enabled"
+        "and",
+        [
+            "securitycenter.subscriptions.id.settings.id.name",
+            "equal",
+            "MCAS"
+        ],
+        [
+            "securitycenter.subscriptions.id.settings.id.enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "enabled"
 }

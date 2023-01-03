@@ -7,9 +7,8 @@
         "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
     ],
     "dashboard_name": "Deployments",
-    "path": "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id",
     "display_path": "deployment.v1-apps.id",
-    "id_suffix": "readOnlyRootFilesystem",
+    "path": "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id",
     "conditions": [
         "or",
         [
@@ -32,5 +31,6 @@
             "false",
             ""
         ]
-    ]
+    ],
+    "id_suffix": "readOnlyRootFilesystem"
 }

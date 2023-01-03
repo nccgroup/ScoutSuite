@@ -10,9 +10,9 @@
         }
     ],
     "references": [
-      "https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/platform-logs-overview#export-the-activity-log-with-a-log-profile",
-      "https://learn.microsoft.com/en-us/cli/azure/monitor/log-profiles?view=azure-cli-latest#az_monitor_log_profiles_create",
-      "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-5-centralize-security-log-management-and-analysis"
+        "https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/platform-logs-overview#export-the-activity-log-with-a-log-profile",
+        "https://learn.microsoft.com/en-us/cli/azure/monitor/log-profiles?view=azure-cli-latest#az_monitor_log_profiles_create",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-5-centralize-security-log-management-and-analysis"
     ],
     "dashboard_name": "Diagnostic Settings",
     "path": "loggingmonitoring.subscriptions.id.diagnostic_settings.id",

@@ -1,14 +1,13 @@
 {
-    "description": "Container/InitContainer/EphemeralContainer Running as Root User",
+    "description": "Container/InitContainer/EphemeralContainer Running As Root User",
     "rationale": "Where possible, runAsUser should be set to a value greater than 0.",
     "references": [
         "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
         "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
     ],
     "dashboard_name": "DaemonSets",
-    "path": "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
     "display_path": "daemon_set.v1-apps.id",
-    "id_suffix": "runAsUser",
+    "path": "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
     "conditions": [
         "and",
         [
@@ -21,5 +20,6 @@
             "equal",
             "0"
         ]
-    ]
+    ],
+    "id_suffix": "runAsUser"
 }

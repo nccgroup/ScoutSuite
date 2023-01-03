@@ -6,8 +6,8 @@
         "https://github.com/markround/tiller#status"
     ],
     "dashboard_name": "Pods",
-    "path": "pod.v1.resources.id",
     "display_path": "pod.v1.id",
+    "path": "pod.v1.resources.id",
     "conditions": [
         "or",
         [

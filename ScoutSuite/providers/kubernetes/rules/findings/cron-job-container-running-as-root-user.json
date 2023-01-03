@@ -1,14 +1,13 @@
 {
-    "description": "Container/InitContainer/EphemeralContainer Running as Root User",
+    "description": "Container/InitContainer/EphemeralContainer Running As Root User",
     "rationale": "Where possible, runAsUser should be set to a value greater than 0.",
     "references": [
         "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
         "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
     ],
     "dashboard_name": "CronJobs",
-    "path": "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id",
     "display_path": "cron_job.v1-batch.id",
-    "id_suffix": "runAsUser",
+    "path": "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id",
     "conditions": [
         "or",
         [
@@ -37,5 +36,6 @@
                 "0"
             ]
         ]
-    ]
+    ],
+    "id_suffix": "runAsUser"
 }

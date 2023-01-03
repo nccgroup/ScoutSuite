@@ -6,8 +6,8 @@
         "https://www.cisecurity.org/benchmark/docker/"
     ],
     "dashboard_name": "DaemonSets",
-    "path": "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
     "display_path": "daemon_set.v1-apps.id",
+    "path": "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
     "conditions": [
         "or",
         [

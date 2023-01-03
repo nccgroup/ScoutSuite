@@ -6,9 +6,8 @@
         "https://www.cisecurity.org/benchmark/docker/"
     ],
     "dashboard_name": "Pods",
-    "path": "pod.v1.resources.id.data.spec.containers.id",
     "display_path": "pod.v1.id",
-    "id_suffix": "hardening_required",
+    "path": "pod.v1.resources.id.data.spec.containers.id",
     "conditions": [
         "or",
         [
@@ -56,5 +55,6 @@
             "null",
             ""
         ]
-    ]
+    ],
+    "id_suffix": "hardening_required"
 }

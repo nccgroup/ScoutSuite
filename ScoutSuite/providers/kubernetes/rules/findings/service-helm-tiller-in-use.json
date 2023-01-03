@@ -6,8 +6,8 @@
         "https://github.com/markround/tiller#status"
     ],
     "dashboard_name": "Services",
-    "path": "service.v1.resources.id",
     "display_path": "service.v1.id",
+    "path": "service.v1.resources.id",
     "conditions": [
         "or",
         [
