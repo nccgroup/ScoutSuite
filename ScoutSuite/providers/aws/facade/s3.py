@@ -273,6 +273,14 @@ class S3Facade(AWSBaseFacade):
                              (statement['Condition']['Bool']['aws:SecureTransport'] == 'true' and
                               statement['Effect'] == 'Allow')):
                         bucket['secure_transport_enabled'] = True
+                    elif 'Condition'in statement and \
+                            'NumericLessThan' in statement['Condition'] and \
+                            's3:TlsVersion' in statement['Condition']['NumericLessThan'] and \
+                            ((statement['Condition']['NumericLessThan']['s3:TlsVersion'] >= '1.2' and
+                              statement['Effect'] == 'Deny') or
+                             (statement['Condition']['NumericGreaterThan']['s3:TlsVersion'] >= '1.1' and
+                              statement['Effect'] == 'Allow')):
+                        bucket['secure_transport_enabled'] = True
             else:
                 bucket['secure_transport_enabled'] = False
         except Exception as e:
