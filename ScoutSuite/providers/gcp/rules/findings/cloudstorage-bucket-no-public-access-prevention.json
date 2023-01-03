@@ -12,6 +12,11 @@
             "cloudstorage.projects.id.buckets.id.public_access_prevention",
             "notEqual",
             "enforced"
+        ],
+        [
+            "cloudstorage.projects.id.buckets.id.public_access_prevention",
+            "notEqual",
+            "inherited"
         ]
     ],
     "id_suffix": "public_access_prevention"
