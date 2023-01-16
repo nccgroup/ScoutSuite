@@ -27,7 +27,7 @@ class FunctionsV1(Resources):
         function_dict['runtime'] = raw_function['runtime']
         function_dict['memory'] = raw_function['availableMemoryMb']
         function_dict['timeout'] = raw_function['timeout']
-        if raw_function.get(maxInstances) is not None:
+        if raw_function.get('maxInstances', False):
             function_dict['max_instances'] = raw_function['maxInstances']
         function_dict['docker_registry'] = raw_function['dockerRegistry']
         function_dict['url'] = raw_function.get('httpsTrigger', {}).get('url')
