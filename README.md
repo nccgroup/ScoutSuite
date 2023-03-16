@@ -36,6 +36,17 @@ Refer to the [wiki](https://github.com/nccgroup/ScoutSuite/wiki/Setup).
 
 ## Usage
 
+- aws 
+```
+$ python scout.py aws --access-keys --access-key-id <AKIAIOSFODNN7EXAMPLE> --secret-access-key <wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY> --session-token <token>
+```
+
+- aliyun
+
+```
+python scout.py aliyun --access-keys -k <access key> -s <secret access key>
+```
+
 Scout Suite is run through the CLI:
 
 ![Running Scout Suite](https://user-images.githubusercontent.com/13310971/78389085-22659d00-75b0-11ea-9f22-ea6fcaa6a1cd.gif)

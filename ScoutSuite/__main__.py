@@ -178,6 +178,7 @@ async def _run(provider,
     print_info('Launching Scout')
 
     print_info('Authenticating to cloud provider')
+    # 获取认证策略
     auth_strategy = get_authentication_strategy(provider)
 
     try:

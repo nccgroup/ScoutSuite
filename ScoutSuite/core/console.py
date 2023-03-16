@@ -18,6 +18,7 @@ logger = logging.getLogger('scout')
 
 def set_logger_configuration(is_debug=False, quiet=False, output_file_path=None):
     """
+    配置是否应在控制台输出中转储完整堆栈跟踪
     Configure whether full stacktraces should be dumped in the console output
     """
 
