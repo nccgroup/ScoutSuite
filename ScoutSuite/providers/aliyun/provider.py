@@ -22,7 +22,6 @@ class AliyunProvider(BaseProvider):
         self.environment = 'default'
 
         self.services_config = AliyunServicesConfig
-
         self.credentials = kwargs['credentials']
         self.account_id = self.credentials.caller_details['AccountId']
 

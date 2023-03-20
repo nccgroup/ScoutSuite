@@ -180,7 +180,6 @@ async def _run(provider,
     print_info('Authenticating to cloud provider')
     # 获取认证策略
     auth_strategy = get_authentication_strategy(provider)
-
     try:
         credentials = auth_strategy.authenticate(profile=profile,
                                                  aws_access_key_id=aws_access_key_id,
@@ -207,6 +206,7 @@ async def _run(provider,
         print_exception(f'Authentication failure: {e}')
         return 101
 
+    # 创建云服务商提供者的对象
     # Create a cloud provider object
     try:
         cloud_provider = get_provider(provider=provider,
@@ -230,9 +230,10 @@ async def _run(provider,
     except Exception as e:
         print_exception(f'Initialization failure: {e}')
         return 102
-
+    # exit()
     # Create a new report
     try:
+        # 报告名称
         report_name = report_name if report_name else cloud_provider.get_report_name()
         report = ScoutReport(cloud_provider.provider_code,
                              report_name,

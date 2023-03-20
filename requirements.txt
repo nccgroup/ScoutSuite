@@ -61,6 +61,9 @@ aliyun-python-sdk-rds>=2.3.9
 aliyun-python-sdk-kms>=2.6.0
 oss2>=2.8.0
 
+# Ksyun / KingSoft Cloud
+kingsoftcloud-sdk-python>=1.0.2
+
 # Oracle Cloud Infrastructure Provider
 oci>=2.2.4
 

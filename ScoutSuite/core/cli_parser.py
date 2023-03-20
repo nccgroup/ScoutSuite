@@ -28,6 +28,7 @@ class ScoutSuiteArgumentParser:
         self._init_gcp_parser()
         self._init_azure_parser()
         self._init_aliyun_parser()
+        self._init_ksyun_parser()
         self._init_oci_parser()
 
     def _init_aws_parser(self):
@@ -241,6 +242,34 @@ class ScoutSuiteArgumentParser:
                                         dest='access_key_secret',
                                         help='Access Key Secret')
 
+    def _init_ksyun_parser(self):
+        parser = self.subparsers.add_parser("ksyun",
+                                            parents=[self.common_providers_args_parser],
+                                            help="Run Scout against an KingSoft Cloud account")
+
+        ksyun_parser = parser.add_argument_group('Authentication modes')
+        ksyun_auth_params = parser.add_argument_group('Authentication parameters')
+
+        ksyun_auth_modes = ksyun_parser.add_mutually_exclusive_group(required=True)
+
+        ksyun_auth_modes.add_argument('--access-keys',
+                                       action='store_true',
+                                       help='Run Scout with user credentials')
+
+        ksyun_auth_params.add_argument('-k',
+                                        '--access-key-id',
+                                        action='store',
+                                        default=None,
+                                        dest='access_key_id',
+                                        help='Access Key Id')
+
+        ksyun_auth_params.add_argument('-s',
+                                        '--access-key-secret',
+                                        action='store',
+                                        default=None,
+                                        dest='access_key_secret',
+                                        help='Access Key Secret')
+
     def _init_oci_parser(self):
         oci_parser = self.subparsers.add_parser("oci",
                                                 parents=[self.common_providers_args_parser],
@@ -253,7 +282,6 @@ class ScoutSuiteArgumentParser:
                             dest='profile',
                             default=None,
                             help='Name of the profile')
-
 
     def _init_common_args_parser(self):
         parser = self.common_providers_args_parser.add_argument_group('Scout Arguments')

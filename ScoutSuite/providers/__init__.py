@@ -7,7 +7,9 @@ providers_dict = {'aws': 'AWSProvider',
 
 def get_provider_object(provider):
     provider_class = providers_dict.get(provider)
+    # 用于动态加载类和函数 如果一个模块经常变化就可以使用 __import__() 来动态载入。 fromlist指明需要导入的子模块名
     provider_module = __import__(f'ScoutSuite.providers.{provider}.provider', fromlist=[provider_class])
+    # 返回一个对象属性值
     provider_object = getattr(provider_module, provider_class)
     return provider_object
 

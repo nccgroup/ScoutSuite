@@ -34,7 +34,7 @@ class AliyunAuthenticationStrategy(AuthenticationStrategy):
             response = client.do_action_with_exception(
                 GetCallerIdentityRequest.GetCallerIdentityRequest())
             response_decoded = json.loads(response)
-
+            #  返回了认证credentials 和账号的AccountId、UserId用于报告名称
             return AliyunCredentials(credentials, response_decoded)
 
         except Exception as e:
