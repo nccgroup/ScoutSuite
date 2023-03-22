@@ -2,10 +2,10 @@ import json
 
 import requests
 from collections import Counter
-
-from ScoutSuite.providers.ksyun.authentication_strategy import KsyunCredentials
 from ScoutSuite.providers.ksyun.facade.kec import KECFacade
+from ScoutSuite.providers.ksyun.facade.ram import RAMFacade
 from ScoutSuite.providers.ksyun.facade.actiontrail import ActiontrailFacade
+from ScoutSuite.providers.ksyun.authentication_strategy import KsyunCredentials
 
 
 class KsyunFacade:
@@ -16,6 +16,7 @@ class KsyunFacade:
     def _instantiate_facades(self):
         self.actiontrail = ActiontrailFacade(self._credentials)
         self.kec = KECFacade(self._credentials)
+        self.ram = RAMFacade(self._credentials)
 
     async def build_region_list(self, service: str, chosen_regions=None):
 

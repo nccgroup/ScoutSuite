@@ -1,7 +1,6 @@
 import json
 
 from ScoutSuite.providers.ksyun.authentication_strategy import KsyunCredentials
-from ScoutSuite.providers.ksyun.utils import ksc_open_api
 from ksyun.common.common_client import CommonClient
 from ksyun.common import credential
 from ksyun.common.exception.ksyun_sdk_exception import KsyunSDKException
