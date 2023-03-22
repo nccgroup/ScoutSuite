@@ -2,6 +2,7 @@ providers_dict = {'aws': 'AWSProvider',
                   'gcp': 'GCPProvider',
                   'azure': 'AzureProvider',
                   'aliyun': 'AliyunProvider',
+                  'ksyun': 'KsyunProvider',
                   'oci': 'OracleProvider'}
 
 

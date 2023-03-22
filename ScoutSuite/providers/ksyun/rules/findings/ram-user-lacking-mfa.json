@@ -1,0 +1,20 @@
+{
+    "description": "User with Console Access Lacking MFA",
+    "rationale": "User with console access should have multi-factor authentication (MFA) enabled",
+    "dashboard_name": "Users",
+    "path": "ram.users.id",
+    "conditions": [
+        "and",
+        [
+            "ram.users.id.console_access",
+            "true",
+            ""
+        ],
+        [
+            "ram.users.id.mfa_status",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "mfa_secure"
+}

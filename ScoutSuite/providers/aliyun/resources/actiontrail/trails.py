@@ -1,3 +1,4 @@
+
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
 
 

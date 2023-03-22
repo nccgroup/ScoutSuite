@@ -1,0 +1,22 @@
+{
+  "compute": {
+    "kec": {
+      "resources": {
+        "instances": {
+          "cols": 2,
+          "path": "services.kec.regions.id.instances"
+        }
+      }
+    }
+  },
+  "management": {
+    "actiontrail": {
+      "resources": {
+        "trails": {
+          "cols": 1,
+          "path": "services.actiontrail.trails"
+        }
+      }
+    }
+  }
+}

@@ -16,7 +16,6 @@ def import_authentication_strategy(provider):
     return authentication_strategy
 
 
-# 获取认证策略
 def get_authentication_strategy(provider: str):
     """
         Returns an authentication strategy implementation for a provider.

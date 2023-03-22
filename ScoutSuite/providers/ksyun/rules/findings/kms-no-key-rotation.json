@@ -1,0 +1,24 @@
+{
+    "description": "KMS Keys Are Not Being Rotated",
+    "rationale": "Keys should be routinely rotated to prevent usage of compromised keys.",
+    "dashboard_name": "Keys",
+    "display_path": "kms.regions.id.keys.id",
+    "path": "kms.regions.id.keys.id",
+    "conditions": [
+        "and",
+        [
+            "kms.regions.id.keys.id.state",
+            "equal",
+            "Enabled"
+        ],
+        [
+            "kms.regions.id.keys.id.creation_date",
+            "olderThan",
+            [
+                "_ARG_0_",
+                "days"
+            ]
+        ]
+    ],
+    "id_suffix": "creation_date"
+}

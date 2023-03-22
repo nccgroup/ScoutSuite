@@ -1,0 +1,14 @@
+{
+    "description": "Not Configured",
+    "rationale": "No trail is configured, which means that API activity is not being logged.",
+    "dashboard_name": "Trails",
+    "path": "actiontrail.trails",
+    "conditions": [
+        "and",
+        [
+            "actiontrail.trails",
+            "empty",
+            ""
+        ]
+    ]
+}

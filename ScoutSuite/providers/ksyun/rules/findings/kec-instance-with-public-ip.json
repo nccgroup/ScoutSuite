@@ -1,0 +1,16 @@
+{
+    "description": "Instance with a Public IP",
+    "rationale": "It is good practice to maintain a list of known, publicly accessible instances and flag all other instances that meet this criteria.",
+    "dashboard_name": "Instances",
+    "display_path": "ecs.regions.id.instances.id",
+    "path": "ecs.regions.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "ecs.regions.id.instances.id.public_ip_address",
+            "notNull",
+            ""
+        ]
+    ],
+    "id_suffix": "public_ip_address"
+}

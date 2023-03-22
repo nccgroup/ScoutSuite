@@ -6,7 +6,7 @@ from ScoutSuite.providers.base.provider import BaseProvider
 
 class AliyunProvider(BaseProvider):
     """
-    Implements provider for Azure
+    Implements provider for Aliyun
     """
 
     def __init__(self,

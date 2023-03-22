@@ -23,7 +23,7 @@ formatted_service_name = {
     'directconnect': 'Direct Connect',
     'dynamodb': 'DynamoDB',
     'ecr': 'ECR',
-    'ecs': 'ECS',
+    'kec': 'ECS',
     'elbv2': 'ELBv2',
     'eks': 'EKS',
     'elasticache': 'ElastiCache',

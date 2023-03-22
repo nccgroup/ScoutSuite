@@ -181,6 +181,7 @@ async def _run(provider,
     # 获取认证策略
     auth_strategy = get_authentication_strategy(provider)
     try:
+        # 调用云服务商的authentication_strategy的authenticate方法，获取credentials
         credentials = auth_strategy.authenticate(profile=profile,
                                                  aws_access_key_id=aws_access_key_id,
                                                  aws_secret_access_key=aws_secret_access_key,
@@ -205,9 +206,8 @@ async def _run(provider,
     except Exception as e:
         print_exception(f'Authentication failure: {e}')
         return 101
-
-    # 创建云服务商提供者的对象
     # Create a cloud provider object
+
     try:
         cloud_provider = get_provider(provider=provider,
                                       # AWS
@@ -230,7 +230,6 @@ async def _run(provider,
     except Exception as e:
         print_exception(f'Initialization failure: {e}')
         return 102
-    # exit()
     # Create a new report
     try:
         # 报告名称
@@ -259,9 +258,9 @@ async def _run(provider,
     # Complete run, including pulling data from provider
     if not fetch_local:
 
-        # Fetch data from provider APIs
         try:
             print_info('Gathering data from APIs')
+            # Fetch data from provider APIs ScoutSuite.providers.ksyun.provider.KsyunProvider
             await cloud_provider.fetch(regions=regions, excluded_regions=excluded_regions)
         except KeyboardInterrupt:
             print_info('\nCancelled by user')
@@ -274,11 +273,12 @@ async def _run(provider,
         if update:
             try:
                 print_info('Updating existing data')
-                #Load previous results
+                # Load previous results
                 last_run_dict = report.encoder.load_from_file('RESULTS')
-                #Get list of previous services which were not updated during this run
-                previous_services = [prev_service for prev_service in last_run_dict['service_list'] if prev_service not in cloud_provider.service_list]
-                #Add previous services
+                # Get list of previous services which were not updated during this run
+                previous_services = [prev_service for prev_service in last_run_dict['service_list']
+                                     if prev_service not in cloud_provider.service_list]
+                # Add previous services
                 for service in previous_services:
                     cloud_provider.service_list.append(service)
                     cloud_provider.services[service] = last_run_dict['services'][service]
@@ -295,8 +295,7 @@ async def _run(provider,
                 setattr(cloud_provider, key, last_run_dict[key])
         except Exception as e:
             print_exception('Failure while updating report: {}'.format(e))
-
-    # Pre processing
+    # Preprocessing
     try:
         print_info('Running pre-processing engine')
         cloud_provider.preprocessing(ip_ranges, ip_ranges_name_key)
