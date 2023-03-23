@@ -87,7 +87,8 @@ class Instances(AzureResources):
 
         if raw_instance.storage_profile is not None:
             instance_dict['storage_profile'] = {}
-            instance_dict['storage_profile']['Publisher'] = raw_instance.storage_profile.image_reference.publisher
+            if raw_instance.storage_profile.image_reference is not None:
+                instance_dict['storage_profile']['Publisher'] = raw_instance.storage_profile.image_reference.publisher
             instance_dict['storage_profile']['Release'] = raw_instance.storage_profile.image_reference.version
             instance_dict['storage_profile']['SKU'] = raw_instance.storage_profile.image_reference.sku
             instance_dict['storage_profile']['Offer'] = raw_instance.storage_profile.image_reference.offer
