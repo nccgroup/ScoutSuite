@@ -146,7 +146,6 @@
           [ "_STATEMENT_.Condition.ForAnyValue:StringLike.", "withoutKeyCaseInsensitive", "iam:PassedToService" ],
           [ "_STATEMENT_.Condition.ForAnyValue:StringLike.", "withoutKeyCaseInsensitive", "kms:CallerAccount" ],
           [ "_STATEMENT_.Condition.ForAnyValue:StringLike.", "withoutKeyCaseInsensitive", "kms:ViaService" ]
-
         ]
       ]
     ]
