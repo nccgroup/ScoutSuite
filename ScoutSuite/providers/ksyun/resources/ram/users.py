@@ -1,11 +1,11 @@
 from ScoutSuite.providers.ksyun.resources.base import KsyunCompositeResources
 
-# from .api_keys import ApiKeys
+from .api_keys import ApiKeys
 
 
 class Users(KsyunCompositeResources):
     _children = [
-        # (ApiKeys, 'api_keys')
+        (ApiKeys, 'api_keys')
     ]
 
     async def fetch_all(self):
@@ -34,8 +34,7 @@ class Users(KsyunCompositeResources):
         user['mobile_phone'] = user_details.get('Phone')
         user['mfa_status'] = user_details.get('EnableMFA')
         # get the MFA status for the user
-        # mfa_enabled, mfa_serial_number = await self.facade.ram.get_user_mfa_status(user['name'])
-        # user['mfa_status'] = mfa_enabled
-        user['mfa_serial_number'] = ''    # mfa_serial_number
+        mfa_serial_number = await self.facade.ram.get_user_mfa_status(user['name'])
+        user['mfa_serial_number'] = mfa_serial_number
 
         return user['id'], user
