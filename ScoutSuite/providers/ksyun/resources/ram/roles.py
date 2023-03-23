@@ -18,7 +18,7 @@ class Roles(KsyunResources):
         role_dict['id'] = role_dict['name'] = raw_role.get('RoleName')
         role_dict['create_date'] = raw_role.get('CreateDate')
         role_dict['description'] = raw_role.get('Description')
-        role_dict['arn'] = raw_role.get('Arn')
+        role_dict['krn'] = raw_role.get('Krn')
         return role_dict['id'], role_dict
 
 

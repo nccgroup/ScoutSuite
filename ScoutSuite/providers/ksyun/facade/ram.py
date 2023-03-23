@@ -175,3 +175,20 @@ class RAMFacade():
         except KsyunSDKException as err:
             print(err)
             return []
+
+    async def get_roles(self):
+        """
+        Get all roles
+
+        :return: a list of all roles
+        """
+        try:
+            r = self.common_client.call("ListRoles", {})
+            response = json.loads(r).get('ListRolesResult')
+            if response:
+                return response['Roles']['member']
+            else:
+                return []
+        except KsyunSDKException as err:
+            print(err)
+            return []
