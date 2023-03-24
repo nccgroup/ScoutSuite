@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class TargetGroups(AWSResources):
@@ -16,5 +17,5 @@ class TargetGroups(AWSResources):
 
     def _parse_target_groups(self, raw_target_group):
             raw_target_group.pop('LoadBalancerArns')
-            arn = raw_target_group.pop('TargetGroupArn')
-            return arn, raw_target_group
+            target_group_id = get_non_provider_id(raw_target_group['TargetGroupArn'])
+            return target_group_id, raw_target_group
