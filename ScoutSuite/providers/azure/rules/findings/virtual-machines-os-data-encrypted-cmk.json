@@ -1,5 +1,5 @@
 {
-    "description": "OS And Data Disks Not Encrypted With CMK",
+    "description": "OS and Data Disks Not Encrypted with CMK",
     "rationale": "Encrypting the IaaS VM's OS disk (boot volume), Data disks (non-boot volume) ensures that the entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads. CMK is superior encryption although requires additional planning.",
     "remediation": "From Azure console: <ol><li>Go to <samp>Virtual machines</samp></li><li>For each virtual machine, go to <samp>Settings</samp></li><li>Click on <samp>Disks</samp></li><li>Click the <samp>X</samp> to detach the disk from the VM</li><li>Now search for <samp>Disks</samp> and locate the unattached disk</li><li>Click the disk then select <samp>Encryption</samp></li><li>Change your encryption type, then select your encryption set</li><li>Click <samp>Save</samp></li><li>Go back to the VM and re-attach the dsk</li></ol>",
     "compliance": [
@@ -22,9 +22,9 @@
     "conditions": [
         "or",
         [
-          "virtualmachines.subscriptions.id.disks.id.encryption_type",
-          "equal",
-          "EncryptionAtRestWithPlatformKey"
+            "virtualmachines.subscriptions.id.disks.id.encryption_type",
+            "equal",
+            "EncryptionAtRestWithPlatformKey"
         ],
         [
             "virtualmachines.subscriptions.id.disks.id.encryption_type",

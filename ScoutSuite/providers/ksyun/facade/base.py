@@ -1,11 +1,17 @@
 import json
+from ksyun.common.common_client import CommonClient
+from ksyun.common import credential
+from ksyun.common.exception.ksyun_sdk_exception import KsyunSDKException
+from ksyun.common.profile.client_profile import ClientProfile
+from ksyun.common.profile.http_profile import HttpProfile
 
-import requests
-from collections import Counter
+from ScoutSuite.providers.ksyun.authentication_strategy import KsyunCredentials
+from ScoutSuite.providers.ksyun.facade.actiontrail import ActiontrailFacade
 from ScoutSuite.providers.ksyun.facade.kec import KECFacade
 from ScoutSuite.providers.ksyun.facade.ram import RAMFacade
-from ScoutSuite.providers.ksyun.facade.actiontrail import ActiontrailFacade
-from ScoutSuite.providers.ksyun.authentication_strategy import KsyunCredentials
+from ScoutSuite.providers.ksyun.facade.rds import RDSFacade
+from ScoutSuite.providers.ksyun.facade.vpc import VPCFacade
+from ScoutSuite.providers.ksyun.facade.kkms import KKMSFacade
 
 
 class KsyunFacade:
@@ -17,41 +23,32 @@ class KsyunFacade:
         self.actiontrail = ActiontrailFacade(self._credentials)
         self.kec = KECFacade(self._credentials)
         self.ram = RAMFacade(self._credentials)
+        self.rds = RDSFacade(self._credentials)
+        self.vpc = VPCFacade(self._credentials)
+        self.kkms = KKMSFacade(self._credentials)
 
     async def build_region_list(self, service: str, chosen_regions=None):
 
-        # TODO could need this for service ids
-        # service = 'ec2containerservice' if service == 'kec' else service
-
-        # TODO does a similar endpoint exist?
-        # available_services = await run_concurrently(lambda: Session().get_available_services())
-        # if service not in available_services:
-        #     raise Exception('Service ' + service + ' is not available.')
-
-        headers = {
-            'Host': 'kec.console.ksyun.com',
-            'X-Requested-With': 'XMLHttpRequest',
-            'Cookie': 'kscdigest=77372c6d1d6114859e1b9179b846dcbf-2304583564;'
-        }
-
-        params = {
-            'Action': 'RegionList',
-            'Service': 'kec',
-            'Version': '2016-03-04',
-            'source': 'kec',
-            'Region': 'cn-beijing-6',
-        }
         try:
             regions = []
-            response = requests.get('https://kec.console.ksyun.com/kecapi/', params=params, headers=headers, verify=False)
-            if json.loads(response.text).get('data'):
-                for item in json.loads(response.text).get('data'):
-                    regions.append(item['regionCode'])
-            if chosen_regions:
-                return list((Counter(regions) & Counter(chosen_regions)).elements())
-            else:
+            cred = credential.Credential(self._credentials.credentials_id, self._credentials.credentials_secret)
+            httpProfile = HttpProfile()
+            httpProfile.endpoint = "kec.api.ksyun.com"
+            httpProfile.reqMethod = "POST"
+            httpProfile.reqTimeout = 60
+            httpProfile.scheme = "http"
+            clientProfile = ClientProfile()
+            clientProfile.httpProfile = httpProfile
+
+            common_client = CommonClient("kec", '2016-03-04', cred, "cn-beijing-6", profile=clientProfile)
+            r = common_client.call("DescribeRegions", {})
+            items = json.loads(r).get('RegionSet')
+            if items:
+                for item in items:
+                    regions.append(item['Region'])
                 return regions
-        except Exception as e:
-            print(e)
-            exit()
+            else:
+                return []
+        except KsyunSDKException as err:
+            print(err)
         

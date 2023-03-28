@@ -1,0 +1,32 @@
+
+<!-- KKMS keys -->
+<script id="services.kkms.regions.id.keys.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="kkms.regions.{{region}}.keys.{{@key}}.id"><samp>{{id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">ARN: <span id="kkms.regions.{{region}}.keys.{{@key}}.arn"><samp>{{arn}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Account ID: <span id="kkms.regions.{{region}}.keys.{{@key}}.creator"><samp>{{creator}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="kkms.regions.{{region}}.keys.{{@key}}.description"><samp>{{description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="kkms.regions.{{region}}.keys.{{@key}}.creation_date">{{format_date creation_date}}</span></div>
+        <div class="list-group-item-text item-margin">Deletion Date: <span id="kkms.regions.{{region}}.keys.{{@key}}.delete_date">{{format_date delete_date}}</span></div>
+        <div class="list-group-item-text item-margin">Material Expiration Time: <span id="kkms.regions.{{region}}.keys.{{@key}}.material_expire_time">{{format_date material_expire_time}}</span></div>
+        <div class="list-group-item-text item-margin">Origin: <span id="kkms.regions.{{region}}.keys.{{@key}}.origin"><samp>{{origin}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Usage: <span id="kkms.regions.{{region}}.keys.{{@key}}.usage"><samp>{{usage}}</samp></span></div>
+        <div class="list-group-item-text item-margin">State: <span id="kkms.regions.{{region}}.keys.{{@key}}.state"><samp>{{state}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.kkms.regions.id.keys", $("#services\\.kkms\\.regions\\.id\\.keys\\.partial").html());
+</script>
+
+<!-- Single KMS key template -->
+<script id="single_kkms_key-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.kkms.regions.id.keys'}}
+</script>
+<script>
+    var single_kkms_key_template = Handlebars.compile($("#single_kkms_key-template").html());
+</script>

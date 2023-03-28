@@ -3,6 +3,7 @@ from ScoutSuite import __version__
 
 formatted_provider_name = {
     'aliyun': 'Aliyun',
+    'ksyun': 'Ksyun',
     'aws': 'AWS',
     'azure': 'Azure',
     'gcp': 'GCP',
@@ -23,7 +24,7 @@ formatted_service_name = {
     'directconnect': 'Direct Connect',
     'dynamodb': 'DynamoDB',
     'ecr': 'ECR',
-    'kec': 'ECS',
+    'ecs': 'ECS',
     'elbv2': 'ELBv2',
     'eks': 'EKS',
     'elasticache': 'ElastiCache',

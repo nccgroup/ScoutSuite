@@ -30,11 +30,11 @@
         }
       }
     },
-    "kms": {
+    "kkms": {
       "resources": {
         "keys": {
           "cols": 2,
-          "path": "services.kms.regions.id.keys"
+          "path": "services.kkms.regions.id.keys"
         }
       }
     }
@@ -45,6 +45,26 @@
         "instances": {
           "cols": 2,
           "path": "services.kec.regions.id.instances"
+        }
+      }
+    }
+  },
+  "database": {
+    "rds": {
+      "resources": {
+        "instances": {
+          "cols": 2,
+          "path": "services.rds.regions.id.instances"
+        }
+      }
+    }
+  },
+  "network": {
+    "vpc": {
+      "resources": {
+        "vpcs": {
+          "cols": 2,
+          "path": "services.vpc.regions.id.vpcs"
         }
       }
     }

@@ -1,0 +1,40 @@
+<!-- VPC VPCs -->
+<script id="services.vpc.regions.id.vpcs.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.id"><samp>{{id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Name: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.description"><samp>{{description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Creation Time: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.creation_time">{{format_date creation_time}}</span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.status"><samp>{{status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Region: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.region_id"><samp>{{region_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Default: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.is_default"><samp>{{is_default}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Cidr Block: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.cidr_block"><samp>{{cidr_block}}</samp></span></div>
+
+        <div class="list-group-item-text item-margin">Router Table IDs: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.router_table_ids"><samp>{{router_table_ids.RouterTableIds}}</samp></span></div>
+        <div class="list-group-item-text item-margin">VRouter ID: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.v_router_id"><samp>{{vrouter_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">VSwitch IDs: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.v_switch_ids"><samp>{{vswitch_ids.VSwitchId}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Nat Gateway IDs: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.nat_gateway_ids"><samp>{{nat_gateway_ids.NatGatewayIds}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Resource Group ID: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.resource_group_id"><samp>{{resource_group_id}}</samp></span></div>
+
+        <div class="list-group-item-text item-margin">User CIDRs: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.user_cidrs"><samp>{{user_cidrs.UserCidr}}</samp></span></div>
+        <div class="list-group-item-text item-margin">IPv6 CIDR Block: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.ipv6_cidr_block"><samp>{{ipv6_cidr_block}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Network Acl Num: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.network_acl_num"><samp>{{network_acl_num}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Cen Status: <span id="vpc.regions.{{region}}.vpcs.{{@key}}.cen_status"><samp>{{cen_status}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.vpc.regions.id.vpcs", $("#services\\.vpc\\.regions\\.id\\.vpcs\\.partial").html());
+</script>
+
+<!-- Single VPC vpc template -->
+<script id="single_vpc_vpc-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.vpc.regions.id.vpcs'}}
+</script>
+<script>
+    var single_vpc_vpc_template = Handlebars.compile($("#single_vpc_vpc-template").html());
+</script>

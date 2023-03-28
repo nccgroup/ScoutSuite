@@ -1,0 +1,48 @@
+
+<!-- RAM groups -->
+<script id="services.ram.groups.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="ram.groups.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Comments: <span id="ram.groups.{{@key}}.comments"><samp>{{comments}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Create Date: <span id="ram.groups.{{@key}}.create_date">{{format_date create_date}}</span></div>
+        <div class="list-group-item-text item-margin">Update Date: <span id="ram.groups.{{@key}}.update_date">{{format_date update_date}}</span></div>
+    </div>
+    <div class="list-group-item" style="padding-bottom: 0 !important;">
+        <h4 class="list-group-item-heading">Members
+            {{> count_badge count=users.length target=(concat '#ram.groups' id 'users')}}
+        </h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each this.users}}
+                <li><a href="javascript:showObject('services.ram.users.{{this.name}}')">{{getValueAt 'services.ram.users' this.name 'name'}}</a></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Policies
+            {{> count_badge count=policies.length}}
+        </h4>
+        <ul>
+            {{#each policies}}
+            <li class="list-group-item-text"><a href="javascript:showObject('services.ram.policies', 'name', '{{this}}')">{{this}}</a></li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.ram.groups", $("#services\\.ram\\.groups\\.partial").html());
+</script>
+
+<!-- Single ram group template -->
+<script id="single_ram_group-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ram.groups'}}
+</script>
+<script>
+    var single_ram_group_template = Handlebars.compile($("#single_ram_group-template").html());
+</script>

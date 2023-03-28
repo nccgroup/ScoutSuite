@@ -11,13 +11,10 @@ class Regions(KsyunCompositeResources, metaclass=abc.ABCMeta):
 
     async def fetch_all(self, regions=None):
         self['regions'] = {}
-        for region in await self.facade.build_region_list(self.service, regions):
-            self['regions'][region] = {
-                'id': region,
-                'region': region,
-                'name': region
-            }
+        regions = await self.facade.build_region_list(self.service, regions)
 
+        for region in regions:
+            self['regions'][region] = {'id': region, 'region': region, 'name': region}
         await self._fetch_children_of_all_resources(
             resources=self['regions'],
             scopes={region: {'region': region} for region in self['regions']}
@@ -30,8 +27,8 @@ class Regions(KsyunCompositeResources, metaclass=abc.ABCMeta):
         for _, key in self._children:
             # VPCs should not be counted as resources. They exist whether you have resources or not,
             # so counting them would make the report confusing.
-            if key == 'vpcs':
-                continue
+            # if key == 'vpcs':
+            #     continue
 
             self[key + '_count'] = sum([region[key + '_count'] for
                                         region in self['regions'].values()])
