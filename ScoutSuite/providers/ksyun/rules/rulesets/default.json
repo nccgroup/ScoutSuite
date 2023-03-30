@@ -1,15 +1,15 @@
 {
-    "about": "Default ruleset for Alibaba Cloud.",
+    "about": "Default ruleset for KingSoft Cloud.",
     "rules": {
         "actiontrail-not-configured.json": [
             {
-                "enabled": true,
+                "enabled": false,
                 "level": "danger"
             }
         ],
         "actiontrail-not-enabled.json": [
             {
-                "enabled": true,
+                "enabled": false,
                 "level": "warning"
             }
         ],

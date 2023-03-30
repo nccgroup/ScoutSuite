@@ -16,11 +16,15 @@ re_nested_get_value_at = re.compile(r'_GET_VALUE_AT_\(.*')
 def pass_conditions(all_info, current_path, conditions, unknown_as_pass_condition=False):
     """
     Check that all conditions are passed for the current path.
+    检查当前路径的所有条件是否都已通过。
 
-    :param all_info:        All of the services' data
+    :param all_info:        All of the services' data 所有服务的数据
     :param current_path:    The value of the `path` variable defined in the finding file
+                            查找文件中定义的“路径”变量的值
     :param conditions:      The conditions to check as defined in the finding file
+                            调查结果文件中定义的要检查的条件
     :param unknown_as_pass_condition:   Consider an undetermined condition as passed
+                                        将未确定的条件视为已通过
     :return:
     """
 

@@ -72,6 +72,7 @@ formatted_service_name = {
 }
 
 
+# 用于管理一个字典，如果键不存在，则向其中添加一个新的键值对。如果键已经存在，则函数只是返回字典。
 def manage_dictionary(dictionary, key, init, callback=None):
     """
     :param dictionary:

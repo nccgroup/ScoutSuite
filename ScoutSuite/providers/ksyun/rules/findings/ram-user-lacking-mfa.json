@@ -6,11 +6,6 @@
     "conditions": [
         "and",
         [
-            "ram.users.id.console_access",
-            "true",
-            ""
-        ],
-        [
             "ram.users.id.mfa_status",
             "false",
             ""
