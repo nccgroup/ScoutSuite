@@ -12,15 +12,15 @@ class Regions(KsyunCompositeResources, metaclass=abc.ABCMeta):
     async def fetch_all(self, regions=None):
         self['regions'] = {}
         regions = await self.facade.build_region_list(self.service, regions)
+        if regions:
+            for region in regions:
+                self['regions'][region] = {'id': region, 'region': region, 'name': region}
+            await self._fetch_children_of_all_resources(
+                resources=self['regions'],
+                scopes={region: {'region': region} for region in self['regions']}
+            )
 
-        for region in regions:
-            self['regions'][region] = {'id': region, 'region': region, 'name': region}
-        await self._fetch_children_of_all_resources(
-            resources=self['regions'],
-            scopes={region: {'region': region} for region in self['regions']}
-        )
-
-        self._set_counts()
+            self._set_counts()
 
     def _set_counts(self):
         self['regions_count'] = len(self['regions'])

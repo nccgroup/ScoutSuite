@@ -38,6 +38,7 @@ class BaseProvider:
         self._load_metadata()
 
         if not hasattr(self, 'services'):
+
             self.services = self.services_config(self.credentials)
         supported_services = vars(self.services).keys()
 

@@ -40,6 +40,7 @@ class KsyunFacade:
             clientProfile = ClientProfile()
             clientProfile.httpProfile = httpProfile
 
+            # 用户有权限的机房API
             common_client = CommonClient("kec", '2016-03-04', cred, "cn-beijing-6", profile=clientProfile)
             r = common_client.call("DescribeRegions", {})
             items = json.loads(r).get('RegionSet')
@@ -50,5 +51,6 @@ class KsyunFacade:
             else:
                 return []
         except KsyunSDKException as err:
-            print(err)
+            # print(err)
+            return []
         

@@ -17,7 +17,7 @@ class Instances(KsyunResources):
     async def _parse_instance(self, raw_instance):
 
         instance_dict = {}
-        instance_dict['id'] = raw_instance.get('DBInstanceClass').get('ID')
+        instance_dict['id'] = raw_instance.get('DBInstanceClass').get('Id')
         instance_dict['name'] = raw_instance.get('DBInstanceName')
         instance_dict['create_time'] = raw_instance.get('InstanceCreateTime')
         # instance_dict['expire_time'] = raw_instance.get('ExpireTime')

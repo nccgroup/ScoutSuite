@@ -39,4 +39,3 @@ class ActiontrailFacade:
                 return []
         except KsyunSDKException as err:
             print(err)
-        # response = []

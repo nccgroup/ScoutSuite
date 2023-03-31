@@ -31,7 +31,7 @@ class KECFacade:
             clientProfile = ClientProfile()
             clientProfile.httpProfile = httpProfile
 
-            common_client = CommonClient("kec", '2016-03-04', cred, region=region, profile=clientProfile)
+            common_client = CommonClient("kec", '2016-03-04', cred, region, profile=clientProfile)
             r = common_client.call("DescribeInstances", {})
             response = json.loads(r).get('InstancesSet')
             if response:
@@ -39,7 +39,6 @@ class KECFacade:
             else:
                 return []
         except KsyunSDKException as err:
-            print(err)
             return []
 
 
