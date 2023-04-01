@@ -15,7 +15,7 @@ class Listeners(AWSResources):
             self[id] = listener
 
     def _parse_listener(self, raw_listener):
-            raw_listener.pop('ListenerArn')
-            raw_listener.pop('LoadBalancerArn')
-            port = raw_listener.pop('Port')
-            return port, raw_listener
+        raw_listener.pop('ListenerArn')
+        raw_listener.pop('LoadBalancerArn')
+        port = raw_listener.pop('Port')
+        return port, raw_listener

@@ -23,7 +23,8 @@ class VirtualNetworks(AzureResources):
         virtual_network_dict['enable_vm_protection'] = raw_virtual_network.enable_vm_protection
         virtual_network_dict['etag'] = str(raw_virtual_network.etag)
         if raw_virtual_network.tags is not None:
-            virtual_network_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_virtual_network.tags.items()]
+            virtual_network_dict['tags'] = ["{}:{}".format(key, value) for key, value in
+                                            raw_virtual_network.tags.items()]
         else:
             virtual_network_dict['tags'] = []
         virtual_network_dict['resource_group_name'] = get_resource_group_name(raw_virtual_network.id)

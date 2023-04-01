@@ -20,5 +20,7 @@ class Connections(AWSResources):
     def _parse_connection(self, raw_connection):
         raw_connection['id'] = raw_connection.pop('connectionId')
         raw_connection['name'] = raw_connection.pop('connectionName')
-        raw_connection['arn'] = format_arn(self.partition, self.service, self.region, raw_connection.get('ownerAccount'), raw_connection.get('id'), self.resource_type)
+        raw_connection['arn'] = format_arn(self.partition, self.service, self.region,
+                                           raw_connection.get('ownerAccount'), raw_connection.get('id'),
+                                           self.resource_type)
         return raw_connection['id'], raw_connection

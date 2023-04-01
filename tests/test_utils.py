@@ -14,6 +14,7 @@ import unittest
 from unittest import mock
 import datetime
 
+
 #
 # Test methods for ScoutSuite/utils.py
 #
@@ -71,15 +72,15 @@ class TestScoutUtilsClass(unittest.TestCase):
 
     def test_get_identity(self):
         with mock.patch(
-            "ScoutSuite.providers.aws.utils.get_caller_identity",
-            return_value={"Arn": "a:b:c:d:e:f:"},
+                "ScoutSuite.providers.aws.utils.get_caller_identity",
+                return_value={"Arn": "a:b:c:d:e:f:"},
         ):
             assert get_aws_account_id("") == "e"
 
     def test_get_partition_name(self):
         with mock.patch(
-            "ScoutSuite.providers.aws.utils.get_caller_identity",
-            return_value={"Arn": "a:b:c:d:e:f:"},
+                "ScoutSuite.providers.aws.utils.get_caller_identity",
+                return_value={"Arn": "a:b:c:d:e:f:"},
         ):
             assert get_partition_name("") == "b"
 
@@ -89,7 +90,7 @@ class TestScoutUtilsClass(unittest.TestCase):
                 {"AttributeName": "string", "AttributeType": "S"},
             ],
             "TableName": "string",
-            "KeySchema": [{"AttributeName": "string", "KeyType": "HASH"},],
+            "KeySchema": [{"AttributeName": "string", "KeyType": "HASH"}, ],
             "TableStatus": "CREATING",
             "CreationDateTime": datetime.datetime(2015, 1, 1, 1, 1, 1, 1, None),
             "ProvisionedThroughput": {

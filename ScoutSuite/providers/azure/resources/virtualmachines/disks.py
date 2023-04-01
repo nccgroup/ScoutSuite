@@ -44,5 +44,3 @@ class Disks(AzureResources):
             disk_dict['encryption_type'] = None
 
         return disk_dict['id'], disk_dict
-
-

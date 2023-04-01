@@ -1,4 +1,3 @@
-
 from ScoutSuite.providers.ksyun.resources.base import KsyunResources
 from ScoutSuite.providers.ksyun.facade.base import KsyunFacade
 
@@ -20,5 +19,3 @@ class Roles(KsyunResources):
         role_dict['description'] = raw_role.get('Description')
         role_dict['krn'] = raw_role.get('Krn')
         return role_dict['id'], role_dict
-
-

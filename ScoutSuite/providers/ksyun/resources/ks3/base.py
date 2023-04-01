@@ -1,12 +1,12 @@
 from ScoutSuite.providers.ksyun.facade.base import KsyunFacade
 from ScoutSuite.providers.ksyun.resources.regions import Regions
-from ScoutSuite.providers.ksyun.resources.rds.instances import Instances
+from ScoutSuite.providers.ksyun.resources.ks3.buckets import Buckets
 
 
-class RDS(Regions):
+class KS3(Regions):
     _children = [
-        (Instances, 'instances')
+        (Buckets, 'buckets')
     ]
 
     def __init__(self, facade: KsyunFacade):
-        super().__init__('rds', facade)
+        super().__init__('kec', facade)

@@ -32,4 +32,3 @@ class LogProfiles(AzureResources):
         if 'Delete' in categories and 'Write' in categories and 'Action' in categories:
             return True
         return False
-

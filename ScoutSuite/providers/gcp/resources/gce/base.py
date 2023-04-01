@@ -7,13 +7,13 @@ from ScoutSuite.providers.gcp.resources.gce.zones import GCEZones
 
 
 class ComputeEngine(Projects):
-    _children = [ 
+    _children = [
         (Firewalls, 'firewalls'),
         (Networks, 'networks'),
         (GCERegions, 'regions'),
         (Snapshots, 'snapshots'),
         (GCEZones, 'zones'),
-     ]
+    ]
 
     async def fetch_all(self):
         await Projects.fetch_all(self)

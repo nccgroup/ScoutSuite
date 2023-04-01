@@ -5,10 +5,11 @@ from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
 
+
 class CloudFront(AWSBaseFacade):
 
     async def get_distributions(self):
-        client = AWSFacadeUtils.get_client('cloudfront',self.session)
+        client = AWSFacadeUtils.get_client('cloudfront', self.session)
         # When no cloudfront distribution exists, we first need to initiate the creation
         # of a new distributions generate_credential_report by calling
         # client.list_distributions and then check for COMPLETE status before trying to download it:

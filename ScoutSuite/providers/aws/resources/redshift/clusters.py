@@ -21,5 +21,6 @@ class Clusters(AWSResources):
     def _parse_cluster(self, raw_cluster):
         name = raw_cluster.pop('ClusterIdentifier')
         raw_cluster['name'] = name
-        raw_cluster['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id, name, self.resource_type)
+        raw_cluster['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id, name,
+                                        self.resource_type)
         return name, raw_cluster

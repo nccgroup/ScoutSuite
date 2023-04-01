@@ -10,7 +10,6 @@ import asyncio
 
 
 class Resources(dict, metaclass=abc.ABCMeta):
-
     """This is the base class of a hierarchical structure. Everything is basically `Resources`.
     It stores in its internal dictionary instances of a given type of resources, with instance ids as keys and
     instance configurations (which store other nested resources) as values.
@@ -32,7 +31,6 @@ class Resources(dict, metaclass=abc.ABCMeta):
 
 
 class CompositeResources(Resources, metaclass=abc.ABCMeta):
-
     """This class represents a node in the hierarchical structure. As inherited from `Resources`, it still \
     stores instances of a given type of resources internally but also stores some kind of nested resources \
     referred to as its 'children'.

@@ -40,10 +40,3 @@ class KECFacade:
                 return []
         except KsyunSDKException as err:
             return []
-
-
-        
-        
-
-
-

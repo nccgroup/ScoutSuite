@@ -21,5 +21,6 @@ class Policies(AWSResources):
     def _parse_policy(self, raw_policy):
         raw_policy['name'] = raw_policy.pop('PolicyName')
         policy_id = get_non_provider_id(raw_policy['name'])
-        raw_policy['arn'] = format_arn(self.partition, self.service, self.region, '', raw_policy['name'], self.resource_type)
+        raw_policy['arn'] = format_arn(self.partition, self.service, self.region, '', raw_policy['name'],
+                                       self.resource_type)
         return policy_id, raw_policy

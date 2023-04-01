@@ -5,7 +5,6 @@ from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrentl
 import json
 
 
-
 class KMSFacade(AWSBaseFacade):
 
     async def get_keys(self, region: str):

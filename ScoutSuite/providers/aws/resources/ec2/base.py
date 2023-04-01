@@ -20,16 +20,16 @@ class EC2(Regions):
         await super().fetch_all(regions, excluded_regions, partition_name)
 
         for region in self['regions']:
-            self['regions'][region]['instances_count'] =\
+            self['regions'][region]['instances_count'] = \
                 sum([len(vpc['instances']) for vpc in self['regions'][region]['vpcs'].values()])
-            self['regions'][region]['security_groups_count'] =\
+            self['regions'][region]['security_groups_count'] = \
                 sum([len(vpc['security_groups']) for vpc in self['regions'][region]['vpcs'].values()])
-            self['regions'][region]['network_interfaces_count'] =\
+            self['regions'][region]['network_interfaces_count'] = \
                 sum([len(vpc['network_interfaces']) for vpc in self['regions'][region]['vpcs'].values()])
-        
-        self['instances_count'] =\
+
+        self['instances_count'] = \
             sum([region['instances_count'] for region in self['regions'].values()])
-        self['security_groups_count'] =\
+        self['security_groups_count'] = \
             sum([region['security_groups_count'] for region in self['regions'].values()])
-        self['network_interfaces_count'] =\
+        self['network_interfaces_count'] = \
             sum([region['network_interfaces_count'] for region in self['regions'].values()])

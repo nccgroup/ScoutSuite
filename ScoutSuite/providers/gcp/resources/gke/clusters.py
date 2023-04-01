@@ -35,22 +35,27 @@ class Clusters(Resources):
         cluster_dict['endpoint'] = raw_cluster.get('endpoint')
         cluster_dict['legacy_abac_enabled'] = raw_cluster.get('legacyAbac', {}).get('enabled', False)
         cluster_dict['logging_enabled'] = self._is_logging_enabled(raw_cluster)
-        cluster_dict['master_authorized_networks_enabled'] = raw_cluster.get('masterAuthorizedNetworksConfig', {}).get('enabled', False)
+        cluster_dict['master_authorized_networks_enabled'] = raw_cluster.get('masterAuthorizedNetworksConfig', {}).get(
+            'enabled', False)
         cluster_dict['monitoring_enabled'] = self._is_monitoring_enabled(raw_cluster)
         cluster_dict['network_policy_enabled'] = raw_cluster.get('networkPolicy', {}).get('enabled', False)
         cluster_dict['node_pools'] = NodePools(raw_cluster)
         cluster_dict['scopes'] = self._get_scopes(raw_cluster)
         cluster_dict['service_account'] = raw_cluster.get('nodeConfig', {}).get('serviceAccount', None)
         cluster_dict['master_authorized_networks_config'] = self._get_master_authorized_networks_config(raw_cluster)
-        cluster_dict['application_layer_encryption_enabled'] = raw_cluster.get('databaseEncryption', {}).get('state', None) == 'ENCRYPTED'
-        cluster_dict['workload_identity_enabled'] = raw_cluster.get('workloadIdentityConfig', {}).get('identityNamespace', None) != None
+        cluster_dict['application_layer_encryption_enabled'] = raw_cluster.get('databaseEncryption', {}).get('state',
+                                                                                                             None) == 'ENCRYPTED'
+        cluster_dict['workload_identity_enabled'] = raw_cluster.get('workloadIdentityConfig', {}).get(
+            'identityNamespace', None) != None
         cluster_dict['metadata_server_enabled'] = self._metadata_server_enabled(raw_cluster.get('nodePools', []))
         cluster_dict['release_channel'] = raw_cluster.get('releaseChannel', {}).get('channel', None)
         cluster_dict['shielded_nodes_enabled'] = raw_cluster.get('shieldedNodes', {}).get('enabled', False)
         cluster_dict['binary_authorization_enabled'] = raw_cluster.get('binaryAuthorization', {}).get('enabled', False)
         cluster_dict['private_ip_google_access_enabled'] = raw_cluster.get('privateIpGoogleAccess', False)
-        cluster_dict['private_nodes_enabled'] = raw_cluster.get('privateClusterConfig', {}).get('enablePrivateNodes', False)
-        cluster_dict['private_endpoint_enabled'] = raw_cluster.get('privateClusterConfig', {}).get('enablePrivateEndpoint', False)
+        cluster_dict['private_nodes_enabled'] = raw_cluster.get('privateClusterConfig', {}).get('enablePrivateNodes',
+                                                                                                False)
+        cluster_dict['private_endpoint_enabled'] = raw_cluster.get('privateClusterConfig', {}).get(
+            'enablePrivateEndpoint', False)
         cluster_dict['public_endpoint'] = raw_cluster.get('privateClusterConfig', {}).get('publicEndpoint', None)
         cluster_dict['private_endpoint'] = raw_cluster.get('privateClusterConfig', {}).get('privateEndpoint', None)
 

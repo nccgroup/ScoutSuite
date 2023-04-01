@@ -22,5 +22,6 @@ class ClusterParameters(AWSResources):
     def _parse_parameter(self, raw_parameter):
         parameter = {'value': raw_parameter['ParameterValue'],
                      'source': raw_parameter['Source']}
-        raw_parameter['arn'] = format_arn(self.partition, self.service, self.region, '', raw_parameter.get('ParameterName'), self.resource_type)
+        raw_parameter['arn'] = format_arn(self.partition, self.service, self.region, '',
+                                          raw_parameter.get('ParameterName'), self.resource_type)
         return raw_parameter['ParameterName'], parameter

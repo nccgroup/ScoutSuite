@@ -36,12 +36,12 @@ class RDSFacade(AWSBaseFacade):
             for instance in self._instances_cache[region]:
                 instance['VpcId'] = instance['DBSubnetGroup']['VpcId'] \
                     if 'DBSubnetGroup' in instance and 'VpcId' in instance['DBSubnetGroup'] \
-                    and instance['DBSubnetGroup']['VpcId'] \
+                       and instance['DBSubnetGroup']['VpcId'] \
                     else ec2_classic
 
             await get_and_set_concurrently(
-                [self._get_and_set_instance_clusters, self._get_and_set_instance_tags], self._instances_cache[region], region=region)
-
+                [self._get_and_set_instance_clusters, self._get_and_set_instance_tags], self._instances_cache[region],
+                region=region)
 
     async def _get_and_set_instance_tags(self, instance: {}, region: str):
         client = AWSFacadeUtils.get_client('rds', self.session, region)
@@ -113,7 +113,7 @@ class RDSFacade(AWSBaseFacade):
             attributes = await run_concurrently(
                 lambda: client.describe_db_snapshot_attributes(
                     DBSnapshotIdentifier=snapshot['DBSnapshotIdentifier'])['DBSnapshotAttributesResult'])
-            snapshot['Attributes'] =\
+            snapshot['Attributes'] = \
                 attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
         except Exception as e:
             if 'DBSnapshotNotFound' in e:
@@ -127,8 +127,9 @@ class RDSFacade(AWSBaseFacade):
         try:
             attributes = await run_concurrently(
                 lambda: client.describe_db_cluster_snapshot_attributes(
-                    DBClusterSnapshotIdentifier=snapshot['DBClusterSnapshotIdentifier'])['DBClusterSnapshotAttributesResult'])
-            snapshot['Attributes'] =\
+                    DBClusterSnapshotIdentifier=snapshot['DBClusterSnapshotIdentifier'])[
+                    'DBClusterSnapshotAttributesResult'])
+            snapshot['Attributes'] = \
                 attributes['DBClusterSnapshotAttributes'] if 'DBClusterSnapshotAttributes' in attributes else {}
         except Exception as e:
             print_exception(f'Failed to describe RDS cluster snapshot attributes: {e}')
@@ -149,7 +150,7 @@ class RDSFacade(AWSBaseFacade):
 
             self._subnet_groups_cache[region] = await AWSFacadeUtils.get_all_pages(
                 'rds', region, self.session, 'describe_db_subnet_groups', 'DBSubnetGroups')
-                
+
     async def get_parameter_groups(self, region: str):
         try:
             parameter_groups = await AWSFacadeUtils.get_all_pages(
@@ -177,7 +178,7 @@ class RDSFacade(AWSBaseFacade):
         except Exception as e:
             print_exception(f'Failed fetching DB parameters for {name}: {e}')
 
-    async def get_security_groups(self, region: str) :
+    async def get_security_groups(self, region: str):
         try:
             return await AWSFacadeUtils.get_all_pages(
                 'rds', region, self.session, 'describe_db_security_groups', 'DBSecurityGroups')

@@ -14,7 +14,8 @@ class ELBv2Facade(AWSBaseFacade):
     async def get_load_balancers(self, region: str, vpc: str):
         try:
             await self.cache_load_balancers(region)
-            return [load_balancer for load_balancer in self.load_balancers_cache[region] if load_balancer['VpcId'] == vpc]
+            return [load_balancer for load_balancer in self.load_balancers_cache[region] if
+                    load_balancer['VpcId'] == vpc]
         except Exception as e:
             print_exception(f'Failed to get ELBv2 load balancers: {e}')
             return []

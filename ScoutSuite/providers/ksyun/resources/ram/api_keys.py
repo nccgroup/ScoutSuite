@@ -1,4 +1,3 @@
-
 from ScoutSuite.providers.ksyun.resources.base import KsyunResources
 from ScoutSuite.providers.ksyun.facade.base import KsyunFacade
 

@@ -38,7 +38,8 @@ class Identity(OracleCompositeResources):
         for user in self['users']:
             self['users'][user]['groups'] = []
             for group in self['groups']:
-                if any(u['user_identifier'] == self['users'][user]['identifier'] for u in self['groups'][group]['users']):
+                if any(u['user_identifier'] == self['users'][user]['identifier'] for u in
+                       self['groups'][group]['users']):
                     self['users'][user]['groups'].append(self['groups'][group])
 
     def _set_user_names_to_group_members(self):
@@ -49,7 +50,3 @@ class Identity(OracleCompositeResources):
         for group in self['groups']:
             for user in self['groups'][group]['users']:
                 user['user_name'] = self['users'][user['user_id']]['name']
-
-
-
-

@@ -5,7 +5,7 @@ from ScoutSuite.providers.gcp.resources.stackdriverlogging.metrics import Metric
 
 
 class StackdriverLogging(Projects):
-    _children = [ 
+    _children = [
         (Sinks, 'sinks'),
         (Metrics, 'metrics'),
         (LoggingMetrics, 'logging_metrics')

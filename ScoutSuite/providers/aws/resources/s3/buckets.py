@@ -7,7 +7,7 @@ class Buckets(AWSResources):
     async def fetch_all(self):
         self.partition = get_partition_name(self.facade.session)
         self.service = 's3'
-        
+
         raw_buckets = await self.facade.s3.get_buckets()
         for raw_bucket in raw_buckets:
             name, resource = self._parse_bucket(raw_bucket)

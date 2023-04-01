@@ -206,7 +206,9 @@ class EC2Facade(AWSBaseFacade):
 
     async def get_peering_connections(self, region):
         try:
-            peering_connections = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_vpc_peering_connections', 'VpcPeeringConnections')
+            peering_connections = await AWSFacadeUtils.get_all_pages('ec2', region, self.session,
+                                                                     'describe_vpc_peering_connections',
+                                                                     'VpcPeeringConnections')
             return peering_connections
         except Exception as e:
             print_exception(f'Failed to get peering connections: {e}')
@@ -214,7 +216,8 @@ class EC2Facade(AWSBaseFacade):
 
     async def get_route_tables(self, region):
         try:
-            route_tables = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_route_tables', 'RouteTables')
+            route_tables = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_route_tables',
+                                                              'RouteTables')
             return route_tables
         except Exception as e:
             print_exception('Failed to get route tables: {}'.format(e))

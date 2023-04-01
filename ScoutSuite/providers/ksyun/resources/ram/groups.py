@@ -1,4 +1,3 @@
-
 from ScoutSuite.providers.ksyun.resources.base import KsyunResources
 from ScoutSuite.providers.ksyun.facade.base import KsyunFacade
 
@@ -31,4 +30,3 @@ class Groups(KsyunResources):
         #     })
 
         return group_dict['id'], group_dict
-

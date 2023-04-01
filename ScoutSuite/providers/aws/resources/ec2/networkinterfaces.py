@@ -20,5 +20,7 @@ class NetworkInterfaces(AWSResources):
 
     def _parse_network_interface(self, raw_network_interface):
         raw_network_interface['name'] = raw_network_interface['NetworkInterfaceId']
-        raw_network_interface['arn'] = format_arn(self.partition, self.service, self.region, raw_network_interface.get('OwnerId'), raw_network_interface.get('NetworkInterfaceId'), self.resource_type)
+        raw_network_interface['arn'] = format_arn(self.partition, self.service, self.region,
+                                                  raw_network_interface.get('OwnerId'),
+                                                  raw_network_interface.get('NetworkInterfaceId'), self.resource_type)
         return raw_network_interface['NetworkInterfaceId'], raw_network_interface

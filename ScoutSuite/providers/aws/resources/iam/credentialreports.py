@@ -15,15 +15,15 @@ class CredentialReports(AWSResources):
         raw_credential_report['name'] = raw_credential_report['user']
         raw_credential_report['password_enabled'] = raw_credential_report['password_enabled']
         raw_credential_report['password_last_used'] = self._sanitize_date(raw_credential_report['password_last_used'])
-        raw_credential_report['password_last_changed'] =\
+        raw_credential_report['password_last_changed'] = \
             self._sanitize_date(raw_credential_report['password_last_changed'])
         raw_credential_report['access_key_1_active'] = raw_credential_report['access_key_1_active']
-        raw_credential_report['access_key_1_last_used_date'] =\
+        raw_credential_report['access_key_1_last_used_date'] = \
             self._sanitize_date(raw_credential_report['access_key_1_last_used_date'])
         raw_credential_report['access_key_1_last_rotated'] = \
             self._sanitize_date(raw_credential_report['access_key_1_last_rotated'])
         raw_credential_report['access_key_2_active'] = raw_credential_report['access_key_2_active']
-        raw_credential_report['access_key_2_last_used_date'] =\
+        raw_credential_report['access_key_2_last_used_date'] = \
             self._sanitize_date(raw_credential_report['access_key_2_last_used_date'])
         raw_credential_report['access_key_2_last_rotated'] = \
             self._sanitize_date(raw_credential_report['access_key_2_last_rotated'])

@@ -4,6 +4,7 @@
 #   - https://github.com/nccgroup/ScoutSuite/issues/443
 #   - https://github.com/nccgroup/ScoutSuite/issues/665
 import httplib2shim
+
 httplib2shim.patch()
 
 from googleapiclient import http

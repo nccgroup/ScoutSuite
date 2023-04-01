@@ -23,17 +23,18 @@ class S3(AWSCompositeResources):
             if "public_access_block_configuration" in self['buckets'][bucket_id]:
                 # The resulting configuration will be the most restrictive
                 self['buckets'][bucket_id]["public_access_block_configuration"]["BlockPublicAcls"] = \
-                self['buckets'][bucket_id]["public_access_block_configuration"]["BlockPublicAcls"] or \
-                self['public_access_block_configuration']["BlockPublicAcls"]
+                    self['buckets'][bucket_id]["public_access_block_configuration"]["BlockPublicAcls"] or \
+                    self['public_access_block_configuration']["BlockPublicAcls"]
                 self['buckets'][bucket_id]["public_access_block_configuration"]["IgnorePublicAcls"] = \
-                self['buckets'][bucket_id]["public_access_block_configuration"]["IgnorePublicAcls"] or \
-                self['public_access_block_configuration']["IgnorePublicAcls"]
+                    self['buckets'][bucket_id]["public_access_block_configuration"]["IgnorePublicAcls"] or \
+                    self['public_access_block_configuration']["IgnorePublicAcls"]
                 self['buckets'][bucket_id]["public_access_block_configuration"]["BlockPublicPolicy"] = \
-                self['buckets'][bucket_id]["public_access_block_configuration"]["BlockPublicPolicy"] or \
-                self['public_access_block_configuration']["BlockPublicPolicy"]
+                    self['buckets'][bucket_id]["public_access_block_configuration"]["BlockPublicPolicy"] or \
+                    self['public_access_block_configuration']["BlockPublicPolicy"]
                 self['buckets'][bucket_id]["public_access_block_configuration"]["RestrictPublicBuckets"] = \
-                self['buckets'][bucket_id]["public_access_block_configuration"]["RestrictPublicBuckets"] or \
-                self['public_access_block_configuration']["RestrictPublicBuckets"]
+                    self['buckets'][bucket_id]["public_access_block_configuration"]["RestrictPublicBuckets"] or \
+                    self['public_access_block_configuration']["RestrictPublicBuckets"]
             else:
                 # No bucket-level configuration, use account level configuration
-                self['buckets'][bucket_id]["public_access_block_configuration"] = self['public_access_block_configuration']
+                self['buckets'][bucket_id]["public_access_block_configuration"] = self[
+                    'public_access_block_configuration']

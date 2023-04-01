@@ -12,7 +12,8 @@ class Queues(AWSResources):
 
     async def fetch_all(self):
         queues = await self.facade.sqs.get_queues(self.region,
-                                                  ['CreatedTimestamp', 'Policy', 'QueueArn', 'KmsMasterKeyId', 'SqsManagedSseEnabled'])
+                                                  ['CreatedTimestamp', 'Policy', 'QueueArn', 'KmsMasterKeyId',
+                                                   'SqsManagedSseEnabled'])
         for queue_url, queue_attributes in queues:
             id, queue = self._parse_queue(queue_url, queue_attributes)
             self[id] = queue

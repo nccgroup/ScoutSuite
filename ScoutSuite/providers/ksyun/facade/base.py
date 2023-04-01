@@ -12,6 +12,7 @@ from ScoutSuite.providers.ksyun.facade.ram import RAMFacade
 from ScoutSuite.providers.ksyun.facade.rds import RDSFacade
 from ScoutSuite.providers.ksyun.facade.vpc import VPCFacade
 from ScoutSuite.providers.ksyun.facade.kkms import KKMSFacade
+from ScoutSuite.providers.ksyun.facade.ks3 import KS3Facade
 
 
 class KsyunFacade:
@@ -26,6 +27,7 @@ class KsyunFacade:
         self.rds = RDSFacade(self._credentials)
         self.vpc = VPCFacade(self._credentials)
         self.kkms = KKMSFacade(self._credentials)
+        self.ks3 = KS3Facade(self._credentials)
 
     async def build_region_list(self, service: str, chosen_regions=None):
 
@@ -53,4 +55,3 @@ class KsyunFacade:
         except KsyunSDKException as err:
             # print(err)
             return []
-        

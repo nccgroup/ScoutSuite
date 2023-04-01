@@ -18,8 +18,8 @@ class CloudStorageFacade:
         try:
             client = self.get_client(project_id)
             buckets = await run_concurrently(lambda: list(client.list_buckets()))
-            await get_and_set_concurrently([self._get_and_set_bucket_logging, 
-                self._get_and_set_bucket_iam_policy], buckets)
+            await get_and_set_concurrently([self._get_and_set_bucket_logging,
+                                            self._get_and_set_bucket_iam_policy], buckets)
             return buckets
         except Exception as e:
             print_exception(f'Failed to retrieve storage buckets: {e}')
@@ -39,4 +39,4 @@ class CloudStorageFacade:
             setattr(bucket, 'iam_policy', bucket_iam_policy)
         except Exception as e:
             print_exception(f'Failed to retrieve bucket IAM policy: {e}')
-            setattr(bucket, 'iam_policy',  None)
+            setattr(bucket, 'iam_policy', None)

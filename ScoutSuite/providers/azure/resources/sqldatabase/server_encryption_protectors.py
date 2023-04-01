@@ -21,5 +21,5 @@ class ServerEncryptionProtectors(AzureResources):
             'server_key_type': protectors.server_key_type,
             'uri': protectors.uri,
             'TDE_protector_is_encrypted': protectors.kind == 'azurekeyvault' and
-            protectors.server_key_type == 'AzureKeyVault' and protectors.uri is not None
+                                          protectors.server_key_type == 'AzureKeyVault' and protectors.uri is not None
         })

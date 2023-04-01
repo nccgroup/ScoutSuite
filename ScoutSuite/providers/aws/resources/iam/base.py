@@ -128,7 +128,7 @@ class IAM(AWSCompositeResources):
                         iam_resource_name, policy_name, policy_type, condition):
         self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name].setdefault(
             resource_string, {})
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string].\
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string]. \
             setdefault(resource, {})
         self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][
             resource].setdefault(policy_type, {})

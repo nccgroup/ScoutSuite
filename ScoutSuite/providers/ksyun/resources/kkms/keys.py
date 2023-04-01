@@ -1,4 +1,3 @@
-
 from ScoutSuite.providers.ksyun.resources.base import KsyunResources
 from ScoutSuite.providers.ksyun.facade.base import KsyunFacade
 
@@ -41,4 +40,3 @@ class Keys(KsyunResources):
         #     key_dict['material_expire_time'] = None
 
         return key_dict['id'], key_dict
-

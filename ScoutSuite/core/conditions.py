@@ -189,7 +189,7 @@ def pass_condition(b, test, a):
     elif test == 'matchInList':
         if type(a) != list:
             a = [a]
-        if type(b) !=list:
+        if type(b) != list:
             b = [b]
         for c in a:
             for d in b:
@@ -250,7 +250,7 @@ def pass_condition(b, test, a):
                     if bottom_limit_port <= port <= upper_limit_port:
                         result = True
                         break
-            else: #A single port
+            else:  # A single port
                 for port in a:
                     if port == port_range:
                         result = True

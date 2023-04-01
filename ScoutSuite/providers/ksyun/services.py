@@ -5,6 +5,7 @@ from ScoutSuite.providers.ksyun.resources.kec.base import KEC
 from ScoutSuite.providers.ksyun.resources.rds.base import RDS
 from ScoutSuite.providers.ksyun.resources.vpc.base import VPC
 from ScoutSuite.providers.ksyun.resources.kkms.base import KKMS
+from ScoutSuite.providers.ksyun.resources.ks3.base import KS3
 from ScoutSuite.providers.base.services import BaseServicesConfig
 
 
@@ -13,12 +14,13 @@ class KsyunServicesConfig(BaseServicesConfig):
         super().__init__(credentials)
 
         facade = KsyunFacade(credentials)
-        self.actiontrail = ActionTrail(facade)
-        self.kec = KEC(facade)
-        self.kkms = KKMS(facade)
-        self.rds = RDS(facade)
-        self.ram = RAM(facade)
-        self.vpc = VPC(facade)
+        # self.actiontrail = ActionTrail(facade)
+        # self.kec = KEC(facade)
+        # self.kkms = KKMS(facade)
+        # self.rds = RDS(facade)
+        # self.ram = RAM(facade)
+        # self.vpc = VPC(facade)
+        self.ks3 = KS3(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'ksyun'

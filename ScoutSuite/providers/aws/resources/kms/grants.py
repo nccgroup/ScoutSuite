@@ -29,6 +29,10 @@ class Grants(AWSResources):
             'issuing_account': raw_grant.get('IssuingAccount'),
             'operations': raw_grant.get('Operations'),
             'constraints': raw_grant.get('Constraints'),
-            'arn': format_arn(self.partition, self.service, self.region, raw_grant.get('IssuingAccount').split(':')[4], raw_grant.get('GrantId'), self.resource_type) if ':' in raw_grant.get('IssuingAccount') else format_arn(self.partition, self.service, self.region, raw_grant.get('IssuingAccount'), raw_grant.get('GrantId'), self.resource_type)
+            'arn': format_arn(self.partition, self.service, self.region, raw_grant.get('IssuingAccount').split(':')[4],
+                              raw_grant.get('GrantId'), self.resource_type) if ':' in raw_grant.get(
+                'IssuingAccount') else format_arn(self.partition, self.service, self.region,
+                                                  raw_grant.get('IssuingAccount'), raw_grant.get('GrantId'),
+                                                  self.resource_type)
         }
         return grant_dict['grant_id'], grant_dict

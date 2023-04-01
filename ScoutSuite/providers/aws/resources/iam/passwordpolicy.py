@@ -10,13 +10,13 @@ class PasswordPolicy(AWSResources):
     def _parse_password_policy(self, raw_password_policy):
         if raw_password_policy is None:
             return {
-                    'MinimumPasswordLength': '1',
-                    'RequireUppercaseCharacters': False,
-                    'RequireLowercaseCharacters': False, 
-                    'RequireNumbers': False,
-                    'RequireSymbols': False, 
-                    'PasswordReusePrevention': False,
-                    'ExpirePasswords': False
+                'MinimumPasswordLength': '1',
+                'RequireUppercaseCharacters': False,
+                'RequireLowercaseCharacters': False,
+                'RequireNumbers': False,
+                'RequireSymbols': False,
+                'PasswordReusePrevention': False,
+                'ExpirePasswords': False
             }
 
         if 'PasswordReusePrevention' not in raw_password_policy:

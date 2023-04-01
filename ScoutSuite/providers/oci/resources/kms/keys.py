@@ -9,7 +9,6 @@ class Keys(OracleResources):
         self.key_vault = keyvault
 
     async def fetch_all(self):
-
         for raw_key in await self.facade.kms.get_keys(self.key_vault):
             id, key = await self._parse_key(raw_key)
             self[id] = key

@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 from ScoutSuite.providers.aws.utils import format_arn
 
+
 class Vpcs(AWSCompositeResources):
     """
     Fetches resources inside the virtual private clouds (VPCs) defined in a region. 
@@ -34,8 +35,9 @@ class Vpcs(AWSCompositeResources):
         vpc['cidr_block'] = raw_vpc['CidrBlock']
         vpc['default'] = raw_vpc['IsDefault']
         vpc['state'] = raw_vpc['State']
-        vpc['arn'] = format_arn(self.partition, self.service, self.region, raw_vpc.get('OwnerId'), raw_vpc.get('VpcId'), self.resource_type)
-        
+        vpc['arn'] = format_arn(self.partition, self.service, self.region, raw_vpc.get('OwnerId'), raw_vpc.get('VpcId'),
+                                self.resource_type)
+
         # Pull the name from tags
         name_tag = next((d for i, d in enumerate(raw_vpc.get('Tags', [])) if d.get('Key') == 'Name'), None)
         if name_tag:

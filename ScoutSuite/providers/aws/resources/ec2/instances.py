@@ -24,7 +24,8 @@ class EC2Instances(AWSResources):
         instance = {}
         id = raw_instance['InstanceId']
         instance['id'] = id
-        instance['arn'] = format_arn(self.partition, self.service, self.region, raw_instance['OwnerId'], raw_instance['InstanceId'], self.resource_type)
+        instance['arn'] = format_arn(self.partition, self.service, self.region, raw_instance['OwnerId'],
+                                     raw_instance['InstanceId'], self.resource_type)
         instance['reservation_id'] = raw_instance['ReservationId']
         instance['availability_zone'] = raw_instance.get('Placement', {}).get('AvailabilityZone')
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
@@ -38,7 +39,7 @@ class EC2Instances(AWSResources):
         if "IamInstanceProfile" in raw_instance:
             instance['iam_instance_profile_id'] = raw_instance['IamInstanceProfile']['Id']
             instance['iam_instance_profile_arn'] = raw_instance['IamInstanceProfile']['Arn']
-        
+
         instance['network_interfaces'] = {}
         for eni in raw_instance['NetworkInterfaces']:
             nic = {}

@@ -58,4 +58,3 @@ class LambdaFacade(AWSBaseFacade):
             else:
                 print_exception('Failed to get Lambda function configuration: {}'.format(e))
         return []
-

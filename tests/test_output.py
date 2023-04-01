@@ -2,6 +2,7 @@ import unittest
 from ScoutSuite.output.html import *
 from ScoutSuite.output.utils import *
 
+
 #
 # Test methods for ScoutSuite/output
 #

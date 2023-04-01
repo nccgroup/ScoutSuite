@@ -16,7 +16,8 @@ class ELBFacade(AWSBaseFacade):
     async def get_load_balancers(self, region: str, vpc: str):
         try:
             await self.cache_load_balancers(region)
-            return [load_balancer for load_balancer in self.load_balancers_cache[region] if load_balancer['VpcId'] == vpc]
+            return [load_balancer for load_balancer in self.load_balancers_cache[region] if
+                    load_balancer['VpcId'] == vpc]
         except Exception as e:
             print_exception(f'Failed to get ELB load balancers: {e}')
             return []
@@ -80,15 +81,15 @@ class ELBFacade(AWSBaseFacade):
             return []
 
     async def _get_policies(self, load_balancer: dict, region: str):
-            if len(load_balancer['policy_names']) == 0:
-                return []
+        if len(load_balancer['policy_names']) == 0:
+            return []
 
-            elb_client = AWSFacadeUtils.get_client('elb', self.session, region)
-            try:
-                return await run_concurrently(lambda: elb_client.describe_load_balancer_policies(
-                    LoadBalancerName=load_balancer['LoadBalancerName'],
-                    PolicyNames=load_balancer['policy_names'])['PolicyDescriptions']
-                )
-            except Exception as e:
-                print_exception(f'Failed to retrieve load balancer policies: {e}')
-                return []
+        elb_client = AWSFacadeUtils.get_client('elb', self.session, region)
+        try:
+            return await run_concurrently(lambda: elb_client.describe_load_balancer_policies(
+                LoadBalancerName=load_balancer['LoadBalancerName'],
+                PolicyNames=load_balancer['policy_names'])['PolicyDescriptions']
+                                          )
+        except Exception as e:
+            print_exception(f'Failed to retrieve load balancer policies: {e}')
+            return []

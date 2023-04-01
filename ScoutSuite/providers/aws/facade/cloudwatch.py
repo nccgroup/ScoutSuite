@@ -20,4 +20,3 @@ class CloudWatch(AWSBaseFacade):
         except Exception as e:
             print_exception('Failed to get CloudWatch metric filters: {}'.format(e))
             return []
-

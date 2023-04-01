@@ -14,7 +14,7 @@ class LoggingMetrics(Resources):
 
     def _parse_metric(self, raw_metrics):
         metric_dict = {}
-        metric_dict['project_ownership_assignments'] =\
+        metric_dict['project_ownership_assignments'] = \
             self._specific_filter_present(raw_metrics, '(protoPayload.serviceName="cloudresourcemanager.googleapis'
                                                        '.com") AND (ProjectOwnership OR projectOwnerInvitee) OR ('
                                                        'protoPayload.serviceData.policyDelta.bindingDeltas.action'

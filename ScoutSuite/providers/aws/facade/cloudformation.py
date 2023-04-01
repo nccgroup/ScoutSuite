@@ -19,7 +19,8 @@ class CloudFormation(AWSBaseFacade):
         else:
             stacks = [stack for stack in stacks if not CloudFormation._is_stack_deleted(stack)]
             await get_and_set_concurrently(
-                [self._get_and_set_description, self._get_and_set_template, self._get_and_set_policy, self._get_stack_notifications],
+                [self._get_and_set_description, self._get_and_set_template, self._get_and_set_policy,
+                 self._get_stack_notifications],
                 stacks, region=region)
         finally:
             return stacks

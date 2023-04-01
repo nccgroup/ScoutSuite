@@ -27,5 +27,3 @@ class Images(AzureResources):
         image_dict['hyper_vgeneration'] = raw_image.hyper_vgeneration
         image_dict['additional_properties'] = raw_image.additional_properties
         return image_dict['id'], image_dict
-
-

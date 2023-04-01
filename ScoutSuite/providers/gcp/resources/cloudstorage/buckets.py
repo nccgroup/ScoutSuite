@@ -30,7 +30,7 @@ class Buckets(Resources):
         bucket_dict['public_access_prevention'] = raw_bucket.iam_configuration.public_access_prevention
 
         iam_configuration = raw_bucket.iam_configuration.get('uniformBucketLevelAccess') or \
-            raw_bucket.iam_configuration.get('bucketPolicyOnly')
+                            raw_bucket.iam_configuration.get('bucketPolicyOnly')
         if iam_configuration:
             bucket_dict['uniform_bucket_level_access'] = iam_configuration.get("enabled", False)
         else:

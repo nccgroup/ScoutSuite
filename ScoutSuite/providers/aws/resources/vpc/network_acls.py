@@ -29,7 +29,8 @@ class NetworkACLs(AWSResources):
         raw_network_acl['rules']['ingress'] = self._parse_network_acl_entries(raw_network_acl['Entries'], False)
         raw_network_acl['rules']['egress'] = self._parse_network_acl_entries(raw_network_acl['Entries'], True)
         raw_network_acl.pop('Entries')
-        raw_network_acl['arn'] = format_arn(self.partition, self.service, self.region, raw_network_acl.get('OwnerId'), raw_network_acl.get('id'), self.resource_type)
+        raw_network_acl['arn'] = format_arn(self.partition, self.service, self.region, raw_network_acl.get('OwnerId'),
+                                            raw_network_acl.get('id'), self.resource_type)
         return raw_network_acl['id'], raw_network_acl
 
     @staticmethod

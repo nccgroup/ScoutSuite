@@ -14,7 +14,8 @@ class GKEFacade(GCPBaseFacade):
         try:
             gke_client = self._get_client()
             response = await run_concurrently(
-                lambda: gke_client.projects().locations().clusters().list(parent=f"projects/{project_id}/locations/-").execute()
+                lambda: gke_client.projects().locations().clusters().list(
+                    parent=f"projects/{project_id}/locations/-").execute()
             )
             clusters = response.get('clusters', [])
             await get_and_set_concurrently([self._get_and_set_private_google_access_enabled],

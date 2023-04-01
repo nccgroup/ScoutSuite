@@ -13,7 +13,6 @@ class RDSFacade:
     def __init__(self, credentials: KsyunCredentials):
         self._credentials = credentials
 
-
     async def get_instances(self, region):
         try:
             cred = credential.Credential(self._credentials.credentials_id, self._credentials.credentials_secret)

@@ -16,7 +16,7 @@ class CodeBuild(AWSBaseFacade):
             if not projects:
                 return []
             return await map_concurrently(self._get_project_details, projects, region=region)
-        
+
     async def _get_project_details(self, project: str, region: str):
         codebuild_client = AWSFacadeUtils.get_client('codebuild', self.session, region)
         try:

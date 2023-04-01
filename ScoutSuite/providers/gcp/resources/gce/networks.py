@@ -29,7 +29,7 @@ class Networks(Resources):
         # Network is legacy if there is no subnets
         network_dict['legacy_mode'] = True \
             if (raw_network.get('subnetworks', None) is None or not raw_network.get('subnetworks', None)) and \
-            raw_network.get('autoCreateSubnetworks', None) is None \
+               raw_network.get('autoCreateSubnetworks', None) is None \
             else False
 
         return network_dict['id'], network_dict

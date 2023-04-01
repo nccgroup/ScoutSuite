@@ -25,8 +25,9 @@ class LoadBalancers(AWSResources):
                  ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Scheme', 'attributes'])
 
         load_balancer['security_groups'] = []
-        load_balancer['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id, raw_load_balancer.get('LoadBalancerName'), self.resource_type)
-        
+        load_balancer['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id,
+                                          raw_load_balancer.get('LoadBalancerName'), self.resource_type)
+
         for sg in raw_load_balancer['SecurityGroups']:
             load_balancer['security_groups'].append({'GroupId': sg})
 
@@ -34,7 +35,7 @@ class LoadBalancers(AWSResources):
         for l in raw_load_balancer['ListenerDescriptions']:
             listener = l['Listener']
             load_balancer['listeners'][l['Listener']
-                                       ['LoadBalancerPort']] = listener
+            ['LoadBalancerPort']] = listener
 
         load_balancer['instances'] = []
         for i in raw_load_balancer['Instances']:

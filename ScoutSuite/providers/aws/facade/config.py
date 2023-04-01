@@ -8,7 +8,8 @@ class ConfigFacade(AWSBaseFacade):
 
     async def get_rules(self, region):
         try:
-            return await AWSFacadeUtils.get_all_pages('config', region, self.session, 'describe_config_rules', 'ConfigRules')
+            return await AWSFacadeUtils.get_all_pages('config', region, self.session, 'describe_config_rules',
+                                                      'ConfigRules')
         except Exception as e:
             print_exception(f'Failed to get Config ruless: {e}')
             return []

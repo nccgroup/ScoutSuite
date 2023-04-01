@@ -12,13 +12,14 @@ class FirewallRules(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for firewall_rule in await self.facade.sqldatabase.get_firewall_rules(self.resource_group_name, self.server_name,
-                                                                         self.subscription_id):
+        for firewall_rule in await self.facade.sqldatabase.get_firewall_rules(self.resource_group_name,
+                                                                              self.server_name,
+                                                                              self.subscription_id):
             id, firewall_rules = self._parse_firewall_rules(firewall_rule)
             self[id] = firewall_rules
 
     def _parse_firewall_rules(self, firewall_rule):
-        firewall_rules_dict ={}
+        firewall_rules_dict = {}
         firewall_rules_dict['id'] = get_non_provider_id(firewall_rule.id.lower())
         firewall_rules_dict['name'] = firewall_rule.name
         firewall_rules_dict['start_ip'] = firewall_rule.start_ip_address

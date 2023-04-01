@@ -3,20 +3,18 @@
 import unittest
 from ScoutSuite.core.console import *
 
+
 class TestOpinelUtilsConsoleClass(unittest.TestCase):
 
     def test_configPrintException(self):
         set_logger_configuration(False)
         set_logger_configuration(True)
 
-
     def test_printDebug(self):
         print_debug('hello')
 
-
     def test_printError(self):
         print_error('hello')
-
 
     def test_printException(self):
         set_logger_configuration(True)
@@ -34,14 +32,11 @@ class TestOpinelUtilsConsoleClass(unittest.TestCase):
         except Exception as e:
             print_exception(e, True)
 
-
     def test_printInfo(msg, newLine=True):
         print_info('hello')
 
-
     def test_printGeneric(self):
         print_generic('hello')
-
 
     def test_prompt(self):
         assert prompt('a') == 'a'
@@ -51,20 +46,28 @@ class TestOpinelUtilsConsoleClass(unittest.TestCase):
         assert prompt(test) == 'b'
         assert prompt(test) == ''
 
-
     def test_prompt_4_value(self):
         assert prompt_value('prompt_4_value', no_confirm=True, test_input='inputvalue') == 'inputvalue'
-        assert prompt_value('prompt_4_value', no_confirm=True, is_question=True, test_input='inputvalue') == 'inputvalue'
+        assert prompt_value('prompt_4_value', no_confirm=True, is_question=True,
+                            test_input='inputvalue') == 'inputvalue'
         assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], no_confirm=True, test_input='b') == 'b'
-        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], display_choices=False, no_confirm=True, test_input='b') == 'b'
-        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], display_indices=True, no_confirm=True, test_input='1') == 'b'
-        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], default='b', no_confirm=True, test_input='') == 'b'
-        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], no_confirm=True, authorize_list=True, test_input='a,b') == 'a,b'
-        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], required=True, no_confirm=True, test_input=['', 'b']) == 'b'
-        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], required=True, no_confirm=True, test_input=['invalid', 'b']) == 'b'
+        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], display_choices=False, no_confirm=True,
+                            test_input='b') == 'b'
+        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], display_indices=True, no_confirm=True,
+                            test_input='1') == 'b'
+        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], default='b', no_confirm=True,
+                            test_input='') == 'b'
+        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], no_confirm=True, authorize_list=True,
+                            test_input='a,b') == 'a,b'
+        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], required=True, no_confirm=True,
+                            test_input=['', 'b']) == 'b'
+        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], required=True, no_confirm=True,
+                            test_input=['invalid', 'b']) == 'b'
         assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], no_confirm=True, test_input='a,c') == None
-        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], no_confirm=True, test_input='a,b', authorize_list = True) == 'a,b'
-        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], no_confirm=True, test_input='a,e', authorize_list = True) == None
+        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], no_confirm=True, test_input='a,b',
+                            authorize_list=True) == 'a,b'
+        assert prompt_value('prompt_4_value', choices=['a', 'b', 'c'], no_confirm=True, test_input='a,e',
+                            authorize_list=True) == None
 
     def test_prompt_4_yes_no(self):
         assert prompt_yes_no('hello', 'N') == False

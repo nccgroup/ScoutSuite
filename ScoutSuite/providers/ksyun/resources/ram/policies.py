@@ -29,7 +29,8 @@ class Policies(KsyunResources):
             policy_dict['policy_type'] = raw_policy.get('PolicyType')
             policy_dict['default_version_id'] = raw_policy.get('DefaultVersionId')
 
-            policy_version = await self.facade.ram.get_policy_version(policy_dict['krn'], policy_dict['default_version_id'])
+            policy_version = await self.facade.ram.get_policy_version(policy_dict['krn'],
+                                                                      policy_dict['default_version_id'])
             policy_dict['policy_document'] = policy_version['Document']
 
             policy_entities = await self.facade.ram.get_policy_entities(policy_dict['krn'])

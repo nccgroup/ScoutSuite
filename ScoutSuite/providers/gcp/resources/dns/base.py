@@ -3,6 +3,6 @@ from ScoutSuite.providers.gcp.resources.dns.managed_zones import ManagedZones
 
 
 class DNS(Projects):
-    _children = [ 
+    _children = [
         (ManagedZones, 'managed_zones')
-     ]
+    ]

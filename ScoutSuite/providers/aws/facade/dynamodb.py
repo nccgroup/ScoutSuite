@@ -71,4 +71,3 @@ class DynamoDBFacade(AWSBaseFacade):
                 print_warning('Failed to describe DynamoDB table tags: {}'.format(e))
             else:
                 print_exception('Failed to describe DynamoDB table tags: {}'.format(e))
-

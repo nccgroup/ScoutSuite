@@ -40,7 +40,7 @@ class BaseServicesConfig:
         try:
             print_info('Fetching resources for the {} service'.format(format_service_name(service)))
 
-            service_config = getattr(self, service)     # ram
+            service_config = getattr(self, service)  # ram
             # call fetch method for the service
             if 'fetch_all' in dir(service_config):
                 method_args = {}
@@ -53,7 +53,7 @@ class BaseServicesConfig:
                 if self._is_provider('aws'):
                     if service != 'iam':
                         method_args['partition_name'] = get_partition_name(self.credentials.session)
-                await service_config.fetch_all(**method_args)                
+                await service_config.fetch_all(**method_args)
                 if hasattr(service_config, 'finalize'):
                     await service_config.finalize()
             else:

@@ -4,6 +4,7 @@ import unittest
 from ScoutSuite.core.fs import *
 from ScoutSuite.core.console import *
 
+
 class TestOpinelFsClass(unittest.TestCase):
     """
     Test opinel.fs
@@ -36,7 +37,6 @@ class TestOpinelFsClass(unittest.TestCase):
         assert type(test) == dict
         assert test['-2'] == 'TEST'
 
-
     def test_read_ip_ranges(self):
         read_ip_ranges('aws/ip-ranges/aws.json', local_file=False)
         read_ip_ranges('tests/data/ip-ranges-1.json', local_file=True)
@@ -46,21 +46,21 @@ class TestOpinelFsClass(unittest.TestCase):
             {
                 'filename': 'tests/data/ip-ranges-1.json',
                 'local_file': True,
-                'conditions': [],'ip_only': False,
+                'conditions': [], 'ip_only': False,
                 'results': 'tests/results/read_ip_ranges/ip-ranges-1a.json'
             },
             {
                 'filename': 'tests/data/ip-ranges-1.json',
                 'local_file': True,
-                'conditions': [],'ip_only': True,
+                'conditions': [], 'ip_only': True,
                 'results': 'tests/results/read_ip_ranges/ip-ranges-1b.json'
             },
             {
                 'filename': 'tests/data/ip-ranges-1.json',
                 'local_file': True,
                 'conditions': [
-                         [
-                          'field_a', 'equal', 'a1']],
+                    [
+                        'field_a', 'equal', 'a1']],
                 'ip_only': True,
                 'results': 'tests/results/read_ip_ranges/ip-ranges-1c.json'
             },
@@ -68,7 +68,7 @@ class TestOpinelFsClass(unittest.TestCase):
                 'filename': 'tests/aws/ip-ranges/aws.json',
                 'local_file': False,
                 'conditions': [
-                    [ 'ip_prefix', 'equal', '23.20.0.0/14' ]
+                    ['ip_prefix', 'equal', '23.20.0.0/14']
                 ],
                 'ip_only': False,
                 'results': 'tests/results/read_ip_ranges/ip-ranges-a.json'
@@ -93,6 +93,6 @@ class TestOpinelFsClass(unittest.TestCase):
 
     def test_save_blob_as_json(self):
         date = datetime.datetime.now()
-        save_blob_as_json('tmp1.json', {'foo': 'bar','date': date}, True)
+        save_blob_as_json('tmp1.json', {'foo': 'bar', 'date': date}, True)
         save_blob_as_json('tmp1.json', {'foo': 'bar'}, True)
         save_blob_as_json('/root/tmp1.json', {'foo': 'bar'}, True)

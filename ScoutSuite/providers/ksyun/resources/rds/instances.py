@@ -43,4 +43,3 @@ class Instances(KsyunResources):
         # instance_dict['db_instance_class'] = raw_instance.get('DBInstanceClass')
 
         return instance_dict['id'], instance_dict
-

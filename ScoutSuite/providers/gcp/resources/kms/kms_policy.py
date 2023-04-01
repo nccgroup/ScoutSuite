@@ -14,7 +14,8 @@ class KMSPolicy(Resources):
         self.key_name = key_name
 
     async def fetch_all(self):
-        raw_kms_bindings = await self.facade.kms.keys_iam_policy(self.project_id, self.location, self.keyring_name, self.key_name)
+        raw_kms_bindings = await self.facade.kms.keys_iam_policy(self.project_id, self.location, self.keyring_name,
+                                                                 self.key_name)
         for raw_kms_binding in raw_kms_bindings:
             kms_binding_id, kms_bindings = await self._parse_binding(raw_kms_binding)
             self[kms_binding_id] = kms_bindings

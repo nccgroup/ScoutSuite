@@ -40,4 +40,3 @@ class OracleProvider(BaseProvider):
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
 
         super().preprocessing()
-

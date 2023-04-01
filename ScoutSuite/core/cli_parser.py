@@ -5,7 +5,8 @@ from ScoutSuite import __version__
 class ScoutSuiteArgumentParser:
 
     def __init__(self):
-        self.parser = argparse.ArgumentParser(epilog='To get addtional help on a specific provider run: scout.py {provider} -h')
+        self.parser = argparse.ArgumentParser(
+            epilog='To get addtional help on a specific provider run: scout.py {provider} -h')
 
         # People will still be able to use the old --provider syntax
         self.parser.add_argument("--provider",
@@ -253,22 +254,22 @@ class ScoutSuiteArgumentParser:
         ksyun_auth_modes = ksyun_parser.add_mutually_exclusive_group(required=True)
 
         ksyun_auth_modes.add_argument('--access-keys',
-                                       action='store_true',
-                                       help='Run Scout with user credentials')
+                                      action='store_true',
+                                      help='Run Scout with user credentials')
 
         ksyun_auth_params.add_argument('-k',
-                                        '--access-key-id',
-                                        action='store',
-                                        default=None,
-                                        dest='access_key_id',
-                                        help='Access Key Id')
+                                       '--access-key-id',
+                                       action='store',
+                                       default=None,
+                                       dest='access_key_id',
+                                       help='Access Key Id')
 
         ksyun_auth_params.add_argument('-s',
-                                        '--access-key-secret',
-                                        action='store',
-                                        default=None,
-                                        dest='access_key_secret',
-                                        help='Access Key Secret')
+                                       '--access-key-secret',
+                                       action='store',
+                                       default=None,
+                                       dest='access_key_secret',
+                                       help='Access Key Secret')
 
     def _init_oci_parser(self):
         oci_parser = self.subparsers.add_parser("oci",
@@ -420,7 +421,8 @@ class ScoutSuiteArgumentParser:
                                   'and Secret Access Key.')
         # Azure
         elif v.get('provider') == 'azure':
-            if v.get('tenant_id') and not (v.get('service_principal') or v.get('user_account_browser') or v.get('user_account')):
+            if v.get('tenant_id') and not (
+                    v.get('service_principal') or v.get('user_account_browser') or v.get('user_account')):
                 self.parser.error('--tenant can only be set when using --user-account-browser or --user-account or '
                                   '--service-principal authentication')
             if v.get('service_principal') and not v.get('tenant_id'):

@@ -13,8 +13,6 @@ from .configuration_log_retention_days import ConfigurationLogRetentionDays
 from .posgresql_firewall_rules import PostgreSQLFirewallRules
 
 
-
-
 class PostgreSQLServers(AzureCompositeResources):
     _children = [
         (ConfigurationLogCheckpoints, 'log_checkpoints'),

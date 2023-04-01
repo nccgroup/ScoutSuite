@@ -26,7 +26,8 @@ class SecurityGroups(AWSResources):
         security_group = {}
         security_group['name'] = raw_security_group['GroupName']
         security_group['id'] = raw_security_group['GroupId']
-        security_group['arn'] = format_arn(self.partition, self.service, self.region, raw_security_group.get('OwnerId'), raw_security_group.get('GroupId'), self.resource_type)
+        security_group['arn'] = format_arn(self.partition, self.service, self.region, raw_security_group.get('OwnerId'),
+                                           raw_security_group.get('GroupId'), self.resource_type)
         security_group['description'] = raw_security_group['Description']
         security_group['owner_id'] = raw_security_group['OwnerId']
 

@@ -40,7 +40,7 @@ class AWSProvider(BaseProvider):
         self.account_id = get_aws_account_id(self.credentials.session)
 
         super().__init__(report_dir, timestamp,
-                                          services, skipped_services, result_format)
+                         services, skipped_services, result_format)
 
     def get_report_name(self):
         """
@@ -78,11 +78,11 @@ class AWSProvider(BaseProvider):
 
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
-        
+
         if 'ec2' in self.service_list and 'vpc' in self.service_list:
             self._match_instances_and_vpcs()
             self._match_instances_and_subnets()
-        
+
         if 'ec2' in self.service_list and 'codebuild' in self.service_list:
             self._update_sg_usage_codebuild()
 
@@ -413,9 +413,11 @@ class AWSProvider(BaseProvider):
             subnet['network_acl'] = acl_id
 
     def _match_instances_and_subnets(self):
-        ec2_instances = self._get_ec2_instances_details(['id', 'vpc', 'region', 'SubnetId'])  # fetch all EC2 instances with only required fields
+        ec2_instances = self._get_ec2_instances_details(
+            ['id', 'vpc', 'region', 'SubnetId'])  # fetch all EC2 instances with only required fields
         for instance in ec2_instances.values():
-            subnet = self.services['vpc']['regions'][instance['region']]['vpcs'][instance['vpc']]['subnets'][instance['SubnetId']]  # find the subnet reference
+            subnet = self.services['vpc']['regions'][instance['region']]['vpcs'][instance['vpc']]['subnets'][
+                instance['SubnetId']]  # find the subnet reference
             manage_dictionary(subnet, 'instances', [])  # initialize instances list for the subnet (if not already set)
             if instance['id'] not in subnet['instances']:  # if instance is not already mapped to the subnet
                 subnet['instances'].append(instance['id'])  # append EC2 instance ID to instance list in subnet
@@ -444,7 +446,8 @@ class AWSProvider(BaseProvider):
         return ec2_instances
 
     def _match_instances_and_vpcs(self):
-        ec2_instances = self._get_ec2_instances_details(['id', 'vpc', 'region'])  # fetch all EC2 instances with only required fields
+        ec2_instances = self._get_ec2_instances_details(
+            ['id', 'vpc', 'region'])  # fetch all EC2 instances with only required fields
         for instance in ec2_instances.values():
             vpc = self.services['vpc']['regions'][instance['region']]['vpcs'][instance['vpc']]  # find the VPC reference
             manage_dictionary(vpc, 'instances', [])  # initialize instances list for the VPC (if not already set)
@@ -485,14 +488,17 @@ class AWSProvider(BaseProvider):
                     awslambda_function = awslambda_config['regions'][r]['functions'][lambda_function]
                     awslambda_function['region'] = r
                     if awslambda_function['role_arn'] in awslambda_funtions:
-                        awslambda_funtions[awslambda_function['role_arn']][awslambda_function['name']] = awslambda_function
+                        awslambda_funtions[awslambda_function['role_arn']][
+                            awslambda_function['name']] = awslambda_function
                     else:
-                        awslambda_funtions[awslambda_function['role_arn']] = {awslambda_function['name']: awslambda_function}
+                        awslambda_funtions[awslambda_function['role_arn']] = {
+                            awslambda_function['name']: awslambda_function}
             for role_id in iam_config['roles']:
                 iam_config['roles'][role_id]['awslambdas_count'] = 0
                 if iam_config['roles'][role_id]['arn'] in awslambda_funtions:
                     iam_config['roles'][role_id]['awslambdas'] = awslambda_funtions[iam_config['roles'][role_id]['arn']]
-                    iam_config['roles'][role_id]['awslambdas_count'] = len(awslambda_funtions[iam_config['roles'][role_id]['arn']])
+                    iam_config['roles'][role_id]['awslambdas_count'] = len(
+                        awslambda_funtions[iam_config['roles'][role_id]['arn']])
 
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
@@ -775,7 +781,6 @@ class AWSProvider(BaseProvider):
         except Exception as e:
             print_exception(f'Failed to get LB attack surface: {e}')
 
-
     def _security_group_to_attack_surface(self, attack_surface_config, public_ip, current_path,
                                           security_groups, listeners=None):
         try:
@@ -831,7 +836,8 @@ class AWSProvider(BaseProvider):
                                             attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
                                         manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'],
                                                           str(listener), {'cidrs': []})
-                                        attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)]['cidrs'] += \
+                                        attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)][
+                                            'cidrs'] += \
                                             ingress_rules['protocols'][p]['ports'][port]['cidrs']
         except Exception as e:
             print_exception(f'Failed to match SG to attack surface: {e}')
@@ -872,11 +878,16 @@ class AWSProvider(BaseProvider):
         try:
             for region in self.services['codebuild']['regions']:
                 for codebuild_project in self.services['codebuild']['regions'][region]['build_projects']:
-                    if 'vpc' in self.services['codebuild']['regions'][region]['build_projects'][codebuild_project] and 'security_groups' in self.services['codebuild']['regions'][region]['build_projects'][codebuild_project]:
+                    if 'vpc' in self.services['codebuild']['regions'][region]['build_projects'][
+                        codebuild_project] and 'security_groups' in \
+                            self.services['codebuild']['regions'][region]['build_projects'][codebuild_project]:
                         cb_project = self.services['codebuild']['regions'][region]['build_projects'][codebuild_project]
                         for cb_project_sg in cb_project['security_groups']:
-                            manage_dictionary(self.services['ec2']['regions'][region]['vpcs'][cb_project['vpc']]['security_groups'][cb_project_sg], 'used_by', {'resource_type': {'codebuild_project': []}})
-                            self.services['ec2']['regions'][region]['vpcs'][cb_project['vpc']]['security_groups'][cb_project_sg]['used_by']['resource_type']['codebuild_project'].append({
+                            manage_dictionary(
+                                self.services['ec2']['regions'][region]['vpcs'][cb_project['vpc']]['security_groups'][
+                                    cb_project_sg], 'used_by', {'resource_type': {'codebuild_project': []}})
+                            self.services['ec2']['regions'][region]['vpcs'][cb_project['vpc']]['security_groups'][
+                                cb_project_sg]['used_by']['resource_type']['codebuild_project'].append({
                                 'id': cb_project['arn'], 'name': cb_project['name']
                             })
         except Exception as e:

@@ -149,7 +149,7 @@ class GCPFacade(GCPBaseFacade):
             return projects
 
     async def get_enabled_services(self, project_id, attempt=1, has_lock=False):
-        timeout = 60*attempt
+        timeout = 60 * attempt
         if project_id not in self.projects_services:
             # not locked, make query
             if has_lock or not self.projects_services_lock:
@@ -165,7 +165,8 @@ class GCPFacade(GCPBaseFacade):
                 except Exception as e:
                     # hit quota, wait and retry
                     if ('API_SHARED_QUOTA_EXHAUSTED' in str(e) or 'RATE_LIMIT_EXCEEDED' in str(e)) and attempt <= 10:
-                        print_warning(f"Service Usage quotas exceeded for project \"{project_id}\", retrying in {timeout}s")
+                        print_warning(
+                            f"Service Usage quotas exceeded for project \"{project_id}\", retrying in {timeout}s")
                         await asyncio.sleep(timeout)
                         return await self.get_enabled_services(project_id, attempt + 1, has_lock=True)
                     # unknown error
@@ -177,7 +178,8 @@ class GCPFacade(GCPBaseFacade):
             else:
                 if attempt <= 10:  # need to set a limit to ensure we don't hit recursion limits
                     if attempt != 1:
-                        print_debug(f"Lock already acquired for get_services() on project \"{project_id}\", retrying in {timeout}s")
+                        print_debug(
+                            f"Lock already acquired for get_services() on project \"{project_id}\", retrying in {timeout}s")
                         await asyncio.sleep(timeout)
                     # set a lower threshold for the first attempt so that execution runs faster when there aren't any issues
                     else:

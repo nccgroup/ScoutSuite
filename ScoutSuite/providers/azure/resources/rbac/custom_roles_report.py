@@ -18,5 +18,3 @@ class CustomRolesReport(AzureResources):
                 custom_role_dict['missing_custom_role_administering_resource_locks'] = False
 
         self[custom_role_dict['id']] = custom_role_dict
-
-
