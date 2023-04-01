@@ -59,6 +59,16 @@
       }
     }
   },
+  "storage": {
+    "ks3": {
+      "resources": {
+        "buckets": {
+          "cols": 2,
+          "path": "services.ks3.buckets"
+        }
+      }
+    }
+  },
   "network": {
     "vpc": {
       "resources": {
