@@ -1,5 +1,5 @@
 import json
-
+import requests
 from ksyun.common.common_client import CommonClient
 from ksyun.common import credential
 from ksyun.common.exception.ksyun_sdk_exception import KsyunSDKException
@@ -192,3 +192,22 @@ class RAMFacade():
         except KsyunSDKException as err:
             print(err)
             return []
+
+    async def get_password_policy(self):
+        url = "https://uc.console.ksyun.com/i/console/iam/user/getPwdPolicy"
+        headers = {
+            "Accept": "application/json",
+            "Cookie": "kscdigest=77372c6d8a01ef3b46dca11e3ef3f1dc-1344489989;"
+        }
+        try:
+            r = requests.get(url, headers=headers)
+            response = json.loads(r.text).get("data")
+            if response:
+                return response
+            else:
+                return []
+        except KsyunSDKException as err:
+            return []
+
+    async def get_security_policy(self):
+        pass

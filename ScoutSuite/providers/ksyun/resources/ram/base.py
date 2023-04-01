@@ -3,6 +3,7 @@ from ScoutSuite.providers.ksyun.resources.ram.roles import Roles
 from ScoutSuite.providers.ksyun.resources.ram.users import Users
 from ScoutSuite.providers.ksyun.resources.ram.groups import Groups
 from ScoutSuite.providers.ksyun.resources.ram.policies import Policies
+from ScoutSuite.providers.ksyun.resources.ram.password_policy import PasswordPolicy
 from ScoutSuite.providers.ksyun.resources.base import KsyunCompositeResources
 
 
@@ -12,7 +13,7 @@ class RAM(KsyunCompositeResources):
         (Groups, 'groups'),
         (Roles, 'roles'),
         (Policies, 'policies'),
-        # (PasswordPolicy, 'password_policy'),
+        (PasswordPolicy, 'password_policy'),
         # (SecurityPolicy, 'security_policy')
     ]
 
