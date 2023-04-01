@@ -14,6 +14,7 @@ from ScoutSuite.providers.ksyun.facade.vpc import VPCFacade
 from ScoutSuite.providers.ksyun.facade.kkms import KKMSFacade
 from ScoutSuite.providers.ksyun.facade.ks3 import KS3Facade
 from ScoutSuite.providers.ksyun.facade.slb import SLBFacade
+from ScoutSuite.providers.ksyun.facade.kcs import KCSFacade
 
 
 class KsyunFacade:
@@ -30,6 +31,7 @@ class KsyunFacade:
         self.kkms = KKMSFacade(self._credentials)
         self.ks3 = KS3Facade(self._credentials)
         self.slb = SLBFacade(self._credentials)
+        self.kcs = KCSFacade(self._credentials)
 
     async def build_region_list(self, service: str, chosen_regions=None):
 

@@ -7,6 +7,7 @@ from ScoutSuite.providers.ksyun.resources.vpc.base import VPC
 from ScoutSuite.providers.ksyun.resources.kkms.base import KKMS
 from ScoutSuite.providers.ksyun.resources.ks3.base import KS3
 from ScoutSuite.providers.ksyun.resources.slb.base import SLB
+from ScoutSuite.providers.ksyun.resources.kcs.base import KCS
 from ScoutSuite.providers.base.services import BaseServicesConfig
 
 
@@ -22,7 +23,8 @@ class KsyunServicesConfig(BaseServicesConfig):
         # self.ram = RAM(facade)
         # self.vpc = VPC(facade)
         # self.ks3 = KS3(facade)
-        self.slb = SLB(facade)
+        # self.slb = SLB(facade)
+        self.kcs = KCS(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'ksyun'
