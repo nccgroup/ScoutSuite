@@ -13,12 +13,12 @@ class KsyunServicesConfig(BaseServicesConfig):
         super().__init__(credentials)
 
         facade = KsyunFacade(credentials)
-        # self.actiontrail = ActionTrail(facade)
-        # self.kec = KEC(facade)
-        # self.kkms = KKMS(facade)
+        self.actiontrail = ActionTrail(facade)
+        self.kec = KEC(facade)
+        self.kkms = KKMS(facade)
         self.rds = RDS(facade)
-        # self.ram = RAM(facade)
-        # self.vpc = VPC(facade)
+        self.ram = RAM(facade)
+        self.vpc = VPC(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'ksyun'
