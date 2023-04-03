@@ -201,7 +201,7 @@ class RAMFacade():
         }
         try:
             r = requests.get(url, headers=headers)
-            response = json.loads(r.text).get("data")
+            response = json.loads(r.text).get("data").get("pwd_policy")
             if response:
                 return response
             else:
@@ -210,4 +210,17 @@ class RAMFacade():
             return []
 
     async def get_security_policy(self):
-        pass
+        url = "https://account.console.ksyun.com/i/console/user/get_security_setting"
+        headers = {
+            "Accept": "application/json",
+            "Cookie": self._credentials.credentials_cookie
+        }
+        try:
+            r = requests.get(url, headers=headers)
+            response = json.loads(r.text).get("data").get('security_setting')
+            if response:
+                return response
+            else:
+                return []
+        except KsyunSDKException as err:
+            return []

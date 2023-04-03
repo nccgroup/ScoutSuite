@@ -12,23 +12,17 @@ class PasswordPolicy(KsyunResources):
         self.update(password_policy)
 
     def _parse_password_policy(self, raw_password_policy):
+
         password_policy_dict = {
             'minimum_password_length': raw_password_policy.get('MinLen'),
-            'hard_expiry': raw_password_policy.get('MaxPwdAge'),
-            'login_session_duration': raw_password_policy.get('SessionExpireTime'),
-            'max_login_attempts': raw_password_policy.get('PwdExpireNotLogin'),
+            'hard_expiry': raw_password_policy.get('SessionExpireTime'),
+            'max_login_attempts': raw_password_policy.get('PwdWrongTimes'),
             'max_password_age': raw_password_policy.get('MaxPwdAge'),
-            'enable_save_mfa_ticket': raw_password_policy.get('MfaLoginStat'),
             'password_reuse_prevention': raw_password_policy.get('PwdReuse'),
             'require_uppercase_characters': raw_password_policy.get('RequireUpper'),
             'require_lowercase_characters': raw_password_policy.get('RequireLower'),
             'require_numbers': raw_password_policy.get('RequireNum'),
             'require_symbols': raw_password_policy.get('RequireSymbols'),
-            'login_network_masks': raw_password_policy.get('MaskLimit'),
-            'allow_user_change_password': True,
-            'allow_user_manage_access_keys': True,
-            'allow_user_manage_mfa_devices': True,
-            'allow_user_manage_public_keys': True,
         }
 
         if password_policy_dict['password_reuse_prevention'] == 0:

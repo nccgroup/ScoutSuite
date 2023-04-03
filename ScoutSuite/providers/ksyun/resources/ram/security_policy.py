@@ -13,20 +13,13 @@ class SecurityPolicy(KsyunResources):
 
     def _parse_security_policy(self, raw_security_policy):
         security_policy_dict = {
-            'login_network_masks':
-                raw_security_policy.get('LoginProfilePreference', {}).get('LoginNetworkMasks'),
-            'login_session_duration':
-                raw_security_policy.get('LoginProfilePreference', {}).get('LoginSessionDuration'),
-            'enable_save_mfa_ticket':
-                raw_security_policy.get('LoginProfilePreference', {}).get('EnableSaveMFATicket'),
-            'allow_user_change_password':
-                raw_security_policy.get('LoginProfilePreference', {}).get('AllowUserToChangePassword'),
-            'allow_user_manage_access_keys':
-                raw_security_policy.get('AccessKeyPreference', {}).get('AllowUserToManageAccessKeys'),
-            'allow_user_manage_mfa_devices':
-                raw_security_policy.get('MFAPreference', {}).get('AllowUserToManageMFADevices'),
-            'allow_user_manage_public_keys':
-                raw_security_policy.get('PublicKeyPreference', {}).get('AllowUserToManagePublicKeys'),
+            'login_network_masks': raw_security_policy.get('mask_limit'),
+            'login_session_duration': '6',
+            'enable_save_mfa_ticket': raw_security_policy.get('bind_mode', {}).get('mfa'),
+            'allow_user_change_password': True,
+            'allow_user_manage_access_keys': False,
+            'allow_user_manage_mfa_devices': False,
+            'allow_user_manage_public_keys': False,
         }
 
         if security_policy_dict['login_network_masks'] == '':
