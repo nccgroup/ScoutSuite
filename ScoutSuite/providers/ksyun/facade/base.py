@@ -7,6 +7,7 @@ from ksyun.common.profile.http_profile import HttpProfile
 
 from ScoutSuite.providers.ksyun.authentication_strategy import KsyunCredentials
 from ScoutSuite.providers.ksyun.facade.actiontrail import ActiontrailFacade
+from ScoutSuite.providers.ksyun.facade.ebs import EBSFacade
 from ScoutSuite.providers.ksyun.facade.kec import KECFacade
 from ScoutSuite.providers.ksyun.facade.ram import RAMFacade
 from ScoutSuite.providers.ksyun.facade.rds import RDSFacade
@@ -32,6 +33,7 @@ class KsyunFacade:
         self.ks3 = KS3Facade(self._credentials)
         self.slb = SLBFacade(self._credentials)
         self.kcs = KCSFacade(self._credentials)
+        self.ebs = EBSFacade(self._credentials)
 
     async def build_region_list(self, service: str, chosen_regions=None):
 

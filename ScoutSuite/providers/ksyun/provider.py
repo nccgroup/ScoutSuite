@@ -19,7 +19,7 @@ class KsyunProvider(BaseProvider):
 
         self.services_config = KsyunServicesConfig
         self.credentials = kwargs['credentials']
-        self.account_id = '100086'  # self.credentials.caller_details['AccountId']
+        self.account_id = self.credentials.account_id
 
         super().__init__(report_dir, timestamp, services, skipped_services)
 

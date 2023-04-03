@@ -50,8 +50,9 @@ def run_from_cli():
                    # GCP
                    project_id=args.get('project_id'), folder_id=args.get('folder_id'),
                    organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
-                   # Aliyun
+                   # Aliyun & KsYun
                    access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
+                   access_key_cookie=args.get('access_key_cookie'),
                    # General
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
                    timestamp=args.get('timestamp'),
@@ -96,8 +97,8 @@ def run(provider,
         # GCP
         service_account=None,
         project_id=None, folder_id=None, organization_id=None, all_projects=False,
-        # Aliyun
-        access_key_id=None, access_key_secret=None,
+        # Aliyun & KsYun
+        access_key_id=None, access_key_secret=None, access_key_cookie=None,
         # General
         report_name=None, report_dir=None,
         timestamp=False,
@@ -148,8 +149,8 @@ async def _run(provider,
                # GCP
                service_account,
                project_id, folder_id, organization_id, all_projects,
-               # Aliyun
-               access_key_id, access_key_secret,
+               # Aliyun & KsYun
+               access_key_id, access_key_secret, access_key_cookie,
                # General
                report_name, report_dir,
                timestamp,
@@ -199,7 +200,8 @@ async def _run(provider,
                                                  username=username,
                                                  password=password,
                                                  access_key_id=access_key_id,
-                                                 access_key_secret=access_key_secret)
+                                                 access_key_secret=access_key_secret,
+                                                 access_key_cookie=access_key_cookie)
 
         if not credentials:
             return 101

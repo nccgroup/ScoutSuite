@@ -271,6 +271,13 @@ class ScoutSuiteArgumentParser:
                                        dest='access_key_secret',
                                        help='Access Key Secret')
 
+        ksyun_auth_params.add_argument('-cookie',
+                                       '--access-key-cookie',
+                                       action='store',
+                                       default=None,
+                                       dest='access_key_cookie',
+                                       help='Access Key Cookie')
+
     def _init_oci_parser(self):
         oci_parser = self.subparsers.add_parser("oci",
                                                 parents=[self.common_providers_args_parser],

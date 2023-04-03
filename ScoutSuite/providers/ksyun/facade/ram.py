@@ -197,7 +197,7 @@ class RAMFacade():
         url = "https://uc.console.ksyun.com/i/console/iam/user/getPwdPolicy"
         headers = {
             "Accept": "application/json",
-            "Cookie": "kscdigest=77372c6d8a01ef3b46dca11e3ef3f1dc-1344489989;"
+            "Cookie": self._credentials.credentials_cookie
         }
         try:
             r = requests.get(url, headers=headers)
