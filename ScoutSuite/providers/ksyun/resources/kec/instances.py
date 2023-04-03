@@ -61,7 +61,7 @@ class Instances(KsyunResources):
         # instance_dict['stopped_mode'] = raw_instance.get('StoppedMode')
         # instance_dict['internet_max_bandwidth_in'] = raw_instance.get('InternetMaxBandwidthIn')
         # instance_dict['deployment_set_id'] = raw_instance.get('DeploymentSetId')
-        # instance_dict['os_name'] = raw_instance.get('OSName')
+        instance_dict['os_name'] = raw_instance.get('Platform')
         # instance_dict['vlan_id'] = raw_instance.get('VlanId')
         # instance_dict['recyclable'] = raw_instance.get('Recyclable')
         # instance_dict['start_time'] = raw_instance.get('StartTime')

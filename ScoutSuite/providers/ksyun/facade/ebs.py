@@ -27,8 +27,31 @@ class EBSFacade:
             clientProfile.httpProfile = httpProfile
 
             common_client = CommonClient("ebs", '2016-03-04', cred, region, profile=clientProfile)
-            r = common_client.call("DescribeInstances", {})
-            response = json.loads(r).get('InstancesSet')
+            r = common_client.call("DescribeVolumes", {})
+            response = json.loads(r).get('Volumes')
+            if response:
+                return response
+            else:
+                return []
+        except KsyunSDKException as err:
+            return []
+
+    async def get_snapshots(self, region):
+        try:
+            cred = credential.Credential(self._credentials.credentials_id, self._credentials.credentials_secret)
+
+            httpProfile = HttpProfile()
+            httpProfile.endpoint = "ebs.api.ksyun.com"
+            httpProfile.reqMethod = "GET"
+            httpProfile.reqTimeout = 60
+            httpProfile.scheme = "http"
+
+            clientProfile = ClientProfile()
+            clientProfile.httpProfile = httpProfile
+
+            common_client = CommonClient("ebs", '2016-03-04', cred, region, profile=clientProfile)
+            r = common_client.call("DescribeSnapshots", {})
+            response = json.loads(r).get('Snapshots')
             if response:
                 return response
             else:

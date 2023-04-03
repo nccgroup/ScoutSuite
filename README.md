@@ -36,6 +36,13 @@ Refer to the [wiki](https://github.com/nccgroup/ScoutSuite/wiki/Setup).
 
 ## Usage
 
+- ksyun
+```
+python scout.py aliyun --access-keys -k <access key> -s <secret access key> --cookie <access cookie>
+
+cookie: kscdigest=xxxxxxxxxxxxxxxxxxxxx
+```
+
 - aws 
 ```
 $ python scout.py aws --access-keys --access-key-id <AKIAIOSFODNN7EXAMPLE> --secret-access-key <wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY> --session-token <token>
