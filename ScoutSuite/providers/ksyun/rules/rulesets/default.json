@@ -3,7 +3,7 @@
     "rules": {
         "actiontrail-not-configured.json": [
             {
-                "enabled": true,
+                "enabled": false,
                 "level": "danger"
             }
         ],
