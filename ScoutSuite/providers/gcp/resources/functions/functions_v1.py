@@ -36,7 +36,7 @@ class FunctionsV1(Resources):
 
         function_dict['bindings'] = raw_function['bindings']
 
-        function_dict['environment_variables'] = raw_function['environmentVariables']
+        function_dict['environment_variables'] = raw_function.get('environmentVariables', {})
         function_dict['environment_variables_secrets'] = get_environment_secrets(function_dict['environment_variables'])
 
         function_dict['labels'] = raw_function['labels']
