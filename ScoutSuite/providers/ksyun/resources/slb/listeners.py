@@ -18,6 +18,7 @@ class Listeners(KsyunResources):
 
         listener_dict = {}
 
-        # listener_dict['id'] = raw_listener.get('InstanceId')
+        listener_dict['id'] = raw_listener.get('ListenerId')
+        listener_dict['name'] = raw_listener.get('ListenerName')
 
         return listener_dict['id'], listener_dict

@@ -31,7 +31,7 @@ class KCSFacade:
             r = common_client.call("DescribeCacheClusters", {})
             response = json.loads(r).get('Data')
             if response:
-                return response
+                return response['list']
             else:
                 return []
         except KsyunSDKException as err:

@@ -12,6 +12,7 @@ class Regions(KsyunCompositeResources, metaclass=abc.ABCMeta):
     async def fetch_all(self, regions=None):
         self['regions'] = {}
         regions = await self.facade.build_region_list(self.service, regions)
+        regions.append('cn-taipei-1')
         if regions:
             for region in regions:
                 self['regions'][region] = {'id': region, 'region': region, 'name': region}

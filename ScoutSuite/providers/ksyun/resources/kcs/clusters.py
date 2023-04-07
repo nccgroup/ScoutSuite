@@ -18,7 +18,7 @@ class Clusters(KsyunResources):
 
         cluster_dict = {}
 
-        cluster_dict['id'] = raw_cluster.get('InstanceId')
-
+        cluster_dict['id'] = raw_cluster.get('cacheId')
+        raw_cluster['name'] = raw_cluster.get('name')
 
         return cluster_dict['id'], cluster_dict
