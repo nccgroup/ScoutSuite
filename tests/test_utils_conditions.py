@@ -2,8 +2,8 @@
 import os
 import unittest
 
-
 from ScoutSuite.core.conditions import *
+
 
 class TestOpinelConditionClass(unittest.TestCase):
     """
@@ -64,10 +64,10 @@ class TestOpinelConditionClass(unittest.TestCase):
         test_list1 = []
         test_dict1 = {}
         test_list2 = [
-         'a']
+            'a']
         test_dict2 = {'a': 'b'}
         test_list3 = ['a', 'b']
-        test_dict3 = {'a': 'b','c': 'd'}
+        test_dict3 = {'a': 'b', 'c': 'd'}
         assert pass_condition(test_list1, 'lengthLessThan', 1) == True
         assert pass_condition(test_list1, 'lengthMoreThan', 1) == False
         assert pass_condition(test_list1, 'lengthEqual', 1) == False
@@ -186,7 +186,8 @@ class TestOpinelConditionClass(unittest.TestCase):
         assert pass_condition(testpolicy['Statement'][0], 'notContainAction', 'iam:GetUser') == False
         assert pass_condition(testpolicy['Statement'][0], 'containAtLeastOneAction', '') == False
         assert pass_condition(testpolicy['Statement'][0], 'containAtLeastOneAction', 'iam:GetUser') == True
-        assert pass_condition(testpolicy['Statement'][0], 'containAtLeastOneAction', ['iam:CreateUser', 'iam:GetUser']) == True
+        assert pass_condition(testpolicy['Statement'][0], 'containAtLeastOneAction',
+                              ['iam:CreateUser', 'iam:GetUser']) == True
 
         src_file = os.path.join(src_dir, 'statement1.json')
         with open(src_file) as f:

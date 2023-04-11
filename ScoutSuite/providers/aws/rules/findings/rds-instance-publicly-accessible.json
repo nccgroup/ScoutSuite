@@ -1,5 +1,5 @@
 {
-    "description": "RDS Instance publicly accessible",
+    "description": "RDS Instance Publicly Accessible",
     "rationale": "Instances should not be publicly accessible as this risks exposing sensitive data.",
     "references": [
         "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html#USER_VPC.Hiding"

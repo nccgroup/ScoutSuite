@@ -13,8 +13,8 @@ class BlobServices(AzureResources):
 
     async def fetch_all(self):
         raw_blob_services = await self.facade.storageaccounts.get_blob_services(self.resource_group_name,
-                                                                                    self.storage_account_name,
-                                                                                    self.subscription_id)
+                                                                                self.storage_account_name,
+                                                                                self.subscription_id)
         for raw_blob_service in raw_blob_services:
             id, blob_service = self._parse_blob_service(raw_blob_service)
             self[id] = blob_service

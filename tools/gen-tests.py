@@ -13,7 +13,8 @@ for root, dirnames, filenames in os.walk(scout_dir):
         tmp = filepath.split('.')[0].split('/')
         print(str(tmp))
 
-        test = '# Import AWS utils\nfrom {} import *\n\n#\n# Test methods for {}\n#\n\nclass Test{}Class:\n\n'.format('.'.join(tmp), filepath, ''.join(t.title() for t in tmp))
+        test = '# Import AWS utils\nfrom {} import *\n\n#\n# Test methods for {}\n#\n\nclass Test{}Class:\n\n'.format(
+            '.'.join(tmp), filepath, ''.join(t.title() for t in tmp))
 
         test_filename = 'test-%s.py' % '-'.join(tmp[1:])
         print(f'{filepath} --> {test_filename}')
@@ -21,4 +22,3 @@ for root, dirnames, filenames in os.walk(scout_dir):
         if not os.path.isfile(test_file):
             with open(test_file, 'w+') as f:
                 f.write(test)
-

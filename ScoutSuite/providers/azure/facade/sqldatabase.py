@@ -1,4 +1,3 @@
-
 from azure.mgmt.sql import SqlManagementClient
 from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.core.console import print_exception

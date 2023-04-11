@@ -2,8 +2,7 @@ from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 
 
 class Projects(GCPCompositeResources):
-
-    """This class represents a collection of GCP Resources that are grouped by project. 
+    """This class represents a collection of GCP Resources that are grouped by project.
     Classes extending Projects should implement the method _fetch_children() with a project ID as paramater.
     The children resources will be stored with the following structure {<projects>: {<project_id>: {<child_name>: {<child_id>: <child_instance>}}}}.
     """

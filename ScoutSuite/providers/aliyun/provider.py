@@ -6,7 +6,7 @@ from ScoutSuite.providers.base.provider import BaseProvider
 
 class AliyunProvider(BaseProvider):
     """
-    Implements provider for Azure
+    Implements provider for Aliyun
     """
 
     def __init__(self,
@@ -22,7 +22,6 @@ class AliyunProvider(BaseProvider):
         self.environment = 'default'
 
         self.services_config = AliyunServicesConfig
-
         self.credentials = kwargs['credentials']
         self.account_id = self.credentials.caller_details['AccountId']
 
@@ -40,4 +39,3 @@ class AliyunProvider(BaseProvider):
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
 
         super().preprocessing()
-

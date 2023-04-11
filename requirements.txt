@@ -54,12 +54,15 @@ aliyun-python-sdk-core>=2.13.4
 aliyun-python-sdk-ram>=3.0.1
 aliyun-python-sdk-ocs>=0.0.4
 aliyun-python-sdk-sts>=3.0.1
-aliyun-python-sdk-actiontrail>=2.0.0
+aliyun-python-sdk-actiontrail==2.0.3
 aliyun-python-sdk-vpc>=3.0.5
 aliyun-python-sdk-ecs>=4.16.10
 aliyun-python-sdk-rds>=2.3.9
 aliyun-python-sdk-kms>=2.6.0
 oss2>=2.8.0
+
+# Ksyun / KingSoft Cloud
+kingsoftcloud-sdk-python>=1.0.2
 
 # Oracle Cloud Infrastructure Provider
 oci>=2.2.4

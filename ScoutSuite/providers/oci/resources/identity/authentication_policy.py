@@ -29,5 +29,3 @@ class PasswordPolicy(OracleResources):
         password_policy_dict['is_numeric_characters_required'] = \
             raw_authentication_policy.password_policy.is_numeric_characters_required
         return password_policy_dict
-
-

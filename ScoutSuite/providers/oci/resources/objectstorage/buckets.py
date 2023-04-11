@@ -7,7 +7,6 @@ class Buckets(OracleResources):
         super().__init__(facade)
 
     async def fetch_all(self):
-
         namespace = await self.facade.objectstorage.get_namespace()
 
         for raw_bucket in await self.facade.objectstorage.get_buckets(namespace):
@@ -42,4 +41,3 @@ class Buckets(OracleResources):
         #                                                              bucket_dict['name'])
 
         return bucket_dict['id'], bucket_dict
-

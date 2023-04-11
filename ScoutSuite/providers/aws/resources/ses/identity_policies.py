@@ -19,4 +19,5 @@ class IdentityPolicies(AWSResources):
         raw_policies = await self.facade.ses.get_identity_policies(self.region, self.identity_name)
         for policy_name, raw_policy in raw_policies.items():
             self[policy_name] = json.loads(raw_policy)
-            self[policy_name]['arn'] = format_arn(self.partition, self.service, self.region, '', policy_name, self.resource_type)
+            self[policy_name]['arn'] = format_arn(self.partition, self.service, self.region, '', policy_name,
+                                                  self.resource_type)

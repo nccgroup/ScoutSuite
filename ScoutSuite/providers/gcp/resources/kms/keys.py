@@ -45,7 +45,7 @@ class Keys(GCPCompositeResources):
         if key_dict['rotation_period']:
             rotation_period = int("".join(filter(str.isdigit, key_dict['rotation_period'])))
             # get values in days instead of seconds
-            key_dict['rotation_period'] = rotation_period//(24*3600)
+            key_dict['rotation_period'] = rotation_period // (24 * 3600)
 
         key_dict['next_rotation_time_days'] = None
         if key_dict['next_rotation_datetime']:

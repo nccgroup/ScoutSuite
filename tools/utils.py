@@ -71,6 +71,7 @@ def get_capitalized_title(initial_title: str) -> str:
 
     return (out_string[:1].upper() + out_string[1:]).strip()  # Capitalize first letter and strip trailing space
 
+
 def results_file_to_dict(f):
     """
     Takes a file pointer to a JS/JSON results file and returns a dict

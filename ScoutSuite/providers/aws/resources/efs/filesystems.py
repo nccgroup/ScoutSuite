@@ -21,5 +21,6 @@ class FileSystems(AWSResources):
         fs_id = raw_file_system.pop('FileSystemId')
         raw_file_system['name'] = raw_file_system.pop('Name') if 'Name' in raw_file_system else None
         raw_file_system['tags'] = raw_file_system.pop('Tags')
-        raw_file_system['arn'] = format_arn(self.partition, self.service, self.region, raw_file_system.get('OwnerId'), fs_id, self.resource_type)
+        raw_file_system['arn'] = format_arn(self.partition, self.service, self.region, raw_file_system.get('OwnerId'),
+                                            fs_id, self.resource_type)
         return fs_id, raw_file_system

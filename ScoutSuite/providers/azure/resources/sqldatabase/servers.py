@@ -46,7 +46,7 @@ class Servers(AzureCompositeResources):
         server['name'] = raw_server.name
         server['resource_group_name'] = get_resource_group_name(raw_server.id)
         if raw_server.tags is not None:
-            server['tags'] = ["{}:{}".format(key, value) for key, value in  raw_server.tags.items()]
+            server['tags'] = ["{}:{}".format(key, value) for key, value in raw_server.tags.items()]
         else:
             server['tags'] = []
         return server['id'], server

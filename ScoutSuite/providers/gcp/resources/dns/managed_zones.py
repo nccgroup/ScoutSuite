@@ -23,28 +23,28 @@ class ManagedZones(Resources):
         zone_dict['visibility'] = raw_zone['visibility']
         zone_dict['creation_timestamp'] = raw_zone['creationTime']
 
-        dnssec_config = raw_zone.get('dnssecConfig',None)
+        dnssec_config = raw_zone.get('dnssecConfig', None)
         if dnssec_config:
             zone_dict['dnssec_enabled'] = True if dnssec_config['state'] == 'on' else False
-            zone_dict['dnssec_keys'] = self._get_keys(dnssec_config,zone_dict)
+            zone_dict['dnssec_keys'] = self._get_keys(dnssec_config, zone_dict)
         else:
             zone_dict['dnssec_enabled'] = False
             zone_dict['dnssec_keys'] = None
             zone_dict['key_signing_algorithm'] = None
-            zone_dict['zone_signing_algorithm']=None
+            zone_dict['zone_signing_algorithm'] = None
         return zone_dict['id'], zone_dict
 
     def _get_description(self, raw_zone):
         description = raw_zone.get('description')
         return description if description else 'N/A'
 
-    def _get_keys(self, dnssec_config,zone_dict):
+    def _get_keys(self, dnssec_config, zone_dict):
         raw_keys = dnssec_config.get('defaultKeySpecs', None)
         if not raw_keys:
             return None
         key_dict = {}
         for raw_key in raw_keys:
-            key_dict[raw_key['keyType']]={
+            key_dict[raw_key['keyType']] = {
                 'key_type': raw_key['keyType'],
                 'key_algorithm': raw_key['algorithm'],
                 'length': raw_key['keyLength'],
@@ -53,7 +53,5 @@ class ManagedZones(Resources):
                 zone_dict['key_signing_algorithm'] = raw_key['algorithm']
             elif raw_key['keyType'] == 'zoneSigning':
                 zone_dict['zone_signing_algorithm'] = raw_key['algorithm']
-
-
 
         return key_dict

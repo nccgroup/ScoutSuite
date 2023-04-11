@@ -24,7 +24,7 @@ class TestAzureProviderClass(unittest.TestCase):
         )
 
         mock_UsernamePasswordCredential.assert_called_with('04b07795-8ddb-461a-bbee-02f9e1bf7b46', 'some-username',
-                                                          'some-password',
+                                                           'some-password',
                                                            authority='https://login.microsoftonline.com/',
                                                            tenant_id='some-tenant-id')
         assert isinstance(result, AzureCredentials)

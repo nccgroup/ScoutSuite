@@ -19,7 +19,6 @@ class GCPServicesConfig(BaseServicesConfig):
     def __init__(self, credentials=None, default_project_id=None,
                  project_id=None, folder_id=None, organization_id=None, all_projects=None,
                  **kwargs):
-
         super().__init__(credentials)
 
         facade = GCPFacade(default_project_id, project_id, folder_id, organization_id, all_projects)

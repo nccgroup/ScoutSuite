@@ -15,8 +15,8 @@ class Ruleset:
     """
     TODO
 
-    :ivar rules:                        List of rules defined in the ruleset
-    :ivar rule_definitions:             Definition of all rules found
+    :ivar rules:                        List of rules defined in the ruleset 规则集中定义的规则列表
+    :ivar rule_definitions:             Definition of all rules found 找到的所有规则的定义
     :ivar ??
     """
 
@@ -33,12 +33,13 @@ class Ruleset:
         rules_dir = [] if rules_dir is None else rules_dir
         ip_ranges = [] if ip_ranges is None else ip_ranges
 
+        # 获取rules data 的path
         self.rules_data_path = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__))) + '/providers/%s/rules' % cloud_provider
 
         self.environment_name = environment_name
         self.rule_type = rule_type
-        # Ruleset filename
+        # Ruleset filename 规则集文件名 "default.json"
         self.filename = self.find_file(filename)
         if not self.filename:
             self.search_ruleset(environment_name)
@@ -52,7 +53,7 @@ class Ruleset:
 
     def shared_init(self, ruleset_generator, rule_dirs, account_id, ip_ranges):
 
-        # Load rule definitions
+        # Load rule definitions 加载定义规则
         if not hasattr(self, 'rule_definitions'):
             self.load_rule_definitions(ruleset_generator, rule_dirs)
 
@@ -66,7 +67,7 @@ class Ruleset:
     def load(self, rule_type, quiet=False):
         """
         Open a JSON file defining a ruleset and load it into a Ruleset object
-
+        打开定义规则集的 JSON 文件并将其加载到 Ruleset 对象中
         :param rule_type:           TODO
         :param quiet:               TODO
         :return:
@@ -186,12 +187,13 @@ class Ruleset:
     def find_file(self, filename, filetype='rulesets'):
         """
 
-        :param filename:
-        :param filetype:
+        :param filename: "default.json"
+        :param filetype: rulesets
         :return:
         """
         if filename and not os.path.isfile(filename):
             # Not a valid relative / absolute path, check Scout's data under findings/ or filters/
+            # 不是有效的相对/绝对路径，请在 findings/ 或 filters/ 下检查 Scout 的数据
             if not filename.startswith('findings/') and not filename.startswith('filters/'):
                 filename = f'{filetype}/{filename}'
             if not os.path.isfile(filename):

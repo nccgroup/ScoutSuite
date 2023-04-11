@@ -2,7 +2,6 @@ from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 
 
 class Subscriptions(AzureCompositeResources):
-
     """This class represents a collection of Azure Resources that are grouped by subscription.
     Classes extending Subscriptions should implement the method _fetch_children() with a subscription ID as paramater.
     The children resources will be stored with the following structure {<subscriptions>: {<subscription_id>: {<child_name>: {<child_id>: <child_instance>}}}}.

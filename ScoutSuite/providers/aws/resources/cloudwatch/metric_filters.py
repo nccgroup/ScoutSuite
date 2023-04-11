@@ -26,7 +26,6 @@ class MetricFilters(AWSResources):
         metric_filter_dict['pattern'] = raw_metric_filter.get('filterPattern')
         metric_filter_dict['metric_transformations'] = raw_metric_filter.get('metricTransformations')
         metric_filter_dict['log_group_name'] = raw_metric_filter.get('logGroupName')
-        metric_filter_dict['arn'] = format_arn(self.partition, self.service, self.region, '', raw_metric_filter.get('filterName'), self.resource_type)
+        metric_filter_dict['arn'] = format_arn(self.partition, self.service, self.region, '',
+                                               raw_metric_filter.get('filterName'), self.resource_type)
         return metric_filter_dict['id'], metric_filter_dict
-
-

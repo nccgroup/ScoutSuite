@@ -85,10 +85,10 @@ class SecurityCenterFacade:
             for i in results:
                 p.append(i)
         except Exception:
-        # TODO implement condition to pass only if the triggered error is MissingApiVersionParameter
+            # TODO implement condition to pass only if the triggered error is MissingApiVersionParameter
             pass
         return p
-    
+
     """
     Commented out this part since a weird bug causes MissingApiVersionParameter errors to appear in the last response from Azure API. 
     Workaround bypasses this but obviously not ideal.
@@ -104,7 +104,7 @@ class SecurityCenterFacade:
             print_exception(f'Failed to retrieve compliance results: {e}')
             return []
      """
-            
+
     async def get_compliance_results(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)

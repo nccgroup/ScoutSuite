@@ -9,7 +9,6 @@ from ScoutSuite.providers.aliyun.resources.kms.base import KMS
 from ScoutSuite.providers.aliyun.resources.oss.base import OSS
 
 
-
 class AliyunServicesConfig(BaseServicesConfig):
     def __init__(self, credentials, **kwargs):
         super().__init__(credentials)

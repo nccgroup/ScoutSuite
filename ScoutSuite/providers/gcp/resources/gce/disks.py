@@ -16,5 +16,5 @@ class Disks(Resources):
 
     def _is_encrypted_with_csek(self, raw_disk):
         return 'diskEncryptionKey' in raw_disk \
-               and 'sha256' in raw_disk.get('diskEncryptionKey') \
-               and raw_disk['diskEncryptionKey']['sha256'] != ''
+            and 'sha256' in raw_disk.get('diskEncryptionKey') \
+            and raw_disk['diskEncryptionKey']['sha256'] != ''

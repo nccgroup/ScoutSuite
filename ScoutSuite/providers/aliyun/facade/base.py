@@ -31,7 +31,7 @@ class AliyunFacade:
     async def build_region_list(self, service: str, chosen_regions=None):
 
         # TODO could need this for service ids
-        # service = 'ec2containerservice' if service == 'ecs' else service
+        # service = 'ec2containerservice' if service == 'kec' else service
 
         # TODO does a similar endpoint exist?
         # available_services = await run_concurrently(lambda: Session().get_available_services())

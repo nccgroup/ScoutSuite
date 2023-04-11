@@ -25,8 +25,8 @@ class Domains(Resources):
                     if member_type == 'domain':
                         if entity not in parsed_groups.keys():
                             parsed_groups[entity] = {'id': get_non_provider_id(entity),
-                                                    'name': entity,
-                                                    'roles': [role]}
+                                                     'name': entity,
+                                                     'roles': [role]}
                         else:
                             parsed_groups[entity]['roles'].append(role)
         return parsed_groups

@@ -8,7 +8,6 @@ class Groups(AzureResources):
             self[id] = group
 
     async def _parse_group(self, raw_group):
-
         group_dict = {}
 
         group_dict['id'] = raw_group.get('id')
@@ -24,4 +23,3 @@ class Groups(AzureResources):
         group_dict['roles'] = []  # this will be filled in `finalize()`
 
         return group_dict['id'], group_dict
-

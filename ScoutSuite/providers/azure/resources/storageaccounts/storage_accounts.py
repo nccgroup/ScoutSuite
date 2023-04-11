@@ -48,9 +48,10 @@ class StorageAccounts(AzureCompositeResources):
         storage_account['access_keys_last_rotation_date'] = \
             self._parse_access_keys_last_rotation_date(raw_storage_account.activity_logs)
         storage_account['encryption_key_source'] = raw_storage_account.encryption.key_source
-        storage_account['encryption_key_customer_managed'] = self._is_encryption_key_customer_managed(raw_storage_account.encryption.key_source)
+        storage_account['encryption_key_customer_managed'] = self._is_encryption_key_customer_managed(
+            raw_storage_account.encryption.key_source)
         if raw_storage_account.tags is not None:
-            storage_account['tags'] = ["{}:{}".format(key, value) for key, value in  raw_storage_account.tags.items()]
+            storage_account['tags'] = ["{}:{}".format(key, value) for key, value in raw_storage_account.tags.items()]
         else:
             storage_account['tags'] = []
 
@@ -75,4 +76,3 @@ class StorageAccounts(AzureCompositeResources):
     def _is_encryption_key_customer_managed(self, key_source):
         # Microsoft Storage is the default option which is not customer-managed
         return key_source != "Microsoft.Storage"
-

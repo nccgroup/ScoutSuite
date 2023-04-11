@@ -2,7 +2,7 @@ from ScoutSuite.providers.azure.resources.subscriptions import Subscriptions
 
 from .role_assignments import RoleAssignments
 from .roles import Roles
-from .custom_roles_report import  CustomRolesReport
+from .custom_roles_report import CustomRolesReport
 
 
 class RBAC(Subscriptions):
@@ -22,4 +22,3 @@ class RBAC(Subscriptions):
                 if role_assignment['principal_type'] == 'User':
                     user_set.add(role_assignment['principal_id'])
         return list(user_set)
-

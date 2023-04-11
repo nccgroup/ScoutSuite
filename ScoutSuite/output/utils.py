@@ -1,7 +1,6 @@
 import os
 import sys
 
-
 from ScoutSuite import DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY
 from ScoutSuite.core.console import print_error
 
@@ -48,7 +47,8 @@ def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, 
     elif file_type == 'RESULTS':
         name = f'scoutsuite_results_{file_name}' if file_name else 'scoutsuite_results'
         if not relative_path:
-            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY,
+                                     DEFAULT_REPORT_RESULTS_DIRECTORY)
         else:
             directory = DEFAULT_REPORT_RESULTS_DIRECTORY
         extension = 'js'
@@ -56,7 +56,8 @@ def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, 
     elif file_type == 'EXCEPTIONS':
         name = f'scoutsuite_exceptions_{file_name}' if file_name else 'scoutsuite_exceptions'
         if not relative_path:
-            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY,
+                                     DEFAULT_REPORT_RESULTS_DIRECTORY)
         else:
             directory = DEFAULT_REPORT_RESULTS_DIRECTORY
         extension = 'js'
@@ -64,7 +65,8 @@ def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, 
     elif file_type == 'ERRORS':
         name = f'scoutsuite_errors_{file_name}' if file_name else 'scoutsuite_errors'
         if not relative_path:
-            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY,
+                                     DEFAULT_REPORT_RESULTS_DIRECTORY)
         else:
             directory = DEFAULT_REPORT_RESULTS_DIRECTORY
         extension = 'json'

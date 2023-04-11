@@ -86,7 +86,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             elif user_account_browser:
 
-                identity_credentials = DeviceCodeCredential(authority=AUTHORITY_HOST_URI,tenant_id=tenant_id,client_id=AZURE_CLI_CLIENT_ID)
+                identity_credentials = DeviceCodeCredential(authority=AUTHORITY_HOST_URI, tenant_id=tenant_id,
+                                                            client_id=AZURE_CLI_CLIENT_ID)
 
             elif service_principal:
 
@@ -146,7 +147,6 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                'attempting MSA accounts. More details available here. ' \
                'https://github.com/AzureAD/microsoft-authentication-library-for-python/' \
                'wiki/Username-Password-Authentication' in e.args:
-
                 raise AuthenticationException(
                     'You are likely authenticating with a Microsoft Account. '
                     'This authentication mode only support Azure Active Directory principal authentication.')

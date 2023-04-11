@@ -32,4 +32,3 @@ class Distributions(AWSResources):
         distribution_dict['last_modified_time'] = raw_distribution.get('LastModifiedTime')
         distribution_dict['origin_groups'] = raw_distribution.get('OriginGroups')
         return distribution_dict['id'], distribution_dict
-

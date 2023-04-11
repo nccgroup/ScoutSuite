@@ -20,5 +20,6 @@ class Volumes(AWSResources):
     def _parse_volume(self, raw_volume):
         raw_volume['id'] = raw_volume.pop('VolumeId')
         raw_volume['name'] = get_name(raw_volume, raw_volume, 'id')
-        raw_volume['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id, raw_volume.get('id'), self.resource_type)
+        raw_volume['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id,
+                                       raw_volume.get('id'), self.resource_type)
         return raw_volume['id'], raw_volume

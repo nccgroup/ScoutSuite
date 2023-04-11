@@ -3,6 +3,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 from ScoutSuite.providers.utils import get_non_provider_id
 
+
 class ParameterGroups(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
         super().__init__(facade)

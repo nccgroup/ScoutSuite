@@ -8,7 +8,6 @@ class AADFacade:
     def __init__(self, credentials):
         self.credentials = credentials
 
-
     async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
         scopes = ['https://graph.microsoft.com/.default']
 
@@ -35,7 +34,7 @@ class AADFacade:
             # becomes out of hands
             # See https://github.com/nccgroup/ScoutSuite/issues/698
             user_filter = '?$filter=userType+eq+%27Guest%27'
-            users_response_beta = await self._get_microsoft_graph_response('users'+ user_filter, 'beta')
+            users_response_beta = await self._get_microsoft_graph_response('users' + user_filter, 'beta')
             if users_response_beta:
                 users = users_response_beta.get('value')
                 return users
@@ -47,7 +46,7 @@ class AADFacade:
     async def get_user(self, user_id):
         try:
             user_filter = f'?$filter=id+eq+%27{user_id}%27'
-            user_response_beta = await self._get_microsoft_graph_response('users'+user_filter, 'beta')
+            user_response_beta = await self._get_microsoft_graph_response('users' + user_filter, 'beta')
             if user_response_beta:
                 users = user_response_beta.get('value')
                 return users[0]

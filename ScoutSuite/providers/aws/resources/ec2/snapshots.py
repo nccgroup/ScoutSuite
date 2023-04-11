@@ -32,7 +32,8 @@ class Snapshots(AWSResources):
         snapshot_dict['volume_id'] = raw_snapshot.get('VolumeId')
         snapshot_dict['volume_size'] = raw_snapshot.get('VolumeSize')
         snapshot_dict['create_volume_permissions'] = raw_snapshot.get('CreateVolumePermissions')
-        snapshot_dict['arn'] = format_arn(self.partition, self.service, self.region, raw_snapshot.get('OwnerId'), raw_snapshot.get('SnapshotId'), self.resource_type)
+        snapshot_dict['arn'] = format_arn(self.partition, self.service, self.region, raw_snapshot.get('OwnerId'),
+                                          raw_snapshot.get('SnapshotId'), self.resource_type)
         return snapshot_dict['id'], snapshot_dict
 
     @staticmethod

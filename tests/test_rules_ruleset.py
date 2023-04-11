@@ -41,7 +41,7 @@ class TestScoutRulesRuleset(unittest.TestCase):
         test002 = Ruleset(cloud_provider='aws', filename=self.test_ruleset_002)
         for rule in test002.rules:
             print_debug(test002.rules[rule][0].to_string())
-        assert (printError.call_count == 1) # is this expected ??
+        assert (printError.call_count == 1)  # is this expected ??
         assert ("test-ruleset-absolute-path.json does not exist." in printError.call_args_list[0][0][0])
 
         test005 = Ruleset(cloud_provider='aws', filename=self.test_ruleset_001, ruleset_generator=True)

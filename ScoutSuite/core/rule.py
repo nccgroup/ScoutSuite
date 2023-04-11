@@ -29,6 +29,7 @@ testcases = [
 ]
 
 
+# 规则类，用于执行规则的检测
 class Rule:
 
     def to_string(self):
@@ -51,7 +52,7 @@ class Rule:
     def set_definition(self, rule_definitions, attributes=None, ip_ranges=None, params=None):
         """
         Update every attribute of the rule by setting the argument values as necessary
-
+        通过根据需要设置参数值来更新规则的每个属性
         :param rule_definitions:            TODO
         :param attributes:                  TODO
         :param ip_ranges:                   TODO

@@ -25,7 +25,8 @@ class SecurityGroups(AzureResources):
         network_security_group_dict['type'] = network_security_group.type
         network_security_group_dict['etag'] = network_security_group.etag
         if network_security_group.tags is not None:
-            network_security_group_dict['tags'] = ["{}:{}".format(key, value) for key, value in  network_security_group.tags.items()]
+            network_security_group_dict['tags'] = ["{}:{}".format(key, value) for key, value in
+                                                   network_security_group.tags.items()]
         else:
             network_security_group_dict['tags'] = []
         network_security_group_dict['resource_group_name'] = get_resource_group_name(network_security_group.id)
@@ -83,13 +84,18 @@ class SecurityGroups(AzureResources):
         else:
             security_rule_dict['source_address_prefixes_is_asg'] = False
 
-        security_rule_dict['source_port_ranges'] = self._merge_prefixes_or_ports(rule.source_port_range, rule.source_port_ranges)
-        security_rule_dict['source_ports'] = ['0-65535'] if '*' in security_rule_dict['source_port_ranges'] else security_rule_dict['source_port_ranges']
+        security_rule_dict['source_port_ranges'] = self._merge_prefixes_or_ports(rule.source_port_range,
+                                                                                 rule.source_port_ranges)
+        security_rule_dict['source_ports'] = ['0-65535'] if '*' in security_rule_dict['source_port_ranges'] else \
+        security_rule_dict['source_port_ranges']
 
-        security_rule_dict['destination_address_prefixes'] = self._merge_prefixes_or_ports(rule.destination_address_prefix, rule.destination_address_prefixes)
+        security_rule_dict['destination_address_prefixes'] = self._merge_prefixes_or_ports(
+            rule.destination_address_prefix, rule.destination_address_prefixes)
 
-        security_rule_dict['destination_port_ranges'] = self._merge_prefixes_or_ports(rule.destination_port_range, rule.destination_port_ranges)
-        security_rule_dict['destination_ports'] = ['0-65535'] if '*' in security_rule_dict['destination_port_ranges'] else security_rule_dict['destination_port_ranges']
+        security_rule_dict['destination_port_ranges'] = self._merge_prefixes_or_ports(rule.destination_port_range,
+                                                                                      rule.destination_port_ranges)
+        security_rule_dict['destination_ports'] = ['0-65535'] if '*' in security_rule_dict[
+            'destination_port_ranges'] else security_rule_dict['destination_port_ranges']
 
         security_rule_dict['etag'] = rule.etag
 

@@ -4,9 +4,11 @@ import os
 from ScoutSuite.core.console import print_error, print_exception
 
 
+# 规则定义类，用于定义规则的名称、描述、严重程度、检测条件等信息。
 class RuleDefinition:
 
     def __init__(self, data_path, file_name=None, rule_dirs=None, string_definition=None):
+        # 初始化方法，用于初始化规则定义类的各个属性。
         rule_dirs = [] if rule_dirs is None else rule_dirs
         self.rules_data_path = data_path
         self.file_name = file_name
@@ -35,7 +37,7 @@ class RuleDefinition:
     def load(self):
         """
         Load the definition of the rule, searching in the specified rule dirs first, then in the built-in definitions
-
+        加载规则的定义，首先在指定的规则目录中搜索，然后在内置定义中
         :return:                        None
         """
         file_name_valid = False

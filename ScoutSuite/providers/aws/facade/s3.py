@@ -17,7 +17,8 @@ class S3Facade(AWSBaseFacade):
             # as per https://github.com/nccgroup/ScoutSuite/issues/727
             buckets = []
             exception = None
-            region_list = self.regions if self.regions else await run_concurrently(lambda: self.session.get_available_regions('s3'))
+            region_list = self.regions if self.regions else await run_concurrently(
+                lambda: self.session.get_available_regions('s3'))
             for region in region_list:
                 try:
                     client = AWSFacadeUtils.get_client('s3', self.session, region)
@@ -131,9 +132,9 @@ class S3Facade(AWSBaseFacade):
         try:
             config = await run_concurrently(lambda: client.get_bucket_encryption(Bucket=bucket['Name']))
             bucket['default_encryption_enabled'] = True
-            bucket['default_encryption_algorithm'] = config.get('ServerSideEncryptionConfiguration', {})\
+            bucket['default_encryption_algorithm'] = config.get('ServerSideEncryptionConfiguration', {}) \
                 .get('Rules', [{}])[0].get('ApplyServerSideEncryptionByDefault', {}).get('SSEAlgorithm')
-            bucket['default_encryption_key'] = config.get('ServerSideEncryptionConfiguration', {})\
+            bucket['default_encryption_key'] = config.get('ServerSideEncryptionConfiguration', {}) \
                 .get('Rules', [{}])[0].get('ApplyServerSideEncryptionByDefault', {}).get('KMSMasterKeyID')
         except ClientError as e:
             if 'ServerSideEncryptionConfigurationNotFoundError' in e.response['Error']['Code']:
@@ -230,16 +231,20 @@ class S3Facade(AWSBaseFacade):
     async def _get_and_set_s3_bucket_block_public_access(self, bucket: {}):
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
-            bucket_public_access_block_conf = await run_concurrently(lambda: client.get_public_access_block(Bucket=bucket['Name']))
-            bucket['public_access_block_configuration'] = bucket_public_access_block_conf['PublicAccessBlockConfiguration']
+            bucket_public_access_block_conf = await run_concurrently(
+                lambda: client.get_public_access_block(Bucket=bucket['Name']))
+            bucket['public_access_block_configuration'] = bucket_public_access_block_conf[
+                'PublicAccessBlockConfiguration']
         except ClientError as e:
             # No such configuration found for the bucket, nothing to be done
             pass
         except Exception as e:
             if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
-                print_warning('Failed to get the public access block configuration for {}: {}'.format(bucket['Name'], e))
+                print_warning(
+                    'Failed to get the public access block configuration for {}: {}'.format(bucket['Name'], e))
             else:
-                print_exception('Failed to get the public access block configuration for {}: {}'.format(bucket['Name'], e))
+                print_exception(
+                    'Failed to get the public access block configuration for {}: {}'.format(bucket['Name'], e))
 
     def _get_and_set_s3_bucket_creationdate(self, buckets):
         # When using region other than 'us-east-1', the 'CreationDate' is the last modified time according to bucket's

@@ -19,7 +19,7 @@ class Trails(AWSResources):
     def _parse_trail(self, raw_trail):
         trail = {'name': raw_trail.pop('Name')}
         trail_id = get_non_provider_id(trail['name'])
-        
+
         trail['arn'] = raw_trail.get('TrailARN')
         trail['is_organization_trail'] = raw_trail.get('IsOrganizationTrail')
         trail['home_region'] = raw_trail.get('HomeRegion')

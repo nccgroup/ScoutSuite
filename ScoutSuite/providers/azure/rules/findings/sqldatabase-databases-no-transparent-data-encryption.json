@@ -7,7 +7,8 @@
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.2.0",
             "reference": "4.1.2"
-        },{
+        },
+        {
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.0.0",
             "reference": "4.2"

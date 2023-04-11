@@ -5,7 +5,7 @@ from ScoutSuite.providers.gcp.resources.stackdrivermonitoring.alert_policies imp
 
 
 class StackdriverMonitoring(Projects):
-    _children = [ 
+    _children = [
         (UptimeChecks, 'uptime_checks'),
         (AlertPolicies, 'alert_policies'),
         (MonitoringAlertPolicies, 'monitoring_alert_policies')

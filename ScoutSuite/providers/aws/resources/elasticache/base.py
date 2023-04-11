@@ -23,7 +23,7 @@ class ElastiCache(Regions):
                 sum([len(vpc['clusters']) for vpc in self['regions'][region]['vpcs'].values()])
             self['regions'][region]['subnet_groups_count'] = \
                 sum([len(vpc['subnet_groups']) for vpc in self['regions'][region]['vpcs'].values()])
-        
+
         self['clusters_count'] = sum([region['clusters_count'] for region in self['regions'].values()])
 
         # We do not want the parameter groups to be part of the resources count, as it is usually in 

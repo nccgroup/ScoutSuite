@@ -5,7 +5,6 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class KeyVaults(OracleCompositeResources):
-
     _children = [
         (Keys, 'keys')
     ]
@@ -24,7 +23,6 @@ class KeyVaults(OracleCompositeResources):
             scopes={keyvault_id: {'keyvault': keyvault}
                     for keyvault_id, keyvault in self.items()}
         )
-
 
     def _parse_keyvault(self, raw_keyvault):
         keyvault_dict = {}

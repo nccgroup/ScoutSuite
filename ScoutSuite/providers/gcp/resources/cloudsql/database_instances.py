@@ -33,11 +33,13 @@ class DatabaseInstances(GCPCompositeResources):
         instance_dict['id'] = get_non_provider_id(raw_instance['name'])
         instance_dict['name'] = raw_instance['name']
         instance_dict['project_id'] = raw_instance['project']
-        instance_dict['automatic_backup_enabled'] = raw_instance['settings'].get('backupConfiguration', {}).get('enabled')
+        instance_dict['automatic_backup_enabled'] = raw_instance['settings'].get('backupConfiguration', {}).get(
+            'enabled')
         instance_dict['database_version'] = raw_instance['databaseVersion']
         instance_dict['log_enabled'] = self._is_log_enabled(raw_instance)
         instance_dict['ssl_required'] = self._is_ssl_required(raw_instance)
-        instance_dict['authorized_networks'] = raw_instance['settings'].get('ipConfiguration', {}).get('authorizedNetworks', [])
+        instance_dict['authorized_networks'] = raw_instance['settings'].get('ipConfiguration', {}).get(
+            'authorizedNetworks', [])
 
         if raw_instance['settings'].get('databaseFlags', None):
             instance_dict['local_infile_off'] = self._mysql_local_infile_flag_off(raw_instance)
@@ -53,7 +55,8 @@ class DatabaseInstances(GCPCompositeResources):
 
             instance_dict['cross_db_ownership_chaining_off'] = self._sqlservers_cross_db_ownership_chaining_flag_off(
                 raw_instance, 'cross db ownership chaining')
-            instance_dict['contained_database_authentication_off'] = self._sqlservers_cross_db_ownership_chaining_flag_off(
+            instance_dict[
+                'contained_database_authentication_off'] = self._sqlservers_cross_db_ownership_chaining_flag_off(
                 raw_instance, 'contained database authentication')
 
         else:

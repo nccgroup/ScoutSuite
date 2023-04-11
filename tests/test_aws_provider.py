@@ -9,6 +9,7 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationExce
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
 from ScoutSuite.providers.aws.resources.ec2.instances import EC2Instances
 
+
 class Object(object):
     pass
 
@@ -18,7 +19,6 @@ class TestAWSProviderClass(unittest.TestCase):
     @mock.patch("ScoutSuite.providers.aws.authentication_strategy.boto3")
     @mock.patch("ScoutSuite.providers.aws.authentication_strategy.get_caller_identity")
     def test_authenticate(self, mock_get_caller_identity, mock_boto3):
-
         aws_authentication_strategy = get_authentication_strategy("aws")
 
         boto3_session = Object()
@@ -119,7 +119,6 @@ class TestAWSProviderClass(unittest.TestCase):
 
     @pytest.mark.skip(reason="pytest does not reproduce actual behavior")
     def test_identify_user_data_secrets(self):
-
         SAMPLE_USER_DATA = """
 # Various AWS Access Key exercisers
 AKIASHORT # too short

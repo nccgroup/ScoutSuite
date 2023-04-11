@@ -33,6 +33,6 @@ class FlowLogs(AWSResources):
         flow_log_dict['log_format'] = raw_flow_log.get('LogFormat')
         flow_log_dict['tags'] = raw_flow_log.get('Tags')
         flow_log_dict['max_aggregation_interval'] = raw_flow_log.get('MaxAggregationInterval')
-        flow_log_dict['arn'] = format_arn(self.partition, self.service, self.region, '', raw_flow_log.get('FlowLogId'), self.resource_type)
+        flow_log_dict['arn'] = format_arn(self.partition, self.service, self.region, '', raw_flow_log.get('FlowLogId'),
+                                          self.resource_type)
         return flow_log_dict['id'], flow_log_dict
-

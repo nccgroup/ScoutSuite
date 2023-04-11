@@ -25,5 +25,6 @@ class Domains(AWSResources):
         domain_dict['auto_renew'] = raw_domain.get('AutoRenew')
         domain_dict['transfer_lock'] = raw_domain.get('TransferLock')
         domain_dict['expiry'] = raw_domain.get('Expiry')
-        domain_dict['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id, domain_dict.get('id'), self.resource_type)
+        domain_dict['arn'] = format_arn(self.partition, self.service, self.region, self.facade.owner_id,
+                                        domain_dict.get('id'), self.resource_type)
         return domain_dict['id'], domain_dict

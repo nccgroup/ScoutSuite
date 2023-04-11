@@ -30,4 +30,3 @@ class NodePools(Resources):
         node_pool_dict['legacy_metadata_endpoints_enabled'] = \
             raw_node_pool['config'].get('metadata', {}).get('disable-legacy-endpoints') == 'false'
         return node_pool_dict['id'], node_pool_dict
-

@@ -40,6 +40,3 @@ class Groups(OracleResources):
             group_dict['users'].append(member_dict)
 
         return group_dict['id'], group_dict
-
-
-

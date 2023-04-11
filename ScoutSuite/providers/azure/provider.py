@@ -49,7 +49,7 @@ class AzureProvider(BaseProvider):
         self.result_format = result_format
 
         super().__init__(report_dir, timestamp,
-                                            services, skipped_services, result_format)
+                         services, skipped_services, result_format)
 
     def get_report_name(self):
         """
@@ -89,20 +89,27 @@ class AzureProvider(BaseProvider):
                         for group in self.services['aad']['groups']:
                             if group == assignment['principal_id']:
                                 self.services['aad']['groups'][group]['roles'].append({'subscription_id': subscription,
-                                                                                     'role_id': role_id})
-                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments']['groups'].append(group)
-                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
+                                                                                       'role_id': role_id})
+                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments'][
+                                    'groups'].append(group)
+                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id][
+                                    'assignments_count'] += 1
                         for user in self.services['aad']['users']:
                             if user == assignment['principal_id']:
                                 self.services['aad']['users'][user]['roles'].append({'subscription_id': subscription,
                                                                                      'role_id': role_id})
-                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments']['users'].append(user)
-                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
+                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments'][
+                                    'users'].append(user)
+                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id][
+                                    'assignments_count'] += 1
                         for service_principal in self.services['aad']['service_principals']:
                             if service_principal == assignment['principal_id']:
-                                self.services['aad']['service_principals'][service_principal]['roles'].append({'subscription_id': subscription,
-                                                                                                               'role_id': role_id})
-                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments']['service_principals'].append(service_principal)
-                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
+                                self.services['aad']['service_principals'][service_principal]['roles'].append(
+                                    {'subscription_id': subscription,
+                                     'role_id': role_id})
+                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments'][
+                                    'service_principals'].append(service_principal)
+                                self.services['rbac']['subscriptions'][subscription]['roles'][role_id][
+                                    'assignments_count'] += 1
         except Exception as e:
             print_exception('Unable to match RBAC roles and principals: {}'.format(e))

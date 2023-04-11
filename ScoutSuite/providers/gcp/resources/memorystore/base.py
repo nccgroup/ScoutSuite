@@ -3,6 +3,6 @@ from ScoutSuite.providers.gcp.resources.memorystore.redis_instances import Redis
 
 
 class MemoryStore(Projects):
-    _children = [ 
+    _children = [
         (RedisInstances, 'redis_instances')
-     ]
+    ]

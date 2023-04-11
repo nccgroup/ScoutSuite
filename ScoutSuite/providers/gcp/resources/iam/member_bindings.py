@@ -32,17 +32,17 @@ class Bindings(Resources):
 
     def _parse_members(self, raw_binding):
         members_dict = {'users': [], 'groups': [], 'service_accounts': [], 'domains': []}
-        
+
         if 'members' not in raw_binding:
             return members_dict
 
-        type_map = { 
-            'user': 'users', 
-            'group': 'groups', 
+        type_map = {
+            'user': 'users',
+            'group': 'groups',
             'serviceAccount': 'service_accounts',
             'domain': 'domains'
         }
-        
+
         # We want to group the members by type, so we need to parse their type and entity.
         # The members are given as strings with the format <member_type>:<member_entity>
         # See the GCP Resource Manager API reference for more info:
@@ -55,5 +55,5 @@ class Bindings(Resources):
                 pass
             else:
                 print_exception(f'Type {member_type} not handled')
-        
+
         return members_dict

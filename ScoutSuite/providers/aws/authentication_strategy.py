@@ -51,7 +51,8 @@ class AWSAuthenticationStrategy(AuthenticationStrategy):
 
             # Set custom user agent
             session._session.user_agent_name = 'Scout Suite'
-            session._session.user_agent_extra = 'Scout Suite/{} (https://github.com/nccgroup/ScoutSuite)'.format(__version__)
+            session._session.user_agent_extra = 'Scout Suite/{} (https://github.com/nccgroup/ScoutSuite)'.format(
+                __version__)
             session._session.user_agent_version = __version__
 
             return AWSCredentials(session=session)

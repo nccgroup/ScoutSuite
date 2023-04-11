@@ -23,7 +23,9 @@ class HostedZones(AWSResources):
         hosted_zone_dict['name'] = raw_hosted_zone.get('Name')
         hosted_zone_dict['caller_reference'] = raw_hosted_zone.get('CallerReference')
         hosted_zone_dict['config'] = raw_hosted_zone.get('Config')
-        hosted_zone_dict['resource_record_sets'] = await self.facade.route53.get_resource_records(hosted_zone_dict['id'])
+        hosted_zone_dict['resource_record_sets'] = await self.facade.route53.get_resource_records(
+            hosted_zone_dict['id'])
         hosted_zone_dict['resource_record_set_count'] = raw_hosted_zone.get('ResourceRecordSetCount')
-        hosted_zone_dict['arn'] = format_arn(self.partition,  self.service, self.region, '', raw_hosted_zone.get('Id'), self.resource_type)
+        hosted_zone_dict['arn'] = format_arn(self.partition, self.service, self.region, '', raw_hosted_zone.get('Id'),
+                                             self.resource_type)
         return hosted_zone_dict['id'], hosted_zone_dict

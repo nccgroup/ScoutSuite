@@ -20,5 +20,6 @@ class AmazonMachineImages(AWSResources):
     def _parse_image(self, raw_image):
         raw_image['id'] = raw_image.get('ImageId')
         raw_image['name'] = raw_image.get('Name')
-        raw_image['arn'] = format_arn(self.partition, self.service, self.region, raw_image.get('OwnerId'), raw_image.get('ImageId'), self.resource_type)
+        raw_image['arn'] = format_arn(self.partition, self.service, self.region, raw_image.get('OwnerId'),
+                                      raw_image.get('ImageId'), self.resource_type)
         return raw_image['id'], raw_image
