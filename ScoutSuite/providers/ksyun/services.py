@@ -11,7 +11,6 @@ from ScoutSuite.providers.ksyun.resources.slb.base import SLB
 from ScoutSuite.providers.ksyun.resources.vpc.base import VPC
 from ScoutSuite.providers.base.services import BaseServicesConfig
 
-
 class KsyunServicesConfig(BaseServicesConfig):
     def __init__(self, credentials, **kwargs):
         super().__init__(credentials)

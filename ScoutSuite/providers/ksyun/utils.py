@@ -1,4 +1,5 @@
 import hmac
+import json
 import hashlib
 import urllib.parse
 import urllib.request
@@ -9,6 +10,7 @@ from ksyun.common.profile.client_profile import ClientProfile
 from ksyun.common.profile.http_profile import HttpProfile
 
 from ScoutSuite.core.console import print_exception
+from ScoutSuite.providers.ksyun.authentication_strategy import KsyunCredentials
 
 
 def sign(params, secret_key):

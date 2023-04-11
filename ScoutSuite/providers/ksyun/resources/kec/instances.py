@@ -7,12 +7,16 @@ class Instances(KsyunResources):
         super().__init__(facade)
         self.region = region
 
+
     async def fetch_all(self):
-        raw_instances = await self.facade.kec.get_instances(region=self.region)
-        if raw_instances:
-            for raw_instance in raw_instances:
-                id, instance = await self._parse_instance(raw_instance)
-                self[id] = instance
+        project_list = self.facade.kec._credentials.project_list
+        if project_list:
+            for project_id in project_list:
+                raw_instances = await self.facade.kec.get_instances(region=self.region, project_id=project_id)
+                if raw_instances:
+                    for raw_instance in raw_instances:
+                        id, instance = await self._parse_instance(raw_instance)
+                        self[id] = instance
 
     async def _parse_instance(self, raw_instance):
 
@@ -38,7 +42,7 @@ class Instances(KsyunResources):
         instance_dict['host_name'] = raw_instance.get('HostName')
         # instance_dict['cluster_id'] = raw_instance.get('ClusterId')
         instance_dict['image_id'] = raw_instance.get('ImageId')
-        # instance_dict['resource_group_id'] = raw_instance.get('ResourceGroupId')
+        instance_dict['resource_group_id'] = raw_instance.get('ProjectId')
         # instance_dict['instance_type_family'] = raw_instance.get('InstanceTypeFamily')
         # instance_dict['credit_specification'] = raw_instance.get('CreditSpecification')
         # instance_dict['instance_network_type'] = raw_instance.get('NetworkInterfaceSet').get('NetworkInterfaceType')

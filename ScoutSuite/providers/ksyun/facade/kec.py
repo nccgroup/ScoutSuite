@@ -6,6 +6,7 @@ from ksyun.common.exception.ksyun_sdk_exception import KsyunSDKException
 from ksyun.common.profile.client_profile import ClientProfile
 from ksyun.common.profile.http_profile import HttpProfile
 
+from ScoutSuite.providers.ksyun import utils
 from ScoutSuite.providers.ksyun.authentication_strategy import KsyunCredentials
 
 
@@ -13,7 +14,7 @@ class KECFacade:
     def __init__(self, credentials: KsyunCredentials):
         self._credentials = credentials
 
-    async def get_instances(self, region):
+    async def get_instances(self, region, project_id):
         """
         Get all instances
 
@@ -32,11 +33,12 @@ class KECFacade:
             clientProfile.httpProfile = httpProfile
 
             common_client = CommonClient("kec", '2016-03-04', cred, region, profile=clientProfile)
-            r = common_client.call("DescribeInstances", {})
+            r = common_client.call("DescribeInstances", {"ProjectId": {"1": project_id}})
             response = json.loads(r).get('InstancesSet')
             if response:
                 return response
             else:
                 return []
+
         except KsyunSDKException as err:
             return []
