@@ -271,14 +271,20 @@ class S3Facade(AWSBaseFacade):
                         for key in statement['Condition']['Bool'].keys():
                             key_map[key.lower()] = key
                         if 'aws:SecureTransport'.lower() in key_map and \
-                                ((statement['Condition']['Bool'][key_map['aws:SecureTransport'.lower()]] == 'false' and statement['Effect'] == 'Deny') or (statement['Condition']['Bool'][key_map['aws:SecureTransport'.lower()]] == 'true' and statement['Effect'] == 'Allow')):
+                                ((statement['Condition']['Bool'][key_map['aws:SecureTransport'.lower()]] == 'false' and
+                                  statement['Effect'] == 'Deny') or
+                                 (statement['Condition']['Bool'][key_map['aws:SecureTransport'.lower()]] == 'true' and
+                                 statement['Effect'] == 'Allow')):
                             bucket['secure_transport_enabled'] = True
-                    elif 'Condition'in statement and \
+                    elif 'Condition' in statement and \
                             'NumericLessThan' in statement['Condition']:
                         for key in statement['Condition']['Bool'].keys():
                             key_map[key.lower()] = key
                         if 's3:TlsVersion'.lower() in key_map and \
-                                ((statement['Condition']['NumericLessThan'][key_map['s3:TlsVersion'.lower()]] >= '1.2' and statement['Effect'] == 'Deny') or (statement['Condition']['NumericGreaterThan'][key_map['s3:TlsVersion'.lower()]] >= '1.1' and statement['Effect'] == 'Allow')):
+                                ((statement['Condition']['NumericLessThan'][key_map['s3:TlsVersion'.lower()]] >= '1.2' and
+                                  statement['Effect'] == 'Deny') or
+                                 (statement['Condition']['NumericGreaterThan'][key_map['s3:TlsVersion'.lower()]] >= '1.1' and
+                                 statement['Effect'] == 'Allow')):
                             bucket['secure_transport_enabled'] = True
             else:
                 bucket['secure_transport_enabled'] = False
