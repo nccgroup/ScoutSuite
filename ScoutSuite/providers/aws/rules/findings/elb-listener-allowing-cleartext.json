@@ -16,6 +16,13 @@
                 "HTTPS",
                 "SSL"
             ]
+        ],
+        [
+            "elb.regions.id.vpcs.id.elbs.id.listeners.id.LoadBalancerPort",
+            "containNoneOf",
+            [
+                443
+            ]
         ]
     ]
 }

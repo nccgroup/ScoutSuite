@@ -1,0 +1,27 @@
+{
+    "description": "Instances Configured To Use Default Service Account With Full Access To All Cloud APIs",
+    "rationale": "When an instance is configured with Compute Engine default service account with Scope Allow full access to all Cloud APIs, based on IAM roles assigned to the user(s) accessing Instance, it may allow user to perform cloud operations/API calls that user is not supposed to perform leading to successful privilege escalation.",
+    "remediation": "From console:<ol><li>Go to the <samp>VM instances</samp> page by visiting https://console.cloud.google.com/compute/instances.</li><li>Click on the impacted VM instance.</li><li>If the instance is not stopped, click the <samp>Stop</samp> button. Wait for the instance to be stopped.</li><li>Next, click the <samp>Edit</samp> button.</li><li>Scroll down to the <samp>Service Account</samp> section.</li><li>Select a different service account or ensure that <samp>Allow full access to all Cloud APIs</samp> is not selected.</li><li>Click the <samp>Save</samp> button to save your changes and then click <samp>START</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "4.2"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances",
+        "https://cloud.google.com/compute/docs/access/service-accounts"
+    ],
+    "dashboard_name": "Instances",
+    "path": "computeengine.projects.id.zones.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.zones.id.instances.id.full_access_apis",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "full_access_apis"
+}

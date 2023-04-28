@@ -1,0 +1,26 @@
+{
+    "description": "Enable Connecting To Serial Ports Is Enabled",
+    "rationale": "The interactive serial console does not support IP-based access restrictions such as IP allow-lists. If you enable the interactive serial console on an instance, clients can attempt to connect to that instance from any IP address. This allows anybody to connect to that instance if they know the correct SSH key, username, project ID, zone, and instance name.",
+    "remediation": "From console:<ol><li>Login to Google Cloud console</li><li>Go to Computer Engine</li><li>Go to VM instances</li><li>Click on the Specific VM</li><li>Click <samp>Edit</samp></li><li>Unselect <samp>Enable connecting to serial ports</samp> below <samp>Remote access</samp>block.</li><li>Click <samp>Save</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "4.5"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/compute/docs/instances/interacting-with-serial-console"
+    ],
+    "dashboard_name": "Instances",
+    "path": "computeengine.projects.id.zones.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.zones.id.instances.id.serial_port_enabled",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "serial_port_enabled"
+}

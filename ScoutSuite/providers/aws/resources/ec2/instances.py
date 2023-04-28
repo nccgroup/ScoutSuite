@@ -1,7 +1,7 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
-from ScoutSuite.providers.aws.utils import get_name
-from ScoutSuite.providers.aws.utils import get_keys
+from ScoutSuite.providers.aws.utils import get_name, get_keys, format_arn
+
 import re
 
 
@@ -10,6 +10,9 @@ class EC2Instances(AWSResources):
         super().__init__(facade)
         self.region = region
         self.vpc = vpc
+        self.partition = facade.partition
+        self.service = 'ec2'
+        self.resource_type = 'instance'
 
     async def fetch_all(self):
         raw_instances = await self.facade.ec2.get_instances(self.region, self.vpc)
@@ -21,9 +24,7 @@ class EC2Instances(AWSResources):
         instance = {}
         id = raw_instance['InstanceId']
         instance['id'] = id
-        instance['arn'] = 'arn:aws:ec2:{}:{}:instance/{}'.format(self.region,
-                                                                 raw_instance['OwnerId'],
-                                                                 raw_instance['InstanceId'])
+        instance['arn'] = format_arn(self.partition, self.service, self.region, raw_instance['OwnerId'], raw_instance['InstanceId'], self.resource_type)
         instance['reservation_id'] = raw_instance['ReservationId']
         instance['availability_zone'] = raw_instance.get('Placement', {}).get('AvailabilityZone')
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
@@ -61,8 +62,8 @@ class EC2Instances(AWSResources):
         secrets = {}
 
         if user_data:
-            aws_access_key_regex = re.compile('AKIA[0-9A-Z]{16}')
-            aws_secret_access_key_regex = re.compile('[0-9a-zA-Z/+]{40}')
+            aws_access_key_regex = re.compile(r'(?:^|[^0-9A-Z])(AKIA[0-9A-Z]{16})(?:[^0-9A-Z]|$)')
+            aws_secret_access_key_regex = re.compile(r'(?:^|[^0-9a-zA-Z/+])([0-9a-zA-Z/+]{40})(?:[^0-9a-zA-Z/+]|$)')
             rsa_private_key_regex = re.compile('(-----BEGIN RSA PRIVATE KEY-----(?s).+?-----END .+?-----)')
             keywords = ['password', 'secret', 'aws_access_key_id', 'aws_secret_access_key', 'aws_session_token']
 

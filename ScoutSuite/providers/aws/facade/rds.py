@@ -1,13 +1,12 @@
 from asyncio import Lock
 
 from botocore.exceptions import ClientError
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
-from ScoutSuite.core.console import print_exception
 
 
 class RDSFacade(AWSBaseFacade):
@@ -49,13 +48,16 @@ class RDSFacade(AWSBaseFacade):
         account_id = get_aws_account_id(self.session)
         try:
             instance_tagset = await run_concurrently(lambda: client.list_tags_for_resource(
-                ResourceName="arn:aws:rds:"+region+":"+account_id+":db:"+instance['DBInstanceIdentifier']))
+                ResourceName=instance['DBInstanceArn']))
             instance['Tags'] = {x['Key']: x['Value'] for x in instance_tagset['TagList']}
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchTagSet':
                 print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
         except Exception as e:
-            print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
+            if 'DBInstanceNotFound' in e:
+                print_warning('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
+            else:
+                print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
             instance['Tags'] = {}
 
     async def _get_and_set_instance_clusters(self, instance: {}, region: str):
@@ -114,7 +116,10 @@ class RDSFacade(AWSBaseFacade):
             snapshot['Attributes'] =\
                 attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
         except Exception as e:
-            print_exception(f'Failed to describe RDS snapshot attributes: {e}')
+            if 'DBSnapshotNotFound' in e:
+                print_warning(f'Failed to describe RDS snapshot attributes: {e}')
+            else:
+                print_exception(f'Failed to describe RDS snapshot attributes: {e}')
             snapshot['Attributes'] = {}
 
     async def _get_and_set_cluster_snapshot_attributes(self, snapshot: {}, region: str):

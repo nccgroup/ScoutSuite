@@ -3,11 +3,15 @@ from ScoutSuite.providers.azure.facade.aad import AADFacade
 from ScoutSuite.providers.azure.facade.rbac import RBACFacade
 from ScoutSuite.providers.azure.facade.keyvault import KeyVaultFacade
 from ScoutSuite.providers.azure.facade.network import NetworkFacade
+from ScoutSuite.providers.azure.facade.resourcemanagement import ResourceManagementFacade
 from ScoutSuite.providers.azure.facade.securitycenter import SecurityCenterFacade
 from ScoutSuite.providers.azure.facade.sqldatabase import SQLDatabaseFacade
 from ScoutSuite.providers.azure.facade.storageaccounts import StorageAccountsFacade
 from ScoutSuite.providers.azure.facade.virtualmachines import VirtualMachineFacade
 from ScoutSuite.providers.azure.facade.appservice import AppServiceFacade
+from ScoutSuite.providers.azure.facade.mysqldatabase import MySQLDatabaseFacade
+from ScoutSuite.providers.azure.facade.postgresqldatabse import PostgreSQLDatabaseFacade
+from ScoutSuite.providers.azure.facade.loggingmonitoring import LoggingMonitoringFacade
 
 from azure.mgmt.resource import SubscriptionClient
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationException
@@ -52,6 +56,10 @@ class AzureFacade:
         self.sqldatabase = SQLDatabaseFacade(credentials)
         self.storageaccounts = StorageAccountsFacade(credentials)
         self.appservice = AppServiceFacade(credentials)
+        self.mysqldatabase = MySQLDatabaseFacade(credentials)
+        self.postgresqldatabase = PostgreSQLDatabaseFacade(credentials)
+        self.loggingmonitoring = LoggingMonitoringFacade(credentials)
+        self.resourcemanagement = ResourceManagementFacade(credentials)
 
         # Instantiate facades for proprietary services
         try:
@@ -78,8 +86,7 @@ class AzureFacade:
     def _set_subscriptions(self):
 
         # Create the client
-        subscription_client = SubscriptionClient(self.credentials.arm_credentials)
-        subscription_client._client.config.add_user_agent(get_user_agent())
+        subscription_client = SubscriptionClient(self.credentials.get_credentials(), user_agent=get_user_agent())
         # Get all the accessible subscriptions
         accessible_subscriptions_list = list(subscription_client.subscriptions.list())
 

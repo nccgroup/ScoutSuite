@@ -1,4 +1,4 @@
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently, map_concurrently
@@ -28,7 +28,9 @@ class SQSFacade(AWSBaseFacade):
                     'Attributes']
             )
         except Exception as e:
-            print_exception(f'Failed to get SQS queue attributes: {e}')
-            raise
+            if 'NonExistentQueue' in e:
+                print_warning(f'Failed to get SQS queue attributes: {e}')
+            else:
+                print_exception(f'Failed to get SQS queue attributes: {e}')
 
         return queue_url, queue_attributes

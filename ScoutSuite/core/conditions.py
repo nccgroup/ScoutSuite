@@ -3,6 +3,7 @@ import dateutil.parser
 import json
 import netaddr
 import re
+import ipaddress
 
 from policyuniverse.expander_minimizer import get_actions_from_statement, _expand_wildcard_action
 
@@ -181,6 +182,18 @@ def pass_condition(b, test, a):
             if re.match(c, b):
                 result = True
                 break
+    elif test == 'matchInList':
+        if type(a) != list:
+            a = [a]
+        if type(b) !=list:
+            b = [b]
+        for c in a:
+            for d in b:
+                if re.match(c, d):
+                    result = True
+                    break
+            if result:
+                break
     elif test == 'notMatch':
         result = (not pass_condition(b, 'match', a))
 
@@ -209,6 +222,12 @@ def pass_condition(b, test, a):
                 break
     elif test == 'notInSubnets':
         result = (not pass_condition(b, 'inSubnets', a))
+    elif test == 'isSubnetRange':
+        result = not ipaddress.ip_network(b, strict=False).exploded.endswith("/32")
+    elif test == 'isPrivateSubnet':
+        result = ipaddress.ip_network(b, strict=False).is_private
+    elif test == 'isPublicSubnet':
+        result = not ipaddress.ip_network(b, strict=False).is_private
 
     # Port/port ranges tests
     elif test == 'portsInPortList':
@@ -277,6 +296,19 @@ def pass_condition(b, test, a):
             if c == a or re.match(r'arn:aws:iam:.*?:%s:.*' % a, c):
                 result = True
                 break
+    elif test == 'isAccountRoot':
+        result = False
+        if type(b) != list:
+            b = [b]
+        for c in b:
+            if type(c) == dict and 'AWS' in c:
+                c = c['AWS']
+                if type(c) != list:
+                    c = [c]
+                for i in c:
+                    if i == a or re.match(r'arn:aws:iam:.*?:%s:root' % a, i):
+                        result = True
+                        break
 
     # Unknown test case
     else:

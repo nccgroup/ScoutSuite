@@ -1,0 +1,33 @@
+{
+    "description": "Windows Defender ATP (WDATP) Is Disabled",
+    "rationale": "WDATP integration brings comprehensive Endpoint Detection and Response (EDR) capabilities within security center. This integration helps to spot abnormalities, detect and respond to advanced attacks on Windows server endpoints monitored by Azure Security Center. Windows Defender ATP in Security Center supports detection on Windows Server 2016, 2012 R2, and 2008 R2 SP1 operating systems in a Standard service subscription.",
+    "remediation": "From Azure console:<ol><li>Go to <samp>Azure Security Center</samp></li><li>Select <samp>Security policy</samp> blade</li><li>Click on <samp>Edit Settings</samp> to alter the the security policy for a subscription</li><li>Select the <samp>Threat Detection</samp> blade</li><li>Check/Enable option <samp>Allow Windows Defender ATP to access my data</samp></li><li>Select <samp>Save</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "2.7"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-in/azure/security-center/security-center-wdatp",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/settings/list",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/settings/update"
+    ],
+    "dashboard_name": "Security Settings",
+    "path": "securitycenter.subscriptions.id.settings.id",
+    "conditions": [
+          "and",
+          [
+              "securitycenter.subscriptions.id.settings.id.name",
+              "equal",
+              "WDATP"
+          ],
+          [
+              "securitycenter.subscriptions.id.settings.id.enabled",
+              "false",
+              ""
+          ]
+      ],
+      "id_suffix": "enabled"
+}

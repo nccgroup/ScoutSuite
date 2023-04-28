@@ -169,7 +169,7 @@
                 "level": "warning"
             }
         ],
-        "kubernetesengine-private-cluster-disabled.json": [
+        "kubernetesengine-private-nodes-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"

@@ -1,0 +1,18 @@
+{
+    "description": "Content Distribution with Insufficient Viewer Security Policy",
+    "rationale": "Distributing content between AWS CloudFront distributions and their custom origins without the use of a valid certificate, can potentially expose sensitive data.",
+    "references": [
+        "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-viewercertificate.html"
+    ],
+    "dashboard_name": "Distributions",
+    "path": "cloudfront.distributions.id",
+    "conditions": [
+        "or",
+        [
+            "this",
+            "withoutKey",
+            "viewer_certificate"
+        ]
+    ],
+    "id_suffix": "viewer_certificate"
+}

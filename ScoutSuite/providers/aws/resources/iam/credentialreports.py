@@ -37,6 +37,8 @@ class CredentialReports(AWSResources):
         else:
             raw_credential_report['mfa_active_hardware'] = False
 
+        raw_credential_report['partition'] = self.facade.partition
+
         return raw_credential_report['id'], raw_credential_report
 
     async def _user_has_hardware_mfa_devices(self, username):
@@ -59,10 +61,13 @@ class CredentialReports(AWSResources):
                 return True
             else:
                 devices = await self.facade.iam.get_user_mfa_devices(username)
-                for device in devices:
-                    if device['SerialNumber'][0:4] == 'arn:':
-                        return False
-                return True
+                if devices:
+                    for device in devices:
+                        if device['SerialNumber'][0:4] == 'arn:':
+                            return False
+                    return True
+                else:
+                    return False
         except Exception as e:
             print_exception(f'Failed to infer hardware MFA configuration for user {username}: {e}')
 

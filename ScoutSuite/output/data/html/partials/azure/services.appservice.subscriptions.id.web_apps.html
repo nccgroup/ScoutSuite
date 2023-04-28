@@ -29,12 +29,13 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Configuration</h4>
-        <div class="list-group-item-text item-margin">Authentication: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.authentication_enabled"><samp>{{convert_bool_to_enabled authentication_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Authentication: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.authentication_enabled">{{convert_bool_to_enabled authentication_enabled}}</span></div>
         <div class="list-group-item-text item-margin">HTTPS-Only Traffic: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.https_only">{{convert_bool_to_enabled https_only}}</span></div>
         <div class="list-group-item-text item-margin">HTTPS 2.0 Support: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.http_2_enabled">{{convert_bool_to_enabled http_2_enabled}}</span></div>
         <div class="list-group-item-text item-margin">HTTP Logging: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.http_logging_enabled">{{convert_bool_to_enabled http_logging_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">FTP Deployment : <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.ftp_deployment_enabled">{{convert_bool_to_enabled ftp_deployment_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Minimum TLS Version Supported: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.minimum_tls_supported"><samp>{{value_or_none minimum_tls_version_supported}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Client Certificates: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.client_cert_enabled"><samp>{{convert_bool_to_enabled client_cert_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Client Certificates: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.client_cert_enabled">{{convert_bool_to_enabled client_cert_enabled}}</span></div>
     </div>
     {{#if identity}}
     <div class="list-group-item">

@@ -31,6 +31,15 @@
       {{/if}}
     </div>
     <div class="list-group-item">
+      <h4 class="list-group-item-heading accordion-heading">Grants</h4>
+      <ul>
+        {{#each grants}}
+        <li><b>Name: {{value_or_none name}}</b></li>
+        <samp>{{> generic_object this}}</samp>
+        {{/each}}
+      </ul>
+    </div>
+    <div class="list-group-item">
     {{#if policy}}
       {{> accordion_policy name = 'Key Policy' document = policy policy_path = (concat 'kms.regions' region 'keys' @key 'policy')}}
     {{else}}

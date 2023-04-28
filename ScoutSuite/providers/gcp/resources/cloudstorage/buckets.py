@@ -27,6 +27,8 @@ class Buckets(Resources):
         bucket_dict['versioning_enabled'] = raw_bucket.versioning_enabled
         bucket_dict['logging_enabled'] = raw_bucket.logging is not None
 
+        bucket_dict['public_access_prevention'] = raw_bucket.iam_configuration.public_access_prevention
+
         iam_configuration = raw_bucket.iam_configuration.get('uniformBucketLevelAccess') or \
             raw_bucket.iam_configuration.get('bucketPolicyOnly')
         if iam_configuration:
@@ -58,10 +60,9 @@ class Buckets(Resources):
         member_bindings = {}
         if bucket_iam_policy:
             for binding in bucket_iam_policy._bindings:
-                if 'legacy' not in binding['role']:
-                    for member in binding['members']:
-                        if member not in member_bindings:
-                            member_bindings[member] = [binding['role']]
-                        else:
-                            member_bindings[member].append(binding['role'])
+                for member in binding['members']:
+                    if member not in member_bindings:
+                        member_bindings[member] = [binding['role']]
+                    else:
+                        member_bindings[member].append(binding['role'])
         return member_bindings

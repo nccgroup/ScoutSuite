@@ -34,7 +34,8 @@ class Keys(AWSCompositeResources):
         if 'metadata' in raw_key:
             key_dict['creation_date'] = raw_key['metadata']['KeyMetadata']['CreationDate'] if \
                 raw_key['metadata']['KeyMetadata']['CreationDate'] else None
-            key_dict['key_enabled'] = False if raw_key['metadata']['KeyMetadata']['KeyState'] == 'Disabled' else True
+            key_dict['key_enabled'] = False if raw_key['metadata']['KeyMetadata']['KeyState'] in \
+                ['Disabled', 'PendingDeletion'] else True
             key_dict['description'] = raw_key['metadata']['KeyMetadata']['Description'] if len(
                 raw_key['metadata']['KeyMetadata']['Description'].strip()) > 0 else None
             key_dict['origin'] = raw_key['metadata']['KeyMetadata']['Origin'] if len(
@@ -49,7 +50,10 @@ class Keys(AWSCompositeResources):
         # enabled anyway
         elif key_dict['origin'] == 'AWS_KMS' and key_dict['key_manager'] == 'CUSTOMER':
             rotation_status = await self.facade.kms.get_key_rotation_status(self.region, key_dict['id'])
-            key_dict['rotation_enabled'] = rotation_status.get('KeyRotationEnabled', None)
+            if rotation_status:
+                key_dict['rotation_enabled'] = rotation_status.get('KeyRotationEnabled', None)
+            else:
+                key_dict['rotation_enabled'] = None
         else:
             key_dict['rotation_enabled'] = True
 

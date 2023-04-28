@@ -1,0 +1,92 @@
+{
+    "description": "Policy with Denied User Actions for Group Objects",
+    "rationale": "When a deny policy is specified for User object actions on a group resource, this will only affect the specific IAM group but not the group members. This could lead to privilege escalation if the user can perform other privileged actions targeting the specific members of the group.",
+    "remediation": "Define all relevant users in the resource field of the affected policies to avoid ineffective IAM actions and deny all group actions. The alternative would be to use the condition \"iam:ResourceTag\" in the policy.",
+    "references": [
+        "https://blog.lightspin.io/aws-iam-groups-authorization-bypass",
+        "https://github.com/lightspin-tech/red-shadow"
+    ],
+    "dashboard_name": "Policies",
+    "display_path": "iam.policies.id",
+    "path": "iam.policies.id.PolicyDocument.Statement.id",
+    "conditions": [
+        "and",
+        [
+            "iam.policies.id.PolicyDocument.Statement.id.Effect",
+            "equal",
+            "Deny"
+        ],
+        [
+            "iam.policies.id.PolicyDocument.Statement.id.",
+            "withKey",
+            "Resource"
+        ],
+        [
+            "iam.policies.id.PolicyDocument.Statement.id.Resource",
+            "matchInList",
+            "arn:aws:iam::[0-9]+:group/.*"
+        ],
+        [
+            "and",
+            [
+                "iam.policies.id.PolicyDocument.Statement.id.",
+                "withKey",
+                "Action"
+            ],
+            [
+                "iam.policies.id.PolicyDocument.Statement.id.Action",
+                "containAtLeastOneOf",
+                [
+                    "*",
+                    "iam:CreateUser",
+                    "iam:GetUser",
+                    "iam:UpdateUser",
+                    "iam:DeleteUser",
+                    "iam:GetUserPolicy",
+                    "iam:PutUserPolicy",
+                    "iam:DeleteUserPolicy",
+                    "iam:ListUserPolicies",
+                    "iam:AttachUserPolicy",
+                    "iam:DetachUserPolicy",
+                    "iam:ListAttachedUserPolicies",
+                    "iam:SimulatePrincipalPolicy",
+                    "iam:GetContextKeysForPrincipalPolicy",
+                    "iam:TagUser",
+                    "iam:UpdateSSHPublicKey",
+                    "iam:UntagUser",
+                    "iam:GetSSHPublicKey",
+                    "iam:ListUserTags",
+                    "iam:DeleteSSHPublicKey",
+                    "iam:GetLoginProfile",
+                    "iam:GetAccessKeyLastUsed",
+                    "iam:UpdateLoginProfile",
+                    "iam:UploadSigningCertificate",
+                    "iam:DeleteLoginProfile",
+                    "iam:ListSigningCertificates",
+                    "iam:CreateLoginProfile",
+                    "iam:UpdateSigningCertificate",
+                    "iam:EnableMFADevice",
+                    "iam:DeleteSigningCertificate",
+                    "iam:ResyncMFADevice",
+                    "iam:ListServiceSpecificCredentials",
+                    "iam:ListMFADevices",
+                    "iam:ResetServiceSpecificCredential",
+                    "iam:DeactivateMFADevice",
+                    "iam:CreateServiceSpecificCredential",
+                    "iam:ChangePassword",
+                    "iam:UpdateServiceSpecificCredential",
+                    "iam:CreateAccessKey",
+                    "iam:DeleteServiceSpecificCredential",
+                    "iam:ListAccessKeys",
+                    "iam:PutUserPermissionsBoundary",
+                    "iam:UpdateAccessKey",
+                    "iam:DeleteUserPermissionsBoundary",
+                    "iam:DeleteAccessKey",
+                    "iam:ListGroupsForUser",
+                    "iam:ListSSHPublicKeys",
+                    "iam:UploadSSHPublicKey"
+                ]
+            ]
+        ]
+    ]
+}

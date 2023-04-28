@@ -1,6 +1,6 @@
 {
-    "description": "The GKE Dashboard Enabled",
-    "rationale": "You should disable the Kubernetes Web UI (Dashboard) when running on Kubernetes Engine. The Kubernetes Web UI (Dashboard) is backed by a highly privileged Kubernetes Service Account.",
+    "description": "Kubernetes Dashboard Enabled",
+    "rationale": "You should disable the Kubernetes Web UI (Dashboard) when running on Kubernetes Engine. The Kubernetes Web UI (Dashboard) is backed by a highly privileged Kubernetes Service Account. The Cloud Console provides much of the same functionality, so you don't need this functionality.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
@@ -19,11 +19,11 @@
         "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
     ],
     "dashboard_name": "Clusters",
-    "path": "kubernetesengine.projects.id.zones.id.clusters.id",
+    "path": "kubernetesengine.projects.id.clusters.id",
     "conditions": [
         "and",
         [
-            "kubernetesengine.projects.id.zones.id.clusters.id.dashboard_status",
+            "kubernetesengine.projects.id.clusters.id.dashboard_status",
             "equal",
             "Enabled"
         ]

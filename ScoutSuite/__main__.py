@@ -1,5 +1,4 @@
 import asyncio
-import copy
 import os
 import webbrowser
 
@@ -273,11 +272,14 @@ async def _run(provider,
         if update:
             try:
                 print_info('Updating existing data')
-                current_run_services = copy.deepcopy(cloud_provider.services)
+                #Load previous results
                 last_run_dict = report.encoder.load_from_file('RESULTS')
-                cloud_provider.services = last_run_dict['services']
-                for service in cloud_provider.service_list:
-                    cloud_provider.services[service] = current_run_services[service]
+                #Get list of previous services which were not updated during this run
+                previous_services = [prev_service for prev_service in last_run_dict['service_list'] if prev_service not in cloud_provider.service_list]
+                #Add previous services
+                for service in previous_services:
+                    cloud_provider.service_list.append(service)
+                    cloud_provider.services[service] = last_run_dict['services'][service]
             except Exception as e:
                 print_exception('Failure while updating report: {}'.format(e))
 

@@ -53,11 +53,10 @@ class BaseServicesConfig:
                     if service != 'iam':
                         method_args['partition_name'] = get_partition_name(self.credentials.session)
 
-                await service_config.fetch_all(**method_args)
-
+                await service_config.fetch_all(**method_args)                
                 if hasattr(service_config, 'finalize'):
                     await service_config.finalize()
             else:
-                print_debug('No method to fetch service %s.' % service)
+                print_debug(f'No method to fetch service {service}.')
         except Exception as e:
-            print_exception(f'Could not fetch {service} configuration: {e}')
+            print_exception(f'Could not fetch {format_service_name(service)} configuration: {e}')

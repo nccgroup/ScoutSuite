@@ -1,6 +1,6 @@
 {
     "description": "Legacy Authorization (ABAC) Enabled",
-    "rationale": "The legacy authorizer in Kubernetes Engine grants broad, statically defined permissions. To ensure that RBAC limits permissions correctly, you must disable the legacy authorizer. RBAC has significant security advantages, can help you ensure that users only have access to cluster resources within their own namespace and is now stable in Kubernetes.",
+    "rationale": "The legacy authorizer in Kubernetes grants broad, statically defined permissions. To ensure that RBAC limits permissions correctly, you must disable the legacy authorizer. RBAC has significant security advantages, can help you ensure that users only have access to cluster resources within their own namespace and is now stable in Kubernetes.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
@@ -19,11 +19,11 @@
         "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
     ],
     "dashboard_name": "Clusters",
-    "path": "kubernetesengine.projects.id.zones.id.clusters.id",
+    "path": "kubernetesengine.projects.id.clusters.id",
     "conditions": [
         "and",
         [
-            "kubernetesengine.projects.id.zones.id.clusters.id.legacy_abac_enabled",
+            "kubernetesengine.projects.id.clusters.id.legacy_abac_enabled",
             "true",
             ""
         ]

@@ -40,6 +40,7 @@ def set_logger_configuration(is_debug=False, quiet=False, output_file_path=None)
             def filter(self, record):
                 record.hostname = HostnameFilter.hostname
                 return True
+
         # create file handler which logs messages
         fh = logging.FileHandler(output_file_path, 'w+')
         # Add filter to add hostname information
@@ -60,12 +61,20 @@ def print_generic(msg):
     logger.info(msg)
 
 
+def print_info(msg):
+    print_generic(msg)
+
+
 def print_debug(msg):
     logger.debug(msg)
 
 
 def print_error(msg):
     logger.error(msg)
+
+
+def print_warning(msg):
+    logger.warning(msg)
 
 
 def print_exception(exception, additional_details=None):
@@ -99,10 +108,6 @@ def print_exception(exception, additional_details=None):
                         'exception': f'{exception}',
                         'traceback': f'{traceback_exc}',
                         'additional_details': additional_details})
-
-
-def print_info(msg):
-    print_generic(msg)
 
 
 ########################################

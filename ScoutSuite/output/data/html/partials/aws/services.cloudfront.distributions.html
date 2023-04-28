@@ -1,0 +1,63 @@
+<!-- cloudfront distributions -->
+<script id="services.cloudfront.distributions.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="cloudfront.distributions.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">ARN: <span id="cloudfront.distributions.{{@key}}.arn"><samp>{{value_or_none arn}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="cloudfront.distributions.{{@key}}.enabled"><samp>{{convert_bool_to_enabled enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Enabled: <span id="cloudfront.distributions.{{@key}}.status"><samp>{{value_or_none status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Last Modified Time: <span id="cloudfront.distributions.{{@key}}.last_modified_time"><samp>{{value_or_none last_modified_time}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Comment: <span id="cloudfront.distributions.{{@key}}.comment"><samp>{{value_or_none comment}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Price Class: <span id="cloudfront.distributions.{{@key}}.price_class"><samp>{{value_or_none price_class}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Domain Name: <span id="cloudfront.distributions.{{@key}}.domain_name"><samp>{{value_or_none domain_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Web ACL ID: <span id="cloudfront.distributions.{{@key}}.web_acl_id"><samp>{{value_or_none web_acl_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">IPv6 Enabled: <span id="cloudfront.distributions.{{@key}}.is_ipv6_enabled"><samp>{{value_or_none is_ipv6_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">HTTP Version: <span id="cloudfront.distributions.{{@key}}.http_version"><samp>{{value_or_none http_version}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Certificate: <span id="cloudfront.distributions.{{@key}}.viewer_certificate"><samp>{{value_or_none viewer_certificate.Certificate}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Minimum TLS Version: <span id="cloudfront.distributions.{{@key}}.minimum_ssl_version"><samp>{{value_or_none viewer_certificate.MinimumProtocolVersion}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Origins</h4>
+        <ul>
+            <ul>
+                {{#each origins.Items}}
+                <li><samp>{{Id}}</samp></li>
+                <ul>
+                    <li>Domain: <samp>{{value_or_none DomainName}}</samp></li>
+                    <li>Origin Path: <samp>{{value_or_none OriginPath}}</samp></li>
+                    {{#if S3OriginConfig}}
+                    <li>S3 Origin Access Identity: <samp>{{value_or_none S3OriginConfig.OriginAccessIdentity}}</samp></li>
+                    {{/if}}
+                    {{#if CustomOriginConfig}}
+                    <li>Custom Origin Config:</li>
+                    <ul>
+                        <li>Protocol Policy: <span class="cloudfront.distributions.{{@../key}}.config_policy"><samp>{{value_or_none CustomOriginConfig.OriginProtocolPolicy}}</samp></span></li>
+                        <li><span class="cloudfront.distributions.{{@../key}}.config_protocols">SSL/TLS Protocols</span>:
+                            <ul>
+                                {{#each CustomOriginConfig.OriginSslProtocols.Items}}
+                                <li>{{this}}</li>
+                                {{/each}}
+                            </ul>
+                    </ul>
+                    {{/if}}
+                </ul>
+                {{/each}}
+            </ul>
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.cloudfront.distributions", $("#services\\.cloudfront\\.distributions\\.partial").html());
+</script>
+
+<!-- Single cloudfront distribution template -->
+<script id="single_cloudfront_distribution-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.cloudfront.distributions'}}
+</script>
+<script>
+    var single_cloudfront_distribution_template = Handlebars.compile($("#single_cloudfront_distribution-template").html());
+</script>

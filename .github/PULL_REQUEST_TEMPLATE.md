@@ -2,6 +2,8 @@
 
 **Make sure the PR is against the `develop` branch (see [Contributing](https://github.com/nccgroup/ScoutSuite/blob/master/CONTRIBUTING.md)).**
 
+**Make sure to set the corresponding milestone in the PR.**
+
 Please include a summary of the change(s) and which issue(s) it addresses. Please also include relevant motivation and context.
 
 Fixes # (issue)

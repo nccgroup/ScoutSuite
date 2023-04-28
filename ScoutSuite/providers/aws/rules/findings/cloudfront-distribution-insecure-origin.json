@@ -1,0 +1,24 @@
+{
+    "description": "Content Distribution with Insecure Origin TLS Policy",
+    "rationale": "Distributing content between AWS CloudFront distributions and their custom origins over HTTPS using older SSL/TLS protocols can potentially expose sensitive data.",
+    "references": [
+        "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-customoriginconfig.html"
+    ],
+    "dashboard_name": "Distributions",
+    "path": "cloudfront.distributions.id",
+    "conditions": [
+        "and",
+        [
+            "cloudfront.distributions.id.viewer_certificate.MinimumProtocolVersion.",
+            "containNoneOf",
+            [
+                "TLSv1.1",
+                "TLSv1.1_2016",
+                "TLSv1.2_2018",
+                "TLSv1.2_2019",
+                "TLSv1.2_2021"
+            ]
+        ]
+    ],
+    "id_suffix": "minimum_ssl_version"
+}

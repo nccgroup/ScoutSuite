@@ -51,6 +51,15 @@
             [
                 "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id"
             ]
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-poor-condition.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id"
+            ]
         ]
     ],
     "key": "iam-inline-_ARG_0_-policy-allows-_ARG_1_-_ARG_2_",

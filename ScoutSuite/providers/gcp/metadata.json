@@ -14,9 +14,17 @@
           "cols": 2,
           "path": "services.iam.projects.id.service_accounts"
         },
+        "domains": {
+          "cols": 2,
+          "path": "services.iam.projects.id.domains"
+        },
         "bindings": {
           "cols": 2,
           "path": "services.iam.projects.id.bindings"
+        },
+        "bindings_separation_duties": {
+          "cols": 2,
+          "path": "services.iam.projects.id.bindings_separation_duties"
         }
       }
     },
@@ -58,11 +66,32 @@
       "resources": {
         "clusters": {
           "cols": 2,
-          "path": "services.kubernetesengine.projects.id.zones.id.clusters"
+          "path": "services.kubernetesengine.projects.id.clusters"
+        }
+      }
+    },
+    "functions": {
+      "resources": {
+        "functions_v1": {
+          "cols": 2,
+          "path": "services.functions.projects.id.functions_v1"
+        },
+        "functions_v2": {
+          "cols": 2,
+          "path": "services.functions.projects.id.functions_v2"
         }
       }
     }
   },
+  "network": {
+    "dns": {
+      "resources": {
+        "managed_zones": {
+          "cols": 2,
+          "path": "services.dns.projects.id.managed_zones"
+        }
+      }
+  }},
   "storage": {
     "cloudstorage": {
       "resources": {
@@ -81,6 +110,22 @@
           "path": "services.cloudsql.projects.id.instances"
         }
       }
+    },
+    "cloudmemorystore": {
+      "resources": {
+        "redis_instances": {
+          "cols": 2,
+          "path": "services.cloudmemorystore.projects.id.redis_instances"
+        }
+      }
+    },
+    "bigquery": {
+      "resources": {
+        "datasets": {
+          "cols": 2,
+          "path": "services.bigquery.projects.id.datasets"
+        }
+      }
     }
   },
   "management": {
@@ -93,6 +138,10 @@
         "metrics": {
           "cols": 2,
           "path": "services.stackdriverlogging.projects.id.metrics"
+        },
+        "logging_metrics": {
+          "cols": 2,
+          "path": "services.stackdriverlogging.projects.id.logging_metrics"
         }
       }
     },
@@ -105,6 +154,10 @@
         "alert_policies": {
           "cols": 2,
           "path": "services.stackdrivermonitoring.projects.id.alert_policies"
+        },
+        "monitoring_alert_policies": {
+          "cols": 2,
+          "path": "services.stackdrivermonitoring.projects.id.monitoring_alert_policies"
         }
       }
     }

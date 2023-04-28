@@ -2,7 +2,7 @@ import json
 
 from botocore.exceptions import ClientError
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_debug, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
@@ -53,6 +53,8 @@ class S3Facade(AWSBaseFacade):
             # Non-async post-processing
             for bucket in buckets:
                 self._set_s3_bucket_secure_transport(bucket)
+            # Try to update CreationDate of all buckets with the correct values from 'us-east-1'
+            self._get_and_set_s3_bucket_creationdate(buckets)
 
             return buckets
 
@@ -61,7 +63,10 @@ class S3Facade(AWSBaseFacade):
         try:
             location = await run_concurrently(lambda: client.get_bucket_location(Bucket=bucket['Name']))
         except Exception as e:
-            print_exception('Failed to get bucket location for {}: {}'.format(bucket['Name'], e))
+            if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                print_warning('Failed to get bucket location for {}: {}'.format(bucket['Name'], e))
+            else:
+                print_exception('Failed to get bucket location for {}: {}'.format(bucket['Name'], e))
             location = None
 
         if location:
@@ -80,7 +85,10 @@ class S3Facade(AWSBaseFacade):
         try:
             logging = await run_concurrently(lambda: client.get_bucket_logging(Bucket=bucket['Name']))
         except Exception as e:
-            print_exception('Failed to get logging configuration for {}: {}'.format(bucket['Name'], e))
+            if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                print_warning('Failed to get logging configuration for {}: {}'.format(bucket['Name'], e))
+            else:
+                print_exception('Failed to get logging configuration for {}: {}'.format(bucket['Name'], e))
             bucket['logging'] = 'Unknown'
         else:
             if 'LoggingEnabled' in logging:
@@ -96,7 +104,10 @@ class S3Facade(AWSBaseFacade):
             bucket['versioning_status_enabled'] = self._status_to_bool(versioning.get('Status'))
             bucket['version_mfa_delete_enabled'] = self._status_to_bool(versioning.get('MFADelete'))
         except Exception as e:
-            print_exception('Failed to get versioning configuration for {}: {}'.format(bucket['Name'], e))
+            if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                print_warning('Failed to get versioning configuration for {}: {}'.format(bucket['Name'], e))
+            else:
+                print_exception('Failed to get versioning configuration for {}: {}'.format(bucket['Name'], e))
             bucket['versioning_status_enabled'] = None
             bucket['version_mfa_delete_enabled'] = None
 
@@ -109,23 +120,42 @@ class S3Facade(AWSBaseFacade):
             if "NoSuchWebsiteConfiguration" in str(e):
                 bucket['web_hosting_enabled'] = False
             else:
-                print_exception('Failed to get web hosting configuration for {}: {}'.format(bucket['Name'], e))
+                if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                    print_warning('Failed to get web hosting configuration for {}: {}'.format(bucket['Name'], e))
+                else:
+                    print_exception('Failed to get web hosting configuration for {}: {}'.format(bucket['Name'], e))
 
     async def _get_and_set_s3_bucket_default_encryption(self, bucket: {}):
         bucket_name = bucket['Name']
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
-            await run_concurrently(lambda: client.get_bucket_encryption(Bucket=bucket['Name']))
+            config = await run_concurrently(lambda: client.get_bucket_encryption(Bucket=bucket['Name']))
             bucket['default_encryption_enabled'] = True
+            bucket['default_encryption_algorithm'] = config.get('ServerSideEncryptionConfiguration', {})\
+                .get('Rules', [{}])[0].get('ApplyServerSideEncryptionByDefault', {}).get('SSEAlgorithm')
+            bucket['default_encryption_key'] = config.get('ServerSideEncryptionConfiguration', {})\
+                .get('Rules', [{}])[0].get('ApplyServerSideEncryptionByDefault', {}).get('KMSMasterKeyID')
         except ClientError as e:
             if 'ServerSideEncryptionConfigurationNotFoundError' in e.response['Error']['Code']:
                 bucket['default_encryption_enabled'] = False
+                bucket['default_encryption_algorithm'] = None
+                bucket['default_encryption_key'] = None
             else:
                 bucket['default_encryption_enabled'] = None
-                print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
+                bucket['default_encryption_algorithm'] = None
+                bucket['default_encryption_key'] = None
+                if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                    print_warning(f'Failed to get encryption configuration for {bucket_name}: {e}')
+                else:
+                    print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
         except Exception as e:
-            print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
             bucket['default_encryption'] = 'Unknown'
+            bucket['default_encryption_algorithm'] = None
+            bucket['default_encryption_key'] = None
+            if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                print_warning(f'Failed to get encryption configuration for {bucket_name}: {e}')
+            else:
+                print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
 
     async def _get_and_set_s3_acls(self, bucket: {}, key_name=None):
         bucket_name = bucket['Name']
@@ -155,7 +185,10 @@ class S3Facade(AWSBaseFacade):
                 self._set_s3_permissions(grantees[grantee]['permissions'], permission)
             bucket['grantees'] = grantees
         except Exception as e:
-            print_exception(f'Failed to get ACL configuration for {bucket_name}: {e}')
+            if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                print_warning(f'Failed to get ACL configuration for {bucket_name}: {e}')
+            else:
+                print_exception(f'Failed to get ACL configuration for {bucket_name}: {e}')
             bucket['grantees'] = {}
 
     async def _get_and_set_s3_bucket_policy(self, bucket: {}):
@@ -165,9 +198,15 @@ class S3Facade(AWSBaseFacade):
             bucket['policy'] = json.loads(bucket_policy['Policy'])
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchBucketPolicy':
-                print_exception('Failed to get bucket policy for {}: {}'.format(bucket['Name'], e))
+                if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                    print_warning('Failed to get bucket policy for {}: {}'.format(bucket['Name'], e))
+                else:
+                    print_exception('Failed to get bucket policy for {}: {}'.format(bucket['Name'], e))
         except Exception as e:
-            print_exception('Failed to get bucket policy for {}: {}'.format(bucket['Name'], e))
+            if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                print_warning('Failed to get bucket policy for {}: {}'.format(bucket['Name'], e))
+            else:
+                print_exception('Failed to get bucket policy for {}: {}'.format(bucket['Name'], e))
             bucket['grantees'] = {}
 
     async def _get_and_set_s3_bucket_tags(self, bucket: {}):
@@ -177,9 +216,15 @@ class S3Facade(AWSBaseFacade):
             bucket['tags'] = {x['Key']: x['Value'] for x in bucket_tagset['TagSet']}
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchTagSet':
-                print_exception('Failed to get bucket tags for {}: {}'.format(bucket['Name'], e))
+                if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                    print_warning('Failed to get bucket tags for {}: {}'.format(bucket['Name'], e))
+                else:
+                    print_exception('Failed to get bucket tags for {}: {}'.format(bucket['Name'], e))
         except Exception as e:
-            print_exception('Failed to get bucket tags for {}: {}'.format(bucket['Name'], e))
+            if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                print_warning('Failed to get bucket tags for {}: {}'.format(bucket['Name'], e))
+            else:
+                print_exception('Failed to get bucket tags for {}: {}'.format(bucket['Name'], e))
             bucket['tags'] = {}
 
     async def _get_and_set_s3_bucket_block_public_access(self, bucket: {}):
@@ -191,7 +236,27 @@ class S3Facade(AWSBaseFacade):
             # No such configuration found for the bucket, nothing to be done
             pass
         except Exception as e:
-            print_exception('Failed to get the public access block configuration for {}: {}'.format(bucket['Name'], e))
+            if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                print_warning('Failed to get the public access block configuration for {}: {}'.format(bucket['Name'], e))
+            else:
+                print_exception('Failed to get the public access block configuration for {}: {}'.format(bucket['Name'], e))
+
+    def _get_and_set_s3_bucket_creationdate(self, buckets):
+        # When using region other than 'us-east-1', the 'CreationDate' is the last modified time according to bucket's
+        # last replication in the respective region
+        # Source: https://github.com/aws/aws-cli/issues/3597#issuecomment-424167129
+        # Fixes issue https://github.com/nccgroup/ScoutSuite/issues/858
+        client = AWSFacadeUtils.get_client('s3', self.session, 'us-east-1')
+        try:
+            buckets_useast1 = client.list_buckets()['Buckets']
+            for bucket in buckets:
+                # Find the bucket with the same name and update 'CreationDate' from the 'us-east-1' region data,
+                # if doesn't exist keep the original value
+                bucket['CreationDate'] = next((b['CreationDate'] for b in buckets_useast1 if
+                                               b['Name'] == bucket['Name']), bucket['CreationDate'])
+        except Exception as e:
+            # Only output exception when in debug mode
+            print_debug('Failed to get bucket creation date from "us-east-1" region')
 
     def _set_s3_bucket_secure_transport(self, bucket: {}):
         try:
@@ -211,7 +276,10 @@ class S3Facade(AWSBaseFacade):
             else:
                 bucket['secure_transport_enabled'] = False
         except Exception as e:
-            print_exception('Failed to evaluate bucket policy for {}: {}'.format(bucket['Name'], e))
+            if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                print_warning('Failed to evaluate bucket policy for {}: {}'.format(bucket['Name'], e))
+            else:
+                print_exception('Failed to evaluate bucket policy for {}: {}'.format(bucket['Name'], e))
             bucket['secure_transport'] = None
 
     def get_s3_public_access_block(self, account_id):
@@ -231,8 +299,12 @@ class S3Facade(AWSBaseFacade):
                 "RestrictPublicBuckets": False
             }
         except Exception as e:
-            print_exception(
-                f'Failed to get the public access block configuration for the account {account_id}: {e}')
+            if 'NoSuchBucket' in str(e) or 'InvalidToken' in str(e):
+                print_warning(
+                    f'Failed to get the public access block configuration for the account {account_id}: {e}')
+            else:
+                print_exception(
+                    f'Failed to get the public access block configuration for the account {account_id}: {e}')
             return None
 
     @staticmethod

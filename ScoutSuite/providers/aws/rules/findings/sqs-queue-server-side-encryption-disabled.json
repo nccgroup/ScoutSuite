@@ -1,0 +1,24 @@
+{
+    "description": "Queue with Encryption Disabled",
+    "rationale": "SQS Server-Side Encryption ensures that the contents of messages in queues are encrypted.",
+    "references": [
+        "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html"
+    ],
+    "dashboard_name": "Queues",
+    "display_path": "sqs.regions.id.queues.id",
+    "path": "sqs.regions.id.queues.id",
+    "conditions": [
+        "and",
+        [
+            "sqs.regions.id.queues.id.kms_master_key_id",
+            "null",
+            ""
+        ],
+        [
+            "sqs.regions.id.queues.id.sqs_managed_sse_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "server-side-encryption-disabled"
+}

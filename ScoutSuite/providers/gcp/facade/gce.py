@@ -1,4 +1,4 @@
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
@@ -69,7 +69,7 @@ class GCEFacade(GCPBaseFacade):
                 lambda: gce_client.projects().get(project=project_id).execute()
             )
         except Exception as e:
-            print_exception(f'Failed to retrieve project: {e}')
+            print_exception(f'Failed to retrieve GCE project: {e}')
             return None
 
     async def get_regions(self, project_id):
@@ -100,7 +100,10 @@ class GCEFacade(GCPBaseFacade):
                                                      subnetwork=subnetwork_id).execute()
             )
         except Exception as e:
-            print_exception(f'Failed to retrieve subnetwork: {e}')
+            if 'was not found' in str(e):
+                print_warning(f'Failed to retrieve subnetwork: {e}')
+            else:
+                print_exception(f'Failed to retrieve subnetwork: {e}')
             return None
 
     async def get_subnetworks(self, project_id, region):
@@ -110,7 +113,10 @@ class GCEFacade(GCPBaseFacade):
             subnetworks_group = gce_client.subnetworks()
             return await GCPFacadeUtils.get_all('items', request, subnetworks_group)
         except Exception as e:
-            print_exception(f'Failed to retrieve subnetworks: {e}')
+            if 'was not found' in str(e):
+                print_warning(f'Failed to retrieve subnetworks: {e}')
+            else:
+                print_exception(f'Failed to retrieve subnetworks: {e}')
             return []
 
     async def get_zones(self, project_id):

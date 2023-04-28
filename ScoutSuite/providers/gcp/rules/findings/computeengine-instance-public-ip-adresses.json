@@ -1,0 +1,30 @@
+{
+    "description": "Instances Have Public IP Addresses",
+    "rationale": "To reduce your attack surface, Compute instances should not have public IP addresses. Instead, instances should be configured behind load balancers, to minimize the instance's exposure to the internet.",
+    "remediation": "From console:<ol><li>Go to the <samp>VM instances</samp> page by visiting https://console.cloud.google.com/compute/instances.</li><li>Click on the instance name to go the <samp>Instance detail</samp> page.</li><li>Click <samp>Edit</samp></li><li>For each Network interface, ensure that <samp>External IP</samp> is set to <samp>None</samp>.</li><li>Click <samp>Done</samp> and then click <samp>Save</samp>.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "4.9"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/load-balancing/docs/backend-service#backends_and_external_ip_addresses",
+        "https://cloud.google.com/compute/docs/instances/connecting-advanced#sshbetweeninstances",
+        "https://cloud.google.com/compute/docs/instances/connecting-to-instance",
+        "https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address#unassign_ip",
+        "https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints"
+    ],
+    "dashboard_name": "Instances",
+    "path": "computeengine.projects.id.zones.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.zones.id.instances.id.public_ip_addresses",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "public_ip_addresses"
+}

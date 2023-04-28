@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Settings(AzureResources):
@@ -16,4 +17,8 @@ class Settings(AzureResources):
 
     def _parse_settings(self, settings):
         settings_dict = {}
+        settings_dict['id'] = get_non_provider_id(settings.id.lower())
+        settings_dict['name'] = settings.name
+        settings_dict['kind'] = settings.kind
+        settings_dict['enabled'] = settings.enabled
         return settings_dict['id'], settings_dict

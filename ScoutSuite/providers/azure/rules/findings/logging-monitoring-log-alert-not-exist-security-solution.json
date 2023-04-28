@@ -1,0 +1,41 @@
+{
+    "description": "Activity Log Alert Does Not Exist For _ARG_0_",
+    "rationale": "Monitoring for \"_ARG_0_\" events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity.",
+    "remediation": "In the Azure console: <ol><li>Go to Monitor service on Azure Security Center</li><li>Select Alerts blade</li><li>Click On New alert Rule</li><li>Under Scope, click Select resource</li><li>Select the appropriate subscription under Filter by subscription</li><li>Select Policy Assignment under Filter by resource type</li><li>Select All for Filter by location</li><li>Click on the subscription from the entries populated under Resource</li><li>Verify Selection preview shows All Policy assignment (policyAssignments) and your selected subscription name</li><li>Under Condition click Select Condition</li><li>Select Create policy assignment signal</li><li>Click Done</li><li>Under Action group, select appropriate action group</li><li>Under Alert rule details, enter rule name and description</li><li>Select appropriate resource group</li><li>Check Enable alert rule upon creation checkbox</li><li>Click Create alert rule</li> </ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "_ARG_1_"
+        }
+    ],
+    "references": [
+      "https://azure.microsoft.com/en-us/updates/classic-alerting-monitoring-retirement/",
+      "https://docs.microsoft.com/en-in/azure/azure-monitor/alerts/alerts-activity-log",
+      "https://docs.microsoft.com/en-in/rest/api/monitor/activitylogalerts/createorupdate",
+      "https://docs.microsoft.com/en-in/rest/api/monitor/activitylogalerts/listbysubscriptionid",
+      "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+    ],
+    "dashboard_name": "Alert Rules",
+    "path": "loggingmonitoring.subscriptions.id.log_alerts.id",
+    "conditions": [
+        "or",
+        [
+            "loggingmonitoring.subscriptions.id.log_alerts.id._ARG_2_",
+            "false",
+            ""
+        ],
+        [
+            "loggingmonitoring.subscriptions.id.log_alerts.id._ARG_2_",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "_ARG_2_",
+    "key": "_ARG_2_",
+    "arg_names": [
+        "Event",
+        "Associated CIS rule",
+        "Dictionary Value"
+    ]
+}

@@ -18,6 +18,7 @@ class Networks(Resources):
         network_dict['id'] = raw_network['id']
         network_dict['project_id'] = raw_network['selfLink'].split('/')[-4]
         network_dict['name'] = raw_network['name']
+
         network_dict['description'] = self._get_description(raw_network)
         network_dict['creation_timestamp'] = raw_network['creationTimestamp']
         network_dict['auto_subnet'] = raw_network.get('autoCreateSubnetworks', None)
@@ -25,6 +26,11 @@ class Networks(Resources):
 
         network_dict['network_url'] = raw_network['selfLink']
         network_dict['subnetwork_urls'] = raw_network.get('subnetworks', None)
+        # Network is legacy if there is no subnets
+        network_dict['legacy_mode'] = True \
+            if (raw_network.get('subnetworks', None) is None or not raw_network.get('subnetworks', None)) and \
+            raw_network.get('autoCreateSubnetworks', None) is None \
+            else False
 
         return network_dict['id'], network_dict
 

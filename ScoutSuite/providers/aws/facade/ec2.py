@@ -3,7 +3,7 @@ import base64
 import boto3
 import zlib
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import get_and_set_concurrently
@@ -45,6 +45,12 @@ class EC2Facade(AWSBaseFacade):
         if value[0:2] == b'\x1f\x8b':  # GZIP magic number
             return zlib.decompress(value, zlib.MAX_WBITS | 32).decode('utf-8')
         else:
+            # Try another run of b64 decoding
+            try:
+                value = base64.b64decode(value)
+            except Exception as e:
+                value = value
+            # Return a string, not a byte string
             try:
                 return value.decode('utf-8')
             except UnicodeDecodeError:
@@ -121,7 +127,10 @@ class EC2Facade(AWSBaseFacade):
                 volume['KeyManager'] = await run_concurrently(
                     lambda: kms_client.describe_key(KeyId=key_id)['KeyMetadata']['KeyManager'])
             except Exception as e:
-                print_exception(f'Failed to describe KMS key: {e}')
+                if 'NotFoundException' in e:
+                    print_warning(f'Failed to describe KMS key: {e}')
+                else:
+                    print_exception(f'Failed to describe KMS key: {e}')
                 volume['KeyManager'] = None
         else:
             volume['KeyManager'] = None
@@ -147,8 +156,10 @@ class EC2Facade(AWSBaseFacade):
                 Attribute='createVolumePermission',
                 SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
         except Exception as e:
-            print_exception(
-                f'Failed to describe EC2 snapshot attributes: {e}')
+            if 'NotFound' in e:
+                print_warning(f'Failed to describe EC2 snapshot attributes: {e}')
+            else:
+                print_exception(f'Failed to describe EC2 snapshot attributes: {e}')
 
     async def get_network_acls(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]

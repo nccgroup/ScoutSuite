@@ -11,12 +11,9 @@ from ScoutSuite.utils import get_user_agent
 class KMSFacade(GCPBaseFacade):
     def __init__(self):
         # This facade is currently using both libraries as the Cloud Client library doesn't support locations
-
         # Cloud Client
         client_info = ClientInfo(user_agent=get_user_agent())
         self.cloud_client = kms.KeyManagementServiceClient(client_info=client_info)
-        # self.cloud_client = kms.KeyManagementServiceClient()
-
         super().__init__('cloudkms', 'v1')  # API Client
 
     async def get_locations(self, project_id: str):
@@ -42,7 +39,8 @@ class KMSFacade(GCPBaseFacade):
                     lambda: list(self.cloud_client.list_key_rings(parent)))
             return key_rings
         except Exception as e:
-            print_exception(f'Failed to retrieve KMS key rings: {e}')
+            if 'Billing is disabled for project' not in str(e):
+                print_exception(f'Failed to retrieve KMS key rings: {e}')
             return {}
 
     async def list_keys(self, project_id: str, location: str, keyring_name: str):
@@ -55,4 +53,16 @@ class KMSFacade(GCPBaseFacade):
             return await GCPFacadeUtils.get_all('cryptoKeys', request, cryptokeys)
         except Exception as e:
             print_exception(f'Failed to retrieve KMS keys for key ring {keyring_name}: {e}')
+            return []
+
+    async def keys_iam_policy(self, project_id: str, location: str, keyring_name: str, key_name: str):
+
+        try:
+            parent = self.cloud_client.crypto_key_path(project_id, location, keyring_name, key_name)
+            kms_client = self._get_client()
+            cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
+            request = cryptokeys.getIamPolicy(resource=parent)
+            return await GCPFacadeUtils.get_all('bindings', request, cryptokeys)
+        except Exception as e:
+            print_exception(f'Failed to retrieve KMS binding policy for key {key_name}: {e}')
             return []

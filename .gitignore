@@ -51,8 +51,9 @@ inc-scoutsuite-run*
 report-*
 *.db
 
-# PyCharm
+# IntelliJ files
 .idea/
+*.iml
 
 # Vs Code
 .vscode/
@@ -68,5 +69,8 @@ report-*
 # Private folders
 /private*/
 /**/private*/
+
+#Profiling output
+*.prof
 
 !docker/bin

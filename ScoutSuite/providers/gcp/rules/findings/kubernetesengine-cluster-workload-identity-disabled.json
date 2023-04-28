@@ -1,0 +1,26 @@
+{
+    "description": "Workload Identity Disabled",
+    "rationale": "Enabling Workload Identity manages the distribution and rotation of Service account keys for the workloads to use.<br>Kubernetes workloads should not use cluster node service accounts to authenticate to Google Cloud APIs. Each Kubernetes Workload that needs to authenticate to other Google services using Cloud IAM should be provisioned a dedicated Service account.",
+    "compliance": [
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.2.2"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "workload_identity_enabled",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "workload_identity_enabled"
+}

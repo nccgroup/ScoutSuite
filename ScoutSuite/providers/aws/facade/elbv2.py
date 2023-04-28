@@ -1,6 +1,6 @@
 import asyncio
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.utils import ec2_classic
@@ -56,7 +56,10 @@ class ELBv2Facade(AWSBaseFacade):
                     ResourceArns=[load_balancer['LoadBalancerArn']])['TagDescriptions'][0]['Tags']
             )
         except Exception as e:
-            print_exception(f'Failed to describe ELBv2 tags: {e}')
+            if 'LoadBalancerNotFound' in e:
+                print_warning(f'Failed to describe ELBv2 tags: {e}')
+            else:
+                print_exception(f'Failed to describe ELBv2 tags: {e}')
 
     async def get_listeners(self, region: str, load_balancer_arn: str):
         return await AWSFacadeUtils.get_all_pages(

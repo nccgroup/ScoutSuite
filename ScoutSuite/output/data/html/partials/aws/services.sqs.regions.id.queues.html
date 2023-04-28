@@ -8,9 +8,16 @@
           <h4 class="list-group-item-heading">Information</h4>
           <div class="list-group-item-text item-margin">Region: {{region}}</div>
           <div class="list-group-item-text item-margin">ARN: {{arn}}</div>
-          <div class="list-group-item-text item-margin">KMS master key id: <span id="sqs.regions.{{region}}.queues.{{@key}}.server-side-encryption-disabled">
+          <div class="list-group-item-text item-margin">KMS master key id:
+            <span id="sqs.regions.{{region}}.queues.{{@key}}.server-side-encryption-disabled">
               {{#if kms_master_key_id}} {{kms_master_key_id}} {{else}} None {{/if}}
-            </span></div>
+            </span>
+          </div>
+          <div class="list-group-item-text item-margin">SQS-managed encryption keys:
+            <span id="sqs.regions.{{region}}.queues.{{@key}}.server-side-encryption-disabled">
+              {{#ifEqual sqs_managed_sse_enabled "true"}} Enabled {{else}} Disabled {{/ifEqual}}
+            </span>
+          </div>
           <div class="list-group-item-text item-margin">Created on: {{CreatedTimestamp}}</div>
         </div>
         <div class="list-group-item">

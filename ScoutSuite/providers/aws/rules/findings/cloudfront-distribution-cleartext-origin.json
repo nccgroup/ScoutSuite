@@ -1,0 +1,23 @@
+{
+    "description": "Content Distribution with Clear-Text Origin TLS Policy",
+    "rationale": "Distributing content between AWS CloudFront distributions and their custom origins over clear-text HTTP, without using AWS encryption solutions, can potentially expose sensitive data.",
+    "references": [
+        "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-customoriginconfig.html"
+    ],
+    "dashboard_name": "Distributions",
+    "path": "cloudfront.distributions.id",
+    "conditions": [
+        "or",
+        [
+            "cloudfront.distributions.id.origins",
+            "containString",
+            "http-only"
+        ],
+        [
+            "cloudfront.distributions.id.origins",
+            "containString",
+            "match-viewer"
+        ]
+    ],
+    "class_suffix": "config_policy"
+}

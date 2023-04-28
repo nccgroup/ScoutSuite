@@ -27,6 +27,15 @@
             [
                 "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id"
             ]
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-poor-condition.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id"
+            ]
         ]
     ]
 }

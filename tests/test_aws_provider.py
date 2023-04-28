@@ -7,7 +7,7 @@ from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.aws.authentication_strategy import AWSCredentials
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationException
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
-
+from ScoutSuite.providers.aws.resources.ec2.instances import EC2Instances
 
 class Object(object):
     pass
@@ -86,6 +86,7 @@ class TestAWSProviderClass(unittest.TestCase):
 
     # mock two separate places from which get_aws_account_id is called
     @mock.patch("ScoutSuite.providers.aws.facade.base.get_aws_account_id")
+    @mock.patch("ScoutSuite.providers.aws.facade.base.get_partition_name")
     @mock.patch("ScoutSuite.providers.aws.provider.get_aws_account_id")
     @mock.patch("ScoutSuite.providers.aws.provider.get_partition_name")
     def test_get_report_name(
@@ -93,6 +94,7 @@ class TestAWSProviderClass(unittest.TestCase):
             mock_get_partiton_name,
             mock_get_aws_account_id,
             mock_facade_aws_account_id,
+            mock_facade_aws_partition_name,
     ):
         # no account_id, no profile
         mock_get_aws_account_id.return_value = None
@@ -114,3 +116,60 @@ class TestAWSProviderClass(unittest.TestCase):
             provider="aws", credentials=mock.MagicMock(session="123"),
         )
         assert aws_provider.get_report_name() == "aws-12345"
+
+    @pytest.mark.skip(reason="pytest does not reproduce actual behavior")
+    def test_identify_user_data_secrets(self):
+
+        SAMPLE_USER_DATA = """
+# Various AWS Access Key exercisers
+AKIASHORT # too short
+AKIA0123456789ABCDEF # just right
+AKIA0123456789ABCDEF0 # too long
+AKIA0123456789abcdef # invalid characters
+FAKIA0123456789ABCDE # wrong prefix
+in middle AKIAFEDCBA9876543210 of line
+line ends with AKIAFFFFFFFFFFFFFFFF
+
+# Various AWS Secret Access Key exercisers
+ThisIsTooShort
+ThisSequenceIsExactlyTheRightLengthToUse
+ThisOneIsJustALittleBitLongerThanItShouldBe
+middle="0000000000/1111111111/2222222222/3333333" + "of line"
+hats off to TRON: HereIsSomethingThatAppearsAtEndOfLineMCP
+        """
+
+        """
+        As I write this test, the assertions below fail; somehow, the "too long"
+        sequences return their initial substrings, which should not even be
+        possible. This behavior appears with pytest, but not when repeated
+        interactively. This behavior also does not appear with the actual scanner:
+
+        The following is excerpted from actual (pretty-printed) output:
+        [...]
+        "user_data": "#!/bin/bash\ncat << \"EOF\" > /root/rsb\n# Various AWS Access Key exercisers\nAKIASHORT # too short\nAKIA0123456789ABCDEF # just right\nAKIA0123456789ABCDEF0 # too long\nAKIA0123456789abcdef # invalid characters\nFAKIA0123456789ABCDE # wrong prefix\nin middle AKIAFEDCBA9876543210 of line\nline ends with AKIAFFFFFFFFFFFFFFFF\n\n# Various AWS Secret Access Key exercisers\nThisIsTooShort\n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\nThisOneIsJustALittleBitLongerThanItShouldBe\nmiddle=\"0000000000/1111111111/2222222222/3333333\" + \"of line\"\nhats off to TRON: HereIsSomethingThatAppearsAtEndOfLineMCP\nEOF",
+        "user_data_secrets": {
+            "AWS Access Key IDs": [
+                "AKIA0123456789ABCDEF",
+                "AKIAFEDCBA9876543210",
+                "AKIAFFFFFFFFFFFFFFFF"
+            ],
+            "AWS Secret Access Keys": [
+                "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",
+                "0000000000/1111111111/2222222222/3333333",
+                "HereIsSomethingThatAppearsAtEndOfLineMCP"
+            ]
+        }
+        [...]
+        """
+
+        results = EC2Instances._identify_user_data_secrets(SAMPLE_USER_DATA)
+        assert results["AWS Access Key IDs"] == [
+            "AKIA0123456789ABCDEF",
+            "AKIAFEDCBA9876543210",
+            "AKIAFFFFFFFFFFFFFFFF"
+        ]
+        assert results["AWS Secret Access Keys"] == [
+            "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",
+            "0000000000/1111111111/2222222222/3333333",
+            "HereIsSomethingThatAppearsAtEndOfLineMCP"
+        ]
