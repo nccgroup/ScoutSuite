@@ -1,6 +1,6 @@
 {
     "description": "Root Account without MFA",
-    "rationale": "The root account is the most privileged user in an account. MFA adds an extra layer of protection on top of a user name and password. With MFA enabled, when a user signs in to an AWS website, they're prompted for their user name and password and for an authentication code from their AWS MFA device.",
+    "rationale": "The root account is the most privileged user in an account. MFA adds an extra layer of protection on top of a user name and password. With MFA enabled, when a user signs in to an AWS website, they're prompted for their username and password and for an authentication code from their AWS MFA device.",
     "remediation": "Enable MFA for the root account",
     "compliance": [
         {
