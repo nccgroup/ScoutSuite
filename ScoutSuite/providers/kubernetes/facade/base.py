@@ -48,15 +48,19 @@ class KubernetesBaseFacade:
             return {}
         if path[0] != '/':
             path = '/' + path
-        # url = f'{self.api_client.configuration.host}{path}'
         print_info(f'GET {path}')
-        return loads(self.api_client.call_api(path, 'GET', auth_settings=['BearerToken'], response_type='json', _preload_content=False)[0].data)
+
+        try:
+            return loads(self.api_client.call_api(path, 'GET', auth_settings=['BearerToken'], response_type='json', _preload_content=False)[0].data)
+        except:
+            print_error(f'Failed to get {path}')
+            return None
 
     @classmethod
     def parse_data(self, raw_resources):
         parsed_output = {}
 
-        for kind in raw_resources:
+        for kind in raw_resources or {}:
             resources = {}
             resource_exists = False
 

@@ -1,3 +1,4 @@
+from ScoutSuite.core.console import print_error
 from ScoutSuite.providers.kubernetes.facade.base import KubernetesBaseFacade
 
 
@@ -26,28 +27,33 @@ class CoreFacade(KubernetesBaseFacade):
             for api_resource in core_resources:
                 if 'list' not in api_resource['verbs']: continue
                 endpoint = f'''/api/{version}/{api_resource['name']}'''
-                resources = self.get(endpoint)['items']
-                kind = api_resource['kind'] 
+                
+                resources = self.get(endpoint)
+                if not resources:
+                    continue
+                
+                resource_items = resources['items']
+                kind = api_resource['kind']
 
                 # Redact sensitive resources
                 if kind in ['Secret']:
-                    for i in range(len(resources)):
+                    for i in range(len(resource_items)):
                         # Do not naively assume all secrets have `data`
-                        secret_data = resources[i].get('data')
+                        secret_data = resource_items[i].get('data')
                         if not secret_data: continue
 
                         # Do not assume `data` is a dictionary either
                         if type(secret_data) == dict:
                             for key in secret_data:
-                                resources[i]['data'][key] = 'REDACTED'
+                                resource_items[i]['data'][key] = 'REDACTED'
                         elif type(secret_data) == str:
-                            resources[i]['data'] = 'REDACTED'
+                            resource_items[i]['data'] = 'REDACTED'
                         elif type(secret_data) == list:
                             for j in range(len(secret_data)):
-                                resources[i]['data'][j] = 'REDACTED'
+                                resource_items[i]['data'][j] = 'REDACTED'
 
                 data[kind] = data.get(kind, {})
-                data[kind][version] = resources
+                data[kind][version] = resource_items
 
         self.data = self.parse_data(data)
         return self.data

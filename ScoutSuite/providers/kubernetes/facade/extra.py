@@ -1,3 +1,4 @@
+from ScoutSuite.core.console import print_error
 from ScoutSuite.providers.kubernetes.facade.base import KubernetesBaseFacade
 
 
@@ -23,10 +24,19 @@ class ExtraFacade(KubernetesBaseFacade):
         for group in extra_resources['groups']:
             for version in group['versions']:
                 endpoint = f'''/apis/{version['groupVersion']}'''
+
                 api_resources = self.get(endpoint)
+                if not api_resources:
+                    continue
+
                 for api_resource in api_resources['resources']:
                     if 'list' not in api_resource['verbs']: continue
                     endpoint = f'''/apis/{version['groupVersion']}/{api_resource['name']}'''
+
+                    api_resources = self.get(endpoint)
+                    if not api_resources:
+                        continue
+
                     resources = self.get(endpoint)['items']
                     key = api_resource['kind']
                     data[key] = data.get(key, {})
