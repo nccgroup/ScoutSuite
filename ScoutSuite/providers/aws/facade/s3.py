@@ -270,20 +270,20 @@ class S3Facade(AWSBaseFacade):
                             'Bool' in statement['Condition']:
                         for key in statement['Condition']['Bool'].keys():
                             key_map[key.lower()] = key
-                        if 'aws:SecureTransport'.lower() in key_map and \
-                                ((statement['Condition']['Bool'][key_map['aws:SecureTransport'.lower()]] == 'false' and
+                        if 'aws:securetransport' in key_map and \
+                                ((statement['Condition']['Bool'][key_map['aws:securetransport']] == 'false' and
                                   statement['Effect'] == 'Deny') or
-                                 (statement['Condition']['Bool'][key_map['aws:SecureTransport'.lower()]] == 'true' and
+                                 (statement['Condition']['Bool'][key_map['aws:securetransport']] == 'true' and
                                  statement['Effect'] == 'Allow')):
                             bucket['secure_transport_enabled'] = True
                     elif 'Condition' in statement and \
                             'NumericLessThan' in statement['Condition']:
                         for key in statement['Condition']['Bool'].keys():
                             key_map[key.lower()] = key
-                        if 's3:TlsVersion'.lower() in key_map and \
-                                ((statement['Condition']['NumericLessThan'][key_map['s3:TlsVersion'.lower()]] >= '1.2' and
+                        if 's3:tlsversion' in key_map and \
+                                ((statement['Condition']['NumericLessThan'][key_map['s3:tlsversion']] >= '1.2' and
                                   statement['Effect'] == 'Deny') or
-                                 (statement['Condition']['NumericGreaterThan'][key_map['s3:TlsVersion'.lower()]] >= '1.1' and
+                                 (statement['Condition']['NumericGreaterThan'][key_map['s3:tlsversion']] >= '1.1' and
                                  statement['Effect'] == 'Allow')):
                             bucket['secure_transport_enabled'] = True
             else:
