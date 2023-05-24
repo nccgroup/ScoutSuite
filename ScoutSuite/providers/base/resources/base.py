@@ -84,10 +84,18 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
         children = [(child_class(self.facade, **scope), child_name)
                     for (child_class, child_name) in self._children]
         # Fetch all children concurrently:
-        await asyncio.wait(
-            {call(child_name, child.fetch_all)
-             for (child, child_name) in children}
-        )
+        # await asyncio.wait(
+        #     {call(child_name, child.fetch_all)
+        #      for (child, child_name) in children}
+        # )
+
+        tasks = []
+        for (child, child_name) in children:
+            task = asyncio.create_task(call(child_name, child.fetch_all))
+            tasks.append(task)
+            
+        await asyncio.wait(tasks)
+
         # Update parent content:
         for child, child_name in children:
             if child_name is None:
