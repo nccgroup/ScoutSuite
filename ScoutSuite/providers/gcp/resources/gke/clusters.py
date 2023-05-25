@@ -47,7 +47,7 @@ class Clusters(Resources):
         cluster_dict['metadata_server_enabled'] = self._metadata_server_enabled(raw_cluster.get('nodePools', []))
         cluster_dict['release_channel'] = raw_cluster.get('releaseChannel', {}).get('channel', None)
         cluster_dict['shielded_nodes_enabled'] = raw_cluster.get('shieldedNodes', {}).get('enabled', False)
-        cluster_dict['binary_authorization_enabled'] = raw_cluster.get('binaryAuthorization', {}).get('enabled', False)
+        cluster_dict['binary_authorization'] = raw_cluster.get('binaryAuthorization', {}).get('evaluationMode', 'EVALUATION_MODE_UNSPECIFIED')
         cluster_dict['private_ip_google_access_enabled'] = raw_cluster.get('privateIpGoogleAccess', False)
         cluster_dict['private_nodes_enabled'] = raw_cluster.get('privateClusterConfig', {}).get('enablePrivateNodes', False)
         cluster_dict['private_endpoint_enabled'] = raw_cluster.get('privateClusterConfig', {}).get('enablePrivateEndpoint', False)

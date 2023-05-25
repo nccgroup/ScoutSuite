@@ -17,10 +17,10 @@
     "conditions": [
         "and",
         [
-            "kubernetesengine.projects.id.clusters.id.binary_authorization_enabled",
-            "false",
-            ""
+            "kubernetesengine.projects.id.clusters.id.binary_authorization",
+            "notEqual",
+            "PROJECT_SINGLETON_POLICY_ENFORCE"
         ]
     ],
-    "id_suffix": "binary_authorization_enabled"
+    "id_suffix": "binary_authorization"
 }
