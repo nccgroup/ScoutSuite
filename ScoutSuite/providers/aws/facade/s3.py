@@ -263,29 +263,26 @@ class S3Facade(AWSBaseFacade):
             if 'policy' in bucket:
                 bucket['secure_transport_enabled'] = False
                 for statement in bucket['policy']['Statement']:
-                    key_map = {}
                     # evaluate statement to see if it contains a condition disallowing HTTP transport
                     # TODO this might not cover all cases
                     if 'Condition' in statement and \
                             'Bool' in statement['Condition']:
                         for key in statement['Condition']['Bool'].keys():
-                            key_map[key.lower()] = key
-                        if 'aws:securetransport' in key_map and \
-                                ((statement['Condition']['Bool'][key_map['aws:securetransport']] == 'false' and
-                                  statement['Effect'] == 'Deny') or
-                                 (statement['Condition']['Bool'][key_map['aws:securetransport']] == 'true' and
-                                 statement['Effect'] == 'Allow')):
-                            bucket['secure_transport_enabled'] = True
+                            if key.lower() == 'aws:securetransport' and \
+                                    ((statement['Condition']['Bool'][key] == 'false' and
+                                    statement['Effect'] == 'Deny') or
+                                    (statement['Condition']['Bool'][key] == 'true' and
+                                    statement['Effect'] == 'Allow')):
+                                bucket['secure_transport_enabled'] = True
                     elif 'Condition' in statement and \
                             'NumericLessThan' in statement['Condition']:
-                        for key in statement['Condition']['Bool'].keys():
-                            key_map[key.lower()] = key
-                        if 's3:tlsversion' in key_map and \
-                                ((statement['Condition']['NumericLessThan'][key_map['s3:tlsversion']] >= '1.2' and
-                                  statement['Effect'] == 'Deny') or
-                                 (statement['Condition']['NumericGreaterThan'][key_map['s3:tlsversion']] >= '1.1' and
-                                 statement['Effect'] == 'Allow')):
-                            bucket['secure_transport_enabled'] = True
+                        for key in statement['Condition']['NumericLessThan'].keys():
+                            if key.lower() == 's3:tlsversion' and \
+                                    ((statement['Condition']['NumericLessThan'][key] >= '1.2' and
+                                    statement['Effect'] == 'Deny') or
+                                    (statement['Condition']['NumericGreaterThan'][key] >= '1.1' and
+                                    statement['Effect'] == 'Allow')):
+                                bucket['secure_transport_enabled'] = True
             else:
                 bucket['secure_transport_enabled'] = False
         except Exception as e:
