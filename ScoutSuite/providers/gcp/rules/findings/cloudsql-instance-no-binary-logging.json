@@ -10,6 +10,11 @@
     "conditions": [
         "and",
         [
+            "cloudsql.projects.id.instances.id.database_type",
+            "equal",
+            "MYSQL"
+        ],
+        [
             "or",
             [
                 "cloudsql.projects.id.instances.id.log_enabled",
@@ -28,5 +33,5 @@
             ""
         ]
     ],
-    "id_suffix": "log_enabled"
+    "id_suffix": "binary_loggign_enabled"
 }

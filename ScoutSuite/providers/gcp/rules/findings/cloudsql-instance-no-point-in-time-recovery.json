@@ -1,0 +1,32 @@
+{
+    "description": "Instance with Point-in-Time Recovery Disabled",
+    "rationale": "The benefits of enabling point-in-time recovery can improve the security posture of the Cloud SQL instance.",
+    "references": [
+        "https://cloud.google.com/sql/docs/mysql/backup-recovery/pitr",
+        "https://cloud.google.com/sql/docs/postgres/backup-recovery/pitr"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "or",
+            [
+                "cloudsql.projects.id.instances.id.pitr_enabled",
+                "false",
+                ""
+            ],
+            [
+                "cloudsql.projects.id.instances.id.pitr_enabled",
+                "null",
+                ""
+            ]
+        ],
+        [
+            "cloudsql.projects.id.instances.id.is_failover_replica",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "pitr_enabled"
+}

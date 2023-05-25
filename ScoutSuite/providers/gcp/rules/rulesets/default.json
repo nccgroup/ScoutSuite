@@ -53,6 +53,12 @@
                 "level": "warning"
             }
         ],
+        "cloudsql-instance-no-point-in-time-recovery.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudsql-instance-ssl-not-required.json": [
             {
                 "enabled": true,
@@ -103,7 +109,7 @@
         ],
         "cloudsql-postgresql-instances-log-min-duration-not-set-1.json": [
             {
-                "enabled": true,
+                "enabled": false,
                 "level": "warning"
             }
         ],

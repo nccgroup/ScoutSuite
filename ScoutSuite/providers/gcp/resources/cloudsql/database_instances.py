@@ -35,7 +35,9 @@ class DatabaseInstances(GCPCompositeResources):
         instance_dict['project_id'] = raw_instance['project']
         instance_dict['automatic_backup_enabled'] = raw_instance['settings'].get('backupConfiguration', {}).get('enabled')
         instance_dict['database_version'] = raw_instance['databaseVersion']
-        instance_dict['log_enabled'] = self._is_log_enabled(raw_instance)
+        instance_dict['database_type'] = raw_instance['databaseVersion'].split('_')[0]
+        instance_dict['binary_logging_enabled'] = raw_instance['settings'].get('backupConfiguration', {}).get('enabled')
+        instance_dict['pitr_enabled'] = raw_instance['settings'].get('backupConfiguration', {}).get('pointInTimeRecoveryEnabled')
         instance_dict['ssl_required'] = self._is_ssl_required(raw_instance)
         instance_dict['authorized_networks'] = raw_instance['settings'].get('ipConfiguration', {}).get('authorizedNetworks', [])
 
@@ -90,8 +92,6 @@ class DatabaseInstances(GCPCompositeResources):
 
         return instance_dict['id'], instance_dict
 
-    def _is_log_enabled(self, raw_instance):
-        return raw_instance['settings'].get('backupConfiguration', {}).get('binaryLogEnabled')
 
     def _is_ssl_required(self, raw_instance):
         return raw_instance['settings'].get('ipConfiguration', {}).get('requireSsl', False)
@@ -141,7 +141,7 @@ class DatabaseInstances(GCPCompositeResources):
     def _postgres_log_temp_files_flags_0(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings'].get('databaseFlags', []):
-                if flag['name'] == 'log_temp_files' and flag['value'] == 0:
+                if flag['name'] == 'log_temp_files' and flag['value'] == '0':
                     return True
             return False
         else:
@@ -150,7 +150,7 @@ class DatabaseInstances(GCPCompositeResources):
     def _postgres_log_min_duration_statement_flags_1(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings'].get('databaseFlags', []):
-                if flag['name'] == 'log_min_duration_statement' and flag['value'] == -1:
+                if flag['name'] == 'log_min_duration_statement' and flag['value'] == '-1':
                     return True
             return False
         else:
