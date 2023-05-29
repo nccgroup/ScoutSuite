@@ -48,7 +48,7 @@ class DatabaseInstances(GCPCompositeResources):
             instance_dict['log_connections_on'] = self._postgres_flags_on(raw_instance, 'log_connections')
             instance_dict['log_disconnections_on'] = self._postgres_flags_on(raw_instance, 'log_disconnections')
             instance_dict['log_lock_waits_on'] = self._postgres_flags_on(raw_instance, 'log_lock_waits')
-            instance_dict['log_min_messages'] = self._postgres_log_min_error_statement_flags(raw_instance)
+            instance_dict['log_min_messages'] = self._postgres_log_min_mesages_flags(raw_instance)
             instance_dict['log_temp_files_0'] = self._postgres_log_temp_files_flags_0(raw_instance)
             instance_dict['log_min_duration_statement_-1'] = self._postgres_log_min_duration_statement_flags_1(
                 raw_instance)
@@ -129,10 +129,10 @@ class DatabaseInstances(GCPCompositeResources):
         else:
             return None
 
-    def _postgres_log_min_error_statement_flags(self, raw_instance):
+    def _postgres_log_min_mesages_flags(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:
             for flag in raw_instance['settings'].get('databaseFlags', []):
-                if flag['name'] == 'log_min_error_statement' and flag['value'] is not None:
+                if flag['name'] == 'log_min_messages' and flag['value'] is not None:
                     return True
             return False
         else:
