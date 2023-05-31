@@ -17,6 +17,9 @@ from ScoutSuite.output.html import ScoutReport
 from ScoutSuite.output.utils import get_filename
 from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
+# Dirty workaround for compatibility with Python >= 3.10
+import collections
+collections.Callable = collections.abc.Callable
 
 
 def run_from_cli():

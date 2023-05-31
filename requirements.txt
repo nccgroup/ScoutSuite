@@ -44,7 +44,7 @@ azure-mgmt-network==17.1.0
 azure-mgmt-redis==12.0.0
 azure-mgmt-web==1.0.0
 azure-mgmt-compute==18.2.0
-azure-mgmt-authorization==1.0.0
+azure-mgmt-authorization==3.0.0
 azure-mgmt-rdbms==8.0.0
 
 msgraph-core==0.2.2

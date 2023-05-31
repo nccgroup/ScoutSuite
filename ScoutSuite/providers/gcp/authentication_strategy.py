@@ -1,11 +1,9 @@
-from datetime import datetime
 import logging
 import os
 import warnings
 
 from google import auth
 
-from ScoutSuite.core.console import print_error
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
@@ -38,11 +36,6 @@ class GCPAuthenticationStrategy(AuthenticationStrategy):
 
             if not credentials:
                 raise AuthenticationException('No credentials')
-
-            if hasattr(credentials, 'valid') and credentials.valid and not credentials.valid:
-                if hasattr(credentials, 'expiry') and credentials.expiry and credentials.expiry < datetime.now():
-                    print_error(f'Credentials expired on {credentials.expiry}')
-                raise AuthenticationException('Credentials are invalid')
 
             credentials.is_service_account = service_account is not None
             credentials.default_project_id = default_project_id
