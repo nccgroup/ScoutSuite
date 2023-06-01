@@ -210,7 +210,7 @@ class GCPFacade(GCPBaseFacade):
         elif service == 'CloudStorage':
             endpoint = 'storage-component'
         elif service == 'CloudSQL':
-            endpoint = 'sql-component'
+            endpoint = 'sqladmin'
         elif service == 'ComputeEngine':
             endpoint = 'compute'
         elif service == 'Functions':

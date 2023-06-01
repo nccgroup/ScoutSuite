@@ -27,7 +27,8 @@ class GKEFacade(GCPBaseFacade):
     async def _get_and_set_private_google_access_enabled(self, cluster, project_id):
         try:
             region = self._get_cluster_region(cluster)
-            subnetwork = await self._gce_facade.get_subnetwork(project_id, region, cluster['subnetwork'])
+            subnetwork_project_id = self._get_cluster_subnetwork_project(cluster)
+            subnetwork = await self._gce_facade.get_subnetwork(subnetwork_project_id, region, cluster['subnetwork'])
             if subnetwork:
                 cluster['privateIpGoogleAccess'] = subnetwork.get('privateIpGoogleAccess')
             else:
@@ -42,3 +43,8 @@ class GKEFacade(GCPBaseFacade):
         region_regex = re.compile("^([\\w]+-[\\w]+)")
         result = region_regex.search(cluster['location'])
         return result.group(1)
+
+    # Subnetwork can be in different project
+    # networkConfig.subnetwork is like projects/{project}/regions/{region}/subnetworks/{subnetworkname}
+    def _get_cluster_subnetwork_project(self, cluster):
+        return cluster['networkConfig']['subnetwork'].split('/')[1]
