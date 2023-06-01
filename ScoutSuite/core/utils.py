@@ -4,7 +4,7 @@ Single-service rule processing functions
 
 import copy
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_debug
 from ScoutSuite.core.conditions import pass_conditions, fix_path_string
 
 
@@ -77,6 +77,8 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
         split_current_path = copy.deepcopy(current_path)
         results = results + recurse(all_info, current_info, [], split_current_path,
                                     config, add_suffix)
+    elif current_info is None:
+        print_debug(f"Unable to recursively test condition for path {current_path} as its value is None, skipping")
     else:
         print_exception('Unable to recursively test condition for path {}: '
                         'unhandled case for \"{}\" type'.format(current_path,
