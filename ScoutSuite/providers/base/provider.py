@@ -360,7 +360,7 @@ class BaseProvider:
                         break
                     current_path.append(key)
                     current_config = current_config[key]
-            if key in current_config:
+            if current_config.get(key):
                 current_path.append(key)
                 for (i, value) in enumerate(list(current_config[key])):
                     if len(path) == 0:
