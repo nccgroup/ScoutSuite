@@ -25,12 +25,12 @@
             "or",
             [
                 "cloudsql.projects.id.instances.id.ssl_required",
-                "false",
+                "null",
                 ""
             ],
             [
                 "cloudsql.projects.id.instances.id.ssl_required",
-                "null",
+                "false",
                 ""
             ]
         ],
