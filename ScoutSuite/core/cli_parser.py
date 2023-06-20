@@ -213,6 +213,11 @@ class ScoutSuiteArgumentParser:
                                  action='store_true',
                                  dest='all_subscriptions',
                                  help='Scan all of the accessible subscriptions')
+        azure_scope.add_argument('--resource-group',
+                                action='store',
+                                dest='resource_group',
+                                default=None,
+                                help='Name of the resource group to scan (default is all resource groups)')
 
     def _init_aliyun_parser(self):
         parser = self.subparsers.add_parser("aliyun",

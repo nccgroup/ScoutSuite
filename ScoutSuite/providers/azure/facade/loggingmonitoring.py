@@ -6,8 +6,9 @@ from azure.mgmt.monitor import MonitorManagementClient
 
 class LoggingMonitoringFacade:
 
-    def __init__(self, credentials):
+    def __init__(self, credentials, resource_group=None):
         self.credentials = credentials
+        self.resource_group = resource_group
 
     def get_client(self, subscription_id: str):
         client = MonitorManagementClient(self.credentials.get_credentials(),
@@ -51,9 +52,14 @@ class LoggingMonitoringFacade:
     async def get_activity_log_alerts(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            activity_log_alerts = await run_concurrently(
-                lambda: list(client.activity_log_alerts.list_by_subscription_id())
-            )
+            if self.resource_group:
+                activity_log_alerts = await run_concurrently(
+                    lambda: list(client.activity_log_alerts.list_by_resource_group(resource_group_name=self.resource_group))
+                )
+            else:
+                activity_log_alerts = await run_concurrently(
+                    lambda: list(client.activity_log_alerts.list_by_subscription_id())
+                )
             return activity_log_alerts
         except Exception as e:
             print_exception(f'Failed to retrieve activity log alerts: {e}')

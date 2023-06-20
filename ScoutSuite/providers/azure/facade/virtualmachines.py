@@ -7,8 +7,9 @@ from ScoutSuite.utils import get_user_agent
 
 class VirtualMachineFacade:
 
-    def __init__(self, credentials):
+    def __init__(self, credentials, resource_group=None):
         self.credentials = credentials
+        self.resource_group = resource_group
 
     def get_client(self, subscription_id: str):
 
@@ -20,9 +21,14 @@ class VirtualMachineFacade:
     async def get_instances(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.virtual_machines.list_all())
-            )
+            if self.resource_group:
+                return await run_concurrently(
+                    lambda: list(client.virtual_machines.list(resource_group_name=self.resource_group))
+                )
+            else:
+                return await run_concurrently(
+                    lambda: list(client.virtual_machines.list_all())
+                )
         except Exception as e:
             print_exception(f'Failed to retrieve virtual machines: {e}')
             return []
@@ -44,9 +50,14 @@ class VirtualMachineFacade:
     async def get_disks(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.disks.list())
-            )
+            if self.resource_group:
+                return await run_concurrently(
+                    lambda: list(client.disks.list_by_resource_group(self.resource_group))
+                )
+            else:
+                return await run_concurrently(
+                    lambda: list(client.disks.list())
+                )
         except Exception as e:
             print_exception(f'Failed to retrieve disks: {e}')
             return []
@@ -54,9 +65,15 @@ class VirtualMachineFacade:
     async def get_snapshots(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.snapshots.list())
-            )
+
+            if self.resource_group:
+                return await run_concurrently(
+                    lambda: list(client.snapshots.list_by_resource_group(self.resource_group))
+                )
+            else: 
+                return await run_concurrently(
+                    lambda: list(client.snapshots.list())
+                )
         except Exception as e:
             print_exception(f'Failed to retrieve snapshots: {e}')
             return []
@@ -64,9 +81,15 @@ class VirtualMachineFacade:
     async def get_images(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.images.list())
-            )
+
+            if self.resource_group:
+                return await run_concurrently(
+                    lambda: list(client.images.list_by_resource_group(self.resource_group))
+                )
+            else:
+                return await run_concurrently(
+                    lambda: list(client.images.list())
+                )
         except Exception as e:
             print_exception(f'Failed to retrieve images: {e}')
             return []

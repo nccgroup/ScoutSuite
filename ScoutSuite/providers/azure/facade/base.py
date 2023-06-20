@@ -38,6 +38,7 @@ class AzureFacade:
     def __init__(self,
                  credentials: AzureCredentials,
                  subscription_ids=[], all_subscriptions=False,
+                 resource_group=None,
                  programmatic_execution=False):
 
         self.credentials = credentials
@@ -48,18 +49,18 @@ class AzureFacade:
         self.all_subscriptions = all_subscriptions
 
         self.aad = AADFacade(credentials)
-        self.rbac = RBACFacade(credentials)
-        self.keyvault = KeyVaultFacade(credentials)
-        self.virtualmachines = VirtualMachineFacade(credentials)
-        self.network = NetworkFacade(credentials)
+        self.rbac = RBACFacade(credentials, resource_group=resource_group)
+        self.keyvault = KeyVaultFacade(credentials, resource_group=resource_group)
+        self.virtualmachines = VirtualMachineFacade(credentials, resource_group=resource_group)
+        self.network = NetworkFacade(credentials, resource_group=resource_group)
         self.securitycenter = SecurityCenterFacade(credentials)
-        self.sqldatabase = SQLDatabaseFacade(credentials)
-        self.storageaccounts = StorageAccountsFacade(credentials)
-        self.appservice = AppServiceFacade(credentials)
-        self.mysqldatabase = MySQLDatabaseFacade(credentials)
-        self.postgresqldatabase = PostgreSQLDatabaseFacade(credentials)
-        self.loggingmonitoring = LoggingMonitoringFacade(credentials)
-        self.resourcemanagement = ResourceManagementFacade(credentials)
+        self.sqldatabase = SQLDatabaseFacade(credentials, resource_group=resource_group)
+        self.storageaccounts = StorageAccountsFacade(credentials,resource_group=resource_group)
+        self.appservice = AppServiceFacade(credentials, resource_group=resource_group)
+        self.mysqldatabase = MySQLDatabaseFacade(credentials, resource_group=resource_group)
+        self.postgresqldatabase = PostgreSQLDatabaseFacade(credentials, resource_group=resource_group)
+        self.loggingmonitoring = LoggingMonitoringFacade(credentials, resource_group=resource_group)
+        self.resourcemanagement = ResourceManagementFacade(credentials, resource_group=resource_group)
 
         # Instantiate facades for proprietary services
         try:

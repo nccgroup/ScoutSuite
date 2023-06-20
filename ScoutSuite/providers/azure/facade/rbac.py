@@ -7,8 +7,9 @@ from ScoutSuite.utils import get_user_agent
 
 class RBACFacade:
 
-    def __init__(self, credentials):
+    def __init__(self, credentials, resource_group=None):
         self.credentials = credentials
+        self.resource_group = resource_group
 
     def get_client(self, subscription_id: str):
         client = AuthorizationManagementClient(self.credentials.get_credentials(),
@@ -20,6 +21,8 @@ class RBACFacade:
         try:
             client = self.get_client(subscription_id)
             scope = f'/subscriptions/{subscription_id}'
+            if self.resource_group:
+                scope += f'/resourceGroups/{self.resource_group}'
             return await run_concurrently(lambda: list(client.role_definitions.list(scope=scope)))
         except Exception as e:
             print_exception(f'Failed to retrieve roles: {e}')
@@ -29,6 +32,8 @@ class RBACFacade:
         try:
             client = self.get_client(subscription_id)
             scope = f'/subscriptions/{subscription_id}'
+            if self.resource_group:
+                scope += f'/resourceGroups/{self.resource_group}'
             return await run_concurrently(lambda: list(client.role_assignments.list_for_scope(scope=scope)))
         except Exception as e:
             print_exception(f'Failed to retrieve role assignments: {e}')
