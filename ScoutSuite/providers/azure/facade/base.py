@@ -49,7 +49,7 @@ class AzureFacade:
         self.all_subscriptions = all_subscriptions
 
         self.aad = AADFacade(credentials)
-        self.rbac = RBACFacade(credentials, resource_group=resource_group)
+        self.rbac = RBACFacade(credentials)
         self.keyvault = KeyVaultFacade(credentials, resource_group=resource_group)
         self.virtualmachines = VirtualMachineFacade(credentials, resource_group=resource_group)
         self.network = NetworkFacade(credentials, resource_group=resource_group)
