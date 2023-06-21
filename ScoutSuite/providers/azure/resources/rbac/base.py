@@ -19,7 +19,8 @@ class RBAC(Subscriptions):
         user_set = set()
         for subscription in self['subscriptions'].values():
             for role_assignment in subscription['role_assignments'].values():
-                if role_assignment['principal_type'] == 'User':
-                    user_set.add(role_assignment['principal_id'])
+                #if role_assignment['principal_type'] == 'User':
+                #principal_type set by Facade because python SDK for Azure doesn't return it
+                user_set.add(role_assignment['principal_id'])
         return list(user_set)
 

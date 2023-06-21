@@ -21,6 +21,7 @@ class RoleAssignments(AzureResources):
         role_assignment_dict['type'] = raw_role_assignment.type
         role_assignment_dict['scope'] = raw_role_assignment.properties.scope
         role_assignment_dict['principal_id'] = raw_role_assignment.properties.principal_id
+        # as of 06/2023 python SDK doens't return principal_type
         #role_assignment_dict['principal_type'] = raw_role_assignment.principal_type
         role_assignment_dict['can_delegate'] = "None"
         role_assignment_dict['additional_properties'] = raw_role_assignment.properties.additional_properties
