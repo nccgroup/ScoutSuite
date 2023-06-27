@@ -28,7 +28,7 @@
         "and",
         [
             "sqldatabase.subscriptions.id.servers.id.ad_admin",
-            "null",
+            "empty",
             ""
         ]
     ],
