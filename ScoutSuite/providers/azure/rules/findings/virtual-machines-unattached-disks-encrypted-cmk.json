@@ -39,6 +39,11 @@
                 "equal",
                 "EncryptionAtRestWithPlatformKey"
             ]
+        ],
+        [
+            "virtualmachines.subscriptions.id.disks.id.encryption_ade",
+            "false",
+            ""
         ]
     ],
     "id_suffix": "encryption_type"
