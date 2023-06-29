@@ -37,4 +37,4 @@ class Vaults(AzureResources):
         return vault['id'], vault
 
     def _is_public_access_allowed(self, raw_vault):
-        return raw_vault.properties.network_acls is None
+        return raw_vault.properties.network_acls.default_action == 'Allow'

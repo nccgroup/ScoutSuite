@@ -91,6 +91,12 @@
                 "level": "warning"
             }
         ],
+        "keyvault-public-traffic-allowed.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "keyvault-rbac-authorization-disabled.json": [
             {
                 "enabled": true,
