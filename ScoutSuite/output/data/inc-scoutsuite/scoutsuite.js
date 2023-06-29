@@ -239,7 +239,7 @@ function processTemplate(id1, containerId, list, replace) {
  * Hide all lists and details
  */
 function hideAll() {
-    $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide()
+    $("[id$='.list']").not("[id='metadata.list']").not("[id='regions.list']").not("[id='filters.list']").hide()
     // Add special case excluded by above selector
     $("[id*='metric_filters.list']").hide()
 
