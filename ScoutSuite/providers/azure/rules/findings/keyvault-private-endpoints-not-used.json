@@ -1,0 +1,27 @@
+{
+    "description": "Key Vaults Not Using Private Endpoint Connections",
+    "rationale": "Private endpoints will keep network requests to Azure Key Vault limited to the endpoints attached to the resources that are whitelisted to communicate with each other. Assigning the Key Vault to a network without an endpoint will allow other resources on that network to view all traffic from the Key Vault to its destination. In spite of the complexity in configuration, this is recommended for high security secrets.",
+    "remediation": "In the Azure console: <ol> <li>Go to <samp>Key Vaults</samp></li> <li>For each key vault, click on the settings menu called <samp>Networking</samp>.</li><li>Go to the tab named <samp>Private Endpoint Connections</samp>.</li> <li>Ensure that a private endpoint entry exists corresponding each Virtual Network that contains resources requiring access to the Key Vault resource.</li> <li>Click <samp>Save</samp> to apply your changes.</li> </ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "8.7"
+        }
+    ],
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/private-link-service",
+        "https://learn.microsoft.com/en-gb/security/benchmark/azure/baselines/key-vault-security-baseline?context=%2Fazure%2Fkey-vault%2Fgeneral%2Fcontext%2Fcontext#ns-2-secure-cloud-services-with-network-controls"
+    ],
+    "dashboard_name": "Keys",
+    "path": "keyvault.subscriptions.id.vaults.id",
+    "conditions": [
+        "and",
+        [
+            "keyvault.subscriptions.id.vaults.id.private_endpoint_connections",
+            "empty",
+            ""
+        ]
+    ],
+    "id_suffix": "private_endpoint_connections"
+}

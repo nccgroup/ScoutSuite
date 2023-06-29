@@ -91,6 +91,12 @@
                 "level": "warning"
             }
         ],
+        "keyvault-private-endpoints-not-used.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "logging-monitoring-diagnostic-setting-does-not-exist.json": [
             {
                 "enabled": false,
