@@ -1,0 +1,36 @@
+{
+    "description": "Resources without Defined Limits",
+    "rationale": "Unset resource limits could result in service denial through resource exhaustion.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+    ],
+    "dashboard_name": "DaemonSets",
+    "display_path": "daemon_set.v1-apps.id",
+    "path": "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources",
+    "conditions": [
+        "or",
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources",
+            "withoutKey",
+            "limits"
+        ],
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources.limits",
+            "null",
+            ""
+        ],
+        [
+            "and",
+            [
+                "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources.limits",
+                "withoutKey",
+                "memory"
+            ],
+            [
+                "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources.limits",
+                "withoutKey",
+                "cpu"
+            ]
+        ]
+    ]
+}

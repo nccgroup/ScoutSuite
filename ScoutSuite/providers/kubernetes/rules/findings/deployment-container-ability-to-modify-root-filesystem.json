@@ -1,0 +1,36 @@
+{
+    "description": "Container/InitContainer/EphemeralContainer Ability to Modify Root Filesystem",
+    "rationale": "Root filesystems should be read-only where possible.",
+    "remediation": "spec.template.spec.(c|initC|ephemeralC)ontainers[].securityContext.readOnlyRootFilesystem should be explicitly set to true for the affected containers.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "Deployments",
+    "display_path": "deployment.v1-apps.id",
+    "path": "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id",
+            "withoutKey",
+            "securityContext"
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "null",
+            ""
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.readOnlyRootFilesystem",
+            "null",
+            ""
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.readOnlyRootFilesystem",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "readOnlyRootFilesystem"
+}

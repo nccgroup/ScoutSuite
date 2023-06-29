@@ -177,8 +177,8 @@ function loadConfig(scriptId, cols, force) {
     let pathArray = scriptId.split('.id.')[0].split('.')
     for (let i in pathArray) {
         // Allows for creation of regions-filter etc...
-        if (i.endsWith('-filters')) {
-            i = i.replace('-filters', '')
+        if (pathArray[i].endsWith('-filters')) {
+            pathArray[i] = pathArray[i].replace('-filters', '')
         }
         list = list[pathArray[i]]
         // Filters
@@ -239,9 +239,7 @@ function processTemplate(id1, containerId, list, replace) {
  * Hide all lists and details
  */
 function hideAll() {
-    $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide()
-    // Add special case excluded by above selector
-    $("[id*='metric_filters.list']").hide()
+    $("[id$='.list']").not("[id='metadata.list']").not("[id='regions.list']").not("[id='filters.list']").hide()
 
     $("[id*='.details']").hide()
     var element = document.getElementById('scout_display_account_id_on_all_pages')
@@ -969,12 +967,17 @@ function showMainDashboard() {
 function makeTitleAcl(resourcePath) {
     resourcePath = resourcePath.replace('service_groups.', '')
     let service = getService(resourcePath)
-    let resource = resourcePath.split('.').pop()
-    resource = resource.replace(/_/g, ' ').replace('<', '').replace('>',
-        '').replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-    }).replace('Acl', 'ACL').replace('Findings', 'Dashboard')
-    return service + ' ' + resource
+
+    const parts = resourcePath.split('.').pop().split('_').map(part => `${part.charAt(0).toUpperCase()}${part.substring(1).toLowerCase()}`)
+    let formatted = ''
+    do {
+        const part = parts.shift()
+        formatted += part.length > 1 ? ` ${part} ` : part
+    } while (parts.length > 0)
+
+    formatted = formatted.replace(/Acl/g, 'ACL').replace('Findings', 'Dashboard').replace(/</g, '').replace(/>/g, '').trim()
+
+    return service + ' ' + formatted
 }
 
 /**
@@ -1091,8 +1094,24 @@ function updateDOM(anchor) {
 
     updateNavbar(path)
 
-    // FIXME this is not a very good implementation
-    if (!path.endsWith('.findings') && !path.endsWith('.statistics') && !path.endsWith('.password_policy') && !path.endsWith('.security_policy') && !path.endsWith('.permissions') && !path.endsWith('.<root_account>') && !path.endsWith('.external_attack_surface')) {
+    const pathSuffixes = [
+        'findings',
+        'statistics',
+        'password_policy',
+        'security_policy',
+        'permissions',
+        '<root_account>',
+        'external_attack_surface',
+        'output',
+    ]
+
+    let show = true
+    for (const suffix of pathSuffixes) {
+        if (!path.endsWith(`.${suffix}`)) continue
+        show = false
+        break
+    }
+    if (show) {
         $('#findings_download_button').show()
         $('#paging_buttons').show()
     } else {
@@ -1210,97 +1229,65 @@ function makeTitle(title) {
         console.log('Error: received title ' + title + ' (string expected).')
         return title.toString()
     }
+
+    const uppercaseTitles = [
+        'acm', 'aks', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'gke', 'iam', 'kms', 'rbac',
+        'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr', 'dns', 'oss', 'ram',
+    ]
+
+    const formattedTitles = {
+        'cloudtrail': 'CloudTrail',
+        'cloudwatch': 'CloudWatch',
+        'cloudformation': 'CloudFormation',
+        'cloudfront': 'CloudFront',
+        'awslambda': 'Lambda',
+        'docdb': 'DocumentDB',
+        'dynamodb': 'DynamoDB',
+        'guardduty': 'GuardDuty',
+        'secretsmanager': 'Secrets Manager',
+        'ssm': 'Systems Manager',
+        'elasticache': 'ElastiCache',
+        'redshift': 'RedShift',
+        'cloudstorage': 'Cloud Storage',
+        'cloudsql': 'Cloud SQL',
+        'stackdriverlogging': 'Stackdriver Logging',
+        'stackdrivermonitoring': 'Stackdriver Monitoring',
+        'computeengine': 'Compute Engine',
+        'kubernetesengine': 'Kubernetes Engine',
+        'cloudmemorystore': 'Cloud Memorystore',
+        'aad': 'Azure Active Directory',
+        'storageaccounts': 'Storage Accounts',
+        'sqldatabase': 'SQL Database',
+        'virtualmachines': 'Virtual Machines',
+        'securitycenter': 'Security Center',
+        'keyvault': 'Key Vault',
+        'appgateway': 'Application Gateway',
+        'rediscache': 'Redis Cache',
+        'appservice': 'App Services',
+        'loadbalancer': 'Load Balancer',
+        'actiontrail': 'ActionTrail',
+        'objectstorage': 'Object Storage',
+
+        // Azure and Kubernetes
+        'loggingmonitoring': 'Azure Monitor',
+
+        // Kubernetes
+        'kubernetesengine': 'GKE'
+    }
+
     title = title.toLowerCase()
-    if (['acm', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr','dns'].indexOf(title) !== -1) {
+    if (uppercaseTitles.indexOf(title) !== -1) {
         return title.toUpperCase()
-    } else if (title === 'cloudtrail') {
-        return 'CloudTrail'
-    } else if (title === 'cloudwatch') {
-        return 'CloudWatch'
-    } else if (title === 'cloudformation') {
-        return 'CloudFormation'
-    } else if (title === 'cloudfront') {
-        return 'CloudFront'
-    } else if (title === 'config') {
-        return 'Config'
-    } else if (title === 'cognito') {
-        return 'Cognito'
-    } else if (title === 'awslambda') {
-        return 'Lambda'
-    } else if (title === 'docdb') {
-        return 'DocumentDB'
-    } else if (title === 'dynamodb') {
-        return 'DynamoDB'
-    } else if (title === 'guardduty') {
-        return 'GuardDuty'
-    } else if (title === 'secretsmanager') {
-        return 'Secrets Manager'
-    } else if (title === 'ssm') {
-        return 'Systems Manager'
-    } else if (title === 'elasticache') {
-        return 'ElastiCache'
-    } else if (title === 'redshift') {
-        return 'RedShift'
-    } else if (title === 'cloudstorage') {
-        return 'Cloud Storage'
-    } else if (title === 'cloudsql') {
-        return 'Cloud SQL'
-    } else if (title === 'stackdriverlogging') {
-        return 'Stackdriver Logging'
-    } else if (title === 'stackdrivermonitoring') {
-        return 'Stackdriver Monitoring'
-    } else if (title === 'computeengine') {
-        return 'Compute Engine'
-    } else if (title === 'kubernetesengine') {
-        return 'Kubernetes Engine'
-    } else if (title === 'functions') {
-        return 'Cloud Functions'
-    } else if (title === 'cloudmemorystore') {
-        return 'Cloud Memorystore'
-    } else if (title === 'bigquery') {
-        return 'BigQuery'
-    } else if (title === 'aad') {
-        return 'Azure Active Directory'
-    } else if (title === 'rbac') {
-        return 'Azure RBAC'
-    } else if (title === 'storageaccounts') {
-        return 'Storage Accounts'
-    } else if (title === 'mysqldatabase') {
-        return 'MySQL Database'
-    } else if (title === 'sqldatabase') {
-        return 'SQL Database'
-    } else if (title === 'postgresqldatabase') {
-        return 'PostreSQL Database'
-    } else if (title === 'virtualmachines') {
-        return 'Virtual Machines'
-    } else if (title === 'securitycenter') {
-        return 'Security Center'
-    } else if (title === 'network') {
-        return 'Network'
-    } else if (title === 'keyvault') {
-        return 'Key Vault'
-    } else if (title === 'appgateway') {
-        return 'Application Gateway'
-    } else if (title === 'rediscache') {
-        return 'Redis Cache'
-    } else if (title === 'appservice') {
-        return 'App Services'
-    } else if (title === 'loggingmonitoring') {
-        return 'Logging Monitoring'
-    } else if (title === 'loadbalancer') {
-        return 'Load Balancer'
-    } else if (title === 'ram') {
-        return 'RAM'
-    } else if (title === 'actiontrail') {
-        return 'ActionTrail'
-    } else if (title === 'ecs') {
-        return 'ECS'
-    } else if (title === 'oss') {
-        return 'OSS'
-    } else if (title === 'objectstorage') {
-        return 'Object Storage'
+    } else if (formattedTitles[title.split('_')[0]]) {
+        return formattedTitles[title]
     } else {
-        return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).split('_').join(' ')
+        const parts = title.split('_').map(part => `${part.charAt(0).toUpperCase()}${part.substring(1).toLowerCase()}`)
+        let formatted = ''
+        do {
+            const part = parts.shift()
+            formatted += part.length > 1 ? ` ${part} ` : part
+        } while (parts.length > 0)
+        return formatted.trim()
     }
 }
 
@@ -1363,6 +1350,10 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
                 partialName = 'left_menu_for_region'
             } else if (path.indexOf('.projects.id.') > 0) {
                 partialName = 'left_menu_for_project'
+            } else if (group === '_scout_suite_aggregation' || group.length === 1 && resourceType.startsWith('v')) {
+                // no real way to categorize Kubernetes resources
+                // hopefully in the future this huge JavaScript file will be decoupled
+                partialName = 'left_menu_for_kubernetes_resource'
             } else {
                 partialName = 'left_menu'
             }
@@ -1379,6 +1370,10 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
                 partialName = 'details_for_region'
             } else if (path.indexOf('.projects.id.') > 0) {
                 partialName = 'details_for_project'
+            } else if (group === '_scout_suite_aggregation' || group.length === 1 && resourceType.startsWith('v')) {
+                // no real way to categorize Kubernetes resources
+                // hopefully in the future this huge JavaScript file will be decoupled
+                partialName = 'details_for_kubernetes_resource'
             } else {
                 partialName = 'details'
             }

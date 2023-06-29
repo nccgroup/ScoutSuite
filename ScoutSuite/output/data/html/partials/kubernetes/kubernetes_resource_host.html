@@ -1,0 +1,30 @@
+<script id="kubernetes_resource_host_partial" type="text/x-handlebars-template">
+    <div class="list-group-item">
+        <ul style="margin-bottom:0">
+            <li class="list-group-item-text no-margin">
+                <b>Host IPC:</b>
+                <span id="{{ id_prefix }}.{{@key}}.spec.hostIPC">
+                    <samp>{{spec.hostIPC}}</samp>
+                </span>
+            </li>
+
+            <li class="list-group-item-text no-margin">
+                <b>Host Network:</b>
+                <span id="{{ id_prefix }}.{{@key}}.spec.hostNetwork">
+                    <samp>{{spec.hostNetwork}}</samp>
+                </span>
+            </li>
+
+            <li class="list-group-item-text no-margin">
+                <b>Host PID:</b>
+                <span id="{{ id_prefix }}.{{@key}}.spec.hostPID">
+                    <samp>{{spec.hostPID}}</samp>
+                </span>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial('kubernetes_resource_host', $('#kubernetes_resource_host_partial').html())
+</script>

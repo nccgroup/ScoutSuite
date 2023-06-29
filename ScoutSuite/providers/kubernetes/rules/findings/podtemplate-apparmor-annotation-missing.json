@@ -1,0 +1,23 @@
+{
+    "description": "AppArmor Annotation Missing",
+    "rationale": "The container.apparmor.security.beta.kubernetes.io annotation is missing. A compromised container with AppArmor disabled makes privilege escalation easier.",
+    "references": [
+        "https://kubernetes.io/docs/tutorials/security/apparmor/"
+    ],
+    "dashboard_name": "PodTemplates",
+    "display_path": "pod_template.v1-apps.id",
+    "path": "pod_template.v1-apps.resources.id",
+    "conditions": [
+        "or",
+        [
+            "pod_template.v1-apps.resources.id.metadata",
+            "withoutKey",
+            "annotations"
+        ],
+        [
+            "pod_template.v1-apps.resources.id.metadata.annotations",
+            "withoutKey",
+            "container.apparmor.security.beta.kubernetes.io"
+        ]
+    ]
+}
