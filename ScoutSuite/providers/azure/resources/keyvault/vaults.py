@@ -3,7 +3,7 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 class Vaults(AzureResources):
 
@@ -53,8 +53,8 @@ class Vaults(AzureResources):
         key['id'] = get_non_provider_id(raw_key.id)
         key['name'] = raw_key.name
         key['enabled'] = raw_attrs.enabled
-        key['expires'] = datetime.fromtimestamp(raw_attrs.expires) if raw_attrs.expires else None
-        key['not_before'] = datetime.fromtimestamp(raw_attrs.not_before) if raw_attrs.not_before else None
+        key['expires'] = datetime.fromtimestamp(raw_attrs.expires, tz=timezone.utc) if raw_attrs.expires else None
+        key['not_before'] = datetime.fromtimestamp(raw_attrs.not_before, tz=timezone.utc) if raw_attrs.not_before else None
         key['exportable'] = raw_attrs.exportable
         key['recovery_level'] = raw_attrs.recovery_level
         return key
