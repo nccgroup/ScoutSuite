@@ -39,7 +39,7 @@ azure-mgmt-storage==16.0.0
 azure-mgmt-monitor==2.0.0
 azure-mgmt-sql==1.0.0
 azure-mgmt-security==1.0.0
-azure-mgmt-keyvault==8.0.0
+azure-mgmt-keyvault==10.2.2
 azure-mgmt-network==17.1.0
 azure-mgmt-redis==12.0.0
 azure-mgmt-web==1.0.0
