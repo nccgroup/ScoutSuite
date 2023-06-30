@@ -43,6 +43,12 @@ class Disks(AzureResources):
         else:
             disk_dict['encryption_type'] = None
 
+        if getattr(raw_disk, 'encryption_settings_collection', None):
+            disk_dict['encryption_ade'] = raw_disk.encryption_settings_collection.enabled and \
+                getattr(raw_disk.encryption_settings_collection, 'encryption_settings_version') in ['1.0','1.1']
+        else:
+            disk_dict['encryption_ade'] = False
+
         return disk_dict['id'], disk_dict
 
 
