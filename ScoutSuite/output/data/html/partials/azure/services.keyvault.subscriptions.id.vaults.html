@@ -26,7 +26,7 @@
         <ul>
             {{#each keys}}
                 <li class="list-group-item-text">
-                    {{name}} ({{convert_bool_to_enabled enabled}}, Expiration: <span id="keyvault.subscriptions.{{@../../key}}.vaults.{{@../key}}.keys.{{@key}}.expires">{{format_date expires}}</span>)
+                    {{name}} ({{convert_bool_to_enabled enabled}}, Auto Rotation: <span id="keyvault.subscriptions.{{@../../key}}.vaults.{{@../key}}.keys.{{@key}}.auto_rotation_enabled">{{ convert_bool_to_enabled auto_rotation_enabled }}</span>, Expiration: <span id="keyvault.subscriptions.{{@../../key}}.vaults.{{@../key}}.keys.{{@key}}.expires">{{format_date expires}}</span>)
                 </li>
             {{else}}
                 <div style="display: inline-flex;">None</div>

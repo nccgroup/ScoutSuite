@@ -33,6 +33,15 @@ class KeyVaultFacade:
             print_exception(f'Failed to retrieve keys from key vault {keyvault_name}: {e}')
             return []
         
+    async def get_key(self, subscription_id: str, resourcegroup_name: str, keyvault_name: str, key_name: str):
+        try:
+            client = self.get_client(subscription_id)
+            return await run_concurrently(
+                lambda: client.keys.get(resource_group_name=resourcegroup_name, vault_name=keyvault_name, key_name=key_name))
+        except Exception as e:
+            print_exception(f'Failed to retrieve key {key_name}: {e}')
+            return None
+        
     async def get_secrets(self, subscription_id: str, resourcegroup_name: str, keyvault_name: str):
         try:
             client = self.get_client(subscription_id)

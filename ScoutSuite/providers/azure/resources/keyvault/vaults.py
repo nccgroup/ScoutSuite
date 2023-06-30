@@ -1,3 +1,4 @@
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
@@ -15,14 +16,31 @@ class Vaults(AzureResources):
         for raw_vault in await self.facade.keyvault.get_key_vaults(self.subscription_id):
             id, vault = self._parse_key_vault(raw_vault)
             self[id] = vault
-            vault['keys'] = []
-            for raw_key in await self.facade.keyvault.get_keys(self.subscription_id, vault['resource_group_name'], vault['name']):
-                key = self._parse_key(raw_key)
-                vault['keys'].append(key)
-            vault['secrets'] = []
-            for raw_secret in await self.facade.keyvault.get_secrets(self.subscription_id, vault['resource_group_name'], vault['name']):
+            vault['keys'] = await self.fetch_keys(vault['resource_group_name'], vault['name'])
+            vault['secrets'] = await self.fetch_secrets(vault['resource_group_name'], vault['name'])
+            
+    async def fetch_keys(self, resource_group_name, keyvault_name):
+        keys = []
+        try:
+            for raw_key in await self.facade.keyvault.get_keys(self.subscription_id, resource_group_name, keyvault_name):
+                raw_key_extra = await self.facade.keyvault.get_key(self.subscription_id, resource_group_name, keyvault_name, raw_key.name)
+                key = self._parse_key(raw_key, raw_key_extra)
+                keys.append(key)
+        except Exception as e:
+            print_exception(f'Failed to list Keys in Key Vault {keyvault_name}: {e}')
+            return []
+        return keys
+
+    async def fetch_secrets(self, resource_group_name, keyvault_name):
+        secrets = []
+        try:
+            for raw_secret in await self.facade.keyvault.get_secrets(self.subscription_id,resource_group_name, keyvault_name):
                 secret = self._parse_secret(raw_secret)
-                vault['secrets'].append(secret)
+                secrets.append(secret)
+        except Exception as e:
+            print_exception(f'Failed to list Secrets in Key Vault {keyvault_name}: {e}')
+            return []
+        return secrets
 
     def _parse_key_vault(self, raw_vault):
         vault = {}
@@ -47,7 +65,7 @@ class Vaults(AzureResources):
     def _is_public_access_allowed(self, raw_vault):
         return raw_vault.properties.network_acls is None
     
-    def _parse_key(self, raw_key):
+    def _parse_key(self, raw_key, raw_key_extra):
         raw_attrs = raw_key.attributes
         key = {}
         key['id'] = get_non_provider_id(raw_key.id)
@@ -57,6 +75,7 @@ class Vaults(AzureResources):
         key['not_before'] = datetime.fromtimestamp(raw_attrs.not_before, tz=timezone.utc) if raw_attrs.not_before else None
         key['exportable'] = raw_attrs.exportable
         key['recovery_level'] = raw_attrs.recovery_level
+        key['auto_rotation_enabled'] = self._is_auto_rotation_enabled(raw_key_extra.rotation_policy)
         return key
 
     def _parse_secret(self, raw_secret):
@@ -68,3 +87,9 @@ class Vaults(AzureResources):
         secret['expires'] = raw_attrs.expires
         secret['not_before'] = raw_attrs.not_before
         return secret
+    
+    def _is_auto_rotation_enabled(self, rotation_policy):
+        if rotation_policy is None or rotation_policy.lifetime_actions is None:
+            return False
+        return any(la for la in rotation_policy.lifetime_actions if la.action.type == 'rotate')
+    
