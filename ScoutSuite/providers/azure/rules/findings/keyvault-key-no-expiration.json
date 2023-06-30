@@ -1,0 +1,39 @@
+{
+    "description": "Key Expiration Disabled",
+    "rationale": "Key expiration is disabled. As a result, compromised keys could be used by potential attackers for a indefinite amount of time. Periodic key rotation enforced with an appropriate key expiration policy could help to mitigate this issue.",
+    "remediation": "In the Azure console:<ol><li>Go to <samp>Key Vaults</samp></li> <li>For each key vault, go to <samp>Keys</samp></li> <li>For all enabled keys, ensure that an appropriate <samp>Expiration date</samp> is set</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "8.1"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "8.2"
+        }
+    ],
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/keys/about-keys",
+        "https://learn.microsoft.com/en-us/azure/key-vault/policy-reference",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-data-protection#dp-6-use-a-secure-key-management-process"
+    ],
+    "dashboard_name": "Keys",
+    "display_path": "keyvault.subscriptions.id.vaults.id",
+    "path": "keyvault.subscriptions.id.vaults.id.keys.id",
+    "conditions": [
+        "and",
+        [
+            "keyvault.subscriptions.id.vaults.id.keys.id.enabled",
+            "true",
+            ""
+        ],
+        [
+            "keyvault.subscriptions.id.vaults.id.keys.id.expires",
+            "equal",
+            "None"
+        ]
+    ],
+    "id_suffix": "expires"
+}
