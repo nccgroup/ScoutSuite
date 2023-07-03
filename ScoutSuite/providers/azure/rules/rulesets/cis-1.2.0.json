@@ -117,12 +117,6 @@
                 "level": "warning"
             }
         ],
-        "keyvault-private-endpoints-not-used.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "logging-monitoring-log-alert-not-exist-create-policy-assignment.json": [
             {
                 "enabled": true,
