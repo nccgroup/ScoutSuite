@@ -13,6 +13,7 @@
         <div class="list-group-item-text item-margin">Disk State: <span id="virtualmachines.subscriptions.{{subscription}}.disks.{{@key}}.disk_state"><samp>{{value_or_none disk_state}}</samp></span></div>
         <div class="list-group-item-text item-margin">Zones: <span id="virtualmachines.subscriptions.{{subscription}}.disks.{{@key}}.zones"><samp>{{value_or_none zones}}</samp></span></div>
         <div class="list-group-item-text item-margin">Encryption Type: <span id="virtualmachines.subscriptions.{{subscription}}.disks.{{@key}}.encryption_type"><samp>{{value_or_none encryption_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Encrypted using ADE: <span id="virtualmachines.subscriptions.{{subscription}}.disks.{{@key}}.encryption_type"><samp>{{convert_bool_to_enabled encryption_ade}}</samp></span></div>
         <div class="list-group-item-text item-margin">OS Type: <span id="virtualmachines.subscriptions.{{subscription}}.disks.{{@key}}.os_type"><samp>{{value_or_none os_type}}</samp></span></div>
         <div class="list-group-item-text item-margin">Hyper V Generation: <span id="virtualmachines.subscriptions.{{subscription}}.disks.{{@key}}.hyper_vgeneration"><samp>{{value_or_none hyper_vgeneration}}</samp></span></div>
         <div class="list-group-item-text item-margin">Disk Size GB: <span id="virtualmachines.subscriptions.{{subscription}}.disks.{{@key}}.disk_size_gb"><samp>{{value_or_none disk_size_gb}}</samp></span></div>
