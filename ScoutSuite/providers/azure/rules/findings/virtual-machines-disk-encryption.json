@@ -41,6 +41,11 @@
             "virtualmachines.subscriptions.id.disks.id.encryption_type",
             "null",
             ""
+        ],
+        [
+            "virtualmachines.subscriptions.id.disks.id.encryption_ade",
+            "false",
+            ""
         ]
     ],
     "id_suffix": "encryption_type"

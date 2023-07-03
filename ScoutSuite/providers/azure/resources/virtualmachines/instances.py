@@ -118,4 +118,6 @@ class Instances(AzureResources):
             instance_name=instance_dict['name'],
             resource_group=get_resource_group_name(raw_instance.id))
 
+        instance_dict['extension_names'] = [extension.name for extension in instance_dict['extensions']]
+
         return instance_dict['id'], instance_dict

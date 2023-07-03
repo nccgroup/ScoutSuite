@@ -6,7 +6,7 @@
         {
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.2.0",
-            "reference": "8.4"
+            "reference": "8.5"
         }
     ],
     "references": [
@@ -14,7 +14,7 @@
         "https://blogs.technet.microsoft.com/kv/2017/05/10/azure-key-vault-recovery-options/",
         "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-8-define-backup-and-recovery-strategy"
     ],
-    "dashboard_name": "PostgreSQL Servers",
+    "dashboard_name": "Key Vaults",
     "path": "keyvault.subscriptions.id.vaults.id",
     "conditions": [
         "and",
