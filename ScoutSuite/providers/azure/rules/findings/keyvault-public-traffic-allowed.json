@@ -1,0 +1,22 @@
+{
+    "description": "Key Vaults Allowing Public Network Access",
+    "rationale": "Restricting default network access helps to provide a new layer of security, since key vaults accept connections from clients on any network. To limit access to selected networks, the default action must be changed.",
+    "remediation": "In the Azure console: <ol> <li>Go to <samp>Key Vaults</samp></li> <li>For each key vault, click on the settings menu called <samp>Networking</samp>.</li><li>Go to the tab named <samp>Firewalls and virtual networks</samp>.</li> <li>Ensure that you have elected to disable public access, or allow public access from <samp>specific virtual networks and IP addresses</samp>.</li> <li>If necessary, add rules to allow traffic from specific networks.</li> <li>Click <samp>Save</samp> to apply your changes.</li> </ol>",
+    "compliance": [
+    ],
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/network-security",
+        "https://learn.microsoft.com/en-gb/security/benchmark/azure/baselines/key-vault-security-baseline?context=%2Fazure%2Fkey-vault%2Fgeneral%2Fcontext%2Fcontext#ns-2-secure-cloud-services-with-network-controls"
+    ],
+    "dashboard_name": "Key Vaults",
+    "path": "keyvault.subscriptions.id.vaults.id",
+    "conditions": [
+        "and",
+        [
+            "keyvault.subscriptions.id.vaults.id.public_access_allowed",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "public_access_allowed"
+}

@@ -33,7 +33,8 @@ class Vaults(AzureResources):
             'recovery_protection_enabled'] = raw_vault.properties.enable_soft_delete and \
                                              bool(raw_vault.properties.enable_purge_protection)
         vault['public_access_allowed'] = self._is_public_access_allowed(raw_vault)
+        vault['rbac_authorization_enabled'] = raw_vault.properties.enable_rbac_authorization
         return vault['id'], vault
 
     def _is_public_access_allowed(self, raw_vault):
-        return raw_vault.properties.network_acls is None
+        return raw_vault.properties.network_acls is None or raw_vault.properties.network_acls.default_action == 'Allow'
