@@ -24,7 +24,7 @@
             <ul>
                 {{#each listeners}}
                     <li class="list-group-item-text">
-                        {{@key}} ({{Protocol}}{{#if SslPolicy}}, {{SslPolicy}}{{/if}})
+                      <span id="elb.regions.{{../region}}.vpcs.{{../vpc}}.elbs.{{@../key}}.listeners.{{@key}}">{{@key}} ({{Protocol}}{{#if SslPolicy}}, {{SslPolicy}}{{/if}})</span>
                     </li>
                 {{/each}}
           </ul>

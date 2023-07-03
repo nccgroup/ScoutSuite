@@ -28,9 +28,12 @@
     "conditions": [
         "and",
         [
-            "virtualmachines.subscriptions.id.instances.id.extensions",
-            "notEmpty",
-            ""
+            "virtualmachines.subscriptions.id.instances.id.extension_names",
+            "containAtLeastOneDifferentFrom",
+            [ 
+                "AzureDiskEncryption",
+                "AzureDiskEncryptionForLinux"
+            ]
         ]
     ],
     "id_suffix": "extensions"
