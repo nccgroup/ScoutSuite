@@ -1,3 +1,4 @@
+from itertools import islice
 from ScoutSuite.core.console import print_warning, print_exception
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
@@ -13,7 +14,6 @@ class Vaults(AzureResources):
         self.subscription_id = subscription_id
         # Hardcoded limit of keys per key vault.
         self.KEY_FETCH_LIMIT = 3
-        self.keys_detailed_fetched = 0
 
     async def fetch_all(self):
         for raw_vault in await self.facade.keyvault.get_key_vaults(self.subscription_id):
@@ -25,30 +25,21 @@ class Vaults(AzureResources):
     async def fetch_keys(self, resource_group_name, keyvault_name):
         keys = []
         try:
-            self.keys_detailed_fetched = 0
-            for raw_key in await self.facade.keyvault.get_keys(self.subscription_id, resource_group_name, keyvault_name):
-                raw_key_extra = await self.fetch_key(resource_group_name, keyvault_name, raw_key.name, raw_key.attributes.enabled)
-                key = self._parse_key(raw_key, raw_key_extra)
+            raw_keys = await self.facade.keyvault.get_keys(self.subscription_id, resource_group_name, keyvault_name)
+            # Retrieve a list of detailed key objects, one by one. In order to stay within
+            # reasonable resource limits, only do this for a small number of keys per vault.
+            key_detailed_names = list(islice((k.name for k in raw_keys if k.attributes.enabled), self.KEY_FETCH_LIMIT))
+            raw_key_details = await self.facade.keyvault.get_detailed_keys(self.subscription_id, resource_group_name, keyvault_name, key_detailed_names)
+            raw_key_details = dict((k.id, k) for k in raw_key_details)
+            for raw_key in raw_keys:
+                raw_key_detailed = raw_key_details.get(raw_key.id)
+                key = self._parse_key(raw_key, raw_key_detailed)
                 keys.append(key)
         except Exception as e:
             print_exception(f'Failed to list Keys in Key Vault {keyvault_name}: {e}')
             return []
         return keys
     
-    async def fetch_key(self, resource_group_name, keyvault_name, key_name, is_key_enabled):
-        if not is_key_enabled:
-            return None
-        if self.keys_detailed_fetched >= self.KEY_FETCH_LIMIT:
-            print_warning(f'Did not fetch details for Key {keyvault_name}/{key_name}. Some results may be incomplete.')
-            return None
-        try:
-            raw_key_extra = await self.facade.keyvault.get_key(self.subscription_id, resource_group_name, keyvault_name, key_name)
-            self.keys_detailed_fetched = self.keys_detailed_fetched + 1
-        except Exception as e:
-            print_exception(f'Failed to fetch Keys {keyvault_name}/{key_name}: {e}')
-            return None
-        return raw_key_extra
-
     async def fetch_secrets(self, resource_group_name, keyvault_name):
         secrets = []
         try:
@@ -84,7 +75,7 @@ class Vaults(AzureResources):
     def _is_public_access_allowed(self, raw_vault):
         return raw_vault.properties.network_acls is None or raw_vault.properties.network_acls.default_action == 'Allow'
     
-    def _parse_key(self, raw_key, raw_key_extra):
+    def _parse_key(self, raw_key, raw_key_detailed):
         raw_attrs = raw_key.attributes
         key = {}
         key['id'] = get_non_provider_id(raw_key.id)
@@ -94,7 +85,7 @@ class Vaults(AzureResources):
         key['not_before'] = datetime.fromtimestamp(raw_attrs.not_before, tz=timezone.utc) if raw_attrs.not_before else None
         key['exportable'] = raw_attrs.exportable
         key['recovery_level'] = raw_attrs.recovery_level
-        key['auto_rotation_enabled'] = self._is_auto_rotation_enabled(raw_key_extra.rotation_policy) if raw_key_extra else None
+        key['auto_rotation_enabled'] = self._is_auto_rotation_enabled(raw_key_detailed.rotation_policy) if raw_key_detailed else None
         return key
 
     def _parse_secret(self, raw_secret):
