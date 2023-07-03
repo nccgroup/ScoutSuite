@@ -31,13 +31,14 @@ class Vaults(AzureResources):
         vault['properties'] = raw_vault.properties
         vault[
             'recovery_protection_enabled'] = raw_vault.properties.enable_soft_delete and \
-                                             raw_vault.properties.enable_purge_protection
+                                             bool(raw_vault.properties.enable_purge_protection)
         vault['public_access_allowed'] = self._is_public_access_allowed(raw_vault)
+        vault['rbac_authorization_enabled'] = raw_vault.properties.enable_rbac_authorization
         vault['private_endpoint_connections'] = self._get_private_endpoint_connections(raw_vault)
         return vault['id'], vault
 
     def _is_public_access_allowed(self, raw_vault):
-        return raw_vault.properties.network_acls is None
+        return raw_vault.properties.network_acls is None or raw_vault.properties.network_acls.default_action == 'Allow'
     
     def _get_private_endpoint_connections(self, raw_vault):
         private_endpoint_connections = getattr(raw_vault.properties, "private_endpoint_connections", None)
