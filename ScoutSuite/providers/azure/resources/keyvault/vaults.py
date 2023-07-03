@@ -1,4 +1,4 @@
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_warning, print_exception
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
@@ -11,6 +11,9 @@ class Vaults(AzureResources):
     def __init__(self, facade: AzureFacade, subscription_id: str):
         super().__init__(facade)
         self.subscription_id = subscription_id
+        # Hardcoded limit of 5 keys per key vault.
+        self.KEY_FETCH_LIMIT = 5
+        self.keys_detailed_fetched = 0
 
     async def fetch_all(self):
         for raw_vault in await self.facade.keyvault.get_key_vaults(self.subscription_id):
@@ -22,14 +25,29 @@ class Vaults(AzureResources):
     async def fetch_keys(self, resource_group_name, keyvault_name):
         keys = []
         try:
+            self.keys_detailed_fetched = 0
             for raw_key in await self.facade.keyvault.get_keys(self.subscription_id, resource_group_name, keyvault_name):
-                raw_key_extra = await self.facade.keyvault.get_key(self.subscription_id, resource_group_name, keyvault_name, raw_key.name)
+                raw_key_extra = await self.fetch_key(resource_group_name, keyvault_name, raw_key.name, raw_key.attributes.enabled)
                 key = self._parse_key(raw_key, raw_key_extra)
                 keys.append(key)
         except Exception as e:
             print_exception(f'Failed to list Keys in Key Vault {keyvault_name}: {e}')
             return []
         return keys
+    
+    async def fetch_key(self, resource_group_name, keyvault_name, key_name, is_key_enabled):
+        if not is_key_enabled:
+            return None
+        if self.keys_detailed_fetched >= self.KEY_FETCH_LIMIT:
+            print_warning(f'Did not fetch details for Key {keyvault_name}/{key_name}. Some results may be incomplete.')
+            return None
+        try:
+            raw_key_extra = await self.facade.keyvault.get_key(self.subscription_id, resource_group_name, keyvault_name, key_name)
+            self.keys_detailed_fetched = self.keys_detailed_fetched + 1
+        except Exception as e:
+            print_exception(f'Failed to fetch Keys {keyvault_name}/{key_name}: {e}')
+            return None
+        return raw_key_extra
 
     async def fetch_secrets(self, resource_group_name, keyvault_name):
         secrets = []
@@ -76,7 +94,7 @@ class Vaults(AzureResources):
         key['not_before'] = datetime.fromtimestamp(raw_attrs.not_before, tz=timezone.utc) if raw_attrs.not_before else None
         key['exportable'] = raw_attrs.exportable
         key['recovery_level'] = raw_attrs.recovery_level
-        key['auto_rotation_enabled'] = self._is_auto_rotation_enabled(raw_key_extra.rotation_policy)
+        key['auto_rotation_enabled'] = self._is_auto_rotation_enabled(raw_key_extra.rotation_policy) if raw_key_extra else None
         return key
 
     def _parse_secret(self, raw_secret):
