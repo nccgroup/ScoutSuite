@@ -5,7 +5,7 @@
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
-            "version": "1.2.0",
+            "version": "2.0.0",
             "reference": "8.7"
         }
     ],
@@ -13,7 +13,7 @@
         "https://learn.microsoft.com/en-us/azure/key-vault/general/private-link-service",
         "https://learn.microsoft.com/en-gb/security/benchmark/azure/baselines/key-vault-security-baseline?context=%2Fazure%2Fkey-vault%2Fgeneral%2Fcontext%2Fcontext#ns-2-secure-cloud-services-with-network-controls"
     ],
-    "dashboard_name": "Keys",
+    "dashboard_name": "Key Vaults",
     "path": "keyvault.subscriptions.id.vaults.id",
     "conditions": [
         "and",
