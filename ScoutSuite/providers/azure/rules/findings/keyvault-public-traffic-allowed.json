@@ -8,7 +8,7 @@
         "https://learn.microsoft.com/en-us/azure/key-vault/general/network-security",
         "https://learn.microsoft.com/en-gb/security/benchmark/azure/baselines/key-vault-security-baseline?context=%2Fazure%2Fkey-vault%2Fgeneral%2Fcontext%2Fcontext#ns-2-secure-cloud-services-with-network-controls"
     ],
-    "dashboard_name": "Keys",
+    "dashboard_name": "Key Vaults",
     "path": "keyvault.subscriptions.id.vaults.id",
     "conditions": [
         "and",
