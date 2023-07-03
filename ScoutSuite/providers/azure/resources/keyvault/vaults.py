@@ -11,8 +11,8 @@ class Vaults(AzureResources):
     def __init__(self, facade: AzureFacade, subscription_id: str):
         super().__init__(facade)
         self.subscription_id = subscription_id
-        # Hardcoded limit of 5 keys per key vault.
-        self.KEY_FETCH_LIMIT = 5
+        # Hardcoded limit of keys per key vault.
+        self.KEY_FETCH_LIMIT = 3
         self.keys_detailed_fetched = 0
 
     async def fetch_all(self):
