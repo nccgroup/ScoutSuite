@@ -10,11 +10,11 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-resource-manager-portal",
-        "https://docs.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal",
-        "https://docs.microsoft.com/en-us/azure/expressroute/",
-        "https://docs.microsoft.com/en-us/azure/security/fundamentals/network-best-practices",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic"
+        "https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-howto-point-to-site-resource-manager-portal",
+        "https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal",
+        "https://learn.microsoft.com/en-us/azure/expressroute/",
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic"
     ],
     "dashboard_name": "NSGs",
     "display_path": "network.subscriptions.id.security_groups.id",
@@ -33,5 +33,4 @@
         ]
     ],
     "key": "network-security-groups-rule-inbound-UDP"
-
 }

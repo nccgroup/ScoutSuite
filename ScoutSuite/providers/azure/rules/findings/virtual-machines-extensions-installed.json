@@ -20,17 +20,20 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/virtual-machines/windows/extensions-features",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/extensions-features",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
     ],
     "dashboard_name": "Instances",
     "path": "virtualmachines.subscriptions.id.instances.id",
     "conditions": [
         "and",
         [
-            "virtualmachines.subscriptions.id.instances.id.extensions",
-            "notEmpty",
-            ""
+            "virtualmachines.subscriptions.id.instances.id.extension_names",
+            "containAtLeastOneDifferentFrom",
+            [ 
+                "AzureDiskEncryption",
+                "AzureDiskEncryptionForLinux"
+            ]
         ]
     ],
     "id_suffix": "extensions"

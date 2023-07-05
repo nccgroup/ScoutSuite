@@ -15,7 +15,7 @@ echo -e "\n\nAWS2 CLI Installation Starting...\n\n"
 # install AWS CLI v2
 # =====================================
 cd ${TMPDIR}
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+curl "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 ./aws/install --update
 

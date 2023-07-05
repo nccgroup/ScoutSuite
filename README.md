@@ -29,6 +29,7 @@ The following cloud providers are currently supported:
 - Google Cloud Platform
 - Alibaba Cloud (alpha)
 - Oracle Cloud Infrastructure (alpha)
+- Kubernetes clusters on a cloud provider (alpha)
 
 ## Installation
 
@@ -64,3 +65,5 @@ Additional details can be found in the [wiki](https://github.com/nccgroup/ScoutS
 
 **NCC Scout now has a free tier under our "Freemium" offering**. 
 This offering provides access to NCC Group’s extended rulesets, keeping your cloud environment protected in-line with best practice configuration and cloud technologies. To sign up for the service, head on to https://cyberstore.nccgroup.com/our-services/service-details/16/cloud-account-monitoring.
+
+

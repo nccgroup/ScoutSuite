@@ -1,0 +1,89 @@
+<script id="kubernetes_container_security_context_partial" type="text/x-handlebars-template">
+    <ul>
+        <samp>
+            <li class="list-group-item-text no-margin">
+                allowPrivilegeEscalation:
+                <span id="{{id_prefix}}.securityContext.allowPrivilegeEscalation">
+                    {{sc.allowPrivilegeEscalation}}
+                </span>
+            </li>
+            <li class="list-group-item-text no-margin">
+                capabilities:
+                {{#if sc.capabilities}}
+                <ul>
+                    {{#each sc.capabilities}}
+                    <li class="list-group-item-text no-margin">
+                        {{ @key }}:
+                        <ul>
+                        {{#each this}}
+                            <li class="list-group-item-text no-margin">{{ this }}</li>
+                        {{/each}}
+                        </ul>
+                    </li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                    {{sc.capabilities}}
+                {{/if}}
+            </li>
+            <li class="list-group-item-text no-margin">
+                privileged:
+                <span id="{{id_prefix}}.securityContext.privileged">
+                    <span>{{sc.privileged}}</span>
+                </span>
+            </li>
+            <li class="list-group-item-text no-margin">
+                procMount:
+                <span id="{{id_prefix}}.securityContext.proc_mount">
+                    {{sc.procMount}}
+                </span>
+            </li>
+            <li class="list-group-item-text no-margin">
+                readOnlyRootFilesystem:
+                <span id="{{id_prefix}}.securityContext.readOnlyRootFilesystem">
+                    {{sc.readOnlyRootFilesystem}}
+                </span>
+            </li>
+            <li class="list-group-item-text no-margin">
+                runAsGroup:
+                <span id="{{id_prefix}}.securityContext.runAsGroup">
+                    {{sc.runAsGroup}}
+                </span>
+            </li>
+            <li class="list-group-item-text no-margin">
+                runAsNonRoot:
+                <span id="{{id_prefix}}.securityContext.runAsNonRoot">
+                    {{sc.runAsNonRoot}}
+                </span>
+            </li>
+            <li class="list-group-item-text no-margin">
+                runAsUser:
+                <span id="{{id_prefix}}.securityContext.runAsUser">
+                    {{sc.runAsUser}}
+                </span>
+            </li>
+            <li class="list-group-item-text no-margin">
+                seLinuxOptions:
+                <span id="{{id_prefix}}.securityContext.seLinuxOptions">
+                    {{sc.seLinuxOptions}}
+                </span>
+            </li>
+            <li class="list-group-item-text no-margin">
+                seccompProfile:
+                <span id="{{id_prefix}}.securityContext.seccompProfile">
+                    {{sc.seccompProfile}}
+                </span>
+            </li>
+            <li class="list-group-item-text no-margin">
+                windowsOptions:
+                <span id="{{id_prefix}}.securityContext.windowsOptions">
+                    {{sc.windowsOptions}}
+                </span>
+            </li>
+        </samp>
+    </ul>
+</script>
+
+<script>
+    Handlebars.registerPartial('kubernetes_container_security_context', $('#kubernetes_container_security_context_partial').html())
+</script>

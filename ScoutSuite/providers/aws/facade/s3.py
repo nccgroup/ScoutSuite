@@ -266,13 +266,23 @@ class S3Facade(AWSBaseFacade):
                     # evaluate statement to see if it contains a condition disallowing HTTP transport
                     # TODO this might not cover all cases
                     if 'Condition' in statement and \
-                            'Bool' in statement['Condition'] and \
-                            'aws:SecureTransport' in statement['Condition']['Bool'] and \
-                            ((statement['Condition']['Bool']['aws:SecureTransport'] == 'false' and
-                              statement['Effect'] == 'Deny') or
-                             (statement['Condition']['Bool']['aws:SecureTransport'] == 'true' and
-                              statement['Effect'] == 'Allow')):
-                        bucket['secure_transport_enabled'] = True
+                            'Bool' in statement['Condition']:
+                        for key in statement['Condition']['Bool'].keys():
+                            if key.lower() == 'aws:securetransport' and \
+                                    ((statement['Condition']['Bool'][key] == 'false' and
+                                    statement['Effect'] == 'Deny') or
+                                    (statement['Condition']['Bool'][key] == 'true' and
+                                    statement['Effect'] == 'Allow')):
+                                bucket['secure_transport_enabled'] = True
+                    elif 'Condition' in statement and \
+                            'NumericLessThan' in statement['Condition']:
+                        for key in statement['Condition']['NumericLessThan'].keys():
+                            if key.lower() == 's3:tlsversion' and \
+                                    ((statement['Condition']['NumericLessThan'][key] >= '1.2' and
+                                    statement['Effect'] == 'Deny') or
+                                    (statement['Condition']['NumericGreaterThan'][key] >= '1.1' and
+                                    statement['Effect'] == 'Allow')):
+                                bucket['secure_transport_enabled'] = True
             else:
                 bucket['secure_transport_enabled'] = False
         except Exception as e:

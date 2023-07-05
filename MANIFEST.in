@@ -13,3 +13,5 @@ recursive-include ScoutSuite/providers/aliyun *
 recursive-include ScoutSuite/providers/aliyun/rules *
 recursive-include ScoutSuite/providers/oci *
 recursive-include ScoutSuite/providers/oci/rules *
+recursive-include ScoutSuite/providers/kubernetes *
+recursive-include ScoutSuite/providers/kubernetes/rules *

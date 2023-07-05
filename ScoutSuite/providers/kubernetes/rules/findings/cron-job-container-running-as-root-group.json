@@ -1,0 +1,41 @@
+{
+    "description": "Container/InitContainer/EphemeralContainer Running As Root Group",
+    "rationale": "Where possible, runAsGroup should be set to a value greater than 0.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "CronJobs",
+    "display_path": "cron_job.v1-batch.id",
+    "path": "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "and",
+            [
+                "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.securityContext",
+                "notNull",
+                ""
+            ],
+            [
+                "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.securityContext.runAsGroup",
+                "equal",
+                "0"
+            ]
+        ],
+        [
+            "and",
+            [
+                "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id.securityContext",
+                "notNull",
+                ""
+            ],
+            [
+                "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id.securityContext.runAsGroup",
+                "equal",
+                "0"
+            ]
+        ]
+    ],
+    "id_suffix": "runAsGroup"
+}

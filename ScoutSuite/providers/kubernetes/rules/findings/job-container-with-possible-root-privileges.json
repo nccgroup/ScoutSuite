@@ -1,0 +1,41 @@
+{
+    "description": "Container/InitContainer/EphemeralContainer with Possible Root Privileges",
+    "rationale": "Where possible, runAsNonRoot should be set to true to prevent the container from running as root.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "Jobs",
+    "display_path": "job.v1-batch.id",
+    "path": "job.v1-batch.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "and",
+        [
+            "or",
+            [
+                "job.v1-batch.resources.id.data.spec.template.spec.securityContext.runAsNonRoot",
+                "null",
+                ""
+            ],
+            [
+                "job.v1-batch.resources.id.data.spec.template.spec.securityContext.runAsNonRoot",
+                "false",
+                ""
+            ]
+        ],
+        [
+            "or",
+            [
+                "job.v1-batch.resources.id.data.spec.template.spec.containers.id.securityContext.runAsNonRoot",
+                "null",
+                ""
+            ],
+            [
+                "job.v1-batch.resources.id.data.spec.template.spec.containers.id.securityContext.runAsNonRoot",
+                "false",
+                ""
+            ]
+        ]
+    ],
+    "id_suffix": "runAsNonRoot"
+}

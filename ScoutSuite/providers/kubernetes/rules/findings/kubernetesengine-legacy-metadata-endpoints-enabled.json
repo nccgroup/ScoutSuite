@@ -1,0 +1,28 @@
+{
+    "description": "Legacy Metadata Endpoints Enabled",
+    "rationale": "The instance metadata server exposed legacy v0.1 and v1beta1 endpoints, which do not enforce metadata query headers. This is a feature in the v1 APIs that makes it more difficult for a potential attacker to retrieve instance metadata, such as Server-Side Request Forgery (SSRF). Unless specifically required, we recommend you disable these legacy APIs.",
+    "compliance": [
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.4.1"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#protect_node_metadata_default_for_112",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
+    ],
+    "dashboard_name": "Clusters",
+    "display_path": "kubernetesengine.projects.id.clusters.id",
+    "path": "kubernetesengine.projects.id.clusters.id.node_pools.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.node_pools.id.legacy_metadata_endpoints_enabled",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "legacy_metadata_endpoints_enabled"
+}

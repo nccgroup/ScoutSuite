@@ -15,8 +15,8 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic"
+        "https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic"
     ],
     "dashboard_name": "Storage Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",

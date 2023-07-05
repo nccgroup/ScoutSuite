@@ -1,0 +1,59 @@
+{
+    "description": "Kubernetes Container/InitContainer/EphemeralContainer Manifest Hardening",
+    "rationale": "Several security options in the affected resources could be enabled to harden assocated containers.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://www.cisecurity.org/benchmark/docker/"
+    ],
+    "dashboard_name": "Deployments",
+    "display_path": "deployment.v1-apps.id",
+    "path": "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id",
+            "withoutKey",
+            "securityContext"
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "null",
+            ""
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "allowPrivilegeEscalation"
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "readOnlyRootFilesystem"
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "capabilities"
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.allowPrivilegeEscalation",
+            "null",
+            ""
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.readOnlyRootFilesystem",
+            "null",
+            ""
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities",
+            "null",
+            ""
+        ],
+        [
+            "deployment.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities.drop",
+            "null",
+            ""
+        ]
+    ]
+}

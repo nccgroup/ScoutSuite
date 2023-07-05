@@ -1,0 +1,55 @@
+{
+    "description": "External Load Balancer Rule Forwards a Non-Standard Port",
+    "rationale": "The Load Balancer rule was found to be forwarding a non-standard port (80 or 443), potentially exposing a sensitive service. If such services need to be exposed, a restriction on the source address could help to reduce the attack surface of the infrastructure.",
+    "dashboard_name": "Forwarding Rule",
+    "path": "computeengine.projects.id.regions.id.forwarding_rules.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.regions.id.forwarding_rules.id.load_balancing_scheme",
+            "equal",
+            "EXTERNAL"
+        ],
+        [
+            "or",
+            [
+                "computeengine.projects.id.regions.id.forwarding_rules.id.all_ports",
+                "true",
+                ""
+            ],
+            [
+                "and",
+                [
+                    "computeengine.projects.id.regions.id.forwarding_rules.id.port_range",
+                    "notEqual",
+                    ""
+                ],
+                [
+                    "computeengine.projects.id.regions.id.forwarding_rules.id.port_range",
+                    "containNoneOf",
+                    [
+                        "80-80",
+                        "443-443",
+                        "80-80,443-443"
+                    ]
+                ]
+            ],
+            [
+                "and",
+                [
+                    "computeengine.projects.id.regions.id.forwarding_rules.id.ports",
+                    "notEmpty",
+                    ""
+                ],
+                [
+                    "computeengine.projects.id.regions.id.forwarding_rules.id.ports",
+                    "containNoneOf",
+                    [
+                        "80",
+                        "443"
+                    ]
+                ]
+            ]
+        ]
+    ]
+}
