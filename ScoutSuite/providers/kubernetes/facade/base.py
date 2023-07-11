@@ -52,8 +52,8 @@ class KubernetesBaseFacade:
 
         try:
             return loads(self.api_client.call_api(path, 'GET', auth_settings=['BearerToken'], response_type='json', _preload_content=False)[0].data)
-        except:
-            print_error(f'Failed to get {path}')
+        except Exception as e:
+            print_error(f'Failed to get {path}: {loads(e.body).get("message")}')
             return None
 
     @classmethod
