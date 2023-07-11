@@ -4,7 +4,7 @@ from yaml import safe_dump
 from google.auth.credentials import Credentials as GCPCredentials
 from kubernetes.client.exceptions import ApiException
 
-from ScoutSuite.core.console import print_error, print_info
+from ScoutSuite.core.console import print_error, print_debug
 from ScoutSuite.providers.aws.authentication_strategy import AWSCredentials
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.kubernetes.authentication_strategy import ClusterProvider, KubernetesCredentials
@@ -48,7 +48,7 @@ class KubernetesBaseFacade:
             return {}
         if path[0] != '/':
             path = '/' + path
-        print_info(f'GET {path}')
+        print_debug(f'GET {path}')
 
         try:
             return loads(self.api_client.call_api(path, 'GET', auth_settings=['BearerToken'], response_type='json', _preload_content=False)[0].data)
