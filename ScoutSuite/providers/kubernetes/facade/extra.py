@@ -1,5 +1,5 @@
-from ScoutSuite.core.console import print_error
 from ScoutSuite.providers.kubernetes.facade.base import KubernetesBaseFacade
+from ScoutSuite.providers.kubernetes.utils import ignored_resources
 
 
 class ExtraFacade(KubernetesBaseFacade):
@@ -30,17 +30,19 @@ class ExtraFacade(KubernetesBaseFacade):
                     continue
 
                 for api_resource in api_resources['resources']:
-                    if 'list' not in api_resource['verbs']: continue
-                    endpoint = f'''/apis/{version['groupVersion']}/{api_resource['name']}'''
 
-                    api_resources = self.get(endpoint)
-                    if not api_resources:
-                        continue
+                    if api_resource['name'] not in ignored_resources:
+                        if 'list' not in api_resource['verbs']: continue
+                        endpoint = f'''/apis/{version['groupVersion']}/{api_resource['name']}'''
 
-                    resources = self.get(endpoint)['items']
-                    key = api_resource['kind']
-                    data[key] = data.get(key, {})
-                    data[key][version['groupVersion']] = resources
+                        api_resources = self.get(endpoint)
+                        if not api_resources:
+                            continue
+
+                        resources = self.get(endpoint)['items']
+                        key = api_resource['kind']
+                        data[key] = data.get(key, {})
+                        data[key][version['groupVersion']] = resources
 
         self.data = self.parse_data(data)
         return self.data

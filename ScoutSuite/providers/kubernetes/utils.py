@@ -1,5 +1,19 @@
 from re import sub
 
+ignored_resources = ['componentstatuses',
+    'persistentvolumeclaims',
+    'volumeattachments'
+    'replicasets',
+    'events',
+    'horizontalpodautoscalers',
+    'certificatesigningrequests',
+    'poddisruptionbudgets',
+    'flowschemas',
+    'prioritylevelconfigurations',
+    'priorityclasses',
+    'leases',
+    'secrets',
+    'controllerrevisions']
 
 def format_resource_kind(kind: str):
     return (kind[0] + sub('([A-Z])', '_\\1', kind[1:])).lower()
