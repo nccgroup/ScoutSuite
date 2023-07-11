@@ -1,5 +1,6 @@
 import logging
 import enum
+import urllib3
 
 from google.auth.credentials import Credentials as GCPCredentials
 from kubernetes import config, client
@@ -41,6 +42,7 @@ class KubernetesAuthenticationStrategy(AuthenticationStrategy):
         '''Obtain credentials to interact with the Kubernetes cluster'''
 
         logging.getLogger('kubernetes.client.rest').setLevel(logging.ERROR)
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
         cluster_provider = kwargs.get('kubernetes_cluster_provider')
         config_file = kwargs.get('kubernetes_config_file')
