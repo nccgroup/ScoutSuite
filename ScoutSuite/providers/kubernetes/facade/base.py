@@ -1,14 +1,15 @@
 from json import dumps, loads
 from yaml import safe_dump
+import re
 
 from google.auth.credentials import Credentials as GCPCredentials
 from kubernetes.client.exceptions import ApiException
 
-from ScoutSuite.core.console import print_error, print_debug
+from ScoutSuite.core.console import print_error, print_warning, print_debug
 from ScoutSuite.providers.aws.authentication_strategy import AWSCredentials
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.kubernetes.authentication_strategy import ClusterProvider, KubernetesCredentials
-from ScoutSuite.providers.kubernetes.utils import format_api_version, format_resource_id, format_resource_kind, format_resource_name
+from ScoutSuite.providers.kubernetes.utils import format_api_version, format_resource_id, format_resource_kind, format_resource_name, standard_scopes
 
 
 from ScoutSuite import __version__
@@ -48,12 +49,23 @@ class KubernetesBaseFacade:
             return {}
         if path[0] != '/':
             path = '/' + path
-        print_debug(f'GET {path}')
+        print_debug(f'Requesting {path}')
 
         try:
             return loads(self.api_client.call_api(path, 'GET', auth_settings=['BearerToken'], response_type='json', _preload_content=False)[0].data)
         except Exception as e:
-            print_error(f'Failed to get {path}: {loads(e.body).get("message")}')
+            message = loads(e.body).get("message")
+            pattern = r'in API group \"(.*?)\" at the cluster scope'
+            result = re.search(pattern, message)
+            if result:
+                scope = result.group(1)
+                if scope in standard_scopes:
+                    print_error(f'Failed to get {path}: {message}')
+                else:
+                    print_warning(f'Failed to get {path}: {message}')
+            else:
+                print_error(f'Failed to get {path}: {message}')
+
             return None
 
     @classmethod

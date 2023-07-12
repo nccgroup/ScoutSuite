@@ -1,20 +1,34 @@
 from re import sub
 
-ignored_resources = ['componentstatuses',
-    'persistentvolumeclaims',
-    'volumeattachments'
-    'replicasets',
-    'events',
-    'horizontalpodautoscalers',
-    'certificatesigningrequests',
-    'poddisruptionbudgets',
-    'flowschemas',
-    'prioritylevelconfigurations',
-    'priorityclasses',
-    'leases',
-    'secrets',
-    'controllerrevisions']
+ignored_resources = ['certificatesigningrequests',
+                     'componentstatuses',
+                     'controllerrevisions',
+                     'events',
+                     'flowschemas',
+                     'horizontalpodautoscalers',
+                     'leases',
+                     'persistentvolumeclaims',
+                     'poddisruptionbudgets',
+                     'priorityclasses',
+                     'prioritylevelconfigurations',
+                     'replicasets',
+                     'secrets',
+                     'volumeattachments']
 
+standard_scopes = ["",
+                   "admissionregistration.k8s.io",
+                   "apiextensions.k8s.io",
+                   "apiregistration.k8s.io",
+                   "apps",
+                   "batch",
+                   "batch",
+                   "discovery.k8s.io",
+                   "extensions",
+                   "networking.k8s.io",
+                   "node.k8s.io",
+                   "policy",
+                   "rbac.authorization.k8s.io",
+                   "storage.k8s.io"]
 def format_resource_kind(kind: str):
     return (kind[0] + sub('([A-Z])', '_\\1', kind[1:])).lower()
 
