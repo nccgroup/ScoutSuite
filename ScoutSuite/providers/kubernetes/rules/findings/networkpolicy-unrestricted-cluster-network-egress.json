@@ -7,23 +7,44 @@
     ],
     "dashboard_name": "Network Policies",
     "display_path": "network_policy.v1-networking-k8s-io.id",
-    "path": "network_policy.v1-networking-k8s-io.resources.id.data.spec.egress.id.data",
+    "path": "network_policy.v1-networking-k8s-io.resources.id.data.spec",
     "conditions": [
         "and",
         [
-            "network_policy.v1-networking-k8s-io.resources.id.data.spec.egress",
-            "notNull",
-            ""
+            "and",
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec",
+                "withKey",
+                "policyTypes"
+            ],
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec.policyTypes",
+                "notNull",
+                ""
+            ],
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec.policyTypes",
+                "containString",
+                "Egress"
+            ]
         ],
         [
-            "network_policy.v1-networking-k8s-io.resources.id.data.spec.egress.id.ports",
-            "null",
-            ""
-        ],
-        [
-            "network_policy.v1-networking-k8s-io.resources.id.data.spec.egress.id.to",
-            "null",
-            ""
+            "and",
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec",
+                "withKey",
+                "egress"
+            ],
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec.egress",
+                "notNull",
+                ""
+            ],
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec.egress",
+                "equal",
+                "[{}]"
+            ]
         ]
     ]
 }
