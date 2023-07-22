@@ -1161,6 +1161,12 @@
                 "level": "danger"
             }
         ],
+        "secretsmanager-lack-of-secrets-rotation.json": [
+            {
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
         "ses-identity-dkim-not-enabled.json": [
             {
                 "enabled": true,
