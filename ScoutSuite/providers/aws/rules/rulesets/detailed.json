@@ -445,6 +445,12 @@
                 "level": "warning"
             }
         ],
+        "elbv2-target-group-allowing-cleartext.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-assume-role-lacks-external-id-and-mfa.json": [
             {
                 "enabled": true,

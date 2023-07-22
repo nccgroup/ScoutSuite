@@ -64,3 +64,7 @@ class ELBv2Facade(AWSBaseFacade):
     async def get_listeners(self, region: str, load_balancer_arn: str):
         return await AWSFacadeUtils.get_all_pages(
             'elbv2', region, self.session, 'describe_listeners', 'Listeners', LoadBalancerArn=load_balancer_arn)
+
+    async def get_target_groups(self, region: str, load_balancer_arn: str):
+        return await AWSFacadeUtils.get_all_pages(
+            'elbv2', region, self.session, 'describe_target_groups', 'TargetGroups', LoadBalancerArn=load_balancer_arn)

@@ -2,11 +2,13 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 from ScoutSuite.providers.utils import get_non_provider_id
 from .listeners import Listeners
+from .target_groups import TargetGroups
 
 
 class LoadBalancers(AWSCompositeResources):
     _children = [
-        (Listeners, 'listeners')
+        (Listeners, 'listeners'),
+        (TargetGroups, 'target_groups')
     ]
 
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
