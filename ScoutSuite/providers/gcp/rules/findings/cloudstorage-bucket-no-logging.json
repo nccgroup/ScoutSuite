@@ -1,6 +1,6 @@
 {
-    "description": "Bucket with Logging Disabled",
-    "rationale": "Enable access and storage logs, in order to capture all events which may affect objects within target buckets.",
+    "description": "Bucket with Usage & Storage Logging Disabled",
+    "rationale": "Cloud Storage provides usage logs and storage logs. Usage logs cover all requests on a given bucket, while storage logs detail the storage usage of that bucket for the last day. While Cloud Audit Logs are best for tracking API operations in Cloud Storage, usage logs are recommended in specific cases, notably when monitoring access that occurs because a resource has allUsers or allAuthenticatedUsers in its access control settings.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
@@ -9,7 +9,8 @@
         }
     ],
     "references": [
-        "https://cloud.google.com/storage/docs/access-logs"
+        "https://cloud.google.com/storage/docs/access-logs",
+        "https://cloud.google.com/storage/docs/audit-logging"
     ],
     "dashboard_name": "Buckets",
     "path": "cloudstorage.projects.id.buckets.id",
