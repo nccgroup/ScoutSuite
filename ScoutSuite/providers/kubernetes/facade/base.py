@@ -60,9 +60,9 @@ class KubernetesBaseFacade:
             if result:
                 scope = result.group(1)
                 if scope in standard_scopes:
-                    print_error(f'Failed to get {path}: {message}')
-                else:
                     print_warning(f'Failed to get {path}: {message}')
+                else:
+                    print_debug(f'Failed to get {path}: {message}')
             else:
                 print_error(f'Failed to get {path}: {message}')
 
