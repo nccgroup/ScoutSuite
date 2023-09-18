@@ -4,11 +4,16 @@
     "dashboard_name": "Functions",
     "path": "functions.projects.id.functions_v2.id",
     "conditions": [
-        "or",
+        "and",
         [
             "functions.projects.id.functions_v2.id.ingress_settings",
             "equal",
             "ALLOW_ALL"
+        ],
+        [
+            "functions.projects.id.functions_v2.id.url",
+            "notNull",
+            ""
         ]
     ],
     "id_suffix": "ingress_settings"
