@@ -29,7 +29,7 @@ $ python tools/aws_security_hub_export.py --profile <profile> --file scoutsuite-
 2020-04-19 10:09:07 wrkbx2 scout[7121] INFO Upload completed, 14 succeeded, 0 failed
 ```
 
-Programatic Usage:
+Programmatic Usage:
 
 ```python
 Python 3.7.3 (default, Dec 20 2019, 18:57:59) 
