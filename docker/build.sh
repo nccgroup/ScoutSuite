@@ -1,10 +1,18 @@
 #!/bin/bash
 
+# vars are stored in .env and config/base.env files
+# note that the FROM used in the Dockerfile files
+# needs to be updated to match the version in the env
+# files in order for anything other than the base image
+# to build correctly.
+# TODO: fix this so that the FROM is set in the Dockerfile
+# automatically by the env vars
+
 SEP1="=============================="
 SEP2="------------------------------"
 
-echo -e "\n\n${SEP1}\n"
-echo -e "\nBEGINNING BUILD...\n"
+echo -e "\n\n${SEP1}"
+echo -e "BEGINNING BUILD..."
 
 case $1 in
 
@@ -52,7 +60,7 @@ case $1 in
     --build-arg VERSION=${VERSION} \
     --build-arg IMAGE_NAME=${IMAGE_NAME} \
     ."
-    
+
     echo -e "\n\nbuilding image using:\n${BUILD_CMD}"
     exec ${BUILD_CMD}
     echo -e "\naws image build complete!\n${SEP2}\n"
@@ -116,9 +124,12 @@ case $1 in
   ;;
 
   *)
-    echo -e "\nUsage: $0 [base | aws | gcp | azure | all ]"
-    echo -e "Using default: base\n"
-    $0 base
+    echo -e "\nBUILD TARGET NOT FOUND!"
+    echo -e "\nUSAGE:\n  $0 [base | aws | gcp | azure | all ]"
+    echo -e "${SEP1}"
+    exit 1
+    # echo -e "Using default: all\n"
+    # $0 all
   ;;
 
 esac

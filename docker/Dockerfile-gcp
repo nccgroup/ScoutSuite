@@ -1,4 +1,4 @@
-FROM nccgroup/scoutsuite-base:5.12.0-01
+FROM nccgroup/scoutsuite-base:5.13.0-01
 
 LABEL maintainer="Jason Ross <algorythm@gmail.com>"
 
