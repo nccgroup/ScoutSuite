@@ -116,6 +116,31 @@ case $1 in
     exec ${BUILD_CMD}
   ;;
 
+  "combined")
+    #####################
+    ## COMBINED IMAGE  ##
+    #####################
+    echo -e "\n${SEP2}\nbuilding combined image...\n"
+    source ./config/base.env
+    source ./config/combined.env
+
+    BUILD_CMD="docker build \
+    -f Dockerfile \
+    -t ${IMAGE_NAME} \
+    --build-arg BUILD_DATE=${BUILD_DATE} \
+    --build-arg NAME=${NAME} \
+    --build-arg VCS_REF=${VCS_REF} \
+    --build-arg VCS_URL=${VCS_URL} \
+    --build-arg VENDOR=${VENDOR} \
+    --build-arg VERSION=${VERSION} \
+    --build-arg IMAGE_NAME=${IMAGE_NAME} \
+    ."
+
+    echo -e "\n\nbuilding image using:\n${BUILD_CMD}"
+    exec ${BUILD_CMD}
+    echo -e "\nbase image build complete!\n${SEP2}\n"
+  ;;
+
   "all")
     $0 base
     $0 aws
