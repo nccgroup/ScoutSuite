@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.12
 
 LABEL maintainer="Jason Ross <algorythm@gmail.com>"
 
