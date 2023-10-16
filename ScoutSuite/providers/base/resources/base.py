@@ -7,10 +7,19 @@ used to reflect that.
 
 import abc
 import asyncio
+from ScoutSuite.core.console import print_exception
+
+
+async def call(child_name, child):
+    """Calls the child class and implements async error handling."""
+    try:
+        task = asyncio.ensure_future(child())
+        await task
+    except Exception as e:
+        print_exception(f'Failed to call {child.__name__}() for resource {child_name}: {e}')
 
 
 class Resources(dict, metaclass=abc.ABCMeta):
-
     """This is the base class of a hierarchical structure. Everything is basically `Resources`.
     It stores in its internal dictionary instances of a given type of resources, with instance ids as keys and
     instance configurations (which store other nested resources) as values.
@@ -32,7 +41,6 @@ class Resources(dict, metaclass=abc.ABCMeta):
 
 
 class CompositeResources(Resources, metaclass=abc.ABCMeta):
-
     """This class represents a node in the hierarchical structure. As inherited from `Resources`, it still \
     stores instances of a given type of resources internally but also stores some kind of nested resources \
     referred to as its 'children'.
@@ -75,11 +83,14 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
         """
         children = [(child_class(self.facade, **scope), child_name)
                     for (child_class, child_name) in self._children]
-        # Fetch all children concurrently:
-        await asyncio.wait(
-            {asyncio.ensure_future(child.fetch_all())
-             for (child, _) in children}
-        )
+
+        tasks = []
+        for (child, child_name) in children:
+            task = asyncio.create_task(call(child_name, child.fetch_all))
+            tasks.append(task)
+            
+        await asyncio.wait(tasks)
+
         # Update parent content:
         for child, child_name in children:
             if child_name is None:

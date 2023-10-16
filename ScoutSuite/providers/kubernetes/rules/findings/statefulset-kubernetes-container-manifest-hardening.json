@@ -1,0 +1,59 @@
+{
+    "description": "Kubernetes Container/InitContainer/EphemeralContainer Manifest Hardening",
+    "rationale": "Several security options in the affected resources could be enabled to harden assocated containers.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://www.cisecurity.org/benchmark/docker/"
+    ],
+    "dashboard_name": "StatefulSets",
+    "display_path": "stateful_set.v1-apps.id",
+    "path": "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+            "withoutKey",
+            "securityContext"
+        ],
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "null",
+            ""
+        ],
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "allowPrivilegeEscalation"
+        ],
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "readOnlyRootFilesystem"
+        ],
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "capabilities"
+        ],
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.allowPrivilegeEscalation",
+            "null",
+            ""
+        ],
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.readOnlyRootFilesystem",
+            "null",
+            ""
+        ],
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities",
+            "null",
+            ""
+        ],
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities.drop",
+            "null",
+            ""
+        ]
+    ]
+}

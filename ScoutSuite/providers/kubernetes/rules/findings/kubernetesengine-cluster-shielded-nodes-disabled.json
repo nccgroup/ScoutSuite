@@ -1,0 +1,26 @@
+{
+    "description": "Shielded GKE Nodes Disabled",
+    "rationale": "Shielded GKE nodes protects clusters against boot- or kernel-level malware or rootkits which persist beyond infected OS.<br>Shielded GKE nodes run firmware which is signed and verified using Google's Certificate Authority, ensuring that the nodes' firmware is unmodified and establishing the root of trust for Secure Boot. GKE node identity is strongly protected via virtual Trusted Platform Module (vTPM) and verified remotely by the master node before the node joins the cluster.",
+    "compliance": [
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.5.5"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.shielded_nodes_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "shielded_nodes_enabled"
+}

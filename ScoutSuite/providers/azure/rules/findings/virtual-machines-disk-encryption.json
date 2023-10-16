@@ -30,8 +30,8 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-overview",
-        "https://docs.microsoft.com/en-us/azure/security-center/security-center-apply-disk-encryption"
+        "https://learn.microsoft.com/en-us/azure/security/azure-security-disk-encryption-overview",
+        "https://learn.microsoft.com/en-us/azure/security-center/security-center-apply-disk-encryption"
     ],
     "dashboard_name": "Disks",
     "path": "virtualmachines.subscriptions.id.disks.id",
@@ -40,6 +40,11 @@
         [
             "virtualmachines.subscriptions.id.disks.id.encryption_type",
             "null",
+            ""
+        ],
+        [
+            "virtualmachines.subscriptions.id.disks.id.encryption_ade",
+            "false",
             ""
         ]
     ],

@@ -1,0 +1,29 @@
+{
+    "description": "Unrestricted Cluster Network Egress",
+    "rationale": "Unrestricted cluster egress controls allow any compromised pod to interact with any other pods.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/cluster-administration/networking/",
+        "https://kubernetes.io/docs/concepts/services-networking/network-policies/"
+    ],
+    "dashboard_name": "Network Policies",
+    "display_path": "network_policy.v1-networking-k8s-io.id",
+    "path": "network_policy.v1-networking-k8s-io.resources.id.data.spec.egress.id.data",
+    "conditions": [
+        "and",
+        [
+            "network_policy.v1-networking-k8s-io.resources.id.data.spec.egress",
+            "notNull",
+            ""
+        ],
+        [
+            "network_policy.v1-networking-k8s-io.resources.id.data.spec.egress.id.ports",
+            "null",
+            ""
+        ],
+        [
+            "network_policy.v1-networking-k8s-io.resources.id.data.spec.egress.id.to",
+            "null",
+            ""
+        ]
+    ]
+}

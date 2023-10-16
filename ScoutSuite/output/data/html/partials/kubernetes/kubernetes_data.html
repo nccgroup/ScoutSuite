@@ -1,0 +1,23 @@
+<script id="kubernetes_data_partial" type="text/x-handlebars-template">
+    {{#if code}}
+    <div class="list-group-item">
+        <h5 class="list-group-item-text">
+            {{title}}
+
+            {{#if hide}}
+            <a href="#{{escape_dots id_prefix}}" data-toggle="collapse" class="k8s-item-heading">
+                <span class="badge float-right btn-info">Details</span>
+            </a>
+            {{/if}}
+        </h5>
+
+        <div class="item-margin{{#if hide}} collapse{{/if}}" id="{{id_prefix}}">
+            {{>kubernetes_code code=code}}
+        </div>
+    </div>
+    {{/if}}
+</script>
+
+<script>
+    Handlebars.registerPartial('kubernetes_data', $('#kubernetes_data_partial').html())
+</script>

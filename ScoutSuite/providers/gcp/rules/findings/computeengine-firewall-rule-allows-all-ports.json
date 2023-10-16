@@ -21,10 +21,17 @@
             "equal",
             "INGRESS"
         ],
-        [
-            "computeengine.projects.id.firewalls.id.allowed_traffic.id.",
-            "equal",
-            "0-65535"
+        ["or",
+            [
+                "computeengine.projects.id.firewalls.id.allowed_traffic.id.",
+                "equal",
+                "0-65535"
+            ],
+            [
+                "computeengine.projects.id.firewalls.id.allowed_traffic.id.",
+                "equal",
+                "1-65535"
+            ]
         ]
     ],
     "id_suffix": "permissive_ports"

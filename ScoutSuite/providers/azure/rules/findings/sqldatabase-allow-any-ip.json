@@ -10,10 +10,10 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/configure-a-windows-firewall-for-database-engine-access?view=sql-server-2017",
-        "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverfirewallrule?view=azurermps-6.13.0&viewFallbackFrom=azurermps-5.2.0",
-        "https://docs.microsoft.com/en-us/azure/azure-sql/database/firewall-configure",
-        "https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-set-database-firewall-rule-azure-sql-database?view=azuresqldb-current"
+        "https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/configure-a-windows-firewall-for-database-engine-access?view=sql-server-2017",
+        "https://learn.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverfirewallrule?view=azurermps-6.13.0&viewFallbackFrom=azurermps-5.2.0",
+        "https://learn.microsoft.com/en-us/azure/azure-sql/database/firewall-configure",
+        "https://learn.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-set-database-firewall-rule-azure-sql-database?view=azuresqldb-current"
     ],
     "dashboard_name": "Firewall Rules",
     "display_path": "sqldatabase.subscriptions.id.servers.id",

@@ -1,0 +1,27 @@
+{
+    "description": "Key Vault Role Based Access Control Disabled",
+    "rationale": "Azure RBAC provides finer-grained access management of Azure resources than vault access policy. It allows an administrator to set separate permissions on individual keys, secrets and certificates on different scope levels, from a management group level all the way to individual resources. It also allows an administrator to take advantage of privileged identity management functionality such as assigning Just in Time access (JIT) to resources.",
+    "remediation": "In the Azure console:<ol><li>Go to <samp>Key Vaults</samp></li> <li>For each key vault, go to <samp>Access configuration</samp></li> <li>Set <samp>Permission model</samp> to <samp>Azure role-based access control (recommended)</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "8.6"
+        }
+    ],
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/rbac-access-policy",
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/rbac-guide"
+    ],
+    "dashboard_name": "Key Vaults",
+    "path": "keyvault.subscriptions.id.vaults.id",
+    "conditions": [
+        "and",
+        [
+            "keyvault.subscriptions.id.vaults.id.rbac_authorization_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "rbac_authorization_enabled"
+}

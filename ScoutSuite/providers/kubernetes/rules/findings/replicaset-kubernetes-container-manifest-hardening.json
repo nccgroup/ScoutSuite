@@ -1,0 +1,59 @@
+{
+    "description": "Kubernetes Container/InitContainer/EphemeralContainer Manifest Hardening",
+    "rationale": "Several security options in the affected resources could be enabled to harden assocated containers.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://www.cisecurity.org/benchmark/docker/"
+    ],
+    "dashboard_name": "ReplicaSets",
+    "display_path": "replica_set.v1-apps.id",
+    "path": "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+            "withoutKey",
+            "securityContext"
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "null",
+            ""
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "allowPrivilegeEscalation"
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "readOnlyRootFilesystem"
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "capabilities"
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.allowPrivilegeEscalation",
+            "null",
+            ""
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.readOnlyRootFilesystem",
+            "null",
+            ""
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities",
+            "null",
+            ""
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities.drop",
+            "null",
+            ""
+        ]
+    ]
+}

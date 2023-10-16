@@ -87,7 +87,8 @@ class Instances(AzureResources):
 
         if raw_instance.storage_profile is not None:
             instance_dict['storage_profile'] = {}
-            instance_dict['storage_profile']['Publisher'] = raw_instance.storage_profile.image_reference.publisher
+            if raw_instance.storage_profile.image_reference is not None:
+                instance_dict['storage_profile']['Publisher'] = raw_instance.storage_profile.image_reference.publisher
             instance_dict['storage_profile']['Release'] = raw_instance.storage_profile.image_reference.version
             instance_dict['storage_profile']['SKU'] = raw_instance.storage_profile.image_reference.sku
             instance_dict['storage_profile']['Offer'] = raw_instance.storage_profile.image_reference.offer
@@ -116,5 +117,7 @@ class Instances(AzureResources):
             subscription_id=self.subscription_id,
             instance_name=instance_dict['name'],
             resource_group=get_resource_group_name(raw_instance.id))
+
+        instance_dict['extension_names'] = [extension.name for extension in instance_dict['extensions']]
 
         return instance_dict['id'], instance_dict

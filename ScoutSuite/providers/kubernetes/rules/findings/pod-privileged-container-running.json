@@ -1,0 +1,24 @@
+{
+    "description": "Privileged Container/InitContainer/EphemeralContainer Running",
+    "rationale": "Access to privileged container may result in privilege escalation. Administrators are encouraged to remove the privileged status of a pod if unncessary. privileged should be explicitly set to false.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "Pods",
+    "display_path": "pod.v1.id",
+    "path": "pod.v1.resources.id.data.spec.containers.id",
+    "conditions": [
+        "and",
+        [
+            "pod.v1.resources.id.data.spec.containers.id.securityContext",
+            "notNull",
+            ""
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.securityContext.privileged",
+            "true",
+            ""
+        ]
+    ]
+}

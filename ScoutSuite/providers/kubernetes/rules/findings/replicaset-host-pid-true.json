@@ -1,0 +1,24 @@
+{
+    "description": "ReplicaSets Using Host PID",
+    "rationale": "A compromised pod with hostPID set to true in PodSpec can be used as a pivot to the host PID.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "ReplicaSets",
+    "display_path": "replica_set.v1-apps.id",
+    "path": "replica_set.v1-apps.resources.id.data.spec.template.spec",
+    "conditions": [
+        "and",
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec",
+            "withKey",
+            "host_pid"
+        ],
+        [
+            "replica_set.v1-apps.resources.id.data.spec.template.spec.host_pid",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "host_pid"
+}
