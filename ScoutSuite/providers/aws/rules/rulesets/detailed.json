@@ -834,6 +834,12 @@
                 "level": "danger"
             }
         ],
+        "iam-user-exists.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kms-cmk-rotation-disabled.json": [
             {
                 "enabled": true,
