@@ -1,0 +1,30 @@
+<!-- ECR Image partial -->
+<script id="services.ecr.regions.id.images.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+      <h4>Information</h4>
+      <ul>
+        <li class="list-group-item-text">Image Digest: {{imageDigest}}</li>
+        <li class="list-group-item-text">Registry ID: {{registryId}}</li>
+        <li class="list-group-item-text">Image Scan Enabled: {{imageScanEnabled}}</li>
+        <li class="list-group-item-text">Scan Status Message: {{ScanStatusMessage}}</li>
+        <li class="list-group-item-text">High Severity Counts: {{HighSeverityCounts}}</li>
+        <li class="list-group-item-text">Medium Severity Counts: {{MediumSeverityCounts}}</li>
+        <li class="list-group-item-text">Informational Severity Counts: {{InformationalSeverityCounts}}</li>
+        <li class="list-group-item-text">Low Severity Counts: {{LowSeverityCounts}}</li>
+        <li class="list-group-item-text">Image Scan Findings Summary Completed: {{imageScanFindingsSummaryCompleted}}</li>
+      </ul>
+    </div>
+  </script>
+  <script>
+    Handlebars.registerPartial("services.ecr.regions.id.images", $("#services\\.ecr\\.regions\\.id\\.images\\.partial").html());
+  </script>
+  <!-- Single ECR Image template -->
+  <script id="single_ecr_image-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ecr.regions.id.images'}}
+  </script>
+  <script>
+    var single_ecr_image_template = Handlebars.compile($("#single_ecr_image-template").html());
+  </script>

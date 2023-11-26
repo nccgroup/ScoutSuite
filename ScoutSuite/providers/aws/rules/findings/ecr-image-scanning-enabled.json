@@ -1,0 +1,43 @@
+{
+    "description": "ECR Image scanning enabled",
+    "rationale": "ECR image scanning helps identify vulnerabilities and threats in container images stored in ECR repositories.",
+    "remediation": "Enable image scanning on all ECR repositories by setting the image-scanning-configuration property to true.",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "5.15"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "5.15"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "5.15"
+        }
+    ],
+    "references": [
+        "https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-scanning.html"
+    ],
+    "dashboard_name": "Images",
+    "display_path": "ecr.regions.id.images.id",
+    "path": "ecr.regions.id.images.id",
+    "conditions": [
+        "and",
+        [
+            "ecr.regions.id.images.id.",
+            "withKey",
+            "imageScanEnabled"
+        ],
+        [
+            "ecr.regions.id.images.id.imageScanEnabled",
+            "equal",
+            "False"
+            
+        ]
+    ],
+    "id_suffix": "imageScanEnabled"
+}
