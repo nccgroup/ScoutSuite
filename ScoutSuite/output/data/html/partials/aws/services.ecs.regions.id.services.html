@@ -1,0 +1,32 @@
+<!-- Service partial -->
+<script id="services.ecs.regions.id.services.partial" type="text/x-handlebars-template">
+    <!-- {{#unless scout_link}} -->
+      <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+      </div>
+      <div class="list-group-item">
+        <h4>Information</h4>
+        <ul>
+          <!-- <li class="list-group-item-text">Service ARN: <samp>{{arn}}</samp></li> -->
+          <li class="list-group-item-text">Service Name: {{name}}</li>
+          <li class="list-group-item-text">Cluster Name: {{cluster_name}}</li>
+          <li class="list-group-item-text">Desired Count: {{desired_count}}</li>
+          <li class="list-group-item-text">Running Count: {{running_count}}</li>
+          <li class="list-group-item-text">Pending Count: {{pending_count}}</li>
+          <li class="list-group-item-text">Scheduling Strategy: {{scheduling_strategy}}</li>
+          <!-- <li class="list-group-item-text">Stable: {{#if is_stable}}Yes{{else}}No{{/if}}</li> -->
+          <li class="list-group-item-text">Launch Type: {{launch_type}}</li>
+        </ul>
+      </div>
+    <!-- {{/unless}} -->
+  </script>
+  <script>
+    Handlebars.registerPartial("services.ecs.regions.id.services", $("#services\\.ecs\\.regions\\.id\\.services\\.partial").html());
+  </script>
+  <!-- Single ECS service template -->
+  <script id="single_ecs_service-template" type="text/x-handlebars-template">
+      {{> modal-template template='services.ecs.regions.id.services'}}
+  </script>
+  <script>
+      var single_ecs_service_template = Handlebars.compile($("#single_ecs_service-template").html());
+  </script>

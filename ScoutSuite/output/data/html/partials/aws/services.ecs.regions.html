@@ -1,0 +1,61 @@
+<script id="services.ecs.regions.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+    <h4>Information</h4>
+      <ul>
+        <li class="list-group-item-text">ECS Clusters count: {{clusters_count}}</li>
+        <li class="list-group-item-text">ECS Services count: {{services_count}}</li>
+        <li class="list-group-item-text">ECS Tasks count: {{tasks_count}}</li>
+
+      </ul>
+    </div>
+    <div class="list-group-item">
+      <div class="accordion">
+        <h4 class="list-group-item-heading accordion-heading">Clusters
+            {{> count_badge target=(concat '#services.ecs.regions' name 'clusters') count=clusters_count}}
+        </h4>
+        <div id="services.ecs.regions.{{name}}.clusters" class="accordion-body">
+          <div class="accordion-inner">
+            <ul class="no-bullet">
+              {{#each this.clusters}}
+                <li><a href="javascript:showObject('services.ecs.regions.{{../name}}.clusters.{{@key}}')">{{name}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="accordion">
+        <h4 class="list-group-item-heading accordion-heading">Services
+            {{> count_badge target=(concat '#services.ecs.regions' name 'services') count=services_count}}
+        </h4>
+        <div id="services.ecs.regions.{{name}}.services" class="accordion-body">
+          <div class="accordion-inner">
+            <ul class="no-bullet">
+              {{#each this.services}}
+                <li><a href="javascript:showObject('services.ecs.regions.{{../name}}.services.{{@key}}')">{{name}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="accordion">
+        <h4 class="list-group-item-heading accordion-heading">Tasks
+            {{> count_badge target=(concat '#services.ecs.regions' name 'tasks') count=tasks_count}}
+        </h4>
+        <div id="services.ecs.regions.{{arn}}.tasks" class="accordion-body">
+          <div class="accordion-inner">
+            <ul class="no-bullet">
+              {{#each this.tasks}}
+                <li><a href="javascript:showObject('services.ecs.regions.{{../name}}.tasks.{{@key}}')">{{arn}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+<script>
+  Handlebars.registerPartial("services.ecs.regions", $("#services\\.ecs\\.regions\\.partial").html());
+</script>
