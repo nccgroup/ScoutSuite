@@ -1,0 +1,27 @@
+<!-- ECS Cluster partial -->
+<script id="services.ecs.regions.id.clusters.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+      <h4>Information</h4>
+      <ul>
+        <li class="list-group-item-text">Status: {{status}}</li>
+        <li class="list-group-item-text">Registered Container Instances Count: {{registered_container_instances_count}}</li>
+        <li class="list-group-item-text">Running Tasks Count: {{running_tasks_count}}</li>
+        <li class="list-group-item-text">Pending Tasks Count: {{pending_tasks_count}}</li>
+        <li class="list-group-item-text">Active Services Count: {{active_services_count}}</li>
+        <li class="list-group-item-text">Container Insights: {{containerInsights}}</li>
+      </ul>
+    </div>
+  </script>
+  <script>
+    Handlebars.registerPartial("services.ecs.regions.id.clusters", $("#services\\.ecs\\.regions\\.id\\.clusters\\.partial").html());
+  </script>
+  <!-- Single ECS cluster instance template -->
+  <script id="single_ecs_cluster-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ecs.regions.id.clusters' }}
+  </script>
+  <script>
+    var single_ecs_cluster_template = Handlebars.compile($("#single_ecs_cluster-template").html());
+  </script>

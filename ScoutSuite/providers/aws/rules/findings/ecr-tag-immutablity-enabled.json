@@ -1,0 +1,45 @@
+{
+    
+    "description": "Repository tag immutability should be enabled for all ECR repositories",
+    "rationale": "Repository tag immutability should be enabled on all ECR repositories to help prevent accidental overwrites or deletions of container images.",
+    "remediation": "Enable repository tag immutability on all ECR repositories by setting the image-tag-mutability property to IMMUTABLE.",
+    "compliance": [
+      {
+        "name": "CIS Amazon Web Services Foundations",
+        "version": "1.0.0",
+        "reference": "5.17"
+      },
+      {
+        "name": "CIS Amazon Web Services Foundations",
+        "version": "1.1.0",
+        "reference": "5.17"
+      },
+      {
+        "name": "CIS Amazon Web Services Foundations",
+        "version": "1.2.0",
+        "reference": "5.17"
+      }
+    ],
+    "references": [
+      "https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-tag-mutability.html"
+    ],
+      "dashboard_name": "Repositories",
+      "display_path": "ecr.regions.id.repositories.id",
+      "path": "ecr.regions.id.repositories.id",
+      "conditions": [
+          "and",
+          [
+              "ecr.regions.id.repositories.id.",
+              "withKey",
+              "imageTagMutability"
+          ],
+          [
+              "ecr.regions.id.repositories.id.imageTagMutability",
+              "equal",
+              "MUTABLE"
+              
+          ]
+      ],
+      "id_suffix": "imageTagMutability"
+  }
+  
