@@ -15,7 +15,7 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl#enforce-https"
+        "https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl#enforce-https"
     ],
     "dashboard_name": "Web Apps",
     "path": "appservice.subscriptions.id.web_apps.id",

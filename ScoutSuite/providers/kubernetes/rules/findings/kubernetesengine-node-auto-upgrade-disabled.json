@@ -1,0 +1,33 @@
+{
+    "description": "Nodes with Auto-Upgrade Disabled",
+    "rationale": "Auto-upgrades automatically ensures that security updates are applied and kept up to date.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.8"
+        },
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.5.3"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
+    ],
+    "dashboard_name": "Clusters",
+    "display_path": "kubernetesengine.projects.id.clusters.id",
+    "path": "kubernetesengine.projects.id.clusters.id.node_pools.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.node_pools.id.auto_upgrade_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "auto_upgrade_disabled"
+}

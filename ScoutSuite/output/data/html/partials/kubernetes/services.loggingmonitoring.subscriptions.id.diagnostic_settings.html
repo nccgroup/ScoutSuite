@@ -1,0 +1,22 @@
+<!-- Logging and Monitoring Diagnostic-->
+<script id="services.loggingmonitoring.subscriptions.id.diagnostic_settings.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Diagnostic setting exists: <span id="loggingmonitoring.subscriptions.{{@../key}}.diagnostic_settings.{{@key}}.diagnostic_exist"><samp>{{diagnostic_exist}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.loggingmonitoring.subscriptions.id.diagnostic_settings", $("#services\\.loggingmonitoring\\.subscriptions\\.id\\.diagnostic_settings\\.partial").html());
+</script>
+
+<!-- Single loggingmonitoring diagnostic template -->
+<script id="single_loggingmonitoring_diagnostic_settings-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.loggingmonitoring.subscriptions.id.diagnostic_settings'}}
+</script>
+<script>
+    var single_loggingmonitoring_diagnostic_settings_template = Handlebars.compile($("#single_loggingmonitoring_diagnostic_settings-template").html());
+</script>

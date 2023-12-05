@@ -1,0 +1,24 @@
+{
+    "description": "Helm/Tiller in Use",
+    "rationale": "Helm 2 and Tiller have been deprecated since 2020.",
+    "references": [
+        "https://helm.sh/blog/helm-v2-deprecation-timeline/",
+        "https://github.com/markround/tiller#status"
+    ],
+    "dashboard_name": "Pods",
+    "display_path": "pod.v1.id",
+    "path": "pod.v1.resources.id",
+    "conditions": [
+        "or",
+        [
+            "pod.v1.resources.id.data.name",
+            "containString",
+            "tiller"
+        ],
+        [
+            "pod.v1.resources.id.data.name",
+            "containString",
+            "tiller-deploy"
+        ]
+    ]
+}

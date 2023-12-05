@@ -1,40 +1,40 @@
 {
-  "description": "Web App Running an Outdated .Net Framework Version",
-  "rationale": "Periodically, newer versions are released for .Net Framework software either due to security flaws or to include additional functionality. Using the latest version for web apps is recommended in order to take advantage of security fixes, if any, and/or additional functionalities of the newer version.",
-  "remediation": "Using Command Line:\n<ol>\n    <li>To see the list of supported runtimes</li>\n    <code><samp>az webapp list-runtimes | grep aspnet</samp></code>\n    <li>To set latest .NET Framework version for an existing app, run the following command:</li>\n  <code>az webapp config set --resource-group &ltRESOURCE_GROUP_NAME&gt --name &ltAPP_NAME&gt --net-framework-version &ltVERSION&gt</code>\n    <li>Use .NET Framework as, 'v4.0' for .NET 4.6 and 'v3.0' for .NET 3.5.</li>\n</ol>",
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "1.2.0",
-      "reference": "9.6"
-    },
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "1.1.0",
-      "reference": "9.6"
-    }
-  ],
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
-  ],
-  "dashboard_name": "Web Apps",
-  "path": "appservice.subscriptions.id.web_apps.id",
-  "conditions": [
-    "and",
-    [
-      "appservice.subscriptions.id.web_apps.id.programming_language",
-      "equal",
-      "dotnet"
+    "description": "Web App Running an Outdated .Net Framework Version",
+    "rationale": "Periodically, newer versions are released for .Net Framework software either due to security flaws or to include additional functionality. Using the latest version for web apps is recommended in order to take advantage of security fixes, if any, and/or additional functionalities of the newer version.",
+    "remediation": "Using Command Line:\n<ol>\n    <li>To see the list of supported runtimes</li>\n    <code><samp>az webapp list-runtimes | grep aspnet</samp></code>\n    <li>To set latest .NET Framework version for an existing app, run the following command:</li>\n  <code>az webapp config set --resource-group &ltRESOURCE_GROUP_NAME&gt --name &ltAPP_NAME&gt --net-framework-version &ltVERSION&gt</code>\n    <li>Use .NET Framework as, 'v4.0' for .NET 4.6 and 'v3.0' for .NET 3.5.</li>\n</ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "9.6"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "9.6"
+        }
     ],
-    [
-      "appservice.subscriptions.id.web_apps.id.programming_language_version",
-      "containNoneOf",
-      [
-        "v6.0",
-        "6.0"
-      ]
-    ]
-  ],
-  "id_suffix": "programming_language_version"
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [
+        "and",
+        [
+            "appservice.subscriptions.id.web_apps.id.programming_language",
+            "equal",
+            "dotnet"
+        ],
+        [
+            "appservice.subscriptions.id.web_apps.id.programming_language_version",
+            "containNoneOf",
+            [
+                "v6.0",
+                "6.0"
+            ]
+        ]
+    ],
+    "id_suffix": "programming_language_version"
 }

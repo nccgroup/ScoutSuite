@@ -15,8 +15,8 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access"
+        "https://learn.microsoft.com/en-us/azure/storage/common/storage-create-storage-account",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access"
     ],
     "dashboard_name": "Storage Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",

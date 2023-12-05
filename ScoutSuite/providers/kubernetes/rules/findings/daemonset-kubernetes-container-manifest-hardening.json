@@ -1,0 +1,54 @@
+{
+    "description": "Kubernetes Container/InitContainer/EphemeralContainer Manifest Hardening",
+    "rationale": "Several security options in the affected resources could be enabled to harden assocated containers.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://www.cisecurity.org/benchmark/docker/"
+    ],
+    "dashboard_name": "DaemonSets",
+    "display_path": "daemon_set.v1-apps.id",
+    "path": "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+            "null",
+            ""
+        ],
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+            "withoutKey",
+            "allowPrivilegeEscalation"
+        ],
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+            "withoutKey",
+            "readOnlyRootFilesystem"
+        ],
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+            "withoutKey",
+            "capabilities"
+        ],
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.allowPrivilegeEscalation",
+            "null",
+            ""
+        ],
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.readOnlyRootFilesystem",
+            "null",
+            ""
+        ],
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities",
+            "null",
+            ""
+        ],
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities.drop",
+            "null",
+            ""
+        ]
+    ]
+}

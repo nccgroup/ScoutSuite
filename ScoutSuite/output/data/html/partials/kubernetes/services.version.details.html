@@ -1,0 +1,9 @@
+<script id="services.version.details.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        {{>generic_object resource}}
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.version.details", $("#services\\.version\\.details\\.partial").html())
+</script>
