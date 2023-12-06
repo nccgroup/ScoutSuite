@@ -108,7 +108,7 @@ class RBAC(KubernetesCompositeResources):
                                 if binding['data']['roleRef']['name'] != role_name.split('_')[-1]:
                                     continue
 
-                                subjects = binding['data']['subjects'] or []
+                                subjects = binding['data'].get('subjects', []) or []
                                 if len(subjects) == 0:
                                     continue
 
