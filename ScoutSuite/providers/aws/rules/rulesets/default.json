@@ -805,6 +805,18 @@
                 "level": "danger"
             }
         ],
+        "iam-policy-with-deny-actions.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-inline-policy-with-deny-actions.json": [
+            {
+                "enabled": "true",
+                "level": "warning"
+            }
+        ],
         "kms-cmk-rotation-disabled.json": [
             {
                 "enabled": true,
