@@ -50,9 +50,6 @@ class RDSFacade(AWSBaseFacade):
             instance_tagset = await run_concurrently(lambda: client.list_tags_for_resource(
                 ResourceName=instance['DBInstanceArn']))
             instance['Tags'] = {x['Key']: x['Value'] for x in instance_tagset['TagList']}
-        except ClientError as e:
-            if e.response['Error']['Code'] != 'NoSuchTagSet':
-                print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
         except Exception as e:
             if 'DBInstanceNotFound' in str(e):
                 print_warning('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))

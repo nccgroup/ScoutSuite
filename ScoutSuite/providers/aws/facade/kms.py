@@ -1,4 +1,4 @@
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
@@ -48,14 +48,20 @@ class KMSFacade(AWSBaseFacade):
             )
             key['aliases'] = response.get('Aliases')
         except Exception as e:
-            print_exception(f'Failed to get KMS aliases: {e}')
+            if 'NotFoundException' in str(e):
+                print_warning(f'Failed to get KMS aliases: {e}')
+            else:
+                print_exception(f'Failed to get KMS aliases: {e}')
 
     async def get_grants(self, region: str, key_id: str):
         try:
             return await AWSFacadeUtils.get_all_pages('kms', region, self.session, 'list_grants', 'Grants',
                                                       KeyId=key_id)
         except Exception as e:
-            print_exception(f'Failed to list KMS Grants: {e}')
+            if 'NotFoundException' in str(e):
+                print_warning(f'Failed to list KMS Grants: {e}')
+            else:
+                print_exception(f'Failed to list KMS Grants: {e}')
             return []
 
     async def get_key_rotation_status(self, region: str, key_id: str):
@@ -64,4 +70,7 @@ class KMSFacade(AWSBaseFacade):
             return await run_concurrently(
                 lambda: client.get_key_rotation_status(KeyId=key_id))
         except Exception as e:
-            print_exception(f'Failed to get KMS key rotation: {e}')
+            if 'NotFoundException' in str(e):
+                print_warning(f'Failed to get KMS key rotation: {e}')
+            else:
+                print_exception(f'Failed to get KMS key rotation: {e}')

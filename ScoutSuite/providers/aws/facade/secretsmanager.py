@@ -1,6 +1,6 @@
 import json
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import map_concurrently, run_concurrently, get_and_set_concurrently
@@ -49,5 +49,8 @@ class SecretsManagerFacade(AWSBaseFacade):
             else:
                 secret['policy'] = {}
         except Exception as e:
-            print_exception('Failed to get Secrets Manager secret policy: {}'.format(e))
+            if "You can't perform this operation on the secret because it was marked for deletion." in str(e):
+                print_warning('Failed to get Secrets Manager secret policy: {}'.format(e))
+            else:
+                print_exception('Failed to get Secrets Manager secret policy: {}'.format(e))
             secret['policy'] = {}

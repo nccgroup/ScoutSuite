@@ -1,4 +1,4 @@
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
@@ -54,4 +54,7 @@ class EFSFacade(AWSBaseFacade):
                 await run_concurrently(lambda: client.describe_mount_target_security_groups(
                     MountTargetId=mount_target['MountTargetId'])['SecurityGroups'])
         except Exception as e:
-            print_exception(f'Failed to describe EFS mount target security groups: {e}')
+            if 'MountTargetNotFound' in str(e):
+                print_warning(f'Failed to describe EFS mount target security groups: {e}')
+            else:
+                print_exception(f'Failed to describe EFS mount target security groups: {e}')
