@@ -53,6 +53,8 @@ class Bindings(Resources):
                 members_dict[type_map[member_type]].append(entity)
             elif member_type == 'deleted':
                 pass
+            elif member_type == 'principalSet':
+                pass
             else:
                 print_exception(f'Type {member_type} not handled')
         
