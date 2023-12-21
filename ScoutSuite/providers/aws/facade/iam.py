@@ -10,50 +10,54 @@ from ScoutSuite.providers.utils import get_non_provider_id, run_concurrently, ge
 
 
 class IAMFacade(AWSBaseFacade):
+
+    async def trigger_generate_credential_report(self):
+        iam_client = AWSFacadeUtils.get_client('iam', self.session)
+        try:
+            response = iam_client.get_credential_report()
+            credential_report = response['Content']
+            return credential_report
+        # generation in process
+        except iam_client.exceptions.CredentialReportNotReadyException:
+            await asyncio.sleep(3)  # wait 3s
+            return await self.trigger_generate_credential_report()
+        # no existing report
+        except iam_client.exceptions.CredentialReportNotPresentException:
+            try:
+                iam_client.generate_credential_report()
+            except Exception as e:
+                print(f"Error generating credential report: {e}")
+                return False
+            await asyncio.sleep(3)  # wait 3s
+            return await self.trigger_generate_credential_report()
+        except Exception as e:
+            print_exception(f'Failed to download credential report: {e}')
+            return None
+
     async def get_credential_reports(self):
-        client = AWSFacadeUtils.get_client('iam', self.session)
-        # When no credential report exists, we first need to initiate the creation of a new report by calling
-        # client.generate_credential_report and then check for COMPLETE status before trying to download it:
-        report_generated, n_attempts = False, 3
         try:
-            while not report_generated and n_attempts > 0:
-                response = await run_concurrently(client.generate_credential_report)
-                if response['State'] == 'COMPLETE':
-                    report_generated = True
-                else:
-                    n_attempts -= 1
-                    await asyncio.sleep(0.1)  # Wait for 100ms before doing a new attempt.
-        except Exception as e:
-            print_exception(f'Failed to generate credential report: {e}')
-            return []
-        finally:
-            if not report_generated and n_attempts == 0:
-                print_exception(f'Failed to complete credential report generation in {n_attempts} attempts')
-                return []
+            report = await self.trigger_generate_credential_report()
+            if report:
 
-        try:
-            report = await run_concurrently(lambda: client.get_credential_report()['Content'])
+                # The report is a CSV string. The first row contains the name of each column. The next rows
+                # each represent an individual account. This algorithm provides a simple initial parsing.
+                lines = report.splitlines()
+                keys = lines[0].decode('utf-8').split(',')
 
-            # The report is a CSV string. The first row contains the name of each column. The next rows
-            # each represent an individual account. This algorithm provides a simple initial parsing.
-            lines = report.splitlines()
-            keys = lines[0].decode('utf-8').split(',')
+                credential_reports = []
+                for line in lines[1:]:
+                    credential_report = {}
+                    values = line.decode('utf-8').split(',')
+                    for key, value in zip(keys, values):
+                        credential_report[key] = value
 
-            credential_reports = []
-            for line in lines[1:]:
-                credential_report = {}
-                values = line.decode('utf-8').split(',')
-                for key, value in zip(keys, values):
-                    credential_report[key] = value
+                    credential_reports.append(credential_report)
 
-                credential_reports.append(credential_report)
-
-            return credential_reports
-        except Exception as e:
-            if 'ReportNotPresent' in str(e):
-                print_warning(f'Failed to download credential report: {e}')
+                return credential_reports
             else:
-                print_exception(f'Failed to download credential report: {e}')
+                return []
+        except Exception as e:
+            print_exception(f"Error getting credential report: {e}")
             return []
 
     async def get_groups(self):
