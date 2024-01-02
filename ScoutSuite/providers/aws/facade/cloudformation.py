@@ -44,7 +44,10 @@ class CloudFormation(AWSBaseFacade):
                 lambda: client.get_template(StackName=stack['StackName'])['TemplateBody'])
         except Exception as e:
             if 'is not ready' not in str(e):
-                print_exception(f'Failed to get CloudFormation template: {e}')
+                if 'does not exist' in str(e):
+                    print_warning(f'Failed to get CloudFormation template: {e}')
+                else:
+                    print_exception(f'Failed to get CloudFormation template: {e}')
             stack['template'] = None
 
     async def _get_and_set_policy(self, stack: {}, region: str):

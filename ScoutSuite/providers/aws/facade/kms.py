@@ -32,9 +32,9 @@ class KMSFacade(AWSBaseFacade):
             key['policy'] = json.loads(response.get('Policy'))
         except Exception as e:
             if 'NotFoundException' in str(e):
-                print_exception(f'Failed to get KMS key policy: {e}')
-            else:
                 print_warning(f'Failed to get KMS key policy: {e}')
+            else:
+                print_exception(f'Failed to get KMS key policy: {e}')
 
     async def _get_and_set_key_metadata(self, key: {}, region: str):
         client = AWSFacadeUtils.get_client('kms', self.session, region)
