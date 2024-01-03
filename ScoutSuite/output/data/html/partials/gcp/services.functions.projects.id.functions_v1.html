@@ -10,29 +10,10 @@
         <div class="list-group-item-text item-margin">Update Time: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.update_time"><samp>{{value_or_none update_time}}</samp></span></div>
         <div class="list-group-item-text item-margin">Version: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.version_id"><samp>{{value_or_none version_id}}</samp></span></div>
         <div class="list-group-item-text item-margin">Runtime: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.runtime"><samp>{{value_or_none runtime}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Memory: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.memory"><samp>{{value_or_none memory}}MB</samp></span></div>
+        <div class="list-group-item-text item-margin">Memory: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.memory"><samp>{{value_or_none memory}}M</samp></span></div>
         <div class="list-group-item-text item-margin">Max Instances: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.max_instances"><samp>{{value_or_none max_instances}}</samp></span></div>
         <div class="list-group-item-text item-margin">Docker Registry: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.docker_registry"><samp>{{value_or_none docker_registry}}</samp></span></div>
-        <div class="list-group-item-text item-margin" id="functions.projects.{{project}}.functions_v1.{{@key}}.environment_variables">Environment Variables
-            {{#if environment_variables}}
-            <ul>
-                {{#each environment_variables}}
-                <li><samp>{{@key}}: {{this}}</samp></li>
-                {{/each}}
-            </ul>
-            {{else}}
-            <span>None</span>
-            {{/if}}
-        </div>
-        {{#if environment_variables_secrets}}
-        <div class="list-group-item-text item-margin" id="functions.projects.{{project}}.functions_v1.{{@key}}.environment_variables_secrets">Environment Variables Secrets (Potential)
-            <ul>
-                {{#each environment_variables_secrets}}
-                <li><samp>{{this}}</samp></li>
-                {{/each}}
-            </ul>
-        </div>
-        {{/if}}
+        <div class="list-group-item-text item-margin">Service Account: <span id="functions.projects.{{project}}.functions_v2.{{@key}}.service_account"><samp>{{value_or_none service_account}}</samp></span></div>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Trigger</h4>
@@ -40,6 +21,25 @@
         <div class="list-group-item-text item-margin">Security Level: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.security_level"><samp>{{value_or_none security_level}}</samp></span></div>
         <div class="list-group-item-text item-margin">Ingress Settings: <span id="functions.projects.{{project}}.functions_v1.{{@key}}.ingress_settings"><samp>{{value_or_none ingress_settings}}</samp></span></div>
     </div>
+    {{#if environment_variables}}
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Environment Variables</h4>
+        {{#each environment_variables}}
+        <div class="list-group-item-text item-margin"><samp>{{@key}}: {{this}}</samp></span></div>
+        {{/each}}
+        {{#if environment_variables_secrets}}
+        <br>
+        <div class="list-group-item-text item-margin" id="functions.projects.{{project}}.functions_v1.{{@key}}.environment_variables_secrets">Environment Variables Secrets (Potential)
+            <ul>
+                {{#each environment_variables_secrets}}
+                <li><samp>{{this}}</samp></li>
+                <div class="list-group-item-text item-margin"><samp>{{this}}</samp></span></div>
+                {{/each}}
+            </ul>
+        </div>
+        {{/if}}
+    </div>
+    {{/if}}
     <div class="list-group-item">
         <h4 class="list-group-item-heading"><span id="functions.projects.{{project}}.functions_v1.{{@key}}.bindings">Bindings:</span></h4>
         <div class="accordion-inner">
