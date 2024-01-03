@@ -30,22 +30,20 @@
         {{/each}}
         {{#if environment_variables_secrets}}
         <br>
-        <div class="list-group-item-text item-margin" id="functions.projects.{{project}}.functions.{{@key}}.environment_variables_secrets">Environment Variables Secrets (Potential)
-            <ul>
-                {{#each environment_variables_secrets}}
-                <li><samp>{{this}}</samp></li>
-                <div class="list-group-item-text item-margin"><samp>{{this}}</samp></span></div>
-                {{/each}}
-            </ul>
+        <div class="list-group-item-text item-margin" id="functions.projects.{{project}}.functions.{{@key}}.environment_variables_secrets">Potential Secrets:
+            {{#each environment_variables_secrets}}
+            <div class="list-group-item-text item-margin"><samp>{{this}}</samp></div>
+            {{/each}}
         </div>
         {{/if}}
     </div>
     {{/if}}
-    <div class="list-group-item">
-        <h4 class="list-group-item-heading"><span id="functions.projects.{{project}}.functions.{{@key}}.bindings">Bindings:</span></h4>
+    <div class="list-group-item" id="functions.projects.{{project}}.functions.{{@key}}.bindings">
+        <h4 class="list-group-item-heading"><span>Bindings:</span></h4>
         <div class="accordion-inner">
             <ul>
                 {{#each bindings}}
+                <span id="functions.projects.{{../project}}.functions.{{@../key}}.bindings.{{@key}}.bindings">
                 <li>Role <samp>{{role}}</samp></li>
                 <ul>
                     {{#each members}}
@@ -55,6 +53,7 @@
                 {{else}}
                 <li><samp>None</samp></li>
                 {{/each}}
+                </span>
             </ul>
         </div>
     </div>
