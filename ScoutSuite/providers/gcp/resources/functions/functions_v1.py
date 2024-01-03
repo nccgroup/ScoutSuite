@@ -31,7 +31,9 @@ class FunctionsV1(Resources):
         function_dict['timeout'] = raw_function['timeout']
         if raw_function.get('maxInstances', False):
             function_dict['max_instances'] = raw_function['maxInstances']
+        function_dict['service_account'] = raw_function.get('serviceAccountEmail')
         function_dict['docker_registry'] = raw_function['dockerRegistry']
+
         function_dict['url'] = raw_function.get('httpsTrigger', {}).get('url')
         function_dict['security_level'] = 'SECURE_ALWAYS' if function_dict['url'] is None else raw_function.get('httpsTrigger', {}).get('securityLevel')
         function_dict['ingress_settings'] = raw_function.get('ingressSettings')

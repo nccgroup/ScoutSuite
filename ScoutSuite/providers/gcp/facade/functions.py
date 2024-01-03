@@ -18,7 +18,7 @@ class FunctionsFacade(GCPBaseFacade):
 
     async def get_functions_v2(self, project_id: str):
         try:
-            return await self._get_functions_version("v2alpha", project_id)
+            return await self._get_functions_version("v2", project_id)
         except Exception as e:
             print_exception(f'Failed to get v2 Cloud Functions: {e}')
             return []
