@@ -25,7 +25,7 @@ class Functions(Resources):
         function_dict['update_time'] = raw_function['updateTime']
         function_dict['version_id'] = raw_function.get('serviceConfig', {}).get('revision')
 
-        function_dict['gen'] = 1 if raw_function.get('environment') == 'GEN_1' else 2
+        function_dict['gen'] = "1" if raw_function.get('environment') == 'GEN_1' else "2"
 
         function_dict['runtime'] = raw_function.get('buildConfig', {}).get('runtime')
         function_dict['memory'] = raw_function.get('serviceConfig', {}).get('availableMemory')
@@ -33,7 +33,7 @@ class Functions(Resources):
         function_dict['max_instances'] = raw_function.get('serviceConfig', {}).get('maxInstanceCount')
 
         function_dict['url'] = raw_function.get('serviceConfig', {}).get('uri')
-        function_dict['security_level'] = 'SECURE_ALWAYS' if (function_dict['url'] is None or function_dict['gen'] == 2) else raw_function.get('serviceConfig', {}).get('securityLevel')
+        function_dict['security_level'] = 'SECURE_ALWAYS' if (function_dict['url'] is None or function_dict['gen'] == "2") else raw_function.get('serviceConfig', {}).get('securityLevel')
         function_dict['ingress_settings'] = raw_function.get('serviceConfig', {}).get('ingressSettings')
 
         function_dict['docker_registry'] = raw_function.get('buildConfig', {}).get('dockerRegistry')
