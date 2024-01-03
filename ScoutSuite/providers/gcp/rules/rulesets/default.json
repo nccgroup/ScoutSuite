@@ -382,6 +382,12 @@
                 "level": "warning"
             }
         ],
+        "functions-internet-ingress.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-gmail-accounts-used.json": [
             {
                 "enabled": true,
