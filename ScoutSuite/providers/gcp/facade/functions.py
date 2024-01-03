@@ -9,21 +9,8 @@ class FunctionsFacade(GCPBaseFacade):
         # The version needs to be set per-function
         super().__init__('cloudfunctions', None)  # API Client
 
-    async def get_functions_v1(self, project_id: str):
-        try:
-            return await self._get_functions_version("v1", project_id)
-        except Exception as e:
-            print_exception(f'Failed to get v1 Cloud Functions: {e}')
-            return []
-
-    async def get_functions_v2(self, project_id: str):
-        try:
-            return await self._get_functions_version("v2", project_id)
-        except Exception as e:
-            print_exception(f'Failed to get v2 Cloud Functions: {e}')
-            return []
-
-    async def _get_functions_version(self, api_version: str, project_id: str):
+    async def get_functions(self, project_id: str):
+        api_version = "v2"
         try:
             # get list of functions
             list_results = await self._list_functions_version(project_id, api_version)

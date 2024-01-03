@@ -4,13 +4,13 @@ from ScoutSuite.providers.utils import get_non_provider_id
 from ScoutSuite.providers.gcp.resources.functions.utils import get_environment_secrets
 
 
-class FunctionsV2(Resources):
+class Functions(Resources):
     def __init__(self, facade: GCPFacade, project_id: str):
         super().__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_functions = await self.facade.functions.get_functions_v2(self.project_id)
+        raw_functions = await self.facade.functions.get_functions(self.project_id)
         if raw_functions:
             for raw_function in raw_functions:
                 function_id, function = self._parse_function(raw_function)
@@ -24,6 +24,8 @@ class FunctionsV2(Resources):
         function_dict['status'] = raw_function['state']
         function_dict['update_time'] = raw_function['updateTime']
         function_dict['version_id'] = raw_function.get('serviceConfig', {}).get('revision')
+
+        function_dict['gen'] = 1 if raw_function.get('environment') == 'GEN_1' else 2
 
         function_dict['runtime'] = raw_function.get('buildConfig', {}).get('runtime')
         function_dict['memory'] = raw_function.get('serviceConfig', {}).get('availableMemory')

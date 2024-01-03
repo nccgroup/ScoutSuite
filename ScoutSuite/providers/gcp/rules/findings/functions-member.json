@@ -5,11 +5,11 @@
         "https://cloud.google.com/logging/docs/reference/audit/appengine/rest/Shared.Types/SecurityLevel"
     ],
     "dashboard_name": "Functions",
-    "path": "functions.projects.id.functions_v1.id",
+    "path": "functions.projects.id.functions.id",
     "conditions": [
         "or",
         [
-            "functions.projects.id.functions_v1.id.bindings",
+            "functions.projects.id.functions.id.bindings",
             "containString",
             "_ARG_0_"
         ]

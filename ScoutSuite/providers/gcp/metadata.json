@@ -80,13 +80,9 @@
     },
     "functions": {
       "resources": {
-        "functions_v1": {
+        "functions": {
           "cols": 2,
-          "path": "services.functions.projects.id.functions_v1"
-        },
-        "functions_v2": {
-          "cols": 2,
-          "path": "services.functions.projects.id.functions_v2"
+          "path": "services.functions.projects.id.functions"
         }
       }
     }

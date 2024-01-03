@@ -348,19 +348,19 @@
                 "level": "warning"
             }
         ],
-        "functions-v1-allowing-http.json": [
+        "functions-allowing-http.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "functions-v1-environment-variables-secrets.json": [
+        "functions-environment-variables-secrets.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "functions-v1-member.json": [
+        "functions-member.json": [
             {
                 "args": [
                     "allUsers"
@@ -376,19 +376,7 @@
                 "level": "danger"
             }
         ],
-        "functions-v1-public-endpoint.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "functions-v2-environment-variables-secrets.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "functions-v2-public-endpoint.json": [
+        "functions-public-endpoint.json": [
             {
                 "enabled": true,
                 "level": "warning"
