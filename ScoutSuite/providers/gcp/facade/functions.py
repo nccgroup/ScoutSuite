@@ -9,6 +9,7 @@ class FunctionsFacade(GCPBaseFacade):
         # The version needs to be set per-function
         super().__init__('cloudfunctions', None)  # API Client
 
+
     async def get_functions(self, project_id: str):
         api_version = "v2"
         try:
@@ -48,12 +49,20 @@ class FunctionsFacade(GCPBaseFacade):
 
     async def _get_and_set_function_iam_policy(self, function, api_version: str):
         try:
-            functions_client = self._build_arbitrary_client(self._client_name, api_version, force_new=True)
-            functions = functions_client.projects().locations().functions()
-            request = functions.getIamPolicy(resource=function.get('name'))
-            policy = await run_concurrently(lambda: request.execute())
-            # setattr(function, 'bindings', policy.get('bindings', []))
-            function['bindings'] = policy.get('bindings', [])
+            # For Gen 2, we get the policy from the Cloud Run service
+            if function.get('environment') == 'GEN_2':
+                run_client = self._build_arbitrary_client('run', 'v2', force_new=True)
+                services = run_client.projects().locations().services()
+                request = services.getIamPolicy(resource=function.get('name').replace('/functions/', '/services/'))
+                policy = await run_concurrently(lambda: request.execute())
+                function['bindings'] = policy.get('bindings', [])
+            # For Gen 1, we ge the policy from the Function itself
+            else:
+                functions_client = self._build_arbitrary_client(self._client_name, api_version, force_new=True)
+                functions = functions_client.projects().locations().functions()
+                request = functions.getIamPolicy(resource=function.get('name'))
+                policy = await run_concurrently(lambda: request.execute())
+                function['bindings'] = policy.get('bindings', [])
         except Exception as e:
             print_exception(f'Failed to get bindings for Cloud Functions function {function.get("name")} '
                             f'({api_version}): {e}')
