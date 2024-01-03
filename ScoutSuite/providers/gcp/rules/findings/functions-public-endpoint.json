@@ -1,8 +1,9 @@
 {
-    "description": "Functions Allowing Traffic from the Internet",
-    "rationale": "The Cloud Function's ingress configuration allowed all traffic, potentially exposing undesired functionality. It is recommended that traffic reaching functions be routed via a load balancer, to minimize the attack surface.",
-    "dashboard_name": "Functions",
-    "path": "functions.projects.id.functions.id",
+    "description": "Functions Allowing Public Invocations",
+    "rationale": "The Cloud Function's triggers allowed public invocations, potentially exposing undesired functionality. It is recommended that invocations be restricted to the expected principals.",
+    "dashboard_name": "Bindings",
+    "display_path": "functions.projects.id.functions.id",
+    "path": "functions.projects.id.functions.id.bindings.id",
     "conditions": [
         "and",
         [
@@ -14,7 +15,46 @@
             "functions.projects.id.functions.id.url",
             "notNull",
             ""
+        ],
+        [
+            "or",
+            [
+                "and",
+                [
+                    "functions.projects.id.functions.id.gen",
+                    "equal",
+                    "1"
+                ],
+                [
+                    "functions.projects.id.functions.id.bindings.id.members",
+                    "containString",
+                    "allUsers"
+                ],
+                [
+                    "functions.projects.id.functions.id.bindings.id.role",
+                    "equal",
+                    "roles/cloudfunctions.invoker"
+                ]
+            ],
+            [
+                "and",
+                [
+                    "functions.projects.id.functions.id.gen",
+                    "equal",
+                    "2"
+                ],
+                [
+                    "functions.projects.id.functions.id.bindings.id.members",
+                    "containString",
+                    "allUsers"
+                ],
+                [
+                    "functions.projects.id.functions.id.bindings.id.role",
+                    "equal",
+                    "roles/run.invoker"
+                ]
+            ]
         ]
     ],
-    "id_suffix": "ingress_settings"
+    "id_suffix": "bindings"
 }

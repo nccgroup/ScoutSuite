@@ -348,16 +348,10 @@
                 "level": "warning"
             }
         ],
-        "functions-allowing-http.json": [
+        "functions-public-endpoint.json": [
             {
                 "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "functions-environment-variables-secrets.json": [
-            {
-                "enabled": true,
-                "level": "warning"
+                "level": "danger"
             }
         ],
         "functions-member.json": [
@@ -376,13 +370,19 @@
                 "level": "danger"
             }
         ],
-        "functions-public-endpoint.json": [
+        "functions-internet-ingress.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "functions-internet-ingress.json": [
+        "functions-allowing-http.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-environment-variables-secrets.json": [
             {
                 "enabled": true,
                 "level": "warning"
