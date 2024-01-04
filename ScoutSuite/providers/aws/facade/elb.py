@@ -1,6 +1,6 @@
 import asyncio
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.utils import ec2_classic
@@ -48,7 +48,10 @@ class ELBFacade(AWSBaseFacade):
                     LoadBalancerName=load_balancer['LoadBalancerName'])['LoadBalancerAttributes']
             )
         except Exception as e:
-            print_exception(f'Failed to describe ELB load balancer attributes: {e}')
+            if 'LoadBalancerNotFound' in str(e):
+                print_warning(f'Failed to describe ELB load balancer attributes: {e}')
+            else:
+                print_exception(f'Failed to describe ELB load balancer attributes: {e}')
 
     async def _get_and_set_load_balancer_tags(self, load_balancer: {}, region: str):
         elb_client = AWSFacadeUtils.get_client('elb', self.session, region)
@@ -58,7 +61,11 @@ class ELBFacade(AWSBaseFacade):
                     LoadBalancerNames=[load_balancer['LoadBalancerName']])['TagDescriptions'][0]['Tags']
             )
         except Exception as e:
-            print_exception(f'Failed to describe ELB load balancer tags: {e}')
+            if 'LoadBalancerNotFound' in str(e):
+                print_warning(f'Failed to describe ELB load balancer tags: {e}')
+            else:
+                print_exception(f'Failed to describe ELB load balancer tags: {e}')
+
 
     async def get_policies(self, region: str):
         try:
@@ -76,7 +83,10 @@ class ELBFacade(AWSBaseFacade):
             # Because _get_policies returns a list, policies has to be flatten:
             return [policy for nested_policy in policies for policy in nested_policy]
         except Exception as e:
-            print_exception(f'Failed to describe ELB policies: {e}')
+            if 'LoadBalancerNotFound' in str(e):
+                print_warning(f'Failed to describe ELB policies: {e}')
+            else:
+                print_exception(f'Failed to describe ELB policies: {e}')
             return []
 
     async def _get_policies(self, load_balancer: dict, region: str):
@@ -90,5 +100,8 @@ class ELBFacade(AWSBaseFacade):
                     PolicyNames=load_balancer['policy_names'])['PolicyDescriptions']
                 )
             except Exception as e:
-                print_exception(f'Failed to retrieve load balancer policies: {e}')
+                if 'LoadBalancerNotFound' in str(e):
+                    print_warning(f'Failed to retrieve load balancer policies: {e}')
+                else:
+                    print_exception(f'Failed to retrieve load balancer policies: {e}')
                 return []
