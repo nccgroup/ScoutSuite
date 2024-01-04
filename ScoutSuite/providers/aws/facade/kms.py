@@ -41,7 +41,10 @@ class KMSFacade(AWSBaseFacade):
         try:
             key['metadata'] = await run_concurrently(lambda: client.describe_key(KeyId=key['KeyId']))
         except Exception as e:
-            print_exception(f'Failed to describe KMS key: {e}')
+            if 'NotFoundException' in str(e):
+                print_warning(f'Failed to describe KMS key: {e}')
+            else:
+                print_exception(f'Failed to describe KMS key: {e}')
 
     async def _get_and_set_key_aliases(self, key: {}, region: str):
         client = AWSFacadeUtils.get_client('kms', self.session, region)
