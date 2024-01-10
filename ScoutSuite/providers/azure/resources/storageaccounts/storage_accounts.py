@@ -45,6 +45,8 @@ class StorageAccounts(AzureCompositeResources):
         storage_account['trusted_microsoft_services_enabled'] = \
             self._is_trusted_microsoft_services_enabled(raw_storage_account)
         storage_account['bypass'] = raw_storage_account.network_rule_set.bypass
+        # The default value (null) is equivalent to True
+        storage_account['shared_key_access_allowed'] = raw_storage_account.allow_shared_key_access != False
         storage_account['access_keys_last_rotation_date'] = \
             self._parse_access_keys_last_rotation_date(raw_storage_account.activity_logs)
         storage_account['encryption_key_source'] = raw_storage_account.encryption.key_source

@@ -21,18 +21,26 @@
     "dashboard_name": "Storage Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",
     "conditions": [
-        "or",
+        "and",
         [
-            "storageaccounts.subscriptions.id.storage_accounts.id.access_keys_last_rotation_date",
-            "equal",
-            "None"
+            "storageaccounts.subscriptions.id.storage_accounts.id.shared_key_access_allowed",
+            "true",
+            ""
         ],
         [
-            "storageaccounts.subscriptions.id.storage_accounts.id.access_keys_last_rotation_date",
-            "olderThan",
+            "or",
             [
-                "_ARG_0_",
-                "days"
+                "storageaccounts.subscriptions.id.storage_accounts.id.access_keys_last_rotation_date",
+                "equal",
+                "None"
+            ],
+            [
+                "storageaccounts.subscriptions.id.storage_accounts.id.access_keys_last_rotation_date",
+                "olderThan",
+                [
+                    "_ARG_0_",
+                    "days"
+                ]
             ]
         ]
     ],
