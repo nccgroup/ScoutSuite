@@ -10,8 +10,8 @@
         "and",
         [
             "cloudstorage.projects.id.buckets.id.effective_public_access_prevention",
-            "notTrue",
-            ""
+            "notEqual",
+            "True"
         ]
     ],
     "class_suffix": "public_access_prevention"

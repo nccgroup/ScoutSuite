@@ -38,8 +38,8 @@
         ],
         [
             "cloudstorage.projects.id.buckets.id.effective_public_access_prevention",
-            "notTrue",
-            ""
+            "notEqual",
+            "True"
         ]
     ],
     "key": "cloudstorage-bucket-_ARG_0_",
