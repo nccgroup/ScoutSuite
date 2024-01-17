@@ -9,15 +9,10 @@
     "conditions": [
         "and",
         [
-            "cloudstorage.projects.id.buckets.id.public_access_prevention",
-            "notEqual",
-            "enforced"
-        ],
-        [
-            "cloudstorage.projects.id.buckets.id.public_access_prevention",
-            "notEqual",
-            "inherited"
+            "cloudstorage.projects.id.buckets.id.effective_public_access_prevention",
+            "notTrue",
+            ""
         ]
     ],
-    "id_suffix": "public_access_prevention"
+    "class_suffix": "public_access_prevention"
 }
