@@ -142,6 +142,12 @@
                 "level": "danger"
             }
         ],
+        "ec2_ebs_default_encryption_disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "ec2-instance-in-security-group.json": [
             {
                 "args": [

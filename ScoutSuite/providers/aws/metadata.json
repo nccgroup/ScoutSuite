@@ -213,6 +213,10 @@
                 "images": {
                     "cols": 2,
                     "path": "services.ec2.regions.id.images"
+                },
+                "regional_settings": {
+                    "cols": 2,
+                    "path": "services.ec2.regions.id.regional_settings"
                 }
             },
             "summaries": {

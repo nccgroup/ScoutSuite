@@ -1,0 +1,28 @@
+<!-- EC2 regional settings partial -->
+<script id="services.ec2.regions.id.regional_settings.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <!-- TKTK: this section seems to open in the context of services.ec2.regions.<region>.regional_settings.ebs_encryption_default rather than its parent.  I've worked around it below but is there a better way? -->
+        <!-- TKTK: how to I highlight the bad setting? -->
+        <!-- TKTK: if I select a region, then it displays the settings twice. -->
+        <h4 class="list-group-item-heading">Regional settings for {{region}}</h4>
+        <div class="list-group-item-text item-margin">Encryption enabled for EBS Volumes by default: {{getValueAt 'services.ec2.regions' region 'regional_settings.ebs_encryption_default'}}</div>
+        <div class="list-group-item-text item-margin">Default encryption key: {{getValueAt 'services.ec2.regions' region 'regional_settings.ebs_default_encryption_key_id'}}</div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.ec2.regions.id.regional_settings", $("#services\\.ec2\\.regions\\.id\\.regional_settings\\.partial").html());
+</script>
+
+<!-- TKTK: what is the intended purpose of this? -->
+<!-- Single region template -->
+<!--<script id="single_ec2_region-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ec2.regions.id.regional_settings' }}
+</script>
+
+<script>
+    var single_ec2_region_template = Handlebars.compile($("#single_ec2_region-template").html());
+</script>-->
