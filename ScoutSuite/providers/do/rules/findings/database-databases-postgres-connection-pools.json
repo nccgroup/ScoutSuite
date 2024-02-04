@@ -1,0 +1,20 @@
+{
+    "description": "No connection pools found for Postgres database",
+    "rationale": "When you use PostgreSQL without a connection pool, each client request creates a new connection to the database. This can lead to a high number of connections, which can cause performance issues and slow down your application. Connection pooling can help mitigate these issues by reusing existing connections instead of creating new ones for each request",
+    "dashboard_name": "Databases",
+    "path": "database.databases.id",
+    "conditions": [
+        "and",
+        [
+            "database.databases.id.connection_pools",
+            "equal",
+            "False"
+        ],
+        [
+            "database.databases.id.engine",
+            "equal",
+            "pg"
+        ]
+    ],
+    "id_suffix": "connection_pools"
+}
