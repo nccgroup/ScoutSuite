@@ -32,6 +32,7 @@ class DatabaseInstances(GCPCompositeResources):
 
         instance_dict['id'] = get_non_provider_id(raw_instance['name'])
         instance_dict['name'] = raw_instance['name']
+        instance_dict['state'] = raw_instance['state']
         instance_dict['project_id'] = raw_instance['project']
         instance_dict['automatic_backup_enabled'] = raw_instance['settings'].get('backupConfiguration', {}).get('enabled')
         instance_dict['database_version'] = raw_instance['databaseVersion']
