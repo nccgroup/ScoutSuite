@@ -26,7 +26,7 @@ class Datasets(Resources):
 
         # format bindings in a way that's easier to query
         dataset_dict['bindings'] = {}
-        for entry in raw_dataset.get('access'):
+        for entry in raw_dataset.get('access', []):
             role = entry.get('role')
             if role not in dataset_dict['bindings'].keys():
                 dataset_dict['bindings'][role] = []
