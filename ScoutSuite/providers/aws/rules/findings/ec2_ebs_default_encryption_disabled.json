@@ -6,13 +6,14 @@
         "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#encryption-by-default"
     ],
     "dashboard_name": "Regions",
-    "path": "ec2.regions.id.regional_settings.ebs_encryption_default",
+    "path": "ec2.regions.id.regional_settings.id",
     "conditions": [
         "and",
         [
-            "ec2.regions.id.regional_settings.ebs_encryption_default",
+            "ebs_encryption_default",
             "false",
             ""
         ]
-    ]
+    ],
+    "id_suffix": "NoDefaultEBSEncryption"
 }

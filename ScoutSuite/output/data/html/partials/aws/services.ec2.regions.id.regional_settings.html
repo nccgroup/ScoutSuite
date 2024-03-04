@@ -4,13 +4,10 @@
         <h4 class="list-group-item-heading">{{region}}</h4>
     </div>
     <div class="list-group-item">
-        <!-- TKTK: this section seems to open in the context of services.ec2.regions.<region>.regional_settings.ebs_encryption_default rather than its parent.  I've worked around it below but is there a better way? -->
-        <!-- TKTK: how to I highlight the bad setting? -->
-        <!-- TKTK: if I select a region, then it displays the settings twice. -->
         <h4 class="list-group-item-heading">Regional settings</h4>
         <ul>
-            <li class="list-group-item-text">Encryption enabled for EBS Volumes by default: <span class="ec2.regions.{{region}}.regional_settings.ebs_encryption_default">{{getValueAt 'services.ec2.regions' region 'regional_settings.ebs_encryption_default'}}</span></li>
-            <li class="list-group-item-text">Default encryption key: <span class="ec2.regions.{{region}}.regional_settings.ebs_default_encryption_key">{{getValueAt 'services.ec2.regions' region 'regional_settings.ebs_default_encryption_key_id'}}</span></li>
+            <li class="list-group-item-text">Encryption enabled for EBS Volumes by default: <span id="ec2.regions.{{region}}.regional_settings.{{@key}}.NoDefaultEBSEncryption"><samp>{{ebs_encryption_default}}</samp></span></li>
+            <li class="list-group-item-text">Default encryption key: <span id="ec2.regions.{{region}}.regional_settings.{{@key}}.ebs_default_encryption_key"><samp>{{ebs_default_encryption_key_id}}</samp></span></li>
         </ul>
     </div>
 </script>
