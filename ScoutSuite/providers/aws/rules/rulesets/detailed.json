@@ -142,7 +142,7 @@
                 "level": "danger"
             }
         ],
-        "ec2_ebs_default_encryption_disabled.json": [
+        "ec2-ebs-default-encryption-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
