@@ -16,12 +16,11 @@
     Handlebars.registerPartial("services.ec2.regions.id.regional_settings", $("#services\\.ec2\\.regions\\.id\\.regional_settings\\.partial").html());
 </script>
 
-<!-- TKTK: what is the intended purpose of this? -->
 <!-- Single region template -->
-<!--<script id="single_ec2_region-template" type="text/x-handlebars-template">
-    {{> modal-template template='services.ec2.regions.id.regional_settings' }}
+<!-- **UNTESTED**  Intended for details popups.  Not used at this time. -->
+<script id="single_ec2_region-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ec2.regions.id.regional_settings'}}
 </script>
-
 <script>
     var single_ec2_region_template = Handlebars.compile($("#single_ec2_region-template").html());
-</script>-->
+</script>
