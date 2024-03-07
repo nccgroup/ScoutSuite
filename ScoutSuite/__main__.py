@@ -61,6 +61,10 @@ def run_from_cli():
                    kubernetes_context=args.get('kubernetes_context'),
                    kubernetes_persist_config=args.get('kubernetes_persist_config'),
                    kubernetes_azure_subscription_id=args.get('kubernetes_azure_subscription_id'),
+                   #DigitalOcean
+                   token=args.get('token'),
+                   access_key=args.get('access_key'),
+                   access_secret=args.get('access_secret'),
                    # General
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
                    timestamp=args.get('timestamp'),
@@ -113,6 +117,10 @@ def run(provider,
         kubernetes_context=None,
         kubernetes_persist_config=True,
         kubernetes_azure_subscription_id=None,
+        #DigitalOcean
+        token=None,
+        access_key=None,
+        access_secret=None,
         # General
         report_name=None, report_dir=None,
         timestamp=False,
@@ -171,6 +179,10 @@ async def _run(provider,
                kubernetes_context,
                kubernetes_persist_config,
                kubernetes_azure_subscription_id,
+               #DigitalOcean
+               token,
+               access_key,
+               access_secret,
                # General
                report_name, report_dir,
                timestamp,
@@ -220,6 +232,11 @@ async def _run(provider,
                                                  password=password,
                                                  access_key_id=access_key_id,
                                                  access_key_secret=access_key_secret,
+
+                                                #DigitalOcean
+                                                token=token,
+                                                access_key=access_key,
+                                                access_secret=access_secret,
 
                                                  # Kubernetes
                                                  kubernetes_cluster_provider=kubernetes_cluster_provider,

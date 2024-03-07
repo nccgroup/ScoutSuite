@@ -1,0 +1,15 @@
+{
+    "description": "Domain is missing SPF record",
+    "rationale": "Without an SPF record, attackers can spoof your domain by sending emails that appear to originate from your legitimate domain",
+    "dashboard_name": "Networking",
+    "path": "networking.domains.id",
+    "conditions": [
+        "and",
+        [
+            "networking.domains.id.spf_record",
+            "equal",
+            "False"
+        ]
+    ],
+    "id_suffix": "spf_record"
+}

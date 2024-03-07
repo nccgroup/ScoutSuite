@@ -1,0 +1,17 @@
+{
+    "description": "Bucket with public write access",
+    "rationale": "Buckets with sensitive data must be private only.",
+    "dashboard_name": "Spaces",
+    "path": "spaces.buckets.id",
+    "conditions": [
+        "and",
+        [
+            "spaces.buckets.id.public_write",
+            "equal",
+            "true"
+        ]
+    ],
+    "id_suffix": "public_write"
+}
+
+

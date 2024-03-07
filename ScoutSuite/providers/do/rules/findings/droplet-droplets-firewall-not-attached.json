@@ -1,0 +1,17 @@
+{
+    "description": "Droplets with no firewall attached",
+    "rationale": "Droplet should have a firewall atatched for enabling secure network configuration",
+    "dashboard_name": "Droplets",
+    "path": "droplet.droplets.id",
+    "conditions": [
+        "and",
+        [
+            "droplet.droplets.id.firewalls",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "firewalls"
+}
+
+

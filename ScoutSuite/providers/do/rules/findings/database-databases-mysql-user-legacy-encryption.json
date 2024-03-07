@@ -1,0 +1,20 @@
+{
+    "description": "Mysql Database user with Legacy MySQL 5.x encryption",
+    "rationale": "DigitalOcean Managed Databases using MySQL 8+ are automatically configured to use caching_sha2_password authentication by default. caching_sha2_password uses a stronger password encryption than prior versions of MySQL.",
+    "dashboard_name": "Databases",
+    "path": "database.databases.id",
+    "conditions": [
+        "and",
+        [
+            "database.databases.id.legacy_encryption_users",
+            "notEqual",
+            "False"
+        ],
+        [
+            "database.databases.id.engine",
+            "equal",
+            "mysql"
+        ]
+    ],
+    "id_suffix": "legacy_encryption_users"
+}
