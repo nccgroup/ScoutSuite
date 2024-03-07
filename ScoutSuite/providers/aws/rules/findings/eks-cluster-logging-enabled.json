@@ -1,0 +1,45 @@
+{
+    
+    "description": "Cluster logging should be enabled for all EKS clusters",
+    "rationale": "Enabling cluster logging provides operational visibility and assists in debugging issues that occur in the Kubernetes clusters running on EKS.",
+    "remediation": "Enable cluster logging on all EKS clusters by creating and configuring a logging backend such as Amazon CloudWatch Logs or Amazon Elasticsearch Service.",
+    "compliance": [
+    {
+    "name": "CIS Amazon Web Services Foundations",
+    "version": "1.0.0",
+    "reference": "5.4"
+    },
+    {
+    "name": "CIS Amazon Web Services Foundations",
+    "version": "1.1.0",
+    "reference": "5.4"
+    },
+    {
+    "name": "CIS Amazon Web Services Foundations",
+    "version": "1.2.0",
+    "reference": "5.4"
+    }
+    ],
+    "references": [
+    "https://docs.aws.amazon.com/eks/latest/userguide/logging.html"
+    ],
+      "dashboard_name": "Clusters",
+      "display_path": "eks.regions.id.clusters.id",
+      "path": "eks.regions.id.clusters.id",
+      "conditions": [
+          "and",
+          [
+              "eks.regions.id.clusters.id.",
+              "withKey",
+              "logging"
+          ],
+          [
+              "eks.regions.id.clusters.id.logging",  
+              "equal",
+              "False"
+              
+          ]
+      ],
+      "id_suffix": "logging"
+  }
+  

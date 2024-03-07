@@ -1,0 +1,37 @@
+<!-- EKS Nodegroup partial -->
+<script id="services.eks.regions.id.nodegroups.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+      <h4>Information</h4>
+      <ul>
+        <li class="list-group-item-text">ARN: {{nodegroupArn}}</li>
+        <li class="list-group-item-text">Cluster Name: {{clusterName}}</li>
+        <li class="list-group-item-text">Version: {{Nodegroup_version}}</li>
+        <li class="list-group-item-text">Minimum Size: {{MinSize}}</li>
+        <li class="list-group-item-text">Maximum Size: {{MaxSize}}</li>
+        <li class="list-group-item-text">Desired Size: {{desiredSize}}</li>
+        <li class="list-group-item-text">Node Security Group: {{Node_sg}}</li>
+        <li class="list-group-item-text">Created At: {{created_at}}</li>
+        <li class="list-group-item-text">Modified At: {{modified_at}}</li>
+        <li class="list-group-item-text">Status: {{status}}</li>
+        <li class="list-group-item-text">Capacity Type: {{capacityType}}</li>
+        <li class="list-group-item-text">Region: {{region}}</li>
+        <li class="list-group-item-text">Instance Types: {{instanceTypes}}</li>
+        <li class="list-group-item-text">AMI Type: {{amiType}}</li>
+        <li class="list-group-item-text">Disk Size: {{diskSize}}</li>
+        <li class="list-group-item-text">Node Role: {{nodeRole}}</li>
+      </ul>
+    </div>
+  </script>
+  <script>
+    Handlebars.registerPartial("services.eks.regions.id.nodegroups", $("#services\\.eks\\.regions\\.id\\.nodegroups\\.partial").html());
+  </script>
+  <!-- Single EKS Nodegroup template -->
+  <script id="single_eks_nodegroup-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.eks.regions.id.nodegroups'}}
+  </script>
+  <script>
+    var single_eks_nodegroup_template = Handlebars.compile($("#single_eks_nodegroup-template").html());
+  </script>

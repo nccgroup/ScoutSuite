@@ -1,0 +1,28 @@
+<!-- ECR Repositories partial -->
+<script id="services.ecr.regions.id.repositories.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+      <h4>Information</h4>
+      <ul>
+        <li class="list-group-item-text">Registry ID: {{id}}</li>
+        <li class="list-group-item-text">Created At: {{created_at}}</li>
+        <li class="list-group-item-text">Image Tag Immutablity status: {{imageTagMutability}}</li>
+        <li class="list-group-item-text">Scan on Push: {{Scan_on_Push}}</li>
+        <li class="list-group-item-text">Encryption Type: {{encryptionType}}</li>
+        <li class="list-group-item-text">Region: {{region}}</li>
+
+      </ul>
+    </div>
+  </script>
+  <script>
+    Handlebars.registerPartial("services.ecr.regions.id.repositories", $("#services\\.ecr\\.regions\\.id\\.repositories\\.partial").html());
+  </script>
+  <!-- Single ECR repository instance template -->
+  <script id="single_ecr_repository-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ecr.regions.id.repositories' }}
+  </script>
+  <script>
+    var single_ecr_repository_template = Handlebars.compile($("#single_ecr_repository-template").html());
+  </script>

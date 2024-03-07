@@ -382,6 +382,36 @@
                 "level": "warning"
             }
         ],
+        "ecr-image-scanning-enabled.json":[
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "eks-cluster-logging-enabled.json": [
+            {
+                "enabled" : true,
+                "level" : "warning"
+            }
+        ],
+        "ecs-container-insights-enabled.json": [
+            {
+                "enabled" : true,
+                "level" : "warning"
+            }
+        ],
+        "eks-endpoint-private-access-enable.json": [
+            {
+                "enabled" : true,
+                "level" : "danger"
+            }
+        ],
+        "ecr-tag-immutablity-enabled.json":[
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "elb-listener-allowing-cleartext.json": [
             {
                 "enabled": true,
