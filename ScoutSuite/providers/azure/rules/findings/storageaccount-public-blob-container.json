@@ -18,7 +18,7 @@
         "https://learn.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources",
         "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access"
     ],
-    "dashboard_name": "Storage Accounts",
+    "dashboard_name": "Blob Containers",
     "display_path": "storageaccounts.subscriptions.id.storage_accounts.id",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id.blob_containers.id",
     "conditions": [
