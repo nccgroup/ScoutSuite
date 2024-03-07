@@ -13,6 +13,7 @@ class AzureProvider(BaseProvider):
 
     def __init__(self,
                  subscription_ids=[], all_subscriptions=None,
+                 resource_group=None,
                  report_dir=None, timestamp=None, services=None, skipped_services=None,
                  result_format='json',
                  **kwargs):
@@ -44,7 +45,8 @@ class AzureProvider(BaseProvider):
         self.services = AzureServicesConfig(self.credentials,
                                             programmatic_execution=self.programmatic_execution,
                                             subscription_ids=self.subscription_ids,
-                                            all_subscriptions=self.all_subscriptions)
+                                            all_subscriptions=self.all_subscriptions,
+                                            resource_group=resource_group)
 
         self.result_format = result_format
 

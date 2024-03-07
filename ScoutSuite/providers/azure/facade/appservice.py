@@ -8,8 +8,9 @@ from ScoutSuite.utils import get_user_agent
 
 class AppServiceFacade:
 
-    def __init__(self, credentials):
+    def __init__(self, credentials, resource_group=None):
         self.credentials = credentials
+        self.resource_group = resource_group
 
     def get_client(self, subscription_id: str):
         client = WebSiteManagementClient(self.credentials.get_credentials(),
@@ -19,9 +20,15 @@ class AppServiceFacade:
     async def get_web_apps(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            web_apps = await run_concurrently(
-                lambda: list(client.web_apps.list())
-            )
+            
+            if self.resource_group:
+                web_apps = await run_concurrently(
+                    lambda: list(client.web_apps.list_by_resource_group(self.resource_group))
+                )
+            else:
+                web_apps = await run_concurrently(
+                    lambda: list(client.web_apps.list())
+                )
         except Exception as e:
             print_exception(f'Failed to retrieve web apps: {e}')
             return []

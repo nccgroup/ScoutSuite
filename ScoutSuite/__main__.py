@@ -50,6 +50,7 @@ def run_from_cli():
                    username=args.get('username'), password=args.get('password'),
                    tenant_id=args.get('tenant_id'),
                    subscription_ids=args.get('subscription_ids'), all_subscriptions=args.get('all_subscriptions'),
+                   resource_group=args.get('resource_group'),
                    # GCP
                    project_id=args.get('project_id'), folder_id=args.get('folder_id'),
                    organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
@@ -102,6 +103,7 @@ def run(provider,
         username=None, password=None,
         tenant_id=None,
         subscription_ids=None, all_subscriptions=None,
+        resource_group=None,
         # GCP
         service_account=None,
         project_id=None, folder_id=None, organization_id=None, all_projects=False,
@@ -160,6 +162,7 @@ async def _run(provider,
                subscription_ids, all_subscriptions,
                client_id, client_secret,
                username, password,
+               resource_group,
                # GCP
                service_account,
                project_id, folder_id, organization_id, all_projects,
@@ -243,6 +246,7 @@ async def _run(provider,
                                       # Azure
                                       subscription_ids=subscription_ids,
                                       all_subscriptions=all_subscriptions,
+                                      resource_group=resource_group,
                                       # GCP
                                       project_id=project_id,
                                       folder_id=folder_id,

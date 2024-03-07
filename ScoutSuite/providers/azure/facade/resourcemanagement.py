@@ -6,8 +6,9 @@ from azure.mgmt.resource import ResourceManagementClient
 
 class ResourceManagementFacade:
 
-    def __init__(self, credentials):
+    def __init__(self, credentials, resource_group=None):
         self.credentials = credentials
+        self.resource_group = resource_group
 
     def get_client(self, subscription_id: str):
         client = ResourceManagementClient(self.credentials.get_credentials(),
@@ -21,9 +22,14 @@ class ResourceManagementFacade:
                 f'resourceType eq \'{resource_type_filter}\''
             ])
             client = self.get_client(subscription_id)
-            resource = await run_concurrently(
-                lambda: list(client.resources.list(filter=type_filter))
-            )
+            if self.resource_group:
+                resource = await run_concurrently(
+                    lambda: list(client.resources.list_by_resource_group(resource_group_name=self.resource_group,filter=type_filter))
+                )
+            else:
+                resource = await run_concurrently(
+                    lambda: list(client.resources.list(filter=type_filter))
+                )
             return resource
         except Exception as e:
             print_exception(f'Failed to retrieve key vault resources: {e}')
@@ -32,9 +38,15 @@ class ResourceManagementFacade:
     async def get_all_resources(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            resource = await run_concurrently(
-                lambda: list(client.resources.list())
-            )
+            
+            if self.resource_group:
+                resource = await run_concurrently(
+                    lambda: list(client.resources.list_by_resource_group(resource_group_name=self.resource_group))
+                )
+            else:
+                resource = await run_concurrently(
+                    lambda: list(client.resources.list())
+                )
             return resource
         except Exception as e:
             print_exception(f'Failed to retrieve resources: {e}')
