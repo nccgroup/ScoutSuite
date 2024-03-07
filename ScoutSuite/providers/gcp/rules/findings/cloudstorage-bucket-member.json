@@ -37,14 +37,9 @@
             ]
         ],
         [
-            "cloudstorage.projects.id.buckets.id.public_access_prevention",
+            "cloudstorage.projects.id.buckets.id.effective_public_access_prevention",
             "notEqual",
-            "enforced"
-        ],
-        [
-            "cloudstorage.projects.id.buckets.id.public_access_prevention",
-            "notEqual",
-            "inherited"
+            "True"
         ]
     ],
     "key": "cloudstorage-bucket-_ARG_0_",
