@@ -1,0 +1,5 @@
+[
+    "ec2.regions.ap-northeast-2.regional_settings.0.NoDefaultEBSEncryption",
+    "ec2.regions.ap-south-1.regional_settings.0.NoDefaultEBSEncryption",
+    "ec2.regions.eu-central-1.regional_settings.0.NoDefaultEBSEncryption"
+]
