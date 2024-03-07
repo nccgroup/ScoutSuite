@@ -1,0 +1,34 @@
+{
+    "description": "Automatic Key Rotation Disabled",
+    "rationale": "Cryptographic best practices discourage extensive reuse of encryption keys. Consequently, Customer Master Keys (CMKs) should be rotated Once set up, Automatic Private Key Rotation removes the need for manual administration when keys expire at intervals determined by your organization's policy.",
+    "remediation": "In the Azure console:<ol><li>Go to <samp>Key Vaults</samp></li> <li>For each key vault, go to <samp>Keys</samp>.</li> <li>For each enabled keys, click on the key to visit the Versions view.</li> <li>In the top row, click on <samp>Rotation policy</samp>.</li> <li>Ensure that <samp>Enable auto rotation</samp> is set to <samp>Enabled</samp>.</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "8.8"
+        }
+    ],
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/keys/about-keys",
+        "https://learn.microsoft.com/en-us/azure/key-vault/policy-reference",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-data-protection#dp-6-use-a-secure-key-management-process"
+    ],
+    "dashboard_name": "Keys",
+    "display_path": "keyvault.subscriptions.id.vaults.id",
+    "path": "keyvault.subscriptions.id.vaults.id.keys.id",
+    "conditions": [
+        "and",
+        [
+            "keyvault.subscriptions.id.vaults.id.keys.id.enabled",
+            "true",
+            ""
+        ],
+        [
+            "keyvault.subscriptions.id.vaults.id.keys.id.auto_rotation_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "auto_rotation_enabled"
+}
