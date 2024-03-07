@@ -1,0 +1,19 @@
+{
+    "description": "EBS Encryption By Default Is Disabled",
+    "rationale": "Enabling EBS encryption by default ensures that all EBS Volumes created in the region are encrypted even if the operator neglects to opt into encryption when creating a Volume.",
+    "remediation": "Enable encryption by default for EBS volumes in all regions.",
+    "references": [
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html#encryption-by-default"
+    ],
+    "dashboard_name": "Regions",
+    "path": "ec2.regions.id.regional_settings.id",
+    "conditions": [
+        "and",
+        [
+            "ebs_encryption_default",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "NoDefaultEBSEncryption"
+}

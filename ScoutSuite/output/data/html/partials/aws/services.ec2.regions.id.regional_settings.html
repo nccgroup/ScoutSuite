@@ -1,0 +1,26 @@
+<!-- EC2 regional settings partial -->
+<script id="services.ec2.regions.id.regional_settings.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{region}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Regional settings</h4>
+        <ul>
+            <li class="list-group-item-text">Encryption enabled for EBS Volumes by default: <span id="ec2.regions.{{region}}.regional_settings.{{@key}}.NoDefaultEBSEncryption"><samp>{{ebs_encryption_default}}</samp></span></li>
+            <li class="list-group-item-text">Default encryption key: <span id="ec2.regions.{{region}}.regional_settings.{{@key}}.ebs_default_encryption_key"><samp>{{ebs_default_encryption_key_id}}</samp></span></li>
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.ec2.regions.id.regional_settings", $("#services\\.ec2\\.regions\\.id\\.regional_settings\\.partial").html());
+</script>
+
+<!-- Single region template -->
+<!-- **UNTESTED**  Intended for details popups.  Not used at this time. -->
+<script id="single_ec2_region-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ec2.regions.id.regional_settings'}}
+</script>
+<script>
+    var single_ec2_region_template = Handlebars.compile($("#single_ec2_region-template").html());
+</script>
