@@ -34,7 +34,14 @@ class Vaults(AzureResources):
                                              bool(raw_vault.properties.enable_purge_protection)
         vault['public_access_allowed'] = self._is_public_access_allowed(raw_vault)
         vault['rbac_authorization_enabled'] = raw_vault.properties.enable_rbac_authorization
+        vault['private_endpoint_connections'] = self._get_private_endpoint_connections(raw_vault)
         return vault['id'], vault
 
     def _is_public_access_allowed(self, raw_vault):
         return raw_vault.properties.network_acls is None or raw_vault.properties.network_acls.default_action == 'Allow'
+    
+    def _get_private_endpoint_connections(self, raw_vault):
+        private_endpoint_connections = getattr(raw_vault.properties, "private_endpoint_connections", None)
+        if not private_endpoint_connections:
+            return []
+        return [pe.private_endpoint.id for pe in private_endpoint_connections if pe.private_link_service_connection_state.status == 'Approved']

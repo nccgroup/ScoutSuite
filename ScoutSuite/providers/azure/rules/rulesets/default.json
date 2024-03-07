@@ -91,6 +91,12 @@
                 "level": "warning"
             }
         ],
+        "keyvault-private-endpoints-not-used.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "keyvault-public-traffic-allowed.json": [
             {
                 "enabled": true,
