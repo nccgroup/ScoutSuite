@@ -21,7 +21,8 @@
             "containNoneOf",
             [
                 "REGULAR",
-                "STABLE"
+                "STABLE",
+                "RAPID"
             ]
         ]
     ],
