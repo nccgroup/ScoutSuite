@@ -16,5 +16,5 @@ class RegionalSettings(AWSResources):
         # However, ScoutSuite seems to assume that every setting is tied to a resource so we make 
         # up a fake resource to hold them.
         self[0] = {}
-        self[0]['ebs_encryption_default'] = (await self.facade.ec2.get_ebs_encryption(self.region))['EbsEncryptionByDefault']
-        self[0]['ebs_default_encryption_key_id'] = (await self.facade.ec2.get_ebs_default_encryption_key(self.region))['KmsKeyId']
+        self[0]['ebs_encryption_default'] = (await self.facade.ec2.get_ebs_encryption(self.region)).get('EbsEncryptionByDefault')
+        self[0]['ebs_default_encryption_key_id'] = (await self.facade.ec2.get_ebs_default_encryption_key(self.region)).get('KmsKeyId')
