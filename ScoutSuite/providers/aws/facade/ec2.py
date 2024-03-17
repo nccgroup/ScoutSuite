@@ -228,6 +228,7 @@ class EC2Facade(AWSBaseFacade):
             return encryption_settings
         except Exception as e:
             print_exception(f'Failed to retrieve EBS encryption settings: {e}')
+            return {}
 
     async def get_ebs_default_encryption_key(self, region):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
@@ -236,3 +237,4 @@ class EC2Facade(AWSBaseFacade):
             return encryption_key
         except Exception as e:
             print_exception(f'Failed to retrieve EBS encryption key ID: {e}')
+            return {}
