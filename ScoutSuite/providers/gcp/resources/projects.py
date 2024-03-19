@@ -20,7 +20,7 @@ class Projects(GCPCompositeResources):
         for p in raw_projects:
             enabled = await self.facade.is_api_enabled(p['projectId'], self.__class__.__name__)
             if enabled:
-                self['projects'][p['projectId']] = {}
+                self['projects'][p['projectNumber']] = {}
 
         await self._fetch_children_of_all_resources(
             resources=self['projects'],
