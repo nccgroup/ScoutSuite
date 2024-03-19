@@ -52,4 +52,6 @@ RUN ["/bin/bash", "-c", "/root/bin/container-set-init.sh"]
 RUN ["rm", "-rf", "/root/bin"]
 
 # Command
-CMD ["/bin/bash"]
+ENV PATH=/root/scoutsuite/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENTRYPOINT [ "/root/scoutsuite/bin/scout" ]
+CMD ["--help"]
