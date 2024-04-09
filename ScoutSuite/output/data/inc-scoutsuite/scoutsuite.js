@@ -1255,7 +1255,7 @@ function makeTitle(title) {
         'computeengine': 'Compute Engine',
         'kubernetesengine': 'Kubernetes Engine',
         'cloudmemorystore': 'Cloud Memorystore',
-        'aad': 'Azure Active Directory',
+        'aad': 'Microsoft Entra ID',
         'storageaccounts': 'Storage Accounts',
         'sqldatabase': 'SQL Database',
         'virtualmachines': 'Virtual Machines',

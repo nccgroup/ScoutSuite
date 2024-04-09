@@ -37,7 +37,7 @@ formatted_service_name = {
     'docdb': 'DocumentDB',
     'ssm': 'Systems Manager',
     # Azure
-    'aad': 'Azure Active Directory',
+    'aad': 'Microsoft Entra ID',
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',
     'securitycenter': 'Security Center',
