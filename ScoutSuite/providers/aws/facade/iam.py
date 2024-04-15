@@ -86,7 +86,8 @@ class IAMFacade(AWSBaseFacade):
             policy['attached_to'] = {}
             attached_entities = await AWSFacadeUtils.get_multiple_entities_from_all_pages(
                 'iam', None, self.session, 'list_entities_for_policy', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'],
-                PolicyArn=policy['Arn'])
+                PolicyArn=policy['Arn'],
+                PolicyUsageFilter='PermissionsPolicy')
 
             for entity_type in attached_entities:
                 resource_type = entity_type.replace('Policy', '').lower()
