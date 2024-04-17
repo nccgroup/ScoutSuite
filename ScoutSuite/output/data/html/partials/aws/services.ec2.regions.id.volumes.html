@@ -4,8 +4,15 @@
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
-        <h4 class="list-group-item-heading">Attributes</h4>
-        {{> generic_object this}}
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="ec2.regions.{{region}}.volumes.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">ARN: <span id="ec2.regions.{{region}}.volumes.{{@key}}.arn"><samp>{{value_or_none arn}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Name: <span id="ec2.regions.{{region}}.volumes.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">State: <span id="ec2.regions.{{region}}.volumes.{{@key}}.state"><samp>{{value_or_none State}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Size: <span id="ec2.regions.{{region}}.volumes.{{@key}}.size"><samp>{{value_or_none Size}} GiB</samp></span></div>
+        <div class="list-group-item-text item-margin">Volume Type: <span id="ec2.regions.{{region}}.volumes.{{@key}}.volume_type"><samp>{{value_or_none VolumeType}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Create Time: <span id="ec2.regions.{{region}}.volumes.{{@key}}.create_time"><samp>{{value_or_none CreateTime}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Encryption: <span id="ec2.regions.{{region}}.volumes.{{@key}}.encrypted">{{convert_bool_to_enabled Encrypted}}</span></div>
     </div>
 </script>
 
