@@ -219,9 +219,8 @@ class IAMFacade(AWSBaseFacade):
             return []
 
     async def _get_and_set_group_users(self, group: {}):
-        client = AWSFacadeUtils.get_client('iam', self.session)
         try:
-            users = await run_concurrently(lambda: client.get_group(GroupName=group['GroupName'])['Users'])
+            users = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'get_group', 'Users', GroupName=group['GroupName'])
             group['Users'] = [user['UserId'] for user in users]
         except Exception as e:
             print_exception('Failed to get IAM group {}: {}'.format(group['GroupName'], e))
