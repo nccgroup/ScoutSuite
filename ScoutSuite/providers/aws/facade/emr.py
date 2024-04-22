@@ -1,4 +1,4 @@
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_warning
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import map_concurrently, run_concurrently
@@ -21,5 +21,8 @@ class EMRFacade(AWSBaseFacade):
         try:
             return await run_concurrently(lambda: client.describe_cluster(ClusterId=cluster_id)['Cluster'])
         except Exception as e:
-            print_exception(f'Failed to describe EMR cluster: {e}')
-            raise
+            if 'is not valid' in str(e):
+                # e.g. Cluster id '...' is not valid.
+                print_warning(f'Failed to describe EMR cluster: {e}')
+            else:
+                print_exception(f'Failed to describe EMR cluster: {e}')

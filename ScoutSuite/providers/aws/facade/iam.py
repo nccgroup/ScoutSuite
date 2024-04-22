@@ -207,7 +207,11 @@ class IAMFacade(AWSBaseFacade):
             return await run_concurrently(
                 lambda: client.list_mfa_devices(UserName=username)['MFADevices'])
         except Exception as e:
-            print_exception(f'Failed to list MFA devices for user: {e}')
+            if 'NoSuchEntity' in str(e):
+                # e.g. The user with name xyz cannot be found.
+                print_warning(f'Failed to list MFA devices for user: {e}')
+            else:
+                print_exception(f'Failed to list MFA devices for user: {e}')
 
     async def get_virtual_mfa_devices(self):
         client = AWSFacadeUtils.get_client('iam', self.session)
