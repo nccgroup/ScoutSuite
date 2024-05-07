@@ -1,0 +1,15 @@
+{
+    "description": "Domain has a high TTL record",
+    "rationale": "Long TTLs delay the propagation of changes. For instance, if you update an IP address or switch services, clients will continue using old cached data until the TTL expires",
+    "dashboard_name": "Networking",
+    "path": "networking.domains.id",
+    "conditions": [
+        "and",
+        [
+            "networking.domains.id.highttl_records",
+            "notEqual",
+            "False"
+        ]
+    ],
+    "id_suffix": "highttl_records"
+}
