@@ -15,10 +15,8 @@ class Domains(DoResources):
                 name, domain = await self._parse_domain(domain)
                 if domain:
                     self[name] = domain
-
     async def _parse_domain(self, raw_domain):
         domain_dict = {}
-
         domain_dict["name"] = raw_domain["name"]
         zone_file = raw_domain["zone_file"]
 

@@ -16,7 +16,6 @@ class SpacesFacade:
         buckets = []
         # TODO no api avaialible to get do regions that support spaces.
         region_list = ["nyc3", "sfo2", "sfo3", "ams3", "fra1", "sgp1", "syd1", "blr1"]
-        
         for region in region_list:
             region_buckets = await self.get_buckets(region)
             buckets.extend(region_buckets)

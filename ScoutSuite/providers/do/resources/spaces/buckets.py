@@ -44,7 +44,5 @@ class Buckets(DoResources):
             True
             if "CORS" in raw_buckets and raw_buckets["CORS"] and "AllowedOrigins" in raw_buckets["CORS"][0]
             else False
-        )
-        
-
+        )        
         return buckets_dict["name"], buckets_dict

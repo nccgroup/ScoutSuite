@@ -80,12 +80,9 @@ class Droplets(DoResources):
             if public_ports
             else ""
         )
-        
         droplet_dict["features_monitoring"] = (
             "True"
             if ("monitoring" in droplet_dict["features"])
             else "False"
         )
-        
-
         return droplet_dict["id"], droplet_dict

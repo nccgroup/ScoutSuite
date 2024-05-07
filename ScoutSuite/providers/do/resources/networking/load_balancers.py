@@ -26,5 +26,4 @@ class LoadBalancers(DoResources):
             raw_load_balancer["enable_backend_keepalive"]
         )
         load_balancer_dict["droplet_ids"] = str(raw_load_balancer["droplet_ids"])
-
         return load_balancer_dict["id"], load_balancer_dict

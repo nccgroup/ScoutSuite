@@ -45,15 +45,12 @@ class Databases(DoResources):
                         == "mysql_native_password"
                     ):
                         legacy_encryption_users.add(db_user["name"])
-
             if legacy_encryption_users == "None":
                 cluster_dict["legacy_encryption_users"] = "True"
             else:
                 cluster_dict["legacy_encryption_users"] = (
                     str(legacy_encryption_users) if legacy_encryption_users else "False"
                 )
-
-        
         elif raw_cluster["engine"] == "redis":
             cluster_dict["eviction_policy"] = (
                 await self.facade.database.get_eviction_policy(raw_cluster["id"])
@@ -66,5 +63,4 @@ class Databases(DoResources):
             cluster_dict["connection_pools"] = (
                 connection_pools if connection_pools else "False"
             )
-        
         return cluster_dict["id"], cluster_dict
