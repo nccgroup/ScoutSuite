@@ -1,0 +1,16 @@
+{
+    "description": "Droplets without improved metrics monitoring enabled",
+    "rationale": "Droplets without improved metrics monitoring enabled",
+    "dashboard_name": "Droplets",
+    "path": "droplet.droplets.id",
+    "conditions": [
+        "and",
+        [
+            "droplet.droplets.id.features_monitoring",
+            "equal",
+            "False"
+        ]
+    ],
+    "id_suffix": "features_monitoring"
+}
+

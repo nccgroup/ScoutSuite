@@ -3,7 +3,6 @@ import boto3
 from ScoutSuite.core.console import print_exception, print_debug, print_warning
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
-from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.do.authentication_strategy import DoCredentials
 
 
@@ -17,10 +16,9 @@ class SpacesFacade:
         buckets = []
         # TODO no api avaialible to get do regions that support spaces.
         region_list = ["nyc3", "sfo2", "sfo3", "ams3", "fra1", "sgp1", "syd1", "blr1"]
-
         for region in region_list:
-            buckets = await self.get_buckets(region)
-
+            region_buckets = await self.get_buckets(region)
+            buckets.extend(region_buckets)
         return buckets
 
     async def get_buckets(self, region=None):
@@ -53,11 +51,26 @@ class SpacesFacade:
             await get_and_set_concurrently(
                 [
                     self._get_and_set_s3_acls,
+                    self._get_CORS
                 ],
                 buckets,
             )
-
             return buckets
+
+    async def _get_CORS(self, bucket: {}, region=None):
+        client = self.get_client("s3", self.session, bucket["region"])        
+        try:
+            # Attempt to get the CORS configuration
+            response = client.get_bucket_cors(Bucket=bucket["Name"])
+            if 'CORSRules' in response:
+                bucket["CORS"] = response['CORSRules']
+            else:
+                print("CORS rules are not set for this bucket.")
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'InvalidAccessKeyId':
+                print("The AWS Access Key Id provided does not exist in our records.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {str(e)}")
 
     async def _get_and_set_s3_bucket_location(self, bucket: {}, region=None):
         client = self.get_client("s3", self.session, region)
@@ -94,7 +107,6 @@ class SpacesFacade:
     async def _get_and_set_s3_acls(self, bucket: {}, key_name=None):
         bucket_name = bucket["Name"]
         client = self.get_client("s3", self.session, bucket["region"])
-
         try:
             grantees = {}
             if key_name:

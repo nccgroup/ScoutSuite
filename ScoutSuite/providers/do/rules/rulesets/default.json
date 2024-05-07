@@ -7,6 +7,24 @@
         "level": "danger"
       }
     ],
+    "droplet-droplets-snapshot-not-present.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "networking-load-balancer-without-droplet.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "droplet-droplets-custom-image.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "droplet-droplets-backup-not-present.json": [
       {
         "enabled": true,
@@ -35,6 +53,12 @@
       {
         "enabled": true,
         "level": "danger"
+      }
+    ],
+    "spaces-buckets-cors.json": [
+      {
+        "enabled": true,
+        "level": "warning"
       }
     ],
     "networking-firewalls-public-ports.json": [
@@ -91,12 +115,6 @@
         "level": "warning"
       }
     ],
-    "database-databases-mysql-publically-exposed.json": [
-      {
-        "enabled": true,
-        "level": "danger"
-      }
-    ],
     "database-databases-mysql-user-legacy-encryption.json": [
       {
         "enabled": true,
@@ -110,6 +128,36 @@
       }
     ],
     "database-databases-postgres-connection-pools.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "database-databases-postgres-trusted-sources.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "droplet-droplets-features-monitoring.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "kubernetes-kubernetes-ha-enabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "kubernetes-kubernetes-surge-upgrade.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "kubernetes-kubernetes-autoupgrade-minor.json": [
       {
         "enabled": true,
         "level": "warning"

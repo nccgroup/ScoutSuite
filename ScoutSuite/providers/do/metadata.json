@@ -1,5 +1,5 @@
 {
-  "Compute": {
+  "Droplets": {
     "droplet": {
       "resources": {
         "droplets": {
@@ -37,7 +37,17 @@
       }
     }
   },
-  "DatabaseClusters": {
+  "Kubernetes": {
+    "kubernetes": {
+      "resources": {
+        "kubernetes": {
+          "cols": 2,
+          "path": "services.kubernetes.kubernetes"
+        }
+      }
+    }
+  },
+  "Databases": {
     "database": {
       "resources": {
         "databases": {

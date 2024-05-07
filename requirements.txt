@@ -69,6 +69,3 @@ kubernetes
 
 # DigitalOcean Cloud Provider
 pydo >=0.2.0
-
-#zone file parser for DigitalOcean domains service
-zonefile_parser >=0.1.14

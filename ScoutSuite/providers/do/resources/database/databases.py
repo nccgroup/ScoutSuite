@@ -17,10 +17,11 @@ class Databases(DoResources):
         cluster_dict = {}
 
         cluster_dict["id"] = raw_cluster["id"]
-        cluster_dict["cluster_name"] = raw_cluster["name"]
+        cluster_dict["name"] = raw_cluster["name"]
         cluster_dict["engine"] = raw_cluster["engine"]
         cluster_dict["version"] = raw_cluster["version"]
-        cluster_dict["semantic_version"] = raw_cluster["semantic_version"]
+        if raw_cluster["engine"] != "mongodb":
+            cluster_dict["semantic_version"] = raw_cluster["semantic_version"]
         cluster_dict["tags"] = raw_cluster["tags"]
         cluster_dict["databases"] = str(raw_cluster["db_names"])
 
@@ -44,12 +45,12 @@ class Databases(DoResources):
                         == "mysql_native_password"
                     ):
                         legacy_encryption_users.add(db_user["name"])
-
-            if legacy_encryption_users:
+            if legacy_encryption_users == "None":
+                cluster_dict["legacy_encryption_users"] = "True"
+            else:
                 cluster_dict["legacy_encryption_users"] = (
                     str(legacy_encryption_users) if legacy_encryption_users else "False"
                 )
-
         elif raw_cluster["engine"] == "redis":
             cluster_dict["eviction_policy"] = (
                 await self.facade.database.get_eviction_policy(raw_cluster["id"])
@@ -62,5 +63,4 @@ class Databases(DoResources):
             cluster_dict["connection_pools"] = (
                 connection_pools if connection_pools else "False"
             )
-
         return cluster_dict["id"], cluster_dict

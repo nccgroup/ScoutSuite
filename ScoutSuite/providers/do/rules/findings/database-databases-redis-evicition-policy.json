@@ -8,7 +8,7 @@
         [
             "database.databases.id.eviction_policy",
             "notEqual",
-            "allkeys-lru"
+            "allkeys_lru"
         ],
         [
             "database.databases.id.engine",

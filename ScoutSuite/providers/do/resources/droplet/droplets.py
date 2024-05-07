@@ -31,6 +31,7 @@ class Droplets(DoResources):
         droplet_dict["next_backup_window"] = raw_droplet["next_backup_window"]
         droplet_dict["snapshot_ids"] = str(raw_droplet["snapshot_ids"])
         droplet_dict["image"] = raw_droplet["image"]["slug"]
+        droplet_dict["image_type"] = raw_droplet["image"]["type"]
         droplet_dict["volume_ids"] = str(raw_droplet["volume_ids"])
         droplet_dict["size"] = raw_droplet["size"]["slug"]
         droplet_dict["size_slug"] = raw_droplet["size_slug"]
@@ -79,5 +80,9 @@ class Droplets(DoResources):
             if public_ports
             else ""
         )
-
+        droplet_dict["features_monitoring"] = (
+            "True"
+            if ("monitoring" in droplet_dict["features"])
+            else "False"
+        )
         return droplet_dict["id"], droplet_dict
