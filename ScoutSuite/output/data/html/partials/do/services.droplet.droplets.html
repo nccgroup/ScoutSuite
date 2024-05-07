@@ -1,0 +1,42 @@
+<!-- droplet droplets -->
+<script id="services.droplet.droplets.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Id: <span id="droplet.droplets.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div> 
+        <div class="list-group-item-text item-margin">Port 22 public: <span id="droplet.droplets.{{@key}}.port_22_exposed"><samp>{{value_or_none port_22_exposed}}</samp></span></div>      
+        <div class="list-group-item-text item-margin">All Ports public: <span id="droplet.droplets.{{@key}}.all_ports_exposed"><samp>{{value_or_none all_ports_exposed}}</samp></span></div> 
+        <div class="list-group-item-text item-margin">Name: <span id="droplet.droplets.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>        <div class="list-group-item-text item-margin">Memory: <span id="droplet.droplets.{{@key}}.memory"><samp>{{value_or_none memory}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Vcpus: <span id="droplet.droplets.{{@key}}.vcpus"><samp>{{value_or_none vcpus}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Disk: <span id="droplet.droplets.{{@key}}.disk"><samp>{{value_or_none disk}}</samp></span></div>        <div class="list-group-item-text item-margin">Locked: <span id="droplet.droplets.{{@key}}.locked"><samp>{{value_or_none locked}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="droplet.droplets.{{@key}}.status"><samp>{{value_or_none status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Kernel: <span id="droplet.droplets.{{@key}}.kernel"><samp>{{value_or_none kernel}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Created At: <span id="droplet.droplets.{{@key}}.created_at"><samp>{{value_or_none created_at}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Features: <span id="droplet.droplets.{{@key}}.features"><samp>{{value_or_none features}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Backup Ids: <span id="droplet.droplets.{{@key}}.backup_ids"><samp>{{value_or_none backup_ids}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Next Backup Window: <span id="droplet.droplets.{{@key}}.next_backup_window"><samp>{{value_or_none next_backup_window}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Snapshot Ids: <span id="droplet.droplets.{{@key}}.snapshot_ids"><samp>{{value_or_none snapshot_ids}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Image: <span id="droplet.droplets.{{@key}}.image"><samp>{{value_or_none image}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Image Type: <span id="droplet.droplets.{{@key}}.image_type"><samp>{{value_or_none image_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Volume Ids: <span id="droplet.droplets.{{@key}}.volume_ids"><samp>{{value_or_none volume_ids}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Size: <span id="droplet.droplets.{{@key}}.size"><samp>{{value_or_none size}}</samp></span></div>        <div class="list-group-item-text item-margin">Size Slug: <span id="droplet.droplets.{{@key}}.size_slug"><samp>{{value_or_none size_slug}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Networks: <span id="droplet.droplets.{{@key}}.networks"><samp>{{value_or_none networks}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Region: <span id="droplet.droplets.{{@key}}.region"><samp>{{value_or_none region}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Tags: <span id="droplet.droplets.{{@key}}.tags"><samp>{{value_or_none tags}}</samp></span></div>        <div class="list-group-item-text item-margin">Vpc Uuid: <span id="droplet.droplets.{{@key}}.vpc_uuid"><samp>{{value_or_none vpc_uuid}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Firewalls: <span id="droplet.droplets.{{@key}}.firewalls"><samp>{{value_or_none firewalls}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.droplet.droplets", $("#services\\.droplet\\.droplets\\.partial").html());
+</script>
+
+<!-- Single droplet droplet template -->
+<script id="single_droplet_droplet-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.droplet.droplets'}}
+</script>
+<script>
+    var single_droplet_droplet_template = Handlebars.compile($("#single_droplet_droplet-template").html());
+</script>

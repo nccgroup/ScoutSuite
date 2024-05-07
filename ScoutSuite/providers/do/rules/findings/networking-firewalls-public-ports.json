@@ -1,0 +1,15 @@
+{
+    "description": "Firewalls with publically exposed ports",
+    "rationale": "Firewalls should not expose sensitive exposed to public internet.",
+    "dashboard_name": "Networking",
+    "path": "networking.firewalls.id",
+    "conditions": [
+        "and",
+        [
+            "networking.firewalls.id.public_ports_enabled",
+            "equal",
+            "True"
+        ]
+    ],
+    "id_suffix": "public_ports_enabled"
+}

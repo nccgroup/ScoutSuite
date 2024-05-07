@@ -1,0 +1,15 @@
+{
+    "description": "Droplets with all ports exposed to public",
+    "rationale": "Droplets should expose only required/intented ports to public internet",
+    "dashboard_name": "Droplets",
+    "path": "droplet.droplets.id",
+    "conditions": [
+        "and",
+        [
+            "droplet.droplets.id.all_ports_exposed",
+            "equal",
+            "True"
+        ]
+    ],
+    "id_suffix": "all_ports_exposed"
+}
