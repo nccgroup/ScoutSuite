@@ -22,6 +22,28 @@
         </div>
         <div class="list-group-item-text item-margin">Resource group: <span id="keyvault.subscriptions.{{@../key}}.vaults.{{@key}}.resource_group_name"><samp>{{value_or_none resource_group_name}}</samp></span></div>
     </div>
+    <div class="list-group-item">
+        <h4>Keys</h4>
+        <ul>
+            {{#each keys}}
+                <li class="list-group-item-text">
+                    {{name}} ({{convert_bool_to_enabled enabled}}, Auto Rotation: <span id="keyvault.subscriptions.{{@../../key}}.vaults.{{@../key}}.keys.{{@key}}.auto_rotation_enabled">{{ convert_bool_to_enabled auto_rotation_enabled }}</span>, Expiration: <span id="keyvault.subscriptions.{{@../../key}}.vaults.{{@../key}}.keys.{{@key}}.expires">{{format_date expires}}</span>)
+                </li>
+            {{else}}
+                <div style="display: inline-flex;">None</div>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="list-group-item">
+        <h4>Secrets</h4>
+        <ul>
+            {{#each secrets}}
+                <li class="list-group-item-text">
+                    {{name}} ({{convert_bool_to_enabled enabled}}, Expiration: <span id="keyvault.subscriptions.{{@../../key}}.vaults.{{@../key}}.secrets.{{@key}}.expires">{{format_date expires}}</span>)
+                </li>
+            {{/each}}
+        </ul>
+    </div>
 </script>
 
 <script>

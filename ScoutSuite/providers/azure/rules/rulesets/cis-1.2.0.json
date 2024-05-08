@@ -111,7 +111,19 @@
                 "level": "warning"
             }
         ],
+        "keyvault-key-no-expiration.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "keyvault-not-recoverable.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "keyvault-secret-no-expiration.json": [
             {
                 "enabled": true,
                 "level": "warning"
