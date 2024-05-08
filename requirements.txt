@@ -23,6 +23,7 @@ google-cloud-logging>=2.2.0
 google-cloud-monitoring==1.1.1
 google-cloud-resource-manager>=0.28.3
 google-cloud-storage>=1.13.2
+google-cloud-org-policy==1.10.0
 google-cloud-kms==1.4.1
 ## API Client Libraries
 google-api-python-client>=2.47.0
