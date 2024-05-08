@@ -1,0 +1,15 @@
+{
+    "description": "Databases publicly exposed",
+    "rationale": "Database services should restrict incoming requests only from trusted sources.",
+    "dashboard_name": "Databases",
+    "path": "database.databases.id",
+    "conditions": [
+        "and",
+        [
+            "database.databases.id.trusted_sources",
+            "equal",
+            "False"
+        ]
+    ],
+    "id_suffix": "trusted_sources"
+}

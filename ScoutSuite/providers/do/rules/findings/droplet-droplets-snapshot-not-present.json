@@ -1,0 +1,17 @@
+{
+    "description": "Droplets having no snapshots present",
+    "rationale": "Droplets should have at least 1 snapshot present for strategic points of recovery, for instance, before a major change or update.",
+    "dashboard_name": "Droplets",
+    "path": "droplet.droplets.id",
+    "conditions": [
+        "and",
+        [
+            "droplet.droplets.id.snapshot_ids",
+            "equal",
+            "[]"
+        ]
+    ],
+    "id_suffix": "snapshot_ids"
+}
+
+

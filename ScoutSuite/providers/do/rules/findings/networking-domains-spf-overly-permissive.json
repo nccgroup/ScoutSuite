@@ -1,0 +1,15 @@
+{
+    "description": "Domain has a overly permissive SPF record",
+    "rationale": "Overly permissive SPF record allows the anyone to send emails on your domain's behalf",
+    "dashboard_name": "Networking",
+    "path": "networking.domains.id",
+    "conditions": [
+        "and",
+        [
+            "networking.domains.id.spf_record_all",
+            "notEqual",
+            "False"
+        ]
+    ],
+    "id_suffix": "spf_record_all"
+}

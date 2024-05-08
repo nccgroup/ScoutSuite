@@ -4,7 +4,8 @@ _strategies = {
     'azure': 'AzureAuthenticationStrategy',
     'aliyun': 'AliyunAuthenticationStrategy',
     'oci': 'OracleAuthenticationStrategy',
-    'kubernetes': 'KubernetesAuthenticationStrategy'
+    'kubernetes': 'KubernetesAuthenticationStrategy',
+    'do': 'DigitalOceanAuthenticationStrategy'
 }
 
 

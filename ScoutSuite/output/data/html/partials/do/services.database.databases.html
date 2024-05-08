@@ -1,0 +1,33 @@
+<!-- database databases -->
+<script id="services.database.databases.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Id: <span id="database.databases.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>    
+        <div class="list-group-item-text item-margin">Name: <span id="database.databases.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Engine: <span id="database.databases.{{@key}}.engine"><samp>{{value_or_none engine}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Version: <span id="database.databases.{{@key}}.version"><samp>{{value_or_none version}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Semantic Version: <span id="database.databases.{{@key}}.semantic_version">
+            <samp>{{value_or_none semantic_version}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Connection Pools: <span id="database.databases.{{@key}}.connection_pools"><samp>{{value_or_none connection_pools}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Eviciton Policy: <span id="database.databases.{{@key}}.eviction_policy"><samp>{{value_or_none eviction_policy}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Legacy Password encryption: <span id="database.databases.{{@key}}.legacy_encryption_users"><samp>{{value_or_none legacy_encryption_users}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Tags: <span id="database.databases.{{@key}}.tags"><samp>{{value_or_none tags}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Databases: <span id="database.databases.{{@key}}.databases"><samp>{{value_or_none databases}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Trusted Sources: <span id="database.databases.{{@key}}.trusted_sources"><samp>{{value_or_none trusted_resources}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.database.databases", $("#services\\.database\\.databases\\.partial").html());
+</script>
+
+<!-- Single database database template -->
+<script id="single_database_database-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.database.databases'}}
+</script>
+<script>
+    var single_database_database_template = Handlebars.compile($("#single_database_database-template").html());
+</script>

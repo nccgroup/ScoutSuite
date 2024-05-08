@@ -1,0 +1,60 @@
+{
+  "Droplets": {
+    "droplet": {
+      "resources": {
+        "droplets": {
+          "cols": 2,
+          "path": "services.droplet.droplets"
+        }
+      }
+    }
+  },
+  "Storage": {
+    "spaces": {
+      "resources": {
+        "buckets": {
+          "cols": 2,
+          "path": "services.spaces.buckets"
+        }
+      }
+    }
+  },
+  "Network": {
+    "networking": {
+      "resources": {
+        "firewalls": {
+          "cols": 2,
+          "path": "services.networking.firewalls"
+        },
+        "domains": {
+          "cols": 2,
+          "path": "services.networking.domains"
+        },
+        "load_balancers": {
+          "cols": 2,
+          "path": "services.networking.load_balancers"
+        }
+      }
+    }
+  },
+  "Kubernetes": {
+    "kubernetes": {
+      "resources": {
+        "kubernetes": {
+          "cols": 2,
+          "path": "services.kubernetes.kubernetes"
+        }
+      }
+    }
+  },
+  "Databases": {
+    "database": {
+      "resources": {
+        "databases": {
+          "cols": 2,
+          "path": "services.database.databases"
+        }
+      }
+    }
+  }
+}
