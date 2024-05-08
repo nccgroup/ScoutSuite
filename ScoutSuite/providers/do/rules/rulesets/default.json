@@ -1,0 +1,167 @@
+{
+  "about": "Default ruleset for DigitalOcean.",
+  "rules": {
+    "droplet-droplets-backup-not-enabled.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "droplet-droplets-snapshot-not-present.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "networking-load-balancer-without-droplet.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "droplet-droplets-custom-image.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "droplet-droplets-backup-not-present.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "droplet-droplets-firewall-not-attached.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "droplet-droplets-port-22-exposed.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "droplet-droplets-all-ports-exposed.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "spaces-buckets-public-read.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "spaces-buckets-cors.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "networking-firewalls-public-ports.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "networking-firewalls-quad-zero.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "networking-load-balancer-ssl-redirect-disabled.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "networking-load-balancer-backend-keepalive-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "networking-domains-missing-spf.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "networking-domains-missing-dkim.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "networking-domains-missing-dmarc.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "networking-domains-spf-overly-permissive.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "networking-domains-high-ttl.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "database-databases-mysql-user-legacy-encryption.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "database-databases-redis-evicition-policy.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "database-databases-postgres-connection-pools.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "database-databases-postgres-trusted-sources.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "droplet-droplets-features-monitoring.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "kubernetes-kubernetes-ha-enabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "kubernetes-kubernetes-surge-upgrade.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "kubernetes-kubernetes-autoupgrade-minor.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ]
+  }
+}

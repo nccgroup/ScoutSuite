@@ -1,0 +1,15 @@
+{
+    "description": "Droplets with port 22 exposed to public",
+    "rationale": "Droplets should have port 22 restricted to trusted networks",
+    "dashboard_name": "Droplets",
+    "path": "droplet.droplets.id",
+    "conditions": [
+        "and",
+        [
+            "droplet.droplets.id.port_22_exposed",
+            "equal",
+            "True"
+        ]
+    ],
+    "id_suffix": "port_22_exposed"
+}

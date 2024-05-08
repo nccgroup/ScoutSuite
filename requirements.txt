@@ -6,6 +6,7 @@ cherrypy>=18.1.0
 cherrypy-cors>=1.6
 coloredlogs<=10.0
 asyncio-throttle==0.1.1
+protobuf==3.20.1
 
 # AWS Provider
 botocore>=1.20.21
@@ -19,11 +20,11 @@ google-cloud-container>=2.1.0
 google-cloud-core>=0.29.1
 google-cloud-iam>=0.1.0
 google-cloud-logging>=2.2.0
-google-cloud-monitoring==1.1.0
+google-cloud-monitoring==1.1.1
 google-cloud-resource-manager>=0.28.3
 google-cloud-storage>=1.13.2
 google-cloud-org-policy==1.10.0
-google-cloud-kms==1.3.0
+google-cloud-kms==1.4.1
 ## API Client Libraries
 google-api-python-client>=2.47.0
 oauth2client>=4.1.3
@@ -67,3 +68,6 @@ oci>=2.2.4
 
 # Kubernetes SDK
 kubernetes
+
+# DigitalOcean Cloud Provider
+pydo >=0.2.0

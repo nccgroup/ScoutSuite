@@ -1,0 +1,20 @@
+{
+    "description": "Eviction policy for Redis database cluster not set to 'allkeys-lru'",
+    "rationale": "When Redis is used as a cache, it is often convenient to let it automatically evict old data as you add new data. Redis provides several eviction policies to choose from, including allkeys-lru, allkeys-lfu, volatile-lru, volatile-lfu, allkeys-random, volatile-random, and volatile-ttl 1. If you do not set an eviction policy, Redis will use the noeviction policy by default. This means that Redis will not evict any keys when the memory limit is reached, and any new values will not be saved 1. If you do not set an eviction policy and Redis runs out of memory, it will start to return errors for commands that could result in more memory being used 1. In general, it is recommended to use the allkeys-lru policy when you expect a power-law distribution in the popularity of your requests. That is, you expect a subset of elements will be accessed far more often than the rest",
+    "dashboard_name": "Databases",
+    "path": "database.databases.id",
+    "conditions": [
+        "and",
+        [
+            "database.databases.id.eviction_policy",
+            "notEqual",
+            "allkeys_lru"
+        ],
+        [
+            "database.databases.id.engine",
+            "equal",
+            "redis"
+        ]
+    ],
+    "id_suffix": "eviction_policy"
+}

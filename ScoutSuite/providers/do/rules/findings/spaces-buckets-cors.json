@@ -1,0 +1,17 @@
+{
+    "description": "CORS not configured in bucket",
+    "rationale": "CORS configuration in a bucket may significantly restrict web-based applications from accessing resources across different domains, potentially limiting the bucket's usefulness for content delivery and integration with external web services.",
+    "dashboard_name": "Spaces",
+    "path": "spaces.buckets.id",
+    "conditions": [
+        "and",
+        [
+            "spaces.buckets.id.CORS",
+            "equal",
+            "False"
+        ]
+    ],
+    "id_suffix": "CORS"
+}
+
+
