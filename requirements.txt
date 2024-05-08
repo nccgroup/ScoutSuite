@@ -6,7 +6,6 @@ cherrypy>=18.1.0
 cherrypy-cors>=1.6
 coloredlogs<=10.0
 asyncio-throttle==0.1.1
-protobuf==3.20.1
 
 # AWS Provider
 botocore>=1.20.21
