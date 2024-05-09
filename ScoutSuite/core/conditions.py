@@ -115,9 +115,13 @@ def pass_condition(b, test, a):
 
     # Dictionary keys tests
     elif test == 'withKey':
-        result = (a in b)
+        result = a in b
     elif test == 'withoutKey':
         result = a not in b
+    elif test == 'withKeyCaseInsensitive':
+        result = a.lower() in map(str.lower, b)
+    elif test == 'withoutKeyCaseInsensitive':
+        result = a.lower() not in map(str.lower, b)
 
     # String test
     elif test == 'containString':
