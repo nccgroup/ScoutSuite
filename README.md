@@ -30,6 +30,7 @@ The following cloud providers are currently supported:
 - Alibaba Cloud (alpha)
 - Oracle Cloud Infrastructure (alpha)
 - Kubernetes clusters on a cloud provider (alpha)
+- DigitalOcean Cloud (alpha)
 
 ## Installation
 

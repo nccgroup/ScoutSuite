@@ -35,7 +35,7 @@ azure-identity==1.5.0
 ## for resources
 
 azure-mgmt-resource==15.0.0
-azure-mgmt-storage==16.0.0
+azure-mgmt-storage==17.0.0
 azure-mgmt-monitor==2.0.0
 azure-mgmt-sql==1.0.0
 azure-mgmt-security==1.0.0
@@ -66,3 +66,6 @@ oci>=2.2.4
 
 # Kubernetes SDK
 kubernetes
+
+# DigitalOcean Cloud Provider
+pydo >=0.2.0

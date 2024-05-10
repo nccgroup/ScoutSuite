@@ -1,5 +1,5 @@
 {
-    "description": "Lack of Key Rotation for (_ARG_0_) Days",
+    "description": "Lack of Key Rotation for _ARG_1_ Days (Key Status: _ARG_0_)",
     "rationale": "In case of access key compromise, the lack of credential rotation increases the period during which an attacker has access to the AWS account.",
     "remediation": "Rotate access keys that have not been changed recently",
     "compliance": [

@@ -30,6 +30,7 @@ class ScoutSuiteArgumentParser:
         self._init_aliyun_parser()
         self._init_oci_parser()
         self._init_kubernetes_parser()
+        self._init_do_parser()
 
     def _init_aws_parser(self):
         parser = self.subparsers.add_parser("aws",
@@ -254,6 +255,32 @@ class ScoutSuiteArgumentParser:
                             dest='profile',
                             default=None,
                             help='Name of the profile')
+        
+    def _init_do_parser(self):
+        do_parser = self.subparsers.add_parser("do",
+                                                parents=[self.common_providers_args_parser],
+                                                help="Run Scout against an DigitalOcean account")
+
+        parser = do_parser.add_argument_group('Authentication parameters')
+
+        parser.add_argument('-t',
+                            '--token',
+                            action='store',
+                            default=None,
+                            dest='token',
+                            help='DO Token')
+        
+        parser.add_argument('--access_key',
+                                     action='store',
+                                     default=None,
+                                     dest='access_key',
+                                     help='Spaces Access Key ID')
+        parser.add_argument('--access_secret',
+                                     action='store',
+                                     default=None,
+                                     dest='access_secret',
+                                     help='Spaces Secret Access Key')
+        
 
     def _init_kubernetes_parser(self):
         kubernetes_parser = self.subparsers.add_parser("kubernetes",
@@ -435,6 +462,11 @@ class ScoutSuiteArgumentParser:
                 self.parser.error('You must provide --tenant when using --user-account authentication')
             if v.get('subscription_ids') and v.get('all_subscriptions'):
                 self.parser.error('--subscription-ids and --all-subscriptions are mutually exclusive options')
+
+        # DigitalOcean
+        if v.get('provider') == 'do':
+            if (v.get('access_key') or v.get('access_secret')) and not (v.get('access_key') and v.get('access_secret')):
+                self.parser.error('For DO Spaces service please provide both --access_key and --access_secret')
 
         # Kubernetes
         elif v.get('provider') == 'kubernetes':

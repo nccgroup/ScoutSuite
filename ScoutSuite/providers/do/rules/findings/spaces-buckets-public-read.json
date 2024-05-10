@@ -1,0 +1,17 @@
+{
+    "description": "Bucket with public read access",
+    "rationale": "Buckets with sensitive data must be private only.",
+    "dashboard_name": "Spaces",
+    "path": "spaces.buckets.id",
+    "conditions": [
+        "and",
+        [
+            "spaces.buckets.id.public_read",
+            "equal",
+            "True"
+        ]
+    ],
+    "id_suffix": "public_read"
+}
+
+

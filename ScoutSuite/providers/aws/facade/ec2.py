@@ -219,3 +219,19 @@ class EC2Facade(AWSBaseFacade):
         except Exception as e:
             print_exception('Failed to get route tables: {}'.format(e))
             return []
+
+    async def get_ebs_encryption(self, region):
+        ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
+        try:
+            encryption_settings = await run_concurrently(lambda: ec2_client.get_ebs_encryption_by_default())
+            return encryption_settings
+        except Exception as e:
+            print_exception(f'Failed to retrieve EBS encryption settings: {e}')
+
+    async def get_ebs_default_encryption_key(self, region):
+        ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
+        try:
+            encryption_key = await run_concurrently(lambda: ec2_client.get_ebs_default_kms_key_id())
+            return encryption_key
+        except Exception as e:
+            print_exception(f'Failed to retrieve EBS encryption key ID: {e}')
