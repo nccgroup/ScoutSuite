@@ -1,0 +1,34 @@
+{
+    "description": "Externally shared AMIs",
+    "rationale": "AMIs need to be shared with specific AWS accounts, Organizations or Organizational Units.",
+    "references": [
+        "https://aws.amazon.com/security/security-bulletins/reminder-about-safely-sharing-and-using-public-amis/",
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/share-amis-with-organizations-and-OUs.html",
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sharingamis-explicit.html"
+    ],
+    "dashboard_name": "Images",
+    "path": "ec2.regions.id.images.id",
+    "conditions": [
+        "or",
+        [
+            "ec2.regions.id.images.id.LaunchPermissions.Groups",
+            "notEmpty",
+            ""
+        ],
+        [
+            "ec2.regions.id.images.id.LaunchPermissions.UserIds",
+            "notEmpty",
+            ""
+        ],
+        [
+            "ec2.regions.id.images.id.LaunchPermissions.OrganizationArns",
+            "notEmpty",
+            ""
+        ],
+        [
+            "ec2.regions.id.images.id.LaunchPermissions.OrganizationalUnitArns",
+            "notEmpty",
+            ""
+        ]
+    ]
+}
