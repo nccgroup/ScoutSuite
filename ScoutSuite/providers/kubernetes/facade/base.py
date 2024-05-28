@@ -54,7 +54,10 @@ class KubernetesBaseFacade:
         try:
             return loads(self.api_client.call_api(path, 'GET', auth_settings=['BearerToken'], response_type='json', _preload_content=False)[0].data)
         except Exception as e:
-            message = loads(e.body).get("message")
+            try:
+                message = loads(e.body).get("message")
+            except Exception:
+                message = e.body.decode("utf-8").strip()
             pattern = r'in API group \"(.*?)\" at the cluster scope'
             result = re.search(pattern, message)
             if result:
