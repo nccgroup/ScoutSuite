@@ -1,0 +1,30 @@
+{
+    "description": "Target Group associated with Load Balancer allowing Clear Text (HTTP) Communication",
+    "rationale": "Use of a secure protocol (HTTPS or SSL) is best practice for encrypted communication. Target group associated with a load balancer using an unencrypted protocol can be vulnerable to eavesdropping and man-in-the-middle attacks.",
+    "references": [
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-https-load-balancers.html",
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-target-group.html"
+    ],
+    "dashboard_name": "Load Balancer Target Groups",
+    "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
+    "path": "elbv2.regions.id.vpcs.id.lbs.id.target_groups.id",
+    "conditions": [
+        "and",
+        [
+            "elbv2.regions.id.vpcs.id.lbs.id.target_groups.id.Protocol",
+            "containNoneOf",
+            [
+                "HTTPS",
+                "SSL"
+            ]
+        ],
+        [
+            "elbv2.regions.id.vpcs.id.lbs.id.target_groups.id.TargetType",
+            "containAtLeastOneOf",
+            [
+                "ip",
+                "instance"
+            ]
+        ]
+    ]
+}
