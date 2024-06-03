@@ -128,9 +128,10 @@ function getPathArray() {
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
  */
 var loadAccountId = function () {
+    const currentDate = new Date().toUTCString();
     var element = document.getElementById('account_id')
     var value = '<i class="fa fa-cloud"></i> ' + runResults['provider_name'] +
-        ' <i class="fa fa-chevron-right"></i> ' + runResults['account_id']
+        ' <i class="fa fa-chevron-right"></i> ' + runResults['account_id'] + ` (Report date: ${currentDate})`
     if (('organization' in runResults) && (value in runResults['organization'])) {
         value += ' (' + runResults['organization'][value]['Name'] + ')'
     }
