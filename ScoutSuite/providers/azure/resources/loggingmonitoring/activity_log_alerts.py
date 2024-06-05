@@ -43,7 +43,7 @@ class ActivityLogAlerts(AzureResources):
 
     def ensure_alert_exist(self, log_alerts, equals_value: str):
         for log_alert in log_alerts:
-            if log_alert.location == 'Global' and log_alert.enabled:
+            if log_alert.location.lower() == 'global' and log_alert.enabled:
                 if '/subscriptions/' + self.subscription_id in log_alert.scopes:
                     for condition in log_alert.condition.all_of:
                         if condition.field == 'operationName' and condition.equals == equals_value:
