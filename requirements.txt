@@ -30,7 +30,7 @@ oauth2client>=4.1.3
 httplib2shim>=0.0.3
 
 #for authentication
-azure-identity==1.5.0
+azure-identity==1.16.1
 
 ## for resources
 
