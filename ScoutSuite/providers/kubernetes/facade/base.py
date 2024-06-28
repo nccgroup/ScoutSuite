@@ -35,7 +35,7 @@ class KubernetesBaseFacade:
         self.data = None
         self.cluster_provider = None
         self.api_client = credentials.api_client
-        self.api_client.user_agent = f'Scout Suite {__version__}'
+        self.api_client.user_agent = f'Scout Suite/Latacora {__version__}'
 
         if isinstance(credentials, AzureCredentials):
             self.cluster_provider = ClusterProvider.AKS.value

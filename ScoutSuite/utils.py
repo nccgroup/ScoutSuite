@@ -109,4 +109,4 @@ def format_service_name(service):
 
 
 def get_user_agent():
-    return 'Scout Suite/{} (https://github.com/nccgroup/ScoutSuite)'.format(__version__)
+    return 'Scout Suite/Latacora/{} (https://github.com/nccgroup/ScoutSuite)'.format(__version__)
