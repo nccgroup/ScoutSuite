@@ -1,14 +1,21 @@
 {
     "description": "Instance Allows Root Login from Any Host",
-    "rationale": "Root access to MySQL Database Instances should be allowed only through trusted IPs.",
+    "rationale": "Products typically ship with insecure defaults that, if not configured securely, can be used by malicious users to take over a system.",
+    "remediation": "Root access to MySQL Database Instances should be allowed only through trusted IPs.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.0.0",
             "reference": "6.4"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.9.1"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-56",
         "https://forsetisecurity.org/docs/latest/concepts/best-practices.html#cloud-sql",
         "https://cloud.google.com/blog/products/gcp/best-practices-for-securing-your-google-cloud-databases"
     ],
