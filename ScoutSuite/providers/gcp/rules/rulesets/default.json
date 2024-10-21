@@ -131,6 +131,30 @@
                 "level": "warning"
             }
         ],
+        "cloudsql-sqlservers-instances-remote-access-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-user-options-specified.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-3625-trace-flag-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-external-scripts-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudstorage-bucket-member.json": [
             {
                 "args": [

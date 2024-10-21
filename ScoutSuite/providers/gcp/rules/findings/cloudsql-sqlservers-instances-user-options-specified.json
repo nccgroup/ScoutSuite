@@ -1,0 +1,27 @@
+{
+    "description": "User Options Flag Specified for SQL Server Instance",
+    "rationale": "This CIS Control provides guidance for securing hardware and software. As delivered by the CSP, the default configurations for operating systems and applications are normally geared toward ease-of-deployment and ease-of-use -- not security. Basic controls, open services and ports, default accounts or passwords, older (vulnerable) protocols, pre-installation of unneeded software -- all can be exploitable in their default state. Even if a strong initial configuration is developed and deployed in the cloud, it must be continually managed to avoid configuration drift as software is updated or patched, new security vulnerabilities are reported, and configurations are “tweaked” to allow the installation of new software or to support new operational requirements. If not, attackers will find opportunities to exploit both network- accessible services and client software.",
+    "remediation": "Establish and maintain a secure configuration process for enterprise assets (end-user devices, including portable and mobile, non-computing/IoT devices, and servers) and software (operating systems and applications). Review and update documentation annually, or when significant enterprise changes occur that could impact this Safeguard.",
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.6.1"
+        }
+    ],
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-53",
+        "https://cloud.google.com/sql/docs/sqlserver/flags"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.user_options_specified",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "user_options_specified"
+}

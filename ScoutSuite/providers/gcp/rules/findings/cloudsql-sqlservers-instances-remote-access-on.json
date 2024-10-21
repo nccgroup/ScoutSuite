@@ -1,0 +1,27 @@
+{
+    "description": "Remote Access Database Flag Enabled for SQL Server Instance",
+    "rationale": "Uninstalling and disabling unnecessary services reduces the target area of your systems.",
+    "remediation": "Uninstall or disable unnecessary services on enterprise assets and software, such as an unused file sharing service, web application module, or service function.",
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.10.1"
+        }
+    ],
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-57",
+        "https://cloud.google.com/sql/docs/sqlserver/flags"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.remote_access_on",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "remote_access_on"
+}
