@@ -1,6 +1,6 @@
 {
     "description": "Functions using deprecated runtimes (Gen 2)",
-    "rationale": "If software is unsupported, yet necessary for the fulfillment of the enterprise’s mission, document an exception detailing mitigating controls and residual risk acceptance. For any unsupported software without an exception documentation, designate as unauthorized. Review the software list to verify software support at least monthly, or more frequently.",
+    "rationale": "If software is unsupported, yet necessary for the fulfillment of the enterprise's mission, document an exception detailing mitigating controls and residual risk acceptance. For any unsupported software without an exception documentation, designate as unauthorized. Review the software list to verify software support at least monthly, or more frequently.",
     "dashboard_name": "Functions",
     "path": "functions.projects.id.functions_v2.id",
     "references": [
