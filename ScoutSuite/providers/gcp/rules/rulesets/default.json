@@ -107,13 +107,31 @@
                 "level": "warning"
             }
         ],
-        "cloudsql-postgresql-instances-log-min-messages-not-set.json": [
+        "cloudsql-postgresql-instances-log-min-error-statement-not-set.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-min-error-statement-insufficient.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-min-messages-insufficient.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
         "cloudsql-postgresql-instances-log-temp-files-not-set-0.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-pgaudit-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"

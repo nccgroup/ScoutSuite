@@ -1,0 +1,33 @@
+{
+    "description": "Centralized Logging for PostgreSQL Instance Disabled",
+    "rationale": "Detailed logs with timestamps provide a record of user activity, system events, and application actions. This allows administrators to identify suspicious activity, potential security breaches, and unauthorized access attempts.",
+    "remediation": "Ensure That 'cloudsql.enable_pgaudit' Database Flag for each Cloud Sql Postgresql Instance Is Set to 'on' For Centralized Logging.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.1.0",
+            "reference": "6.2.2"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.15.7"
+        }
+    ],
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-62",
+        "https://www.postgresql.org/docs/9.6/runtime-config-logging.html#RUNTIME-CONFIG-LOGGING-WHAT",
+        "https://cloud.google.com/sql/docs/postgres/flags"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.cloudsql_enable_pgaudit",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "cloudsql_enable_pgaudit"
+}

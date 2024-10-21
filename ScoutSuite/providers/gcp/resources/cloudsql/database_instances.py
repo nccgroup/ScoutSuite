@@ -46,9 +46,12 @@ class DatabaseInstances(GCPCompositeResources):
             instance_dict['log_connections_on'] = self._postgres_flags_on(raw_instance, 'log_connections')
             instance_dict['log_disconnections_on'] = self._postgres_flags_on(raw_instance, 'log_disconnections')
             instance_dict['log_lock_waits_on'] = self._postgres_flags_on(raw_instance, 'log_lock_waits')
-            instance_dict['log_min_messages'] = self._postgres_log_min_error_statement_flags(raw_instance)
+            instance_dict['log_min_messages'] = self._postgres_flags_value(raw_instance, 'log_min_messages')
+            instance_dict['log_min_error_statement'] = self._postgres_flags_value(raw_instance, 'log_min_error_statement')
             instance_dict['log_temp_files_0'] = self._postgres_log_temp_files_flags_0(raw_instance)
             instance_dict['log_min_duration_statement_-1'] = self._postgres_log_min_duration_statement_flags_1(raw_instance)
+            instance_dict['cloudsql_enable_pgaudit'] = self._postgres_flags_on(raw_instance, 'cloudsql.enable_pgaudit')
+            instance_dict['cloudsql_enable_pgaudit'] = self._postgres_flags_on(raw_instance, 'cloudsql.enable_pgaudit')
 
             instance_dict['cross_db_ownership_chaining_off'] = self._sqlservers_flag_off(raw_instance, 'cross db ownership chaining')
             instance_dict['contained_database_authentication_off'] = self._sqlservers_flag_off(raw_instance, 'contained database authentication')
@@ -64,7 +67,7 @@ class DatabaseInstances(GCPCompositeResources):
             instance_dict['log_connections_on'] = self._check_database_type(raw_instance)
             instance_dict['log_disconnections_on'] = self._check_database_type(raw_instance)
             instance_dict['log_lock_waits_on'] = self._check_database_type(raw_instance)
-            instance_dict['log_min_messages'] = self._check_database_type(raw_instance)
+            instance_dict['log_min_error_statement'] = self._check_database_type(raw_instance)
             instance_dict['log_temp_files_0'] = self._check_database_type(raw_instance)
             instance_dict['log_min_duration_statement_-1'] = self._check_database_type(raw_instance)
 
@@ -127,6 +130,15 @@ class DatabaseInstances(GCPCompositeResources):
                 if flag['name'] == flag_name and flag['value'] != 'off':
                     return True
             return False
+        else:
+            return None
+    
+    def _postgres_flags_value(self, raw_instance, flag_name: str):
+        if 'POSTGRES' in raw_instance['databaseVersion']:
+            for flag in raw_instance['settings'].get('databaseFlags', []):
+                if flag['name'] == flag_name and flag.get('value'):
+                    return flag.get('value')
+            return None
         else:
             return None
 

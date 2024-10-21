@@ -43,7 +43,7 @@
                 "level": "warning"
             }
         ],
-        "cloudsql-postgresql-instances-log-min-messages-not-set.json": [
+        "cloudsql-postgresql-instances-log-min-error-statement-not-set.json": [
             {
                 "enabled": true,
                 "level": "warning"
