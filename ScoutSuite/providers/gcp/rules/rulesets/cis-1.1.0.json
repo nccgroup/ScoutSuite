@@ -115,7 +115,7 @@
                 "level": "warning"
             }
         ],
-        "computeengine-instance-public-ip-adresses.json": [
+        "computeengine-instance-public-ip-addresses.json": [
             {
                 "enabled": true,
                 "level": "warning"
