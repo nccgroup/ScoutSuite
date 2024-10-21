@@ -25,6 +25,10 @@
         "bindings_separation_duties": {
           "cols": 2,
           "path": "services.iam.projects.id.bindings_separation_duties"
+        },
+        "audit_configs": {
+          "cols": 2,
+          "path": "services.iam.projects.id.audit_configs"
         }
       }
     },

@@ -538,6 +538,12 @@
                 "level": "warning"
             }
         ],
+        "iam-audit-logs-misconfigured.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kms-cryptokeys-anonymously-publicly-accessible.json": [
             {
                 "enabled": true,
