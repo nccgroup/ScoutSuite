@@ -3,6 +3,21 @@
     "rationale": "Some default firewall rules were in use. This could potentially expose sensitive services or protocols to other networks.",
     "dashboard_name": "Firewall Rule",
     "path": "computeengine.projects.id.firewalls.id",
+    "reference": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-39"
+    ],
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "4.3.3"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "4.3.4"
+        }
+    ],
     "conditions": [
         "and",
         [
