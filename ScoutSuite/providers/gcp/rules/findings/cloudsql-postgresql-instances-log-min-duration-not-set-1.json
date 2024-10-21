@@ -7,9 +7,15 @@
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.1.0",
             "reference": "6.2.7"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.15.6"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-62",
         "https://www.postgresql.org/docs/current/runtime-config-logging.html#RUNTIME-CONFIG-LOGGING-WHAT",
         "https://cloud.google.com/sql/docs/postgres/flags"
     ],
