@@ -1229,6 +1229,8 @@ function makeTitle(title) {
         console.log('Error: received title ' + title + ' (string expected).')
         return title.toString()
     }
+    
+    console.log(title)
 
     const uppercaseTitles = [
         'acm', 'aks', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'gke', 'iam', 'kms', 'rbac',

@@ -1,23 +1,23 @@
-<!-- Compute Engine ssl_policies partial -->
-<script id="services.computeengine.projects.id.ssl_policies.partial" type="text/x-handlebars-template">
+<!-- Compute Engine sslpolicies partial -->
+<script id="services.computeengine.projects.id.sslpolicies.partial" type="text/x-handlebars-template">
     <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
         
     </div>
     <div class="list-group-item">
-        <div class="list-group-item-text">Profile: <span id="computeengine.projects.{{@../key}}.ssl_policies.{{@key}}.profile">{{profile}}</span></div>
-        <div class="list-group-item-text">Minimum TLS Version: <span id="computeengine.projects.{{@../key}}.ssl_policies.{{@key}}.minTlsVersion">{{minTlsVersion}}</span></div>
-        <div class="list-group-item-text">Fingerprint: <span id="computeengine.projects.{{@../key}}.ssl_policies.{{@key}}.fingerprint">{{fingerprint}}</span></div>
+        <div class="list-group-item-text">Profile: <span id="computeengine.projects.{{@../key}}.sslpolicies.{{@key}}.profile">{{profile}}</span></div>
+        <div class="list-group-item-text">Minimum TLS Version: <span id="computeengine.projects.{{@../key}}.sslpolicies.{{@key}}.minTlsVersion">{{minTlsVersion}}</span></div>
+        <div class="list-group-item-text">Fingerprint: <span id="computeengine.projects.{{@../key}}.sslpolicies.{{@key}}.fingerprint">{{fingerprint}}</span></div>
     </div>
 </script>
 
 <script>
-    Handlebars.registerPartial("services.computeengine.projects.id.ssl_policies", $("#services\\.computeengine\\.projects\\.id\\.ssl_policies\\.partial").html());
+    Handlebars.registerPartial("services.computeengine.projects.id.sslpolicies", $("#services\\.computeengine\\.projects\\.id\\.sslpolicies\\.partial").html());
 </script>
 
 <!-- Single computeengine sslpolicy template -->
 <script id="single_computeengine_sslpolicy-template" type="text/x-handlebars-template">
-    {{> modal-template template='services.computeengine.projects.id.ssl_policies'}}
+    {{> modal-template template='services.computeengine.projects.id.sslpolicies'}}
 </script>
 <script>
     var single_computeengine_sslpolicy_template = Handlebars.compile($("#single_computeengine_sslpolicy-template").html());

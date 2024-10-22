@@ -9,6 +9,6 @@ class SSLPolicies(Resources):
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_policies = await self.facade.gce.get_ssl_policies(self.project_id)
+        raw_policies = await self.facade.gce.get_sslpolicies(self.project_id)
         for raw_policy in raw_policies:
             self[get_non_provider_id(raw_policy.get('id'))] = raw_policy

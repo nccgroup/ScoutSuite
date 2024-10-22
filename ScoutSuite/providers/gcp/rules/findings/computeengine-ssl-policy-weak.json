@@ -14,16 +14,16 @@
         }
     ],
     "dashboard_name": "Policies",
-    "path": "computeengine.projects.id.ssl_policies.id",
+    "path": "computeengine.projects.id.sslpolicies.id",
     "conditions": [
         "or",
         [
-            "computeengine.projects.id.ssl_policies.id.profile",
+            "computeengine.projects.id.sslpolicies.id.profile",
             "equal",
             "COMPATIBLE"
         ],
         [
-            "computeengine.projects.id.ssl_policies.id.minTlsVersion",
+            "computeengine.projects.id.sslpolicies.id.minTlsVersion",
             "containAtLeastOneOf",
             ["TLS_1_0", "TLS_1_1"]
         ]

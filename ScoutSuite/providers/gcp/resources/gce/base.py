@@ -1,4 +1,4 @@
-from ScoutSuite.providers.gcp.resources.gce.ssl_policies import SSLPolicies
+from ScoutSuite.providers.gcp.resources.gce.sslpolicies import SSLPolicies
 from ScoutSuite.providers.gcp.resources.projects import Projects
 from ScoutSuite.providers.gcp.resources.gce.firewalls import Firewalls
 from ScoutSuite.providers.gcp.resources.gce.networks import Networks

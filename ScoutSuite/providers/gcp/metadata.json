@@ -80,9 +80,9 @@
           "cols": 2,
           "path": "services.computeengine.projects.id.global_forwarding_rules"
         },
-        "ssl_policies": {
+        "sslpolicies": {
           "cols": 2,
-          "path": "services.computeengine.projects.id.ssl_policies"
+          "path": "services.computeengine.projects.id.sslpolicies"
         }
       }
     },
