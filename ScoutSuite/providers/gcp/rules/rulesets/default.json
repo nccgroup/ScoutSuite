@@ -77,6 +77,12 @@
                 "level": "warning"
             }
         ],
+        "cloudsql-mysql-instances-skip-show-database-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudsql-postgresql-instances-log-checkpoints-off.json": [
             {
                 "enabled": true,

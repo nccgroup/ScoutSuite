@@ -41,6 +41,7 @@ class DatabaseInstances(GCPCompositeResources):
 
         if raw_instance['settings'].get('databaseFlags', None):
             instance_dict['local_infile_off'] = self._mysql_local_infile_flag_off(raw_instance)
+            instance_dict['skip_show_database_on'] = self._mysql_flag_on(raw_instance, 'skip_show_database')
 
             instance_dict['log_checkpoints_on'] = self._postgres_flags_on(raw_instance, 'log_checkpoints')
             instance_dict['log_connections_on'] = self._postgres_flags_on(raw_instance, 'log_connections')
@@ -50,7 +51,6 @@ class DatabaseInstances(GCPCompositeResources):
             instance_dict['log_min_error_statement'] = self._postgres_flags_value(raw_instance, 'log_min_error_statement')
             instance_dict['log_temp_files_0'] = self._postgres_log_temp_files_flags_0(raw_instance)
             instance_dict['log_min_duration_statement_-1'] = self._postgres_log_min_duration_statement_flags_1(raw_instance)
-            instance_dict['cloudsql_enable_pgaudit'] = self._postgres_flags_on(raw_instance, 'cloudsql.enable_pgaudit')
             instance_dict['cloudsql_enable_pgaudit'] = self._postgres_flags_on(raw_instance, 'cloudsql.enable_pgaudit')
 
             instance_dict['cross_db_ownership_chaining_off'] = self._sqlservers_flag_off(raw_instance, 'cross db ownership chaining')
@@ -118,6 +118,14 @@ class DatabaseInstances(GCPCompositeResources):
                 if flag['name'] == 'local_infile' and flag['value'] == 'on':
                     return False
         return True
+
+    def _mysql_flag_on(self, raw_instance, flag):
+        if 'MYSQL' in raw_instance['databaseVersion']:
+            for flag in raw_instance['settings'].get('databaseFlags', []):
+                if flag['name'] == flag and flag['value'] == 'on':
+                    return True
+            return False
+        return None
 
     def _check_database_type(self, raw_instance):
         if 'POSTGRES' in raw_instance['databaseVersion']:

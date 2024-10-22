@@ -1,0 +1,28 @@
+{
+    "description": "Skip Show Database Flag for MySQL Instance Is Off",
+    "rationale": "The principle of least privilege reduces the risk of unauthorized actions being taken in your systems.",
+    "remediation": "Configure data access control lists based on a user's need to know. Apply data access control lists, also known as access permissions, to local and remote file systems, databases, and applications. Ensure 'Skip_show_database' Database Flag for Cloud SQL MySQL Instance Is Set to 'On'",
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.5.4"
+        }
+    ],
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-52",
+        "https://cloud.google.com/sql/docs/mysql/flags",
+        "https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_skip_show_database"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.skip_show_database_on",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "skip_show_database_on"
+}
