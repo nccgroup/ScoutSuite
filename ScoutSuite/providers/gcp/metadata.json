@@ -79,6 +79,10 @@
         "global_forwarding_rules": {
           "cols": 2,
           "path": "services.computeengine.projects.id.global_forwarding_rules"
+        },
+        "ssl_policies": {
+          "cols": 2,
+          "path": "services.computeengine.projects.id.ssl_policies"
         }
       }
     },

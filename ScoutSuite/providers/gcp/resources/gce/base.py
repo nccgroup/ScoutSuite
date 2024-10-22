@@ -16,7 +16,7 @@ class ComputeEngine(Projects):
         (Snapshots, 'snapshots'),
         (GCEZones, 'zones'),
         (GlobalForwardingRules, "global_forwarding_rules"),
-        (SSLPolicies, 'ssl_policies')
+        (SSLPolicies, 'sslpolicies')
      ]
 
     async def fetch_all(self):

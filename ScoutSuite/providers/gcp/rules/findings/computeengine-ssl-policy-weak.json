@@ -28,5 +28,5 @@
             ["TLS_1_0", "TLS_1_1"]
         ]
     ],
-    "id_suffix": "ssl_policies"
+    "id_suffix": "profile"
 }

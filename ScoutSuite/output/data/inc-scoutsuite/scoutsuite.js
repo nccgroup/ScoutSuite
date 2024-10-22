@@ -1253,7 +1253,6 @@ function makeTitle(title) {
         'stackdriverlogging': 'Stackdriver Logging',
         'stackdrivermonitoring': 'Stackdriver Monitoring',
         'computeengine': 'Compute Engine',
-        'kubernetesengine': 'Kubernetes Engine',
         'cloudmemorystore': 'Cloud Memorystore',
         'aad': 'Azure Active Directory',
         'storageaccounts': 'Storage Accounts',
@@ -1268,11 +1267,12 @@ function makeTitle(title) {
         'actiontrail': 'ActionTrail',
         'objectstorage': 'Object Storage',
         'essentialcontacts': 'Essential Contacts',
+        'sslpolicies': 'SSL Policies',
 
         // Azure and Kubernetes
         'loggingmonitoring': 'Azure Monitor',
 
-        // Kubernetes
+        // Google Cloud and Kubernetes
         'kubernetesengine': 'GKE'
     }
 
