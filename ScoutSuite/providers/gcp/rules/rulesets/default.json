@@ -532,6 +532,12 @@
                 "level": "warning"
             }
         ],
+        "iam-service-account-role-assigned-to-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-service-account-with-user-managed-keys.json": [
             {
                 "enabled": true,
