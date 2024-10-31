@@ -15,7 +15,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-55",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#681-ensure-instance-ip-assignment-is-set-to-private",
         "https://cloud.google.com/load-balancing/docs/backend-service#backends_and_external_ip_addresses",
         "https://cloud.google.com/compute/docs/instances/connecting-advanced#sshbetweeninstances",
         "https://cloud.google.com/compute/docs/instances/connecting-to-instance",

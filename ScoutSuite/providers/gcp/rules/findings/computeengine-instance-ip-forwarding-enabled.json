@@ -15,7 +15,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-4",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#151-ensure-that-ip-forwarding-is-not-enabled-on-instances",
         "https://cloud.google.com/vpc/docs/using-routes#canipforward"
     ],
     "dashboard_name": "Instances",

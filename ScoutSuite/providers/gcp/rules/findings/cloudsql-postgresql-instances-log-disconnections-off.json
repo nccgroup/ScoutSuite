@@ -15,7 +15,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-62",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#6153-ensure-that-the-log_disconnections-database-flag-for-cloud-sql-postgresql-instance-is-set-to-on",
         "https://www.postgresql.org/docs/9.6/runtime-config-logging.html#RUNTIME-CONFIG-LOGGING-WHAT",
         "https://cloud.google.com/sql/docs/postgres/flags"
     ],

@@ -1,7 +1,7 @@
 {
     "description": "External Scripts Enabled for SQL Server Instance",
-    "rationale": "Unauthorized scripts can be used by malicious users to take over a system or take other destructive actions.",
-    "remediation": "Use technical controls, such as digital signatures and version control, to ensure that only authorized scripts, such as specific .ps1, .py, etc., files, are allowed to execute. Block unauthorized scripts from executing. Reassess bi-annually, or more frequently.",
+    "rationale": "The 'external scripts enabled' flag allows the execution of scripts with certain remote language extensions. This property is OFF by default. When Advanced Analytics Services is installed, setup can optionally set this property to true. As the External Scripts Enabled feature allows scripts external to SQL such as files located in an R library to be executed, which could adversely affect the security of the system, hence this should be disabled. This requirement is applicable to SQL Server database instances.",
+    "remediation": "Ensure 'external scripts enabled' database flag for Cloud SQL SQL Server instance is set to 'off'",
     "compliance": [
         {
             "name": "App Defense Alliance Cloud Profile",
@@ -10,7 +10,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-49",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#621-ensure-external-scripts-enabled-database-flag-for-cloud-sql-sql-server-instance-is-set-to-off",
         "https://cloud.google.com/sql/docs/sqlserver/flags"
     ],
     "dashboard_name": "Instances",

@@ -20,7 +20,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-44",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#553-ensure-that-cloud-storage-bucket-is-not-anonymously-or-publicly-accessible",
         "https://cloud.google.com/storage/docs/access-control/iam-reference",
         "https://cloud.google.com/storage/docs/access-control/making-data-public",
         "https://cloud.google.com/storage/docs/gsutil/commands/iam"
@@ -30,7 +30,8 @@
     "path": "cloudstorage.projects.id.buckets.id",
     "conditions": [
         "and",
-        ["or",
+        [
+            "or",
             [
                 "cloudstorage.projects.id.buckets.id.member_bindings",
                 "withKey",

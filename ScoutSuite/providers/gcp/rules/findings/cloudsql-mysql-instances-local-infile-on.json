@@ -15,7 +15,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-44",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#611-ensure-that-the-local_infile-database-flag-for-a-cloud-sql-mysql-instance-is-set-to-off",
         "https://cloud.google.com/sql/docs/mysql/flags",
         "https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_local_infile",
         "https://dev.mysql.com/doc/refman/5.7/en/load-data-local.html"

@@ -10,7 +10,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-62",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#6154-ensure-that-the-log_min_messages-flag-for-a-cloud-sql-postgresql-instance-is-set-at-minimum-to-warning",
         "https://www.postgresql.org/docs/9.6/runtime-config-logging.html#RUNTIME-CONFIG-LOGGING-WHEN",
         "https://cloud.google.com/sql/docs/postgres/flags"
     ],
@@ -21,7 +21,12 @@
         [
             "cloudsql.projects.id.instances.id.log_min_messages",
             "containAtLeastOneOf",
-            ["error", "log", "fatal", "panic"]
+            [
+                "error",
+                "log",
+                "fatal",
+                "panic"
+            ]
         ]
     ],
     "id_suffix": "log_min_messages"

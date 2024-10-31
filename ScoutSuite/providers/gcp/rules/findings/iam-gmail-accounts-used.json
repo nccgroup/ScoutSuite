@@ -20,7 +20,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-19",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#2121-ensure-that-corporate-login-credentials-are-used",
         "https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#manage-identities",
         "https://support.google.com/work/android/answer/6371476",
         "https://cloud.google.com/sdk/gcloud/reference/organizations/get-iam-policy",

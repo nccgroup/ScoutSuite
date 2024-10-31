@@ -15,7 +15,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-38",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#421-ensure-legacy-networks-do-not-exist-for-older-projects",
         "https://cloud.google.com/vpc/docs/using-legacy#creating_a_legacy_network",
         "https://cloud.google.com/vpc/docs/using-legacy#deleting_a_legacy_network"
     ],

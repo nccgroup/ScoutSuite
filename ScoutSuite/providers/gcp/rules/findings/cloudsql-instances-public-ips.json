@@ -15,7 +15,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-50",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#634-ensure-that-the-cloud-sql-database-instance-requires-all-incoming-connections-to-use-ssl",
         "https://cloud.google.com/sql/docs/mysql/configure-private-ip",
         "https://cloud.google.com/sql/docs/mysql/private-ip",
         "https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints",

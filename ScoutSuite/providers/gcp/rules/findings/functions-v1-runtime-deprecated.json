@@ -4,7 +4,7 @@
     "dashboard_name": "Functions",
     "path": "functions.projects.id.functions_v1.id",
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-1"
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#126-ensure-that-all-gcp-cloud-functions-are-configured-to-use-a-current-not-deprecated-runtime"
     ],
     "compliance": [
         {
@@ -18,7 +18,29 @@
         [
             "functions.projects.id.functions_v1.id.runtime",
             "containAtLeastOneOf",
-            ["nodejs6", "nodejs8", "nodejs10", "nodejs12", "nodejs14", "nodejs16", "python37", "python38", "go111", "go113", "go116", "go118", "go119", "go120", "java11", "ruby26", "ruby27", "ruby30", "php74", "dotnet3", "dotnet6"]
+            [
+                "nodejs6",
+                "nodejs8",
+                "nodejs10",
+                "nodejs12",
+                "nodejs14",
+                "nodejs16",
+                "python37",
+                "python38",
+                "go111",
+                "go113",
+                "go116",
+                "go118",
+                "go119",
+                "go120",
+                "java11",
+                "ruby26",
+                "ruby27",
+                "ruby30",
+                "php74",
+                "dotnet3",
+                "dotnet6"
+            ]
         ]
     ],
     "id_suffix": "runtime"

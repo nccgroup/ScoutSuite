@@ -3,7 +3,7 @@
     "rationale": "DNS logs may contain indications of compromise, so it's important to review logs regularly to detect and stop unauthorized or destructive actions from taking place in your systems.",
     "remediation": "Ensure that Cloud DNS Logging is enabled for all VPC networks.",
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Specification.md#audit-34",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#3911-ensure-that-cloud-dns-logging-is-enabled-for-all-vpc-networks",
         "https://cloud.google.com/dns/docs/monitoring"
     ],
     "compliance": [
