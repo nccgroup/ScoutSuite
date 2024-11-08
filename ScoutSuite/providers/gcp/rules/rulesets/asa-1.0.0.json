@@ -1,5 +1,5 @@
 {
-    "about": "This ruleset attempts to audit as many security configurations from  v1.0.0.",
+    "about": "This ruleset attempts to audit as many security configurations from the App Defense Alliance Google Cloud Profile v1.0.0.",
     "rules": {
         "cloudsql-allows-root-login-from-any-host.json": [
             {
