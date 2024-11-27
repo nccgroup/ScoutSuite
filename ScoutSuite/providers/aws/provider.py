@@ -1,5 +1,6 @@
 import copy
 import os
+import datetime
 
 from ScoutSuite.core.console import print_error, print_exception, print_warning, print_debug
 from ScoutSuite.providers.aws.services import AWSServicesConfig
@@ -8,7 +9,6 @@ from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id, get_
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
-
 
 class AWSProvider(BaseProvider):
     """
@@ -46,10 +46,14 @@ class AWSProvider(BaseProvider):
         """
         Returns the name of the report using the provider's configuration
         """
+
+        x = datetime.datetime.now()
+        
+        current_date_time = f"{x.year}-{x.month}-{x.day}-{x.hour}-{x.minute}"
         if self.profile:
-            return f'aws-{self.profile}'
+            return f'aws-{self.profile}-{current_date_time}'
         elif self.account_id:
-            return f'aws-{self.account_id}'
+            return f'aws-{self.account_id}-{current_date_time}'
         else:
             return 'aws'
 
