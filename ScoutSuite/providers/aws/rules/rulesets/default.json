@@ -112,6 +112,12 @@
                 "level": "danger"
             }
         ],
+        "ec2-ami-shared.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "ec2-default-security-group-in-use.json": [
             {
                 "enabled": true,

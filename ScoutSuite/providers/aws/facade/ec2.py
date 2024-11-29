@@ -96,10 +96,45 @@ class EC2Facade(AWSBaseFacade):
         filters = [{'Name': 'owner-id', 'Values': [self.owner_id]}]
         client = AWSFacadeUtils.get_client('ec2', self.session, region)
         try:
-            return await run_concurrently(lambda: client.describe_images(Filters=filters)['Images'])
+            images = await run_concurrently(lambda: client.describe_images(Filters=filters)['Images'])
         except Exception as e:
             print_exception(f'Failed to get EC2 images: {e}')
-            return []
+            images = []
+        else:
+            await get_and_set_concurrently([self._get_and_set_image_permissions], images, region=region)
+        finally:
+            return images
+
+    async def _get_and_set_image_permissions(self, image: {}, region: str):
+        ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
+        try:
+            launch_permissions = await run_concurrently(lambda: ec2_client.describe_image_attribute(
+                Attribute='launchPermission',
+                ImageId=image['ImageId']))
+            
+            image['LaunchPermissions'] = {
+                'Groups': [],
+                'UserIds': [],
+                'OrganizationArns': [],
+                'OrganizationalUnitArns': []
+            }
+            image['Shared'] = False
+            
+            if launch_permissions['LaunchPermissions'] != []:
+                for permission in launch_permissions['LaunchPermissions']:
+                    if permission.get('Group'):
+                        image['LaunchPermissions']['Groups'].append(permission.get('Group'))
+                    if permission.get('UserId'):
+                        image['LaunchPermissions']['UserIds'].append(permission.get('UserId'))
+                    if permission.get('OrganizationArn'):
+                        image['LaunchPermissions']['OrganizationArns'].append(permission.get('OrganizationArn'))
+                    if permission.get('OrganizationalUnitArn'):
+                        image['LaunchPermissions']['OrganizationalUnitArns'].append(permission.get('OrganizationalUnitArn'))
+            if image['LaunchPermissions']['Groups'] != [] or image['LaunchPermissions']['UserIds'] != [] or image['LaunchPermissions']['OrganizationArns'] != [] or image['LaunchPermissions']['OrganizationalUnitArns'] != []:
+                image['Shared'] = True
+        
+        except Exception as e:
+            print_exception(f'Failed to describe EC2 image LaunchPermission attribute: {e}')
 
     async def get_network_interfaces(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]

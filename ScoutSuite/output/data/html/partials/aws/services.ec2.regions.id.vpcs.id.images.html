@@ -11,6 +11,15 @@
             <li class="list-group-item-text">ID: <samp>{{id}}</samp></li>
             <li class="list-group-item-text">Architecture: {{getValueAt 'services.ec2.regions' region 'images' id 'Architecture'}}</li>
             <li class="list-group-item-text">Public: <span id="ec2.regions.{{region}}.images.{{id}}.image_is_public">{{getValueAt 'services.ec2.regions' region 'images' id 'Public'}}</span></li>
+            {{#if Shared}}
+            <li class="list-group-item-text">Shared with:</li>
+                    <ul>
+                        <li class="list-group-item-text">Shared Groups: {{getValueAt 'services.ec2.regions' region 'images' id 'LaunchPermissions.Groups'}}</li>
+                        <li class="list-group-item-text">Shared Account IDs: {{getValueAt 'services.ec2.regions' region 'images' id 'LaunchPermissions.UserIds'}}</li>
+                        <li class="list-group-item-text">Shared Organizations: {{getValueAt 'services.ec2.regions' region 'images' id 'LaunchPermissions.OrganizationArns'}}</li>
+                        <li class="list-group-item-text">Shared Organizational Units: {{getValueAt 'services.ec2.regions' region 'images' id 'LaunchPermissions.OrganizationalUnitArns'}}</li>
+                    </ul>
+            {{/if}}
         </ul>
     </div>
 </script>
