@@ -687,6 +687,15 @@
                 "level": "danger"
             }
         ],
+        "iam-principals-with-readonlyaccess-policy.json" :[
+            {
+                "args": [
+                    "arn:aws:iam::aws:policy/ReadOnlyAccess"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-role-with-inline-policies.json": [
             {
                 "enabled": true,

@@ -1,0 +1,20 @@
+{
+    "description": "IAM Principals with attached ReadOnlyAccess Policy",
+    "rationale": "The AWS-managed ReadOnlyAccess policy is highly potent and exposes the account to a significant data leakage threat. It should be granted very conservatively.",
+    "remediation": "Review IAM principals with attached ReadOnlyPolicy and ensure that they align with your security policies and the principle of least privilege. Consider using alternative managed policies, such as ViewOnlyAccess or SecurityAudit.",
+    "references": [
+        "https://www.tenable.com/blog/the-aws-managed-policies-trap",
+        "https://docs.aws.amazon.com/aws-managed-policy/latest/reference/ReadOnlyAccess.html"
+    ],
+    "dashboard_name": "Policies",
+    "display_path": "iam.policies.id",
+    "path": "iam.policies.id",
+    "conditions": [
+        "and",
+        [
+            "iam.policies.id.arn",
+            "equal",
+            "_ARG_0_"
+        ]
+    ]
+}
