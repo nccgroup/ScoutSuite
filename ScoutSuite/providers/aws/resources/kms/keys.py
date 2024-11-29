@@ -38,10 +38,16 @@ class Keys(AWSCompositeResources):
                 ['Disabled', 'PendingDeletion'] else True
             key_dict['description'] = raw_key['metadata']['KeyMetadata']['Description'] if len(
                 raw_key['metadata']['KeyMetadata']['Description'].strip()) > 0 else None
+            key_dict['key_usage'] = raw_key['metadata']['KeyMetadata']['KeyUsage'] if len(
+                raw_key['metadata']['KeyMetadata']['KeyUsage'].strip()) > 0 else None
             key_dict['origin'] = raw_key['metadata']['KeyMetadata']['Origin'] if len(
                 raw_key['metadata']['KeyMetadata']['Origin'].strip()) > 0 else None
+            if 'CustomKeyStoreId' in raw_key['metadata']['KeyMetadata']:
+                key_dict['custom_key_store_id'] = raw_key['metadata']['KeyMetadata']['CustomKeyStoreId']
             key_dict['key_manager'] = raw_key['metadata']['KeyMetadata']['KeyManager'] if len(
                 raw_key['metadata']['KeyMetadata']['KeyManager'].strip()) > 0 else None
+            key_dict['key_spec'] = raw_key['metadata']['KeyMetadata']['KeySpec'] if len(
+                raw_key['metadata']['KeyMetadata']['KeySpec'].strip()) > 0 else None
 
         # Handle keys who don't have these keys - seen in the wild, unsure why
         if 'origin' not in key_dict.keys() or 'key_manager' not in key_dict.keys():
