@@ -132,186 +132,186 @@ def is_throttled(exception):
 
 secret_patterns = {
     "AWS key":
-        re.compile("(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}"),
+        re.compile(r"(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}"),
     "Adobe Client ID (Oauth Web)":
-        re.compile("(adobe[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{32})['\"]"),
+        re.compile(r"(adobe[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{32})['\"]"),
     "Adobe Client Secret":
-        re.compile("(?i)(p8e-)[a-z0-9]{32}"),
+        re.compile(r"(?i)(p8e-)[a-z0-9]{32}"),
     "Alibaba AccessKey ID":
-        re.compile("(?i)(LTAI)[a-z0-9]{20}"),
+        re.compile(r"(?i)(LTAI)[a-z0-9]{20}"),
     "Alibaba Secret Key":
-        re.compile("(alibaba[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{30})['\"]"),
+        re.compile(r"(alibaba[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{30})['\"]"),
     "Asana Client ID":
-        re.compile("(asana[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([0-9]{16})['\"]"),
+        re.compile(r"(asana[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([0-9]{16})['\"]"),
     "Asana Client Secret":
-        re.compile("(asana[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{32})['\"]"),
+        re.compile(r"(asana[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{32})['\"]"),
     "Atlassian API token":
-        re.compile("(atlassian[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{24})['\"]"),
+        re.compile(r"(atlassian[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{24})['\"]"),
     "Beamer API token":
-        re.compile("(beamer[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](b_[a-z0-9=_\-]{44})['\"]"),
+        re.compile(r"(beamer[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](b_[a-z0-9=_\-]{44})['\"]"),
     "Bitbucket client ID":
-        re.compile("(bitbucket[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{32})['\"]"),
+        re.compile(r"(bitbucket[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{32})['\"]"),
     "Bitbucket client secret":
-        re.compile("(bitbucket[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9_\-]{64})['\"]"),
+        re.compile(r"(bitbucket[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9_\-]{64})['\"]"),
     "Clojars API token":
         re.compile("(?i)(CLOJARS_)[a-z0-9]{60}"),
     "Contentful delivery API token":
-        re.compile("(contentful[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9\-=_]{43})['\"]"),
+        re.compile(r"(contentful[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9\-=_]{43})['\"]"),
     "Databricks API token":
-        re.compile("dapi[a-h0-9]{32}"),
+        re.compile(r"dapi[a-h0-9]{32}"),
     "Discord API key":
-        re.compile("(discord[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-h0-9]{64})['\"]"),
+        re.compile(r"(discord[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-h0-9]{64})['\"]"),
     "Discord client ID":
-        re.compile("(discord[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([0-9]{18})['\"]"),
+        re.compile(r"(discord[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([0-9]{18})['\"]"),
     "Discord client secret":
-        re.compile("(discord[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9=_\-]{32})['\"]"),
+        re.compile(r"(discord[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9=_\-]{32})['\"]"),
     "Doppler API token":
-        re.compile("(?i)['\"](dp\.pt\.)[a-z0-9]{43}['\"]"),
+        re.compile(r"(?i)['\"](dp\.pt\.)[a-z0-9]{43}['\"]"),
     "Dropbox API secret/key":
-        re.compile("(dropbox[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{15})['\"]"),
+        re.compile(r"(dropbox[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{15})['\"]"),
     "Dropbox long lived API token":
         re.compile(
-            "(dropbox[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"][a-z0-9]{11}(AAAAAAAAAA)[a-z0-9\-_=]{43}['\"]"),
+            r"(dropbox[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"][a-z0-9]{11}(AAAAAAAAAA)[a-z0-9\-_=]{43}['\"]"),
     "Dropbox short lived API token":
         re.compile(
-            "(dropbox[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](sl\.[a-z0-9\-=_]{135})['\"]"),
+            r"(dropbox[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](sl\.[a-z0-9\-=_]{135})['\"]"),
     "Duffel API token":
-        re.compile("(?i)['\"]duffel_(test|live)_[a-z0-9_-]{43}['\"]"),
+        re.compile(r"(?i)['\"]duffel_(test|live)_[a-z0-9_-]{43}['\"]"),
     "Dynatrace API token":
-        re.compile("(?i)['\"]dt0c01\.[a-z0-9]{24}\.[a-z0-9]{64}['\"]"),
+        re.compile(r"(?i)['\"]dt0c01\.[a-z0-9]{24}\.[a-z0-9]{64}['\"]"),
     "EasyPost API token":
-        re.compile("(?i)['\"]EZAK[a-z0-9]{54}['\"]"),
+        re.compile(r"(?i)['\"]EZAK[a-z0-9]{54}['\"]"),
     "EasyPost test API token":
-        re.compile("(?i)['\"]EZTK[a-z0-9]{54}['\"]"),
+        re.compile(r"(?i)['\"]EZTK[a-z0-9]{54}['\"]"),
     "Fastly API token":
-        re.compile("(fastly[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9\-=_]{32})['\"]"),
+        re.compile(r"(fastly[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9\-=_]{32})['\"]"),
     "Finicity API token":
-        re.compile("(finicity[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{32})['\"]"),
+        re.compile(r"(finicity[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{32})['\"]"),
     "Finicity client secret":
-        re.compile("(finicity[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{20})['\"]"),
+        re.compile(r"(finicity[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{20})['\"]"),
     "Flutterwave encrypted key":
-        re.compile("FLWSECK_TEST[a-h0-9]{12}"),
+        re.compile(r"FLWSECK_TEST[a-h0-9]{12}"),
     "Flutterwave public key":
-        re.compile("(?i)FLWPUBK_TEST-[a-h0-9]{32}-X"),
+        re.compile(r"(?i)FLWPUBK_TEST-[a-h0-9]{32}-X"),
     "Flutterwave secret key":
-        re.compile("(?i)FLWSECK_TEST-[a-h0-9]{32}-X"),
+        re.compile(r"(?i)FLWSECK_TEST-[a-h0-9]{32}-X"),
     "Frame.io API token":
-        re.compile("(?i)fio-u-[a-z0-9\-_=]{64}"),
+        re.compile(r"(?i)fio-u-[a-z0-9\-_=]{64}"),
     "Generic API Key":
         re.compile(
-            "((key|api[^Version]|token|secret|password)[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([0-9a-zA-Z\-_=]{8,64})['\"]"),
+            r"((key|api[^Version]|token|secret|password)[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([0-9a-zA-Z\-_=]{8,64})['\"]"),
     "Generic Password":
         re.compile("password"),
     "Generic Secret":
-        re.compile("secret"),
+        re.compile(r"secret"),
     "GitHub App Token":
-        re.compile("(ghu|ghs)_[0-9a-zA-Z]{36}"),
+        re.compile(r"(ghu|ghs)_[0-9a-zA-Z]{36}"),
     "GitHub OAuth Access Token":
-        re.compile("gho_[0-9a-zA-Z]{36}"),
+        re.compile(r"gho_[0-9a-zA-Z]{36}"),
     "GitHub Personal Access Token":
-        re.compile("ghp_[0-9a-zA-Z]{36}"),
+        re.compile(r"ghp_[0-9a-zA-Z]{36}"),
     "GitHub Refresh Token":
-        re.compile("ghr_[0-9a-zA-Z]{76}"),
+        re.compile(r"ghr_[0-9a-zA-Z]{76}"),
     "GitLab Personal Access Token":
-        re.compile("glpat-[0-9a-zA-Z\-\_]{20}"),
+        re.compile(r"glpat-[0-9a-zA-Z\-\_]{20}"),
     "GoCardless API token":
-        re.compile("(?i)['\"]live_[a-z0-9\-_=]{40}['\"]"),
+        re.compile(r"(?i)['\"]live_[a-z0-9\-_=]{40}['\"]"),
     "Google (GCP) Service-account":
-        re.compile("\"type\": \"service_account\""),
+        re.compile(r"\"type\": \"service_account\""),
     "Grafana API token":
-        re.compile("(?i)['\"]eyJrIjoi[a-z0-9\-_=]{72,92}['\"]"),
+        re.compile(r"(?i)['\"]eyJrIjoi[a-z0-9\-_=]{72,92}['\"]"),
     "HashiCorp Terraform user/org API token":
-        re.compile("(?i)['\"][a-z0-9]{14}\.atlasv1\.[a-z0-9\-_=]{60,70}['\"]"),
+        re.compile(r"(?i)['\"][a-z0-9]{14}\.atlasv1\.[a-z0-9\-_=]{60,70}['\"]"),
     "Heroku API Key":
         re.compile(
-            "(heroku[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12})['\"]"),
+            r"(heroku[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12})['\"]"),
     "Intercom API token":
-        re.compile("(intercom[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9=_]{60})['\"]"),
+        re.compile(r"(intercom[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9=_]{60})['\"]"),
     "Intercom client secret/ID":
         re.compile(
-            "(intercom[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-h0-9]{8}-[a-h0-9]{4}-[a-h0-9]{4}-[a-h0-9]{4}-[a-h0-9]{12})['\"]"),
+            r"(intercom[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-h0-9]{8}-[a-h0-9]{4}-[a-h0-9]{4}-[a-h0-9]{4}-[a-h0-9]{12})['\"]"),
     "Ionic API token":
-        re.compile("(ionic[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](ion_[a-z0-9]{42})['\"]"),
+        re.compile(r"(ionic[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](ion_[a-z0-9]{42})['\"]"),
     "Linear API token":
-        re.compile("(?i)lin_api_[a-z0-9]{40}"),
+        re.compile(r"(?i)lin_api_[a-z0-9]{40}"),
     "Linear client secret/ID":
-        re.compile("(linear[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{32})['\"]"),
+        re.compile(r"(linear[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{32})['\"]"),
     "LinkedIn Client ID":
-        re.compile("(linkedin[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{14})['\"]"),
+        re.compile(r"(linkedin[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{14})['\"]"),
     "LinkedIn Client secret":
-        re.compile("(linkedin[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z]{16})['\"]"),
+        re.compile(r"(linkedin[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z]{16})['\"]"),
     "Lob API Key":
-        re.compile("(lob[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]((live|test)_[a-f0-9]{35})['\"]"),
+        re.compile(r"(lob[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]((live|test)_[a-f0-9]{35})['\"]"),
     "Lob Publishable API Key":
         re.compile(
-            "(lob[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]((test|live)_pub_[a-f0-9]{31})['\"]"),
+            r"(lob[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]((test|live)_pub_[a-f0-9]{31})['\"]"),
     "Mailchimp API key":
-        re.compile("(mailchimp[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{32}-us20)['\"]"),
+        re.compile(r"(mailchimp[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{32}-us20)['\"]"),
     "Mailgun private API token":
-        re.compile("(mailgun[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](key-[a-f0-9]{32})['\"]"),
+        re.compile(r"(mailgun[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](key-[a-f0-9]{32})['\"]"),
     "Mailgun public validation key":
-        re.compile("(mailgun[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](pubkey-[a-f0-9]{32})['\"]"),
+        re.compile(r"(mailgun[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](pubkey-[a-f0-9]{32})['\"]"),
     "Mailgun webhook signing key":
         re.compile(
-            "(mailgun[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-h0-9]{32}-[a-h0-9]{8}-[a-h0-9]{8})['\"]"),
+            r"(mailgun[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-h0-9]{32}-[a-h0-9]{8}-[a-h0-9]{8})['\"]"),
     "MessageBird API token":
-        re.compile("(messagebird[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{25})['\"]"),
+        re.compile(r"(messagebird[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{25})['\"]"),
     "New Relic ingest browser API token":
-        re.compile("['\"](NRJS-[a-f0-9]{19})['\"]"),
+        re.compile(r"['\"](NRJS-[a-f0-9]{19})['\"]"),
     "New Relic user API ID":
-        re.compile("(newrelic[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([A-Z0-9]{64})['\"]"),
+        re.compile(r"(newrelic[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([A-Z0-9]{64})['\"]"),
     "New Relic user API Key":
-        re.compile("['\"](NRAK-[A-Z0-9]{27})['\"]"),
+        re.compile(r"['\"](NRAK-[A-Z0-9]{27})['\"]"),
     "PGP private key":
-        re.compile("-----BEGIN PGP PRIVATE KEY BLOCK-----"),
+        re.compile(r"-----BEGIN PGP PRIVATE KEY BLOCK-----"),
     "PKCS8 private key":
-        re.compile("-----BEGIN PRIVATE KEY-----"),
+        re.compile(r"-----BEGIN PRIVATE KEY-----"),
     "PlanetScale API token":
-        re.compile("(?i)pscale_tkn_[a-z0-9\-_\.]{43}"),
+        re.compile(r"(?i)pscale_tkn_[a-z0-9\-_\.]{43}"),
     "PlanetScale password":
-        re.compile("(?i)pscale_pw_[a-z0-9\-_\.]{43}"),
+        re.compile(r"(?i)pscale_pw_[a-z0-9\-_\.]{43}"),
     "Postman API token":
-        re.compile("(?i)PMAK-[a-f0-9]{24}\-[a-f0-9]{34}"),
+        re.compile(r"(?i)PMAK-[a-f0-9]{24}\-[a-f0-9]{34}"),
     "Pulumi API token":
-        re.compile("pul-[a-f0-9]{40}"),
+        re.compile(r"pul-[a-f0-9]{40}"),
     "PyPI upload token":
-        re.compile("pypi-AgEIcHlwaS5vcmc[A-Za-z0-9\-_]{50,1000}"),
+        re.compile(r"pypi-AgEIcHlwaS5vcmc[A-Za-z0-9\-_]{50,1000}"),
     "RSA private key":
-        re.compile("-----BEGIN RSA PRIVATE KEY-----"),
+        re.compile(r"-----BEGIN RSA PRIVATE KEY-----"),
     "Rubygem API token":
-        re.compile("rubygems_[a-f0-9]{48}"),
+        re.compile(r"rubygems_[a-f0-9]{48}"),
     "SSH (DSA) private key":
-        re.compile("-----BEGIN DSA PRIVATE KEY-----"),
+        re.compile(r"-----BEGIN DSA PRIVATE KEY-----"),
     "SSH (EC) private key":
-        re.compile("-----BEGIN EC PRIVATE KEY-----"),
+        re.compile(r"-----BEGIN EC PRIVATE KEY-----"),
     "SSH private key":
-        re.compile("-----BEGIN OPENSSH PRIVATE KEY-----"),
+        re.compile(r"-----BEGIN OPENSSH PRIVATE KEY-----"),
     "SendGrid API token":
-        re.compile("(?i)SG\.[a-z0-9_\-\.]{66}"),
+        re.compile(r"(?i)SG\.[a-z0-9_\-\.]{66}"),
     "Sendinblue API token":
-        re.compile("(?i)xkeysib-[a-f0-9]{64}\-[a-z0-9]{16}"),
+        re.compile(r"(?i)xkeysib-[a-f0-9]{64}\-[a-z0-9]{16}"),
     "Shippo API token":
-        re.compile("shippo_(live|test)_[a-f0-9]{40}"),
+        re.compile(r"shippo_(live|test)_[a-f0-9]{40}"),
     "Shopify access token":
-        re.compile("shpat_[a-fA-F0-9]{32}"),
+        re.compile(r"shpat_[a-fA-F0-9]{32}"),
     "Shopify custom app access token":
-        re.compile("shpca_[a-fA-F0-9]{32}"),
+        re.compile(r"shpca_[a-fA-F0-9]{32}"),
     "Shopify private app access token":
-        re.compile("shppa_[a-fA-F0-9]{32}"),
+        re.compile(r"shppa_[a-fA-F0-9]{32}"),
     "Shopify shared secret":
-        re.compile("shpss_[a-fA-F0-9]{32}"),
+        re.compile(r"shpss_[a-fA-F0-9]{32}"),
     "Slack token":
-        re.compile("xox[baprs]-([0-9a-zA-Z]{10,48})?"),
+        re.compile(r"xox[baprs]-([0-9a-zA-Z]{10,48})?"),
     "Stripe":
-        re.compile("(sk|pk)_(test|live)_[0-9a-z]{10,32}"),
+        re.compile(r"(sk|pk)_(test|live)_[0-9a-z]{10,32}"),
     "Twitch API token":
-        re.compile("(twitch[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{30})['\"]"),
+        re.compile(r"(twitch[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{30})['\"]"),
     "Twitter token":
-        re.compile("(twitter[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{35,44})['\"]"),
+        re.compile(r"(twitter[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{35,44})['\"]"),
     "Typeform API token":
-        re.compile("(typeform[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}(tfp_[a-z0-9\-_\.=]{59})"),
+        re.compile(r"(typeform[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}(tfp_[a-z0-9\-_\.=]{59})"),
     "npm access token":
-        re.compile("(?i)['\"](npm_[a-z0-9]{36})['\"]")
+        re.compile(r"(?i)['\"](npm_[a-z0-9]{36})['\"]")
 }
 
 
