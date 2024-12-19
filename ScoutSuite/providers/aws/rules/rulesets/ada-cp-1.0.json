@@ -42,6 +42,15 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "iam-password-policy-minimum-length.json": [
+            {
+                "args": [
+                    "14"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
         ]
     }
 }
