@@ -17,9 +17,15 @@
             "name": "CIS Amazon Web Services Foundations",
             "version": "1.2.0",
             "reference": "1.4"
+        },
+        {
+            "name": "ADA Cloud Profile",
+            "version": "1.0",
+            "reference": "2.8.4"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/v1.0/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#284-ensure-access-keys-are-rotated-every-90-days-or-less",
         "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#rotate-credentials"
     ],
     "dashboard_name": "Access keys",

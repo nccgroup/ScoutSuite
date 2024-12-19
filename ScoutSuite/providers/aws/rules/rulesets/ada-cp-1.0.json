@@ -51,6 +51,22 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "iam-user-with-multiple-access-keys.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-user-no-key-rotation.json": [
+            {
+                "args": [
+                    "Active",
+                    "90"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
         ]
     }
 }
