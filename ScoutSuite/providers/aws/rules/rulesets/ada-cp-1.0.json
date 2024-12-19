@@ -25,7 +25,7 @@
                 "level": "danger"
             }
         ],
-        "iam-root-account-with-active-keys.json": [
+        "iam-root-account-with-access-keys.json": [
             {
                 "enabled": true,
                 "level": "danger"
