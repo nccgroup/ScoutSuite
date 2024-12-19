@@ -36,6 +36,12 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "iam-admin-policy-attached.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
         ]
     }
 }
