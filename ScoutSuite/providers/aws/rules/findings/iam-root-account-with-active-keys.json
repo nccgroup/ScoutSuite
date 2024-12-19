@@ -31,6 +31,7 @@
     ],
     "references": [
         "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-standards-cis-controls-1.1",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#271-ensure-no-root-user-account-access-key-exists",
         "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-use",
         "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-acct_review-access",
         "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-acct_document-processes"

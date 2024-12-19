@@ -10,6 +10,7 @@
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#121-ensure-that-all-aws-lambda-functions-are-configured-to-use-a-current-not-deprecated-runtime",
         "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
     ],
     "dashboard_name": "Functions",
