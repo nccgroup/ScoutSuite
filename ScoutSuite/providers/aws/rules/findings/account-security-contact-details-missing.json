@@ -15,7 +15,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#232-ensure-security-contact-information-is-registered",
+        "https://github.com/appdefensealliance/ASA-WG/blob/v1.0/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#232-ensure-security-contact-information-is-registered",
         "https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact.html"
     ],
     "dashboard_name": "Contacts",

@@ -11,7 +11,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#273-ensure-iam-policies-that-allow-full--administrative-privileges-are-not-attached",
+        "https://github.com/appdefensealliance/ASA-WG/blob/v1.0/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#273-ensure-iam-policies-that-allow-full--administrative-privileges-are-not-attached",
         "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
         "https://aws.amazon.com/blogs/security/back-to-school-understanding-the-iam-policy-grammar/"
     ],

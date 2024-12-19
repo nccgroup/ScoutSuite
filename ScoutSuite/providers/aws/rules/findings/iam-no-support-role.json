@@ -25,7 +25,7 @@
         }
     ],
     "references": [
-        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#221-ensure-a-support-role-has-been-created-to-manage-incidents-with-aws-support"
+        "https://github.com/appdefensealliance/ASA-WG/blob/v1.0/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#221-ensure-a-support-role-has-been-created-to-manage-incidents-with-aws-support"
     ],
     "dashboard_name": "Policies",
     "display_path": "iam.policies.id",
