@@ -162,6 +162,9 @@
         "iam-password-policy-reuse-enabled.json": [
             {
                 "comment": "Recommendation 1.10",
+                "args": [
+                    "1"
+                ],
                 "enabled": true,
                 "level": "danger",
                 "scored": true

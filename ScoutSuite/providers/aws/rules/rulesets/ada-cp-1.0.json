@@ -67,6 +67,15 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "iam-password-policy-reuse-enabled.json": [
+            {
+                "args": [
+                    "24"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
         ]
     }
 }
