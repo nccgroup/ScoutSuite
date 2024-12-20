@@ -21,9 +21,9 @@
     "conditions": [
         "and",
         [
-            "iam.policies.id.arn",
-            "notMatch",
-            "^arn:aws:iam::aws:policy/.*$"
+            "iam.policies.id.management",
+            "equal",
+            "Customer"
         ],
         [
             "iam.policies.id.attached_to",
