@@ -1,14 +1,5 @@
 {
     "rules": {
-        "iam-password-policy-reuse-enabled.json": [
-            {
-                "args": [
-                    "1"
-                ],
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
         "awslambda-runtime-deprecated.json": [
             {
                 "enabled": true,
@@ -21,7 +12,31 @@
                 "level": "danger"
             }
         ],
+        "account-contact-details-missing.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "account-security-contact-details-missing.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-root-account-with-access-keys.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-user-password-key-assigned-at-creation.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-admin-policy-attached.json": [
             {
                 "enabled": true,
                 "level": "danger"
