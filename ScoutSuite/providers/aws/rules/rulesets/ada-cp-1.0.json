@@ -3,48 +3,56 @@
     "rules": {
         "awslambda-runtime-deprecated.json": [
             {
+                "comment":"ADA-CP 1.2.1 Ensure that all AWS Lambda functions are configured to use a current (not deprecated) runtime",
                 "enabled": true,
                 "level": "danger"
             }
         ],
         "iam-no-support-role.json": [
             {
+                "comment": "ADA-CP 2.2.1 Ensure a support role has been created to manage incidents with AWS Support",
                 "enabled": true,
                 "level": "danger"
             }
         ],
         "account-contact-details-missing.json": [
             {
+                "comment": "ADA-CP 2.3.1 Maintain current contact details",
                 "enabled": true,
                 "level": "danger"
             }
         ],
         "account-security-contact-details-missing.json": [
             {
+                "comment": "ADA-CP 2.3.2 Ensure security contact information is registered",
                 "enabled": true,
                 "level": "danger"
             }
         ],
         "iam-root-account-with-access-keys.json": [
             {
+                "comment": "ADA-CP 2.7.1 Ensure no 'root' user account access key exists",
                 "enabled": true,
                 "level": "danger"
             }
         ],
         "iam-user-password-key-assigned-at-creation.json": [
             {
+                "comment": "ADA-CP 2.7.2 Do not setup access keys during initial user setup for all IAM users that have a console password",
                 "enabled": true,
                 "level": "danger"
             }
         ],
         "iam-admin-policy-attached.json": [
             {
+                "comment": "ADA-CP 2.7.3 Ensure IAM policies that allow full ':' administrative privileges are not attached",
                 "enabled": true,
                 "level": "danger"
             }
         ],
         "iam-password-policy-minimum-length.json": [
             {
+                "comment": "ADA-CP 2.8.2 Ensure IAM password policy requires minimum length of 14 or greater",
                 "args": [
                     "14"
                 ],
@@ -54,12 +62,14 @@
         ],
         "iam-user-with-multiple-access-keys.json": [
             {
+                "comment": "ADA-CP 2.8.3 Ensure there is only one active access key available for any single IAM user",
                 "enabled": true,
                 "level": "danger"
             }
         ],
         "iam-user-no-key-rotation.json": [
             {
+                "comment": "ADA-CP 2.8.4 Ensure access keys are rotated every 90 days or less",
                 "args": [
                     "Active",
                     "90"
@@ -70,6 +80,7 @@
         ],
         "iam-password-policy-reuse-enabled.json": [
             {
+                "comment": "ADA-CP 2.9.1 Ensure IAM password policy prevents password reuse",
                 "args": [
                     "24"
                 ],
