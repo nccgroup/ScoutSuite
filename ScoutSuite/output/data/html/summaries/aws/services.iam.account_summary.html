@@ -1,0 +1,25 @@
+<!-- Account summary -->
+<script id="services.iam.account_summary.details.template" type="text/x-handlebars-template">
+  <div class="list-group" id="services.iam.account_summary.details">
+    <div class="list-group" id="services.iam.account_summary.view">
+      <div class="list-group-item active">
+        <h4 class="list-group-item-heading">Account Summary</h4>
+      </div>
+      <div class="list-group-item">
+        <div class="list-group-item-text item-margin">Number of IAM Users: <span id="iam.account_summary.Users">{{items.Users}}</span></div>
+        <div class="list-group-item-text item-margin">Number of IAM Roles: <span id="iam.account_summary.Roles">{{items.Roles}}</span></div>
+        <div class="list-group-item-text item-margin">Number of IAM user groups: <span id="iam.account_summary.Groups">{{items.Groups}}</span></div>
+        <div class="list-group-item-text item-margin">Number of IAM permission policies: <span id="iam.account_summary.Policies">{{items.Policies}}</span></div>
+        <div class="list-group-item-text item-margin">Number of IAM Instance profiles: <span id="iam.account_summary.InstanceProfiles">{{items.InstanceProfiles}}</span></div>
+        <div class="list-group-item-text item-margin">Root user access keys present: <span id="iam.account_summary.AccountAccessKeysPresent">{{items.AccountAccessKeysPresent}}</span></div>
+        <div class="list-group-item-text item-margin">Root user password present: <span id="iam.account_summary.AccountPasswordPresent">{{items.AccountPasswordPresent}}</span></div>
+        <div class="list-group-item-text item-margin">Root user MFA enabled: <span id="iam.account_summary.AccountMFAEnabled">{{items.AccountMFAEnabled}}</span></div>
+        <div class="list-group-item-text item-margin">Root user MFA devices: <span id="iam.account_summary.MFADevices">{{items.MFADevices}}</span></div>
+        <div class="list-group-MFADevices-text item-margin">Root user MFA devices in use: <span id="iam.account_summary.MFADevicesInUse">{{items.MFADevicesInUse}}</span></div>
+        <div class="list-group-item-text item-margin">Root user signing certificates present: <span id="iam.account_summary.AccountSigningCertificatesPresent">{{items.AccountSigningCertificatesPresent}}</span></div>
+        <div class="list-group-item-text item-margin">Server Certificates: <span id="iam.account_summary.ServerCertificates">{{items.ServerCertificates}}</span></div>
+        <div class="list-group-item-text item-margin">Permission policy versions in use: <span id="iam.account_summary.PolicyVersionsInUse">{{items.PolicyVersionsInUse}}</span></div>
+      </div>
+    </div>
+  </div>
+</script>

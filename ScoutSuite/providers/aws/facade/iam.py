@@ -183,6 +183,15 @@ class IAMFacade(AWSBaseFacade):
                 print_exception(f'Failed to get account password policy: {e}')
             return None
 
+    async def get_account_summary(self):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        try:
+            return (await run_concurrently(client.get_account_summary))['SummaryMap']
+        except ClientError as e:
+            if e.response['Error']['Code'] != 'NoSuchEntity':
+                print_exception(f'Failed to get account account summary: {e}')
+            return None
+
     async def _get_and_set_user_access_keys(self, user: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)
         try:

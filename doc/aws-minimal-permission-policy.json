@@ -84,6 +84,7 @@
         "guardduty:ListDetectors",
         "iam:GenerateCredentialReport",
         "iam:GetAccountPasswordPolicy",
+        "iam:GetAccountSummary",
         "iam:GetCredentialReport",
         "iam:GetGroup",
         "iam:GetGroupPolicy",

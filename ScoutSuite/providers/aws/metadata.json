@@ -399,6 +399,10 @@
                 "password_policy": {
                     "cols": 1,
                     "path": "services.iam.password_policy"
+                },
+                "account_summary": {
+                    "cols": 1,
+                    "path": "services.iam.account_summary"
                 }
             }
         },

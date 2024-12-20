@@ -17,26 +17,13 @@
         "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-acct_document-processes"
     ],
     "dashboard_name": "Root account",
-    "path": "iam.credential_reports.id",
+    "path": "iam.account_summary.AccountAccessKeysPresent",
     "conditions": [
-        "and",
+        "or",
         [
-            "iam.credential_reports.id.name",
-            "equal",
-            "<root_account>"
-        ],
-        [
-            "or",
-            [
-                "iam.credential_reports.id.access_key_1_last_rotated",
-                "notEqual",
-                "N/A"
-            ],
-            [
-                "iam.credential_reports.id.access_key_2_last_rotated",
-                "notEqual",
-                "N/A"
-            ]
+            "this",
+            "moreThan",
+            "0"
         ]
     ]
 }
