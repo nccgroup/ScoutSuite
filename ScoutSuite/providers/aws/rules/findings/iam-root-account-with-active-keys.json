@@ -17,11 +17,6 @@
             "name": "CIS Amazon Web Services Foundations",
             "version": "1.2.0",
             "reference": "1.12"
-        },
-        {
-            "name": "CIS Amazon Web Services Foundations",
-            "version": "2.0.0",
-            "reference": "1.4"
         }
     ],
     "references": [
