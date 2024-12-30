@@ -3,6 +3,6 @@ flake8
 codecov
 coveralls
 autopep8
-pytest>=5.*
+pytest>=5.0
 pytest-cov
 mypy
