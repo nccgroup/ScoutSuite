@@ -41,6 +41,15 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "iam-unused-credentials-not-disabled-or-rotated.json": [
+            {
+                "args": [
+                    "45"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
         ]
     },
     "about": "extra test rules"

@@ -87,6 +87,16 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "iam-unused-credentials-not-disabled-or-rotated.json": [
+            {
+                "comment": "ADA-CP 2.10.1 Ensure credentials unused for 45 days or greater are disabled",
+                "args": [
+                    "45"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
         ]
     }
 }
