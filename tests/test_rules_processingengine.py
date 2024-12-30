@@ -2,6 +2,7 @@ import json
 import os
 import tempfile
 import unittest
+import freezegun
 
 from ScoutSuite.core.console import set_logger_configuration, print_error
 from ScoutSuite.core.processingengine import ProcessingEngine
@@ -22,6 +23,7 @@ class TestScoutRulesProcessingEngine(unittest.TestCase):
     # TODO
     # Check that one testcase per finding rule exists (should be within default ruleset)
 
+    @freezegun.freeze_time("2024-01-01")
     def test_all_finding_rules(self):
         # Test everything in the "default" ruleset
         # FIXME this is only for AWS
