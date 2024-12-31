@@ -43,7 +43,7 @@
                 "level": "warning"
             }
         ],
-        "cloudsql-postgresql-instances-log-min-messages-not-set.json": [
+        "cloudsql-postgresql-instances-log-min-error-statement-not-set.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -115,7 +115,7 @@
                 "level": "warning"
             }
         ],
-        "computeengine-instance-public-ip-adresses.json": [
+        "computeengine-instance-public-ip-addresses.json": [
             {
                 "enabled": true,
                 "level": "warning"

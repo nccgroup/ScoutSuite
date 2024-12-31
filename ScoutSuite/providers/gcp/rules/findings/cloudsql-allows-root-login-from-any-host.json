@@ -1,14 +1,21 @@
 {
     "description": "Instance Allows Root Login from Any Host",
-    "rationale": "Root access to MySQL Database Instances should be allowed only through trusted IPs.",
+    "rationale": "At the time of MySQL Instance creation, not providing an administrative password allows anyone to connect to the SQL database instance with administrative privileges. The root password should be set to ensure only authorized users have these privileges.",
+    "remediation": "Ensure That a MySQL Database Instance Does Not Allow Anyone To Connect With Administrative Privileges.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.0.0",
             "reference": "6.4"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.9.1"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#691-ensure-that-a-mysql-database-instance-does-not-allow-anyone-to-connect-with-administrative-privileges",
         "https://forsetisecurity.org/docs/latest/concepts/best-practices.html#cloud-sql",
         "https://cloud.google.com/blog/products/gcp/best-practices-for-securing-your-google-cloud-databases"
     ],

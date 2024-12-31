@@ -1,3 +1,4 @@
+from ScoutSuite.providers.gcp.resources.iam.audit_configs import AuditConfigs
 from ScoutSuite.providers.gcp.resources.projects import Projects
 from ScoutSuite.providers.gcp.resources.iam.member_bindings import Bindings
 from ScoutSuite.providers.gcp.resources.iam.users import Users
@@ -14,5 +15,6 @@ class IAM(Projects):
         (Groups, 'groups'),
         (ServiceAccounts, 'service_accounts'),
         (Domains, "domains"),
-        (BindingsSeparationDuties, 'bindings_separation_duties')
+        (BindingsSeparationDuties, 'bindings_separation_duties'),
+        (AuditConfigs, 'audit_configs')
     ]

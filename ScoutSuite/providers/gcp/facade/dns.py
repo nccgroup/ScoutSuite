@@ -6,7 +6,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class DNSFacade(GCPBaseFacade):
     def __init__(self):
-        super().__init__('dns', 'v1')
+        super().__init__("dns", "v1")
 
     async def get_zones(self, project_id):
         try:
@@ -15,5 +15,15 @@ class DNSFacade(GCPBaseFacade):
                 lambda: dns_client.managedZones().list(project=project_id).execute()
             )
         except Exception as e:
-            print_exception(f'Failed to retrieve zones: {e}')
+            print_exception(f"Failed to retrieve zones: {e}")
+            return {}
+
+    async def get_policies(self, project_id):
+        try:
+            dns_client = self._get_client()
+            return await run_concurrently(
+                lambda: dns_client.policies().list(project=project_id).execute()
+            )
+        except Exception as e:
+            print_exception(f"Failed to retrieve DNS policies: {e}")
             return {}

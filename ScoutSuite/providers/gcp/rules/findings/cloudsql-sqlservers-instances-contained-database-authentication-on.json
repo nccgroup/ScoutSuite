@@ -7,9 +7,15 @@
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.1.0",
             "reference": "6.3.2"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.5.6"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#656-ensure-that-the-contained-database-authentication-database-flag-for-cloud-sql-on-the-sql-server-instance-is-set-to-off",
         "https://cloud.google.com/sql/docs/sqlserver/flags",
         "https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/contained-database-authentication-server-configuration-option?view=sql-server-ver15",
         "https://learn.microsoft.com/en-us/sql/relational-databases/databases/security-best-practices-with-contained-databases?view=sql-server-ver15"

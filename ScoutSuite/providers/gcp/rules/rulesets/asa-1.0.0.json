@@ -1,0 +1,285 @@
+{
+    "about": "This ruleset attempts to audit as many security configurations from the App Defense Alliance Google Cloud Profile v1.0.0. Audit the following items manually: 2.12.1, 2.14.7, 3.1.1, 3.9.11, 3.10.5",
+    "rules": {
+        "cloudsql-allows-root-login-from-any-host.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-instances-public-ips.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cloudsql-instance-ssl-not-required.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-mysql-instances-local-infile-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-mysql-instances-skip-show-database-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-connections-off.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-disconnections-off.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-min-duration-not-set-1.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-min-error-statement-insufficient.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-min-messages-insufficient.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-pgaudit-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-3625-trace-flag-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-contained-database-authentication-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-external-scripts-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-remote-access-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-user-options-specified.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudstorage-bucket-member.json": [
+            {
+                "args": [
+                    "allUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "allAuthenticatedUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "computeengine-firewall-default-rule-in-use.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-block-project-ssh-keys-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-default-service-account.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-full-api-access.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-ip-forwarding-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-os-login-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-public-ip-addresses.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-network-legacy-in-use.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-ssl-policy-weak.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "dns-logging-for-vpc-missing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "dns-zones-dnssec-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "dns-zones-key-signing-key-using-rsasha1.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "dns-zones-zone-signing-key-using-rsasha1.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "essentialcontacts-absent.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v1-environment-variables-secrets.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v1-runtime-deprecated.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "functions-v2-environment-variables-secrets.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "functions-v2-runtime-deprecated.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-audit-logs-misconfigured.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-gmail-accounts-used.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-sa-has-admin-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-service-account-role-assigned-to-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "kms-cryptokeys-anonymously-publicly-accessible.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-audit-config-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-custom-role-changes.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-metric-filter-does-not-exist-project-ownership-assignment.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-no-export-sinks.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ]
+    }
+}

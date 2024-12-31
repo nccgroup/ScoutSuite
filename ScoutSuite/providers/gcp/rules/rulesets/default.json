@@ -77,6 +77,12 @@
                 "level": "warning"
             }
         ],
+        "cloudsql-mysql-instances-skip-show-database-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudsql-postgresql-instances-log-checkpoints-off.json": [
             {
                 "enabled": true,
@@ -107,13 +113,31 @@
                 "level": "warning"
             }
         ],
-        "cloudsql-postgresql-instances-log-min-messages-not-set.json": [
+        "cloudsql-postgresql-instances-log-min-error-statement-not-set.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-min-error-statement-insufficient.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-log-min-messages-insufficient.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
         "cloudsql-postgresql-instances-log-temp-files-not-set-0.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-postgresql-instances-pgaudit-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -126,6 +150,30 @@
             }
         ],
         "cloudsql-sqlservers-instances-cross-db-ownership-chaining-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-remote-access-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-user-options-specified.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-3625-trace-flag-on.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-sqlservers-instances-external-scripts-enabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -264,7 +312,7 @@
                 "level": "warning"
             }
         ],
-        "computeengine-instance-public-ip-adresses.json": [
+        "computeengine-instance-public-ip-addresses.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -324,6 +372,18 @@
                 "level": "warning"
             }
         ],
+        "computeengine-ssl-policy-weak.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "dns-logging-for-vpc-missing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "dns-zones-dnssec-not-enabled.json": [
             {
                 "enabled": true,
@@ -342,10 +402,22 @@
                 "level": "warning"
             }
         ],
+        "essentialcontacts-absent.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "functions-v1-allowing-http.json": [
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "functions-v1-runtime-deprecated.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "functions-v1-environment-variables-secrets.json": [
@@ -386,6 +458,12 @@
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "functions-v2-runtime-deprecated.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "iam-gmail-accounts-used.json": [
@@ -454,6 +532,12 @@
                 "level": "warning"
             }
         ],
+        "iam-service-account-role-assigned-to-user.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-service-account-with-user-managed-keys.json": [
             {
                 "enabled": true,
@@ -461,6 +545,12 @@
             }
         ],
         "iam-user-has-sa-user-role.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-audit-logs-misconfigured.json": [
             {
                 "enabled": true,
                 "level": "warning"

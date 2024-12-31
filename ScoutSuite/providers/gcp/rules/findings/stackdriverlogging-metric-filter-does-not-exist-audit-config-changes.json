@@ -7,9 +7,15 @@
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.1.0",
             "reference": "2.5"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "3.10.3"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#3103-ensure-that-the-log-metric-filter-and-alerts-exist-for-audit-configuration-changes",
         "https://cloud.google.com/logging/docs/logs-based-metrics/",
         "https://cloud.google.com/monitoring/custom-metrics/",
         "https://cloud.google.com/monitoring/alerts/",

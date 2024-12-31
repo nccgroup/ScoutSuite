@@ -1,0 +1,32 @@
+
+<!-- Cloud Resources Manager audit_configs' partial -->
+<script id="services.iam.projects.id.audit_configs.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{service}}</h4>
+    </div>
+    <div class="list-group-item">
+        {{#each auditLogConfigs}}
+        <h5 class="list-group-item-heading">{{logType}}</h5>
+        <h6>Exempted Members</h6>
+        <ul id="iam.projects.{{@../../key}}.audit_configs.{{@../key}}.auditLogConfigs.{{@key}}.exemptedMembers">
+            {{#each exemptedMembers}}
+            <li><samp>{{this}}</samp></li>
+            {{else}}
+            <li><samp>None</samp></li>
+            {{/each}}
+        </ul>
+        {{/each}}
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.iam.projects.id.audit_configs", $("#services\\.iam\\.projects\\.id\\.audit_configs\\.partial").html());
+</script>
+
+<!-- Single iam audit_config template -->
+<script id="single_iam_audit_config-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.iam.projects.id.audit_configs'}}
+</script>
+<script>
+    var single_iam_audit_config_template = Handlebars.compile($("#single_iam_audit_config-template").html());
+</script>

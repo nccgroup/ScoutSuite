@@ -7,9 +7,15 @@
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.1.0",
             "reference": "1.9"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "2.7.6"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#276-ensure-that-cloud-kms-cryptokeys-are-not-anonymously-or-publicly-accessible",
         "https://cloud.google.com/sdk/gcloud/reference/kms/keys/remove-iam-policy-binding",
         "https://cloud.google.com/sdk/gcloud/reference/kms/keys/set-iam-policy",
         "https://cloud.google.com/sdk/gcloud/reference/kms/keys/get-iam-policy",

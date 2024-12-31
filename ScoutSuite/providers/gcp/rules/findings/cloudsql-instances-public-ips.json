@@ -7,9 +7,15 @@
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.1.0",
             "reference": "6.6"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.5.3"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#634-ensure-that-the-cloud-sql-database-instance-requires-all-incoming-connections-to-use-ssl",
         "https://cloud.google.com/sql/docs/mysql/configure-private-ip",
         "https://cloud.google.com/sql/docs/mysql/private-ip",
         "https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints",

@@ -7,9 +7,15 @@
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.1.0",
             "reference": "4.6"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0.0",
+            "reference": "1.5.1"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#151-ensure-that-ip-forwarding-is-not-enabled-on-instances",
         "https://cloud.google.com/vpc/docs/using-routes#canipforward"
     ],
     "dashboard_name": "Instances",

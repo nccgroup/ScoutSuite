@@ -1,0 +1,26 @@
+{
+    "description": "No Essential Contacts is Configured for Organization",
+    "rationale": "Establish and maintain contact information for parties that need to be informed of security incidents. Contacts may include internal staff, third-party vendors, law enforcement, cyber insurance providers, relevant government agencies, Information Sharing and Analysis Center (ISAC) partners, or other stakeholders. Verify contacts annually to ensure that information is up-to-date.",
+    "dashboard_name": "Essential Contacts",
+    "path": "essentialcontacts.projects.id",
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#235-ensure-essential-contacts-is-configured-for-organization",
+        "https://cloud.google.com/resource-manager/docs/managing-notification-contacts"
+    ],
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "2.3.5"
+        }
+    ],
+    "conditions": [
+        "and",
+        [
+            "essentialcontacts.projects.id.contacts",
+            "empty",
+            ""
+        ]
+    ],
+    "id_suffix": "contacts"
+}

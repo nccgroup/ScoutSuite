@@ -13,7 +13,7 @@ class FunctionsFacade(GCPBaseFacade):
         return await self._get_functions_version("v1", project_id)
 
     async def get_functions_v2(self, project_id: str):
-        return await self._get_functions_version("v2alpha", project_id)
+        return await self._get_functions_version("v2", project_id)
 
     async def _get_functions_version(self, api_version: str, project_id: str):
         try:

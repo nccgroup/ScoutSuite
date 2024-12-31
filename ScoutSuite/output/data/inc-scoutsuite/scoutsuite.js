@@ -1229,6 +1229,8 @@ function makeTitle(title) {
         console.log('Error: received title ' + title + ' (string expected).')
         return title.toString()
     }
+    
+    console.log(title)
 
     const uppercaseTitles = [
         'acm', 'aks', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'gke', 'iam', 'kms', 'rbac',
@@ -1253,7 +1255,6 @@ function makeTitle(title) {
         'stackdriverlogging': 'Stackdriver Logging',
         'stackdrivermonitoring': 'Stackdriver Monitoring',
         'computeengine': 'Compute Engine',
-        'kubernetesengine': 'Kubernetes Engine',
         'cloudmemorystore': 'Cloud Memorystore',
         'aad': 'Azure Active Directory',
         'storageaccounts': 'Storage Accounts',
@@ -1267,11 +1268,13 @@ function makeTitle(title) {
         'loadbalancer': 'Load Balancer',
         'actiontrail': 'ActionTrail',
         'objectstorage': 'Object Storage',
+        'essentialcontacts': 'Essential Contacts',
+        'sslpolicies': 'SSL Policies',
 
         // Azure and Kubernetes
         'loggingmonitoring': 'Azure Monitor',
 
-        // Kubernetes
+        // Google Cloud and Kubernetes
         'kubernetesengine': 'GKE'
     }
 

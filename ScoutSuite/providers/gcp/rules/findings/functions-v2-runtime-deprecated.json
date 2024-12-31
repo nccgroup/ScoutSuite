@@ -1,0 +1,48 @@
+{
+    "description": "Functions using deprecated runtimes (Gen 2)",
+    "rationale": "If software is unsupported, yet necessary for the fulfillment of the enterprise's mission, document an exception detailing mitigating controls and residual risk acceptance. For any unsupported software without an exception documentation, designate as unauthorized. Review the software list to verify software support at least monthly, or more frequently.",
+    "dashboard_name": "Functions",
+    "path": "functions.projects.id.functions_v2.id",
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#126-ensure-that-all-gcp-cloud-functions-are-configured-to-use-a-current-not-deprecated-runtime",
+        "https://cloud.google.com/functions/docs/runtime-support"
+    ],
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "1.2.6"
+        }
+    ],
+    "conditions": [
+        "or",
+        [
+            "functions.projects.id.functions_v2.id.runtime",
+            "containAtLeastOneOf",
+            [
+                "nodejs6",
+                "nodejs8",
+                "nodejs10",
+                "nodejs12",
+                "nodejs14",
+                "nodejs16",
+                "python37",
+                "python38",
+                "go111",
+                "go113",
+                "go116",
+                "go118",
+                "go119",
+                "go120",
+                "java11",
+                "ruby26",
+                "ruby27",
+                "ruby30",
+                "php74",
+                "dotnet3",
+                "dotnet6"
+            ]
+        ]
+    ],
+    "id_suffix": "runtime"
+}

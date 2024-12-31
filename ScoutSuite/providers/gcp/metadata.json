@@ -25,6 +25,10 @@
         "bindings_separation_duties": {
           "cols": 2,
           "path": "services.iam.projects.id.bindings_separation_duties"
+        },
+        "audit_configs": {
+          "cols": 2,
+          "path": "services.iam.projects.id.audit_configs"
         }
       }
     },
@@ -33,6 +37,14 @@
         "keyrings": {
           "cols": 2,
           "path": "services.kms.projects.id.keyrings"
+        }
+      }
+    },
+    "essentialcontacts": {
+      "resources": {
+        "contacts": {
+          "cols": 2,
+          "path": "services.iam.essentialcontacts.id.contacts"
         }
       }
     }
@@ -67,6 +79,10 @@
         "global_forwarding_rules": {
           "cols": 2,
           "path": "services.computeengine.projects.id.global_forwarding_rules"
+        },
+        "sslpolicies": {
+          "cols": 2,
+          "path": "services.computeengine.projects.id.sslpolicies"
         }
       }
     },

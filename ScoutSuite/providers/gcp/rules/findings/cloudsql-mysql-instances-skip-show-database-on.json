@@ -1,0 +1,28 @@
+{
+    "description": "Skip Show Database Flag for MySQL Instance Is Off",
+    "rationale": "The 'skip_show_database' database flag prevents people from using the SHOW DATABASES statement if they do not have the SHOW DATABASES privilege. This can improve security if you have concerns about users being able to see databases belonging to other users. Its effect depends on the SHOW DATABASES privilege: If the variable value is ON, the SHOW DATABASES statement is permitted only to users who have the SHOW DATABASES privilege, and the statement displays all database names. If the value is OFF, SHOW DATABASES is permitted to all users, but displays the names of only those databases for which the user has the SHOW DATABASES or other privilege. This requirement is applicable to Mysql database instances.",
+    "remediation": "Configure data access control lists based on a user's need to know. Apply data access control lists, also known as access permissions, to local and remote file systems, databases, and applications. Ensure 'Skip_show_database' Database Flag for Cloud SQL MySQL Instance Is Set to 'On'",
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.5.4"
+        }
+    ],
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#654-ensure-skip_show_database-database-flag-for-cloud-sql-mysql-instance-is-set-to-on",
+        "https://cloud.google.com/sql/docs/mysql/flags",
+        "https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_skip_show_database"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.skip_show_database_on",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "skip_show_database_on"
+}

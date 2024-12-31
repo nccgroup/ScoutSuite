@@ -3,6 +3,22 @@
     "rationale": "Some default firewall rules were in use. This could potentially expose sensitive services or protocols to other networks.",
     "dashboard_name": "Firewall Rule",
     "path": "computeengine.projects.id.firewalls.id",
+    "reference": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#433-ensure-that-ssh-access-is-restricted-from-the-internet",
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#434-ensure-that-rdp-access-is-restricted-from-the-internet"
+    ],
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "4.3.3"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "4.3.4"
+        }
+    ],
     "conditions": [
         "and",
         [

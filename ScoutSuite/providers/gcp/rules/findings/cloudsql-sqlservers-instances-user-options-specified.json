@@ -1,0 +1,27 @@
+{
+    "description": "User Options Flag Specified for SQL Server Instance",
+    "rationale": "The user options option specifies global defaults for all users. A list of default query processing options is established for the duration of a user's work session. The user options option allows you to change the default values of the SET options (if the server's default settings are not appropriate). A user can override these defaults by using the SET statement. You can configure user options dynamically for new logins. After you change the setting of user options, new login sessions use the new setting; current login sessions are not affected.",
+    "remediation": "Ensure 'user options' database flag for Cloud SQL SQL Server instance is not configured.",
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "6.6.1"
+        }
+    ],
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#661-ensure-user-options-database-flag-for-cloud-sql-sql-server-instance-is-not-configured",
+        "https://cloud.google.com/sql/docs/sqlserver/flags"
+    ],
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.user_options_specified",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "user_options_specified"
+}

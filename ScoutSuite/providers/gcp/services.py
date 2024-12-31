@@ -12,7 +12,7 @@ from ScoutSuite.providers.gcp.resources.bigquery.base import BigQuery
 from ScoutSuite.providers.gcp.resources.stackdriverlogging.base import StackdriverLogging
 from ScoutSuite.providers.gcp.resources.stackdrivermonitoring.base import StackdriverMonitoring
 from ScoutSuite.providers.gcp.resources.gke.base import KubernetesEngine
-
+from ScoutSuite.providers.gcp.resources.essentialcontacts.base import EssentialContacts
 
 class GCPServicesConfig(BaseServicesConfig):
 
@@ -36,6 +36,7 @@ class GCPServicesConfig(BaseServicesConfig):
         self.stackdrivermonitoring = StackdriverMonitoring(facade)
         self.kubernetesengine = KubernetesEngine(facade)
         self.dns = DNS(facade)
+        self.essentialcontacts = EssentialContacts(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'gcp'

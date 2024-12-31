@@ -14,6 +14,7 @@
         <div class="list-group-item-text item-margin">Public IP Address: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.public_ip"><samp>{{value_or_none public_ip}}</samp></span></div>
         <div class="list-group-item-text item-margin">Private IP Address: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.private_ip"><samp>{{value_or_none private_ip}}</samp></span></div>
         <div class="list-group-item-text item-margin">Local Infile Flag is Off: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.local_infile_off"><samp>{{value_or_none local_infile_off}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Skip Show Database is On: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.skip_show_database_on"><samp>{{value_or_none skip_show_database_on}}</samp></span></div>
         <div class="list-group-item-text item-margin">Cross db Ownership Chaining Flag is Off: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.cross_db_ownership_chaining_off"><samp>{{value_or_none cross_db_ownership_chaining_off}}</samp></span></div>
         <div class="list-group-item-text item-margin">Contained Database Authentication Flag is Off: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.contained_database_authentication_off"><samp>{{value_or_none contained_database_authentication_off}}</samp></span></div>
 
@@ -21,9 +22,15 @@
         <div class="list-group-item-text item-margin">Log Connections Flag is On: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_connections_on"><samp>{{value_or_none log_connections_on}}</samp></span></div>
         <div class="list-group-item-text item-margin">Log Disconnections Flag is On: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_disconnections_on"><samp>{{value_or_none log_disconnections_on}}</samp></span></div>
         <div class="list-group-item-text item-margin">Log Lock Waits Flag is On: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_lock_waits_on"><samp>{{value_or_none log_lock_waits_on}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Log Min Messages Flag set Appropriately: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_min_messages"><samp>{{value_or_none log_min_messages}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Log Min Messages Flag: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_min_messages"><samp>{{value_or_none log_min_messages}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Log Min Error Statement Flag: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_min_error_statement"><samp>{{value_or_none log_min_error_statement}}</samp></span></div>
         <div class="list-group-item-text item-margin">Log Temp Files Flag set to 0: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_temp_files_0"><samp>{{value_or_none log_temp_files_0}}</samp></span></div>
         <div class="list-group-item-text item-margin">Log Min Duration Statement Flag set to -1: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_min_duration_statement_-1"><samp>{{value_or_none log_min_duration_statement_-1}}</samp></span></div>
+        <div class="list-group-item-text item-margin">cloudsql.enable_pgaudit Flag set to On: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.cloudsql_enable_pgaudit"><samp>{{value_or_none cloudsql_enable_pgaudit}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Remote Access is On: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.remote_access_on"><samp>{{value_or_none remote_access_on}}</samp></span></div>
+        <div class="list-group-item-text item-margin">User options flag is specified: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.user_options_specified"><samp>{{value_or_none user_options_specified}}</samp></span></div>
+        <div class="list-group-item-text item-margin">3625 trace flag is disabled: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.3625_off"><samp>{{value_or_none 3625_off}}</samp></span></div>
+        <div class="list-group-item-text item-margin">External scripts are enabled: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.external_scripts_enabled"><samp>{{value_or_none external_scripts_enabled}}</samp></span></div>
 
         {{#if authorized_networks}}
         <div class="list-group-item-text item-margin">Authorized Networks:</div>

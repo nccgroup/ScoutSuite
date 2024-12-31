@@ -1,6 +1,7 @@
 {
     "description": "Gmail Account in Use",
     "rationale": "It is recommended fully-managed corporate Google accounts be used for increased visibility, auditing, and controlling access to Cloud Platform resources. Email accounts based outside of the user's organization, such as personal accounts, should not be used for business purposes.",
+    "remediation": "Centralize account management through a directory or identity service.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
@@ -11,9 +12,15 @@
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.1.0",
             "reference": "1.1"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "2.12.1"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#2121-ensure-that-corporate-login-credentials-are-used",
         "https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#manage-identities",
         "https://support.google.com/work/android/answer/6371476",
         "https://cloud.google.com/sdk/gcloud/reference/organizations/get-iam-policy",

@@ -1,3 +1,4 @@
+from ScoutSuite.providers.gcp.resources.gce.sslpolicies import SSLPolicies
 from ScoutSuite.providers.gcp.resources.projects import Projects
 from ScoutSuite.providers.gcp.resources.gce.firewalls import Firewalls
 from ScoutSuite.providers.gcp.resources.gce.networks import Networks
@@ -15,6 +16,7 @@ class ComputeEngine(Projects):
         (Snapshots, 'snapshots'),
         (GCEZones, 'zones'),
         (GlobalForwardingRules, "global_forwarding_rules"),
+        (SSLPolicies, 'sslpolicies')
      ]
 
     async def fetch_all(self):

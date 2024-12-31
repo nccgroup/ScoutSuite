@@ -1,0 +1,35 @@
+{
+    "description": "Weak SSL Policy",
+    "rationale": "Load balancers are used to efficiently distribute traffic across multiple servers. Both SSL proxy and HTTPS load balancers are external load balancers, meaning they distribute traffic from the Internet to a GCP network. GCP customers can configure load balancer SSL policies with a minimum TLS version (1.0, 1.1, or 1.2) that clients can use to establish a connection, along with a profile (Compatible, Modern, Restricted, or Custom) that specifies permissible cipher suites. To comply with users using outdated protocols, GCP load balancers can be configured to permit insecure cipher suites. In fact, the GCP default SSL policy uses a minimum TLS version of 1.0 and a Compatible profile, which allows the widest range of insecure cipher suites. As a result, it is easy for customers to configure a load balancer without even knowing that they are permitting outdated cipher suites.",
+    "remediation": "Ensure no HTTPS or SSL proxy load balancers permit SSL policies with weak cipher suites.",
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#411-ensure-no-https-or-ssl-proxy-load-balancers-permit-ssl-policies-with-weak-cipher-suites",
+        "https://cloud.google.com/load-balancing/docs/use-ssl-policies"
+    ],
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "4.1.1"
+        }
+    ],
+    "dashboard_name": "Policies",
+    "path": "computeengine.projects.id.sslpolicies.id",
+    "conditions": [
+        "or",
+        [
+            "computeengine.projects.id.sslpolicies.id.profile",
+            "equal",
+            "COMPATIBLE"
+        ],
+        [
+            "computeengine.projects.id.sslpolicies.id.minTlsVersion",
+            "containAtLeastOneOf",
+            [
+                "TLS_1_0",
+                "TLS_1_1"
+            ]
+        ]
+    ],
+    "id_suffix": "profile"
+}

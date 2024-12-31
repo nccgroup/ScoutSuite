@@ -1,9 +1,18 @@
 {
     "description": "Lack of Export Sinks",
     "rationale": "Export sinks for Stackdriver logging were not found. As a result, logs would be deleted after the configured retention period, and would not be backed up.",
+    "remediation": "Collect audit logs. Ensure that logging, per the enterprise's audit log management process, has been enabled across enterprise assets and that logs are retained for at least a minimum period of time.",
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#3101-ensure-that-sinks-are-configured-for-all-log-entries",
         "https://cloud.google.com/logging",
         "https://cloud.google.com/logging/docs/export"
+    ],
+    "compliance": [
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "3.10.1"
+        }
     ],
     "dashboard_name": "Logging Configurations",
     "display_path": "stackdriverlogging.projects.id.sinks",

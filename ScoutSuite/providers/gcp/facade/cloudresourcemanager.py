@@ -16,6 +16,14 @@ class CloudResourceManagerFacade(GCPBaseFacade):
         except Exception as e:
             print_exception(f'Failed to retrieve project IAM policy bindings: {e}')
             return []
-        
 
-
+    async def get_audit_configs(self, project_id: str):
+        try:
+            cloudresourcemanager_client = self._get_client()
+            response = await run_concurrently(
+                lambda: cloudresourcemanager_client.projects().getIamPolicy(resource=project_id).execute()
+            )
+            return response.get('auditConfigs', [])
+        except Exception as e:
+            print_exception(f'Failed to retrieve project IAM policy audit configs: {e}')
+            return []

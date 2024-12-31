@@ -12,9 +12,15 @@
             "name": "CIS Google Cloud Platform Foundations",
             "version": "1.1.0",
             "reference": "1.5"
+        },
+        {
+            "name": "App Defense Alliance Cloud Profile",
+            "version": "1.0",
+            "reference": "2.11.5"
         }
     ],
     "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/main/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#2115-ensure-that-service-account-has-no-admin-privileges",
         "https://cloud.google.com/sdk/gcloud/reference/iam/service-accounts/",
         "https://cloud.google.com/iam/docs/understanding-roles",
         "https://cloud.google.com/iam/docs/understanding-service-accounts"

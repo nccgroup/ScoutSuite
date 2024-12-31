@@ -63,6 +63,7 @@ formatted_service_name = {
     'kubernetesengine': 'Kubernetes Engine',
     'functions': 'Cloud Functions',
     'bigquery': 'BigQuery',
+    'essentialcontacts': 'Essential Contacts',
     # Aliyun
     'actiontrail': 'ActionTrail',
     # OCI

@@ -148,3 +148,13 @@ class GCEFacade(GCPBaseFacade):
         except Exception as e:
             print_exception(f'Failed to retrieve forwarding_rules: {e}')
             return []
+
+    async def get_sslpolicies(self, project_id):
+        try:
+            gce_client = self._get_client()
+            sslpolicies = gce_client.sslPolicies()
+            request = sslpolicies.list(project=project_id)
+            return await GCPFacadeUtils.get_all('items', request, sslpolicies)
+        except Exception as e:
+            print_exception(f'Failed to retrieve SSL policies: {e}')
+            return []
