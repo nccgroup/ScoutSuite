@@ -1,0 +1,27 @@
+{
+    "description": "Lambda Function Using Deprecated Runtime",
+    "rationale": "Deprecated Lambda runtimes no longer receive security updates.",
+    "remediation": "Switch to a newer, supported runtime.",
+    "compliance": [
+        {
+            "name": "ADA Cloud Profile",
+            "version": "1.0",
+            "reference": "1.2.1"
+        }
+    ],
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/v1.0/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#121-ensure-that-all-aws-lambda-functions-are-configured-to-use-a-current-not-deprecated-runtime",
+        "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
+    ],
+    "dashboard_name": "Functions",
+    "path": "awslambda.regions.id.functions.id",
+    "conditions": [
+        "and",
+        [
+            "runtime_deprecated",
+            "true",
+            ""
+        ]
+    ],
+    "class_suffix": "runtime_deprecated"
+}

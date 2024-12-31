@@ -683,6 +683,9 @@
         ],
         "iam-password-policy-reuse-enabled.json": [
             {
+                "args": [
+                    "1"
+                ],
                 "enabled": true,
                 "level": "danger"
             }

@@ -14,6 +14,14 @@
         }
     },
     "management": {
+        "account": {
+            "resources": {
+                "contacts": {
+                    "cols": 2,
+                    "path": "services.account.contacts"
+                }
+            }
+        },
         "cloudformation": {
             "resources": {
                 "stacks": {
@@ -391,6 +399,10 @@
                 "password_policy": {
                     "cols": 1,
                     "path": "services.iam.password_policy"
+                },
+                "account_summary": {
+                    "cols": 1,
+                    "path": "services.iam.account_summary"
                 }
             }
         },

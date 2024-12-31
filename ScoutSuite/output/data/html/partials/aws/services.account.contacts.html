@@ -1,0 +1,31 @@
+<!-- Account settings partial -->
+<script id="services.account.contacts.partial" type="text/x-handlebars-template">
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Account Contact</h4>
+        <div>
+            <div class="list-group-item-text item-margin">Full name: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.FullName}}</samp></div>
+            <div class="list-group-item-text item-margin">Company name: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.CompanyName}}</samp></div>
+            <div class="list-group-item-text item-margin">Address line 1: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.AddressLine1}}</samp></div>
+            <div class="list-group-item-text item-margin">Address line 2: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.AddressLine2}}</samp></div>
+            <div class="list-group-item-text item-margin">Address line 3: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.AddressLine3}}</samp></div>
+            <div class="list-group-item-text item-margin">City: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.City}}</samp></div>
+            <div class="list-group-item-text item-margin">District/County: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.DistrictOrCounty}}</samp></div>
+            <div class="list-group-item-text item-margin">State/Province/Region: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.StateOrRegion}}</samp></div>
+            <div class="list-group-item-text item-margin">Country: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.CountryCode}}</samp></div>
+            <div class="list-group-item-text item-margin">Postal code: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.PostalCode}}</samp></div>
+            <div class="list-group-item-text item-margin">Phone number: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.PhoneNumber}}</samp></div>
+            <div class="list-group-item-text item-margin">Website URL: <samp class="account.contacts.{{@key}}.contact_information">{{value_or_none contact_information.WebsiteUrl}}</samp></div>
+        </div>
+        <h4 class="list-group-item-heading">Security Contact</h4>
+        <div>
+            <div class="list-group-item-text item-margin">Name: <samp class="account.contacts.{{@key}}.security_contact">{{value_or_none security_contact.Name}}</samp></div>
+            <div class="list-group-item-text item-margin">Title: <samp class="account.contacts.{{@key}}.security_contact">{{value_or_none security_contact.Title}}</samp></div>
+            <div class="list-group-item-text item-margin">Email address: <samp class="account.contacts.{{@key}}.security_contact">{{value_or_none security_contact.EmailAddress}}</samp></div>
+            <div class="list-group-item-text item-margin">Phone number: <samp class="account.contacts.{{@key}}.security_contact">{{value_or_none security_contact.PhoneNumber}}</samp></div>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.account.contacts", $("#services\\.account\\.contacts\\.partial").html());
+</script>

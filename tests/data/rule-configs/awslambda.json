@@ -1,0 +1,343 @@
+{
+    "account_id": "123456789012",
+    "services": {
+        "awslambda": {
+            "filters": {},
+            "findings": {
+                "awslambda-runtime-deprecated": {
+                    "checked_items": 2,
+                    "class_suffix": "runtime_deprecated",
+                    "compliance": null,
+                    "dashboard_name": "Functions",
+                    "description": "Lambda Function Using Deprecated Runtime",
+                    "flagged_items": 1,
+                    "items": [
+                        "awslambda.regions.us-east-1.functions.scoutid-b47af3e35341b60759c8e3c3e426b5b0216a1e35.runtime_deprecated"
+                    ],
+                    "level": "warning",
+                    "path": "awslambda.regions.id.functions.id",
+                    "rationale": "Deprecated Lambda runtimes no longer receive security updates.",
+                    "references": [
+                        "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
+                    ],
+                    "remediation": "Switch to a newer, supported runtime.",
+                    "service": "Lambda"
+                }
+            },
+            "functions_count": 2,
+            "regions": {
+                "us-east-1": {
+                    "functions": {
+                        "scoutid-640ab2bae07bedc4c163f679a746f7ab7fb5d1fa": {
+                            "access_policy": {
+                                "Id": "default",
+                                "Statement": [],
+                                "Version": "2012-10-17"
+                            },
+                            "arn": "arn:aws:lambda:us-east-1:123456789012:function:Test1",
+                            "code_sha256": "ozqmTyk2fnrKvm6fOjTpTgCCWSzYe3fyTMHO8rh6Iis=",
+                            "code_size": 287,
+                            "date_runtime_deprecated": "None",
+                            "description": "",
+                            "env_variable_names": [],
+                            "env_variable_values": [],
+                            "env_variables": [],
+                            "execution_role": {
+                                "Arn": "arn:aws:iam::123456789012:role/service-role/Test1-role",
+                                "AssumeRolePolicyDocument": {
+                                    "Statement": [
+                                        {
+                                            "Action": "sts:AssumeRole",
+                                            "Condition": {
+                                                "ArnLike": {
+                                                    "aws:SourceArn": "arn:aws:lambda:us-east-1:123456789012:function:Test1"
+                                                },
+                                                "Bool": {
+                                                    "aws:ViaAWSService": "false"
+                                                },
+                                                "Null": {
+                                                    "aws:SourceAccount": "false",
+                                                    "aws:SourceArn": "false"
+                                                },
+                                                "StringEquals": {
+                                                    "aws:SourceAccount": "123456789012"
+                                                }
+                                            },
+                                            "Effect": "Allow",
+                                            "Principal": {
+                                                "Service": "lambda.amazonaws.com"
+                                            }
+                                        }
+                                    ],
+                                    "Version": "2012-10-17"
+                                },
+                                "CreateDate": "2024-01-24 23:50:06+00:00",
+                                "MaxSessionDuration": 3600,
+                                "Path": "/service-role/",
+                                "RoleId": "AROAAAAAAAAAAAAAAAAAA",
+                                "RoleLastUsed": {
+                                    "LastUsedDate": "2024-05-23 00:00:37+00:00",
+                                    "Region": "us-east-1"
+                                },
+                                "RoleName": "Test1-role-gs4r4cl9",
+                                "policies": [
+                                    {
+                                        "Document": {
+                                            "Statement": [
+                                                {
+                                                    "Action": "logs:CreateLogGroup",
+                                                    "Effect": "Allow",
+                                                    "Resource": "arn:aws:logs:us-east-1:123456789012:*"
+                                                },
+                                                {
+                                                    "Action": [
+                                                        "logs:CreateLogStream",
+                                                        "logs:PutLogEvents"
+                                                    ],
+                                                    "Effect": "Allow",
+                                                    "Resource": [
+                                                        "arn:aws:logs:us-east-1:123456789012:log-group:/aws/lambda/Test1:*"
+                                                    ]
+                                                }
+                                            ],
+                                            "Version": "2012-10-17"
+                                        },
+                                        "PolicyArn": "arn:aws:iam::123456879012:policy/service-role/AWSLambdaBasicExecutionRole-c693a6e5-35e0-4e71-9176-a449e4efc40d",
+                                        "PolicyName": "AWSLambdaBasicExecutionRole-c693a6e5-35e0-4e71-9176-a449e4efc40d"
+                                    }
+                                ],
+                                "policy_statements": [
+                                    {
+                                        "Action": "logs:CreateLogGroup",
+                                        "Effect": "Allow",
+                                        "Resource": "arn:aws:logs:us-east-1:123456789012:*"
+                                    },
+                                    {
+                                        "Action": [
+                                            "logs:CreateLogStream",
+                                            "logs:PutLogEvents"
+                                        ],
+                                        "Effect": "Allow",
+                                        "Resource": [
+                                            "arn:aws:logs:us-east-1:123456789012:log-group:/aws/lambda/Test1:*"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "handler": "lambda_function.lambda_handler",
+                            "last_modified": "2024-05-22T20:43:52.000+0000",
+                            "memory_size": 128,
+                            "name": "Test1",
+                            "revision_id": "c9906c99-df60-4a13-94cc-b90ca69b970d",
+                            "role_arn": "arn:aws:iam::123456789012:role/service-role/Test1-role-gs4r4cl9",
+                            "runtime": "python3.12",
+                            "runtime_deprecated": false,
+                            "timeout": 3,
+                            "tracing_config": {
+                                "Mode": "PassThrough"
+                            },
+                            "version": "$LATEST"
+                        },
+                        "scoutid-b47af3e35341b60759c8e3c3e426b5b0216a1e35": {
+                            "access_policy": {
+                                "Id": "default",
+                                "Statement": [
+                                    {
+                                        "Action": "lambda:InvokeFunction",
+                                        "Condition": {
+                                            "ArnLike": {
+                                                "AWS:SourceArn": "arn:aws:events:us-east-1:123456789012:rule/TestRule"
+                                            }
+                                        },
+                                        "Effect": "Allow",
+                                        "Principal": {
+                                            "Service": "events.amazonaws.com"
+                                        },
+                                        "Resource": "arn:aws:lambda:us-east-1:123456789012:function:Test2"
+                                    }
+                                ],
+                                "Version": "2012-10-17"
+                            },
+                            "arn": "arn:aws:lambda:us-east-1:123456789012:function:Test2",
+                            "code_sha256": "m2FX3CW1rbebsw7RjAuG7YeRu/Ej7SVvExLbgAYUt4M=",
+                            "code_size": 2379,
+                            "date_runtime_deprecated": "2022-07-18",
+                            "description": "Test 2",
+                            "env_variable_names": [
+                                "GROUP",
+                                "POLICY_ARN",
+                                "INSTANCE_PROFILE_ARN"
+                            ],
+                            "env_variable_values": [
+                                "DEV",
+                                "arn:aws:iam::123456789012:policy/TestPolicy",
+                                "arn:aws:iam::123456789012:instance-profile/TestProfile"
+                            ],
+                            "env_variables": {
+                                "INSTANCE_PROFILE_ARN": "arn:aws:iam::123456789012:instance-profile/TestProfile",
+                                "GROUP": "DEV",
+                                "POLICY_ARN": "arn:aws:iam::123456789012:policy/TestPolicy"
+                            },
+                            "execution_role": {
+                                "Arn": "arn:aws:iam::123456789012:role/Test2-role",
+                                "AssumeRolePolicyDocument": {
+                                    "Statement": [
+                                        {
+                                            "Action": "sts:AssumeRole",
+                                            "Effect": "Allow",
+                                            "Principal": {
+                                                "Service": "lambda.amazonaws.com"
+                                            }
+                                        }
+                                    ],
+                                    "Version": "2012-10-17"
+                                },
+                                "CreateDate": "2021-03-23 19:09:46+00:00",
+                                "Description": "",
+                                "MaxSessionDuration": 3600,
+                                "Path": "/",
+                                "RoleId": "AROABBBBBBBBBBBBBBBBB",
+                                "RoleLastUsed": {
+                                    "LastUsedDate": "2024-03-13 19:17:35+00:00",
+                                    "Region": "us-east-1"
+                                },
+                                "RoleName": "Test2-role",
+                                "policies": [
+                                    {
+                                        "Document": {
+                                            "Statement": [
+                                                {
+                                                    "Action": [
+                                                        "iam:CreateInstanceProfile",
+                                                        "iam:ListInstanceProfiles",
+                                                        "iam:ListAttachedRolePolicies",
+                                                        "iam:GetInstanceProfile",
+                                                        "ec2:DescribeIamInstanceProfileAssociations",
+                                                        "ec2:AssociateIamInstanceProfile",
+                                                        "ec2:DisassociateIamInstanceProfile",
+                                                        "ec2:DescribeTags",
+                                                        "ec2:CreateTags"
+                                                    ],
+                                                    "Effect": "Allow",
+                                                    "Resource": "*"
+                                                },
+                                                {
+                                                    "Action": "iam:AttachRolePolicy",
+                                                    "Condition": {
+                                                        "ArnLike": {
+                                                            "iam:PolicyARN": [
+                                                                "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "Effect": "Allow",
+                                                    "Resource": "arn:aws:iam::123456789012:role/*"
+                                                },
+                                                {
+                                                    "Action": "iam:PassRole",
+                                                    "Condition": {
+                                                        "StringEquals": {
+                                                            "iam:PassedToService": "ec2.amazonaws.com"
+                                                        }
+                                                    },
+                                                    "Effect": "Allow",
+                                                    "Resource": "arn:aws:iam::123456789012:role/Test2-role"
+                                                },
+                                                {
+                                                    "Action": "iam:AddRoleToInstanceProfile",
+                                                    "Effect": "Allow",
+                                                    "Resource": [
+                                                        "arn:aws:iam::123456789012:instance-profile/*",
+                                                        "arn:aws:iam::123456789012:role/Test2-role"
+                                                    ]
+                                                },
+                                                {
+                                                    "Action": "logs:*",
+                                                    "Effect": "Allow",
+                                                    "Resource": "arn:aws:logs:*"
+                                                }
+                                            ],
+                                            "Version": "2012-10-17"
+                                        },
+                                        "PolicyArn": "arn:aws:iam::123456789012:policy/TestPolicy",
+                                        "PolicyName": "TestPolicy"
+                                    }
+                                ],
+                                "policy_statements": [
+                                    {
+                                        "Action": [
+                                            "iam:CreateInstanceProfile",
+                                            "iam:ListInstanceProfiles",
+                                            "iam:ListAttachedRolePolicies",
+                                            "iam:GetInstanceProfile",
+                                            "ec2:DescribeIamInstanceProfileAssociations",
+                                            "ec2:AssociateIamInstanceProfile",
+                                            "ec2:DisassociateIamInstanceProfile",
+                                            "ec2:DescribeTags",
+                                            "ec2:CreateTags"
+                                        ],
+                                        "Effect": "Allow",
+                                        "Resource": "*"
+                                    },
+                                    {
+                                        "Action": "iam:AttachRolePolicy",
+                                        "Condition": {
+                                            "ArnLike": {
+                                                "iam:PolicyARN": [
+                                                    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+                                                ]
+                                            }
+                                        },
+                                        "Effect": "Allow",
+                                        "Resource": "arn:aws:iam::123456789012:role/*"
+                                    },
+                                    {
+                                        "Action": "iam:PassRole",
+                                        "Condition": {
+                                            "StringEquals": {
+                                                "iam:PassedToService": "ec2.amazonaws.com"
+                                            }
+                                        },
+                                        "Effect": "Allow",
+                                        "Resource": "arn:aws:iam::123456789012:role/Test2-role"
+                                    },
+                                    {
+                                        "Action": "iam:AddRoleToInstanceProfile",
+                                        "Effect": "Allow",
+                                        "Resource": [
+                                            "arn:aws:iam::123456789012:instance-profile/*",
+                                            "arn:aws:iam::123456789012:role/Test2-role"
+                                        ]
+                                    },
+                                    {
+                                        "Action": "logs:*",
+                                        "Effect": "Allow",
+                                        "Resource": "arn:aws:logs:*"
+                                    }
+                                ]
+                            },
+                            "handler": "handler.event_handler",
+                            "last_modified": "2021-03-23T21:55:59.377+0000",
+                            "memory_size": 128,
+                            "name": "Test2",
+                            "revision_id": "8733e9d3-7ece-4974-8d99-3c5afc7f948e",
+                            "role_arn": "arn:aws:iam::123456789012:role/Test2-role",
+                            "runtime": "python3.6",
+                            "runtime_deprecated": true,
+                            "timeout": 300,
+                            "tracing_config": {
+                                "Mode": "PassThrough"
+                            },
+                            "version": "$LATEST"
+                        }
+                    },
+                    "functions_count": 2,
+                    "id": "us-east-1",
+                    "name": "us-east-1",
+                    "region": "us-east-1"
+                }
+            },
+            "regions_count": 1
+        }
+    }
+}

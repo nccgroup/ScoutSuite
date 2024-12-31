@@ -1,0 +1,210 @@
+{
+  "account_id": "123456789012",
+  "services": {
+    "iam": {
+      "policies": {
+        "ANPAAAAAAAAAAAAAAAAAA": {
+          "PolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "*"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                  "*"
+                ]
+              }
+            ],
+            "Version": "2012-10-17"
+          },
+          "arn": "arn:aws:iam::aws:policy/AdministratorAccess",
+          "attached_to": {
+            "roles": [
+              {
+                "id": "AROAXXXXXXXXXXXXXXXX",
+                "name": "Admin"
+              }
+            ],
+            "users": [
+              {
+                "id": "AROAXXXXXXXXXXXXXXXX",
+                "name": "admin"
+              }
+            ]
+          },
+          "id": "ANPAAAAAAAAAAAAAAAAAA",
+          "management": "AWS",
+          "name": "AdministratorAccess"
+        },
+        "ANPABBBBBBBBBBBBBBBBB": {
+          "PolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "*"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                  "*"
+                ],
+                "Sid": "Statement1"
+              }
+            ],
+            "Version": "2012-10-17"
+          },
+          "arn": "arn:aws:iam::111111111111:policy/admin",
+          "attached_to": {
+            "users": [
+              {
+                "id": "AROAXXXXXXXXXXXXXXXX",
+                "name": "test2"
+              }
+            ]
+          },
+          "id": "ANPABBBBBBBBBBBBBBBBB",
+          "management": "Customer",
+          "name": "admin"
+        },               
+        "ANPACCCCCCCCCCCCCCCCC": {
+          "PolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "s3:GetObject"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                  "arn:aws:s3::foo/bar"
+                ],
+                "Sid": "Statement1"
+              },
+              {
+                "Action": [
+                  "s3:PutObject",
+                  "*",
+                  "s3:GetObjectVersion"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                  "arn:aws:s3::foo/*",
+                  "*",
+                  "arn:aws:s3::foo/bar"
+                ],
+                "Sid": "Statement1"
+              }
+            ],
+            "Version": "2012-10-17"
+          },
+          "arn": "arn:aws:iam::111111111111:policy/admin-obfuscated",
+          "attached_to": {
+            "groups": [
+              {
+                "id": "AROAXXXXXXXXXXXXXXXX",
+                "name": "admins"
+              }
+            ]
+          },
+          "id": "ANPACCCCCCCCCCCCCCCCC",
+          "management": "Customer",
+          "name": "admin-obfuscated"
+        },
+        "ANPADDDDDDDDDDDDDDDDD": {
+          "PolicyDocument": {},
+          "arn": "arn:aws:iam::111111111111:policy/admin-not-attached",
+          "attached_to": {},
+          "id": "ANPADDDDDDDDDDDDDDDDD",
+          "management": "Customer",
+          "name": "admin-not-attached"
+        },
+        "ANPAEEEEEEEEEEEEEEEEE": {
+          "PolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "*"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                  "arn:aws:s3::foo"
+                ],
+                "Sid": "Statement1"
+              }
+            ],
+            "Version": "2012-10-17"
+          },
+          "arn": "arn:aws:iam::111111111111:policy/admin-s3",
+          "attached_to": {
+            "users": [
+              {
+                "id": "AROAXXXXXXXXXXXXXXXX",
+                "name": "test2"
+              }
+            ]
+          },
+          "id": "ANPAEEEEEEEEEEEEEEEEE",
+          "management": "Customer",
+          "name": "admin-s3"
+        },               
+        "ANPAEEEEEEEEEEEEEEEEE": {
+          "PolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "Get*"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                  "arn:aws:s3::foo"
+                ],
+                "Sid": "Statement1"
+              }
+            ],
+            "Version": "2012-10-17"
+          },
+          "arn": "arn:aws:iam::111111111111:policy/read-all",
+          "attached_to": {
+            "users": [
+              {
+                "id": "AROAXXXXXXXXXXXXXXXX",
+                "name": "test2"
+              }
+            ]
+          },
+          "id": "ANPAEEEEEEEEEEEEEEEEE",
+          "management": "Customer",
+          "name": "read-all"
+        },               
+        "ANPAEEEEEEEEEEEEEEEEE": {
+          "PolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "*"
+                ],
+                "Effect": "Deny",
+                "Resource": [
+                  "*"
+                ],
+                "Sid": "Statement1"
+              }
+            ],
+            "Version": "2012-10-17"
+          },
+          "arn": "arn:aws:iam::111111111111:policy/anti-admin",
+          "attached_to": {
+            "users": [
+              {
+                "id": "AROAXXXXXXXXXXXXXXXX",
+                "name": "test2"
+              }
+            ]
+          },
+          "id": "ANPAEEEEEEEEEEEEEEEEE",
+          "management": "Customer",
+          "name": "anti-admin"
+        }
+      }
+    }
+  }
+}

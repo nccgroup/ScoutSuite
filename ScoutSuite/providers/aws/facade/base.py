@@ -1,5 +1,6 @@
 from boto3.session import Session
 
+from ScoutSuite.providers.aws.facade.account import AccountFacade
 from ScoutSuite.providers.aws.facade.acm import AcmFacade
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
@@ -247,6 +248,7 @@ class AWSFacade(AWSBaseFacade):
 
     def _instantiate_facades(self):
         self.ec2 = EC2Facade(self.session, self.owner_id)
+        self.account = AccountFacade(self.session)
         self.acm = AcmFacade(self.session)
         self.awslambda = LambdaFacade(self.session)
         self.cloudformation = CloudFormation(self.session)

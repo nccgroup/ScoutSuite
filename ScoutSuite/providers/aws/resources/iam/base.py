@@ -5,6 +5,7 @@ from ScoutSuite.providers.aws.resources.iam.policies import Policies
 from ScoutSuite.providers.aws.resources.iam.users import Users
 from ScoutSuite.providers.aws.resources.iam.roles import Roles
 from ScoutSuite.providers.aws.resources.iam.passwordpolicy import PasswordPolicy
+from ScoutSuite.providers.aws.resources.iam.accountsummary import AccountSummary
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.core.console import print_exception
 
@@ -16,7 +17,8 @@ class IAM(AWSCompositeResources):
         (Policies, 'policies'),
         (Users, 'users'),
         (Roles, 'roles'),
-        (PasswordPolicy, 'password_policy')
+        (PasswordPolicy, 'password_policy'),
+        (AccountSummary, 'account_summary')
     ]
 
     def __init__(self, facade: AWSFacade):
@@ -26,8 +28,9 @@ class IAM(AWSCompositeResources):
     async def fetch_all(self, partition_name='aws', **kwargs):
         await self._fetch_children(self)
 
-        # We do not want the report to count the password policies as resources, they aren't really resources.
+        # We do not want the report to count password policies or account summaries as resources, they aren't really resources.
         self['password_policy_count'] = 0
+        self['account_summary_count'] = 0
 
     async def finalize(self):
         try:
@@ -78,6 +81,9 @@ class IAM(AWSCompositeResources):
                 return resource_id
 
     def _parse_permissions(self, policy_name, policy_document, policy_type, iam_resource_type, resource_name):
+        # Skip empty policies
+        if not policy_document:
+            return
         # Enforce list of statements (Github issue #99)
         if type(policy_document['Statement']) != list:
             policy_document['Statement'] = [policy_document['Statement']]

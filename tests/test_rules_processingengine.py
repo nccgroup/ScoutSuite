@@ -2,6 +2,7 @@ import json
 import os
 import tempfile
 import unittest
+import freezegun
 
 from ScoutSuite.core.console import set_logger_configuration, print_error
 from ScoutSuite.core.processingengine import ProcessingEngine
@@ -22,25 +23,31 @@ class TestScoutRulesProcessingEngine(unittest.TestCase):
     # TODO
     # Check that one testcase per finding rule exists (should be within default ruleset)
 
+    @freezegun.freeze_time("2024-01-01")
     def test_all_finding_rules(self):
-        ruleset_file_name = os.path.join(self.test_dir, 'data/ruleset-test.json')
+        # Test everything in the "default" ruleset
         # FIXME this is only for AWS
         with open(os.path.join(self.test_dir, '../ScoutSuite/providers/aws/rules/rulesets/default.json'), 'rt') as f:
-            ruleset = json.load(f)
+            default_ruleset = json.load(f)
 
-        for rule_file_name in ruleset['rules']:
-            self.rule_counters['found'] += 1
-            rule = ruleset['rules'][rule_file_name][0]
-            rule['enabled'] = True
-            print(rule_file_name)
-            self._test_rule(ruleset_file_name, rule_file_name, rule)
+        # Also test additional test rules
+        with open(os.path.join(self.test_dir, 'data/ruleset-test.json'), 'rt') as f:
+            extra_ruleset = json.load(f)
+
+        for ruleset in [default_ruleset, extra_ruleset]:
+            for rule_file_name in ruleset['rules']:
+                self.rule_counters['found'] += 1
+                rule = ruleset['rules'][rule_file_name][0]
+                rule['enabled'] = True
+                #print(rule_file_name)
+                self._test_rule(rule_file_name, rule)
 
         print('Existing  rules: %d' % self.rule_counters['found'])
         print('Processed rules: %d' % self.rule_counters['tested'])
         print('Verified  rules: %d' % self.rule_counters['verified'])
 
 
-    def _test_rule(self, ruleset_file_name, rule_file_name, rule):
+    def _test_rule(self, rule_file_name, rule):
         test_config_file_name = os.path.join(self.test_dir, 'data/rule-configs/%s' % rule_file_name)
         if not os.path.isfile(test_config_file_name):
             return

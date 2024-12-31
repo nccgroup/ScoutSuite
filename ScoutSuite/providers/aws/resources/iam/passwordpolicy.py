@@ -15,15 +15,14 @@ class PasswordPolicy(AWSResources):
                     'RequireLowercaseCharacters': False, 
                     'RequireNumbers': False,
                     'RequireSymbols': False, 
-                    'PasswordReusePrevention': False,
+                    'PasswordReusePrevention': 0,
                     'ExpirePasswords': False
             }
 
         if 'PasswordReusePrevention' not in raw_password_policy:
-            raw_password_policy['PasswordReusePrevention'] = False
+            raw_password_policy['PasswordReusePrevention'] = 0
         else:
-            raw_password_policy['PreviousPasswordPrevented'] = raw_password_policy['PasswordReusePrevention']
-            raw_password_policy['PasswordReusePrevention'] = True
+            raw_password_policy['PasswordReusePrevention'] = raw_password_policy['PasswordReusePrevention']
         # There is a bug in the API: ExpirePasswords always returns false
         if 'MaxPasswordAge' in raw_password_policy:
             raw_password_policy['ExpirePasswords'] = True

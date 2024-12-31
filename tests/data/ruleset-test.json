@@ -1,11 +1,65 @@
 {
     "rules": {
-        "iam-password-policy-reuse-enabled.json": [
+        "awslambda-runtime-deprecated.json": [
             {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-no-support-role.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "account-contact-details-missing.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "account-security-contact-details-missing.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-root-account-with-access-keys.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-user-password-key-assigned-at-creation.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-admin-policy-attached.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-unused-credentials-not-disabled-or-rotated.json": [
+            {
+                "args": [
+                    "45"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-root-credentials-used-recently.json": [
+            {
+                "args": [
+                    "180"
+                ],
                 "enabled": true,
                 "level": "danger"
             }
         ]
     },
-    "about": "regression test"
+    "about": "extra test rules"
 }

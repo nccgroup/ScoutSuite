@@ -1,0 +1,43 @@
+{
+  "account_id": "123456789012",
+  "services": {
+    "iam": {
+      "account_summary": {
+        "AccessKeysPerUserQuota": 2,
+        "AccountAccessKeysPresent": 1,
+        "AccountMFAEnabled": 1,
+        "AccountPasswordPresent": 1,
+        "AccountSigningCertificatesPresent": 0,
+        "AssumeRolePolicySizeQuota": 2048,
+        "AttachedPoliciesPerGroupQuota": 10,
+        "AttachedPoliciesPerRoleQuota": 10,
+        "AttachedPoliciesPerUserQuota": 10,
+        "GlobalEndpointTokenVersion": 1,
+        "GroupPolicySizeQuota": 5120,
+        "Groups": 0,
+        "GroupsPerUserQuota": 10,
+        "GroupsQuota": 300,
+        "InstanceProfiles": 0,
+        "InstanceProfilesQuota": 1000,
+        "MFADevices": 1,
+        "MFADevicesInUse": 1,
+        "Policies": 1,
+        "PoliciesQuota": 1500,
+        "PolicySizeQuota": 6144,
+        "PolicyVersionsInUse": 4,
+        "PolicyVersionsInUseQuota": 10000,
+        "Providers": 0,
+        "RolePolicySizeQuota": 10240,
+        "Roles": 2,
+        "RolesQuota": 1000,
+        "ServerCertificates": 0,
+        "ServerCertificatesQuota": 20,
+        "SigningCertificatesPerUserQuota": 2,
+        "UserPolicySizeQuota": 2048,
+        "Users": 15,
+        "UsersQuota": 5000,
+        "VersionsPerPolicyQuota": 5
+      }
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+    "account_id": "123456879012",
+    "services": {
+        "iam": {
+            "policies": {
+                "ANPAAAAAAAAAAAAAAAAAA": {
+                    "PolicyDocument": {
+                        "Statement": [
+                            {
+                                "Action": [
+                                    "support:*"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": [
+                                    "*"
+                                ]
+                            }
+                        ],
+                        "Version": "2012-10-17"
+                    },
+                    "arn": "arn:aws:iam::aws:policy/AWSSupportAccess",
+                    "attached_to": {
+                        "roles": [
+                            {
+                                "id": "AROAAAAAAAAAAAAAAAAAA",
+                                "name": "SupportTest"
+                            }
+                        ]
+                    },
+                    "id": "ANPAAAAAAAAAAAAAAAAAA",
+                    "management": "AWS",
+                    "name": "AWSSupportAccess"
+                },
+                "ANPABBBBBBBBBBBBBBBBB": {
+                    "PolicyDocument": {
+                        "Statement": [
+                            {
+                                "Action": [
+                                    "support:*"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": [
+                                    "*"
+                                ]
+                            }
+                        ],
+                        "Version": "2012-10-17"
+                    },
+                    "arn": "arn:aws:iam::aws:policy/AWSSupportAccess",
+                    "attached_to": {
+                        "users": [
+                            {
+                                "id": "AROAAAAAAAAAAAAAAAAAA",
+                                "name": "SupportTest"
+                            }
+                        ]
+                    },
+                    "id": "ANPABBBBBBBBBBBBBBBBB",
+                    "management": "AWS",
+                    "name": "AWSSupportAccess"
+                },
+                "ANPACCCCCCCCCCCCCCCCC": {
+                    "PolicyDocument": {
+                        "Statement": [
+                            {
+                                "Action": [
+                                    "support:*"
+                                ],
+                                "Effect": "Allow",
+                                "Resource": [
+                                    "*"
+                                ]
+                            }
+                        ],
+                        "Version": "2012-10-17"
+                    },
+                    "arn": "arn:aws:iam::aws:policy/AWSSupportAccess",
+                    "attached_to": {
+                    },
+                    "id": "ANPACCCCCCCCCCCCCCCCC",
+                    "management": "AWS",
+                    "name": "AWSSupportAccess"
+                }
+            }
+        }
+    }
+}

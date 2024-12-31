@@ -1,4 +1,5 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.providers.aws.resources.account.base import Account
 from ScoutSuite.providers.aws.resources.acm.base import Certificates
 from ScoutSuite.providers.aws.resources.awslambda.base import Lambdas
 from ScoutSuite.providers.aws.resources.cloudformation.base import CloudFormation
@@ -63,6 +64,7 @@ class AWSServicesConfig(BaseServicesConfig):
     """
     Object that holds the necessary AWS configuration for all services in scope.
 
+    :ivar account                       Account configuration
     :ivar cloudtrail:                   CloudTrail configuration
     :ivar cloudwatch:                   CloudWatch configuration:
     :ivar cloudfront:                   CloudFront configuration
@@ -89,6 +91,7 @@ class AWSServicesConfig(BaseServicesConfig):
 
         facade = AWSFacade(credentials)
 
+        self.account = Account(facade)
         self.acm = Certificates(facade)
         self.awslambda = Lambdas(facade)
         self.cloudformation = CloudFormation(facade)

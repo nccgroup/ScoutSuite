@@ -1,0 +1,52 @@
+{
+    "description": "Account Contact Information Missing Key Details",
+    "rationale": "Account contact information is used by AWS when security or billing problems are detected.",
+    "remediation": "Add appropriate contact details and ensure that they are kept up to date",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "2.0.0",
+            "reference": "1.1"
+        },
+        {
+            "name": "ADA Cloud Profile",
+            "version": "1.0",
+            "reference": "2.3.1"
+        }
+    ],
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/v1.0/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#231-maintain-current-contact-details",
+        "https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-contact.html"
+    ],
+    "dashboard_name": "Contacts",
+    "path": "account.contacts.id",
+    "conditions": [
+        "or",
+        [
+            "contact_information",
+            "withoutValue",
+            "FullName"
+        ],
+        [
+            "contact_information",
+            "withoutValue",
+            "AddressLine1"
+        ],
+        [
+            "contact_information",
+            "withoutValue",
+            "City"
+        ],
+        [
+            "contact_information",
+            "withoutValue",
+            "CountryCode"
+        ],
+        [
+            "contact_information",
+            "withoutValue",
+            "PhoneNumber"
+        ]
+    ],
+    "class_suffix": "contact_information"
+}

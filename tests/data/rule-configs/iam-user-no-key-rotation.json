@@ -1,0 +1,54 @@
+{
+  "account_id": "123456789012",
+  "services": {
+    "iam": {
+      "users": {
+        "AIDAXXXXXXXXAAAAAAAAA": {
+          "AccessKeys": [
+            {
+              "AccessKeyId": "AKIAXXXXXXXXAAAAAAAA",
+              "CreateDate": "2023-06-01 00:00:00+00:00",
+              "Status": "Inactive",
+              "UserName": "test"
+            }
+          ],
+          "arn": "arn:aws:iam::123456789012:user/test",
+          "id": "AIDAXXXXXXXXAAAAAAAAA",
+          "name": "test"
+        },
+        "AIDAXXXXXXXXBBBBBBBBB": {
+          "AccessKeys": [
+            {
+              "AccessKeyId": "AKIAXXXXXXXXCCCCCCCC",
+              "CreateDate": "2023-10-01 00:00:00+00:00",
+              "Status": "Active",
+              "UserName": "admin"
+            }
+          ],
+          "arn": "arn:aws:iam::123456789012:user/admin",
+          "id": "AIDAXXXXXXXXBBBBBBBBB",
+          "name": "admin"
+        },
+        "AIDAXXXXXXXXCCCCCCCCC": {
+          "AccessKeys": [
+            {
+              "AccessKeyId": "AKIAXXXXXXXXDDDDDDDD",
+              "CreateDate": "2023-10-05 00:00:00+00:00",
+              "Status": "Active",
+              "UserName": "test2"
+            }
+          ],
+          "arn": "arn:aws:iam::123456789012:user/test2",
+          "id": "AIDAXXXXXXXXCCCCCCCCC",
+          "name": "test2"
+        },
+        "AIDAXXXXXXXXDDDDDDDDD": {
+          "AccessKeys": [],
+          "arn": "arn:aws:iam::123456789012:user/no-access",
+          "id": "AIDAXXXXXXXXDDDDDDDDD",
+          "name": "no-access"
+        }
+      }
+    }
+  }
+}

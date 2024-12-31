@@ -64,12 +64,22 @@ class IAMFacade(AWSBaseFacade):
         return groups
 
     async def get_policies(self):
+        # We can't restrict to only attached policies because we need to be able to detect when 
+        # AWSSupportAccess is not attached to anything.  And there's no server-side filter that we 
+        # can use to request only that one -- we need to request every AWS-managed policy, 
+        # regardless of whether they're attached to anything.
         policies = await AWSFacadeUtils.get_all_pages(
-            'iam', None, self.session, 'list_policies', 'Policies', OnlyAttached=True)
+            'iam', None, self.session, 'list_policies', 'Policies')
         await get_and_set_concurrently([self._get_and_set_policy_details], policies)
         return policies
 
     async def _get_and_set_policy_details(self, policy):
+        # Don't look up details for unattached policies; fill in dummy details
+        if 0 == policy['AttachmentCount']:
+            policy['PolicyDocument'] = {}
+            policy['attached_to'] = {}
+            return
+
         client = AWSFacadeUtils.get_client('iam', self.session)
         try:
             policy_version = await run_concurrently(
@@ -171,6 +181,15 @@ class IAMFacade(AWSBaseFacade):
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchEntity':
                 print_exception(f'Failed to get account password policy: {e}')
+            return None
+
+    async def get_account_summary(self):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        try:
+            return (await run_concurrently(client.get_account_summary))['SummaryMap']
+        except ClientError as e:
+            if e.response['Error']['Code'] != 'NoSuchEntity':
+                print_exception(f'Failed to get account account summary: {e}')
             return None
 
     async def _get_and_set_user_access_keys(self, user: {}):

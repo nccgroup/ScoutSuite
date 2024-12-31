@@ -9,6 +9,8 @@
         <div class="list-group-item-text item-margin">Description: <span id="awslambda.regions.{{region}}.functions.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
         <div class="list-group-item-text item-margin">Last Modified: <span id="awslambda.regions.{{region}}.functions.{{@key}}.last_modified"><samp>{{format_date last_modified}}</samp></span></div>
         <div class="list-group-item-text item-margin">Runtime: <span id="awslambda.regions.{{region}}.functions.{{@key}}.runtime"><samp>{{value_or_none runtime}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Runtime deprecated: <span class="awslambda.regions.{{region}}.functions.{{@key}}.runtime_deprecated"><samp>{{value_or_none runtime_deprecated}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Runtime deprecation date: <span class="awslambda.regions.{{region}}.functions.{{@key}}.runtime_deprecated"><samp>{{value_or_none date_runtime_deprecated}}</samp></span></div>
         <div class="list-group-item-text item-margin">Version: <span id="awslambda.regions.{{region}}.functions.{{@key}}.version"><samp>{{value_or_none version}}</samp></span></div>
         <div class="list-group-item-text item-margin">Revision ID: <span id="awslambda.regions.{{region}}.functions.{{@key}}.revision_id"><samp>{{value_or_none revision_id}}</samp></span></div>
         <div class="list-group-item-text item-margin">Execution Role: <a href="javascript:showObject('services.iam.roles.{{value_or_none execution_role.RoleId}}')">{{value_or_none execution_role.RoleName}}</a></div>

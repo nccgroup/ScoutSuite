@@ -1,0 +1,29 @@
+{
+    "comment": "This rule is very similar to 'iam-root-account-with-active-keys.json', the difference being that this rule prohibits *any* root access keys, including inactive ones.  ADA-CP 2.7.1 is not clear whether inactive keys are allowed: the title and CLI investigation procedure do not allow them but the Console investigation procedure does.  The flaw is tracked by https://github.com/appdefensealliance/ASA-WG/issues/138.  If ADA chooses to permit inactive keys, then we can drop this rule and switch to 'iam-root-account-with-active-keys.json'.",
+    "description": "Root Account Has Access Keys",
+    "rationale": "AWS root account access keys should be deleted as they provide unrestricted access to the AWS Account.",
+    "remediation": "Delete or disable root account access keys",
+    "compliance": [
+        {
+            "name": "ADA Cloud Profile",
+            "version": "1.0",
+            "reference": "2.7.1"
+        }
+    ],
+    "references": [
+        "https://github.com/appdefensealliance/ASA-WG/blob/v1.0/Cloud%20App%20and%20Config%20Profile/Cloud%20App%20and%20Config%20Test%20Guide.md#271-ensure-no-root-user-account-access-key-exists",
+        "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-use",
+        "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-acct_review-access",
+        "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_best-practices_mgmt-acct.html#best-practices_mgmt-acct_document-processes"
+    ],
+    "dashboard_name": "Root account",
+    "path": "iam.account_summary.AccountAccessKeysPresent",
+    "conditions": [
+        "or",
+        [
+            "this",
+            "moreThan",
+            "0"
+        ]
+    ]
+}
