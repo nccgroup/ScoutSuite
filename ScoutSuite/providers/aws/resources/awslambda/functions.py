@@ -79,7 +79,7 @@ class Functions(AWSResources):
             function_dict["env_variable_values"] = []
 
     def _get_deprecation_date(self, runtime):
-        # As of July 2024, the Lambda API does not have a way to determine whether a Lambda 
+        # As of December 2024, the Lambda API does not have a way to determine whether a Lambda 
         # runtime is deprecated; that information is only available in AWS documentation.  
         # Consequently, the table here will need to be updated from time to time.
         # Upcoming deprecation dates: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html#runtimes-supported
@@ -88,8 +88,9 @@ class Functions(AWSResources):
         # Table of runtime identifier : deprecation date
         # If a particular runtime identifier does not appear in the table, then no deprecation 
         # date for the runtime has been announced.
-        last_updated = datetime.date(2024, 7, 15)
+        last_updated = datetime.date(2024, 12, 30)
         deprecations = {
+            'nodejs18.x': datetime.date(2025, 7, 31), # Jul 31 2025
             'dotnet6': datetime.date(2024, 12, 20), # Dec 20, 2024
             'python3.8': datetime.date(2024, 10, 14), # Oct 14, 2024
             'nodejs16.x': datetime.date(2024, 6, 12), # Jun 12, 2024
