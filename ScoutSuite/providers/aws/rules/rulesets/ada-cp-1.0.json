@@ -97,6 +97,16 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "iam-root-credentials-used-recently.json": [
+            {
+                "comment": "ADA-CP 1.11.1 Eliminate use of the 'root' user for administrative and daily tasks",
+                "args": [
+                    "180"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
         ]
     }
 }

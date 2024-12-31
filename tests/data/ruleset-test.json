@@ -50,6 +50,15 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "iam-root-credentials-used-recently.json": [
+            {
+                "args": [
+                    "180"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
         ]
     },
     "about": "extra test rules"
