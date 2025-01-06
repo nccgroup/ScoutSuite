@@ -5,7 +5,7 @@
 $resultsBaseDirectory = "C:\ScoutSuiteAudits"
 
 # Path to ScoutSuite executable
-$scoutExecutable = "C:\Users\ashika.sreerambushan\source\repos\aws-audit-tools\ScoutSuite\scout.py"
+$scoutExecutable = "C:\Users\ashika.sreerambushan\source\repos\ScoutSuite\scout.py"
 
 # Get the current date
 $currentDatetime = Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'
