@@ -1,0 +1,20 @@
+{
+    "description": "PostgreSQL Database have enabled public IP",
+    "rationale": "",
+    "remediation": "",
+    "compliance": [
+    ],
+    "references": [
+    ],
+    "dashboard_name": "PostgreSQL Flexible Servers",
+    "display_path": "postgresqlflexibledatabase.subscriptions.id.servers.id",
+    "path": "postgresqlflexibledatabase.subscriptions.id.servers.id",
+    "conditions": [
+        "and",
+        [
+            "postgresqlflexibledatabase.subscriptions.id.servers.id.network.public_network_access",
+            "equal",
+            "Enabled"
+        ]
+    ]
+}

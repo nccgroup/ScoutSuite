@@ -1,0 +1,20 @@
+{
+    "description": "PostgreSQL Database directory auth disabled",
+    "rationale": "",
+    "remediation": "",
+    "compliance": [
+    ],
+    "references": [
+    ],
+    "dashboard_name": "PostgreSQL Flexible Servers",
+    "display_path": "postgresqlflexibledatabase.subscriptions.id.servers.id",
+    "path": "postgresqlflexibledatabase.subscriptions.id.servers.id",
+    "conditions": [
+        "and",
+        [
+            "postgresqlflexibledatabase.subscriptions.id.servers.id.auth_config.directory_auth",
+            "equal",
+            "Disabled"
+        ]
+    ]
+}

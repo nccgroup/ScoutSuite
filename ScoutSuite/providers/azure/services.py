@@ -12,6 +12,7 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 from ScoutSuite.providers.azure.resources.appservice.base import AppServices
 from ScoutSuite.providers.azure.resources.mysqldatabase.base import MySQLServers
 from ScoutSuite.providers.azure.resources.postgresqldatabase.base import PostgreSQLServers
+from ScoutSuite.providers.azure.resources.postgresqlflexibledatabase.base import PostgreSQLFlexibleServers
 from ScoutSuite.providers.azure.resources.loggingmonitoring.base import LoggingMonitoring
 
 # Try to import proprietary services
@@ -54,6 +55,7 @@ class AzureServicesConfig(BaseServicesConfig):
         self.appservice = AppServices(facade)
         self.mysqldatabase = MySQLServers(facade)
         self.postgresqldatabase = PostgreSQLServers(facade)
+        self.postgresqlflexibledatabase = PostgreSQLFlexibleServers(facade)
         self.loggingmonitoring = LoggingMonitoring(facade)
 
         # Instantiate proprietary services
