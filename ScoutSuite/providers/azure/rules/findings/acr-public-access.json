@@ -1,0 +1,21 @@
+{
+    "description": "Container Registry public access Enabled",
+    "rationale": "",
+    "remediation": "",
+    "compliance": [
+    ],
+    "references": [
+        "https://rnd-confluence.veeam.local/display/AP/AppSec+Cloud+Infrastructure+Security+Requirements"
+    ],
+    "dashboard_name": "Registries",
+    "path": "containerregistry.subscriptions.id.registries.id",
+    "conditions": [
+        "and",
+        [
+            "containerregistry.subscriptions.id.registries.id.public_network_access",
+            "equal",
+            "Enabled"
+        ]
+    ],
+    "id_suffix": "public_access_enabled"
+}

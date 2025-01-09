@@ -38,6 +38,7 @@ formatted_service_name = {
     'ssm': 'Systems Manager',
     # Azure
     'aad': 'Azure Active Directory',
+    'registry': 'ACR Registry',
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',
     'securitycenter': 'Security Center',
