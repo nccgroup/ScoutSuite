@@ -49,6 +49,7 @@ formatted_service_name = {
     'loadbalancer': 'Load Balancer',
     'virtualmachines': 'Virtual Machines',
     'postgresqldatabase': 'PostgresSQL Database',
+    'postgresqlflexibledatabase': 'PostgreSQL Flexible Database',
     'mysqldatabase': 'MySQL Database',
     'loggingmonitoring': 'Logging Monitoring',
     # GCP

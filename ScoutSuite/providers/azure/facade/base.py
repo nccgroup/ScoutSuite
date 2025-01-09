@@ -11,6 +11,7 @@ from ScoutSuite.providers.azure.facade.virtualmachines import VirtualMachineFaca
 from ScoutSuite.providers.azure.facade.appservice import AppServiceFacade
 from ScoutSuite.providers.azure.facade.mysqldatabase import MySQLDatabaseFacade
 from ScoutSuite.providers.azure.facade.postgresqldatabse import PostgreSQLDatabaseFacade
+from ScoutSuite.providers.azure.facade.postgresqlflexibledatabase import PostgreSQLFlexibleDatabaseFacade
 from ScoutSuite.providers.azure.facade.loggingmonitoring import LoggingMonitoringFacade
 
 from azure.mgmt.resource import SubscriptionClient
@@ -58,6 +59,7 @@ class AzureFacade:
         self.appservice = AppServiceFacade(credentials)
         self.mysqldatabase = MySQLDatabaseFacade(credentials)
         self.postgresqldatabase = PostgreSQLDatabaseFacade(credentials)
+        self.postgresqlflexibledatabase = PostgreSQLFlexibleDatabaseFacade(credentials)
         self.loggingmonitoring = LoggingMonitoringFacade(credentials)
         self.resourcemanagement = ResourceManagementFacade(credentials)
 
