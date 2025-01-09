@@ -31,6 +31,16 @@
       }
     }
   },
+  "container": {
+    "acr": {
+      "resources": {
+        "registries": {
+          "cols": 2,
+          "path": "services.acrs.subscriptions.id.registries"
+        }
+      }
+    }
+  },
   "database": {
     "sqldatabase": {
       "resources": {

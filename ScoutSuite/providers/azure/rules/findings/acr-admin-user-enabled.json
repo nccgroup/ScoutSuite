@@ -1,0 +1,20 @@
+{
+    "description": "Container Registry admin user Enabled",
+    "rationale": "",
+    "remediation": "",
+    "compliance": [
+    ],
+    "references": [  
+    ],
+    "dashboard_name": "Registries",
+    "path": "containerregistry.subscriptions.id.registries.id",
+    "conditions": [
+        "and",
+        [
+            "containerregistry.subscriptions.id.registries.id.admin_user_enabled",
+            "notEqual",
+            "False"
+        ]
+    ],
+    "id_suffix": "admin_user_enabled"
+}

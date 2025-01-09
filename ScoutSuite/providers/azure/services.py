@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.aad.base import AAD
+from ScoutSuite.providers.azure.resources.acr.base import ACRRegistries
 from ScoutSuite.providers.azure.resources.rbac.base import RBAC
 from ScoutSuite.providers.azure.resources.keyvault.base import KeyVaults
 from ScoutSuite.providers.azure.resources.network.base import Networks
@@ -44,6 +45,7 @@ class AzureServicesConfig(BaseServicesConfig):
                              programmatic_execution)
 
         self.aad = AAD(facade)
+        self.acr = ACRRegistries(facade)
         self.rbac = RBAC(facade)
         self.securitycenter = SecurityCenter(facade)
         self.sqldatabase = Servers(facade)
