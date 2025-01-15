@@ -33,7 +33,7 @@
         "and",
         [
             "iam.credential_reports.id.password_last_used",
-            "notNull",
+            "no_Root",
             ""
         ],
         [
