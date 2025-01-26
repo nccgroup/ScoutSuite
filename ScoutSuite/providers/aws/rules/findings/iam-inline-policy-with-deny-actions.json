@@ -1,0 +1,20 @@
+{
+    "description": "Inline User Policy with Deny Action",
+    "rationale": "The presence of Deny statements in permission policies is not necessarily a problem: they have totally valid uses. However, attempting to control access to API actions in AWS using a wildcard allow and a deny-list is very difficult and subject to problems since there is frequently more than way to accomplish something, new API actions get added all the time, and permission policy authors frequently fail to consider all available API actions. Flagged policies should be reviewed to make sure they are appropriate given the account's access control regime and requirements, and that they do not have trivial bypasses.",
+    "dashboard_name": "Users",
+    "display_path": "iam.users.id",
+    "path": "iam.users.id.inline_policies.id.PolicyDocument.Statement.id",
+    "conditions": [
+        "and",
+        [
+            "iam.users.id.inline_policies.id.PolicyDocument.Statement.id.Effect",
+            "equal",
+            "Deny"
+        ],
+        [
+            "iam.users.id.inline_policies.id.PolicyDocument.Statement.id.Action",
+            "notMatch",
+            "\\*"
+        ]
+    ]
+}
