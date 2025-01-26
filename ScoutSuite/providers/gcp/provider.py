@@ -52,7 +52,7 @@ class GCPProvider(BaseProvider):
         # All accessible projects
         if self.all_projects:
             # Service Account
-            if self.credentials.is_service_account and hasattr(self.credentials, 'service_account_email'):
+            if hasattr(self.credentials, 'service_account_email'):
                 self.account_id = self.credentials.service_account_email
             else:
                 # TODO use username email (can't find it...)
