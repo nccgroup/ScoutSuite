@@ -192,19 +192,29 @@ class BaseProvider:
 
     def manage_object(self, object, attr, init, callback=None):
         """
-        This is a quick-fix copy of Opinel's manage_dictionary in order to support the new ScoutSuite object which isn't
-        a dict
+        Initialize an attribute in an object or dictionary if it doesn't exist.
+        This is a quick-fix copy of Opinel's manage_dictionary modified to support both
+        dictionaries and objects while avoiding infinite recursion.
+        
+        :param object: The dictionary or object to modify
+        :param attr: The attribute name
+        :param init: The initial value
+        :param callback: Optional callback to execute after setting the value
+        :return: The modified object
         """
         if type(object) == dict:
             if not str(attr) in object:
                 object[str(attr)] = init
-                self.manage_object(object, attr, init)
         else:
             if not hasattr(object, attr):
                 setattr(object, attr, init)
-                self.manage_object(object, attr, init)
+        
         if callback:
-            callback(getattr(object, attr))
+            if type(object) == dict:
+                callback(object[str(attr)])
+            else:
+                callback(getattr(object, attr))
+        
         return object
 
     def _process_metadata_callbacks(self):
