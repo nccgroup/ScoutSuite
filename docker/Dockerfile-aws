@@ -28,9 +28,17 @@ LABEL \
 
 # Copy helper scripts to container
 ADD bin /root/bin
-
 # Install AWS CLI
 RUN ["/bin/bash", "-c", "/root/bin/container-install-aws2.sh"]
+
+# Install required software
+RUN ["/bin/bash", "-c", "/root/bin/container-install-prereqs.sh"]
+
+# Install ScoutSuite
+RUN ["/bin/bash", "-c", "/root/bin/container-install-scoutsuite.sh"]
+
+# Set a nice message
+RUN ["/bin/bash", "-c", "/root/bin/container-set-init.sh"]
 
 # Remove scripts
 RUN ["rm", "-rf", "/root/bin"]

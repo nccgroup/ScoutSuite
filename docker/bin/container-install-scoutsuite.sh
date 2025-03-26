@@ -13,6 +13,11 @@ TMPDIR=/tmp
 cd ${WORKDIR}
 virtualenv -p python3 scoutsuite
 source ${WORKDIR}/scoutsuite/bin/activate
-pip install scoutsuite
+
+# Install from your fork
+git clone https://github.com/TiiSysDev/ScoutSuite.git
+cd ScoutSuite
+pip install -e .
+
 
 echo -e "\n\nScoutsuite Installation Complete!\n\n"
