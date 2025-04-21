@@ -1,6 +1,7 @@
 import asyncio
 import base64
 import boto3
+from botocore.exceptions import ClientError
 import zlib
 
 from ScoutSuite.core.console import print_exception, print_warning
@@ -155,11 +156,13 @@ class EC2Facade(AWSBaseFacade):
             snapshot['CreateVolumePermissions'] = await run_concurrently(lambda: ec2_client.describe_snapshot_attribute(
                 Attribute='createVolumePermission',
                 SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
-        except Exception as e:
-            if 'NotFound' in e:
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "InvalidSnapshot.NotFound":
                 print_warning(f'Failed to describe EC2 snapshot attributes: {e}')
             else:
                 print_exception(f'Failed to describe EC2 snapshot attributes: {e}')
+        except Exception as e:
+            print_exception(f'Failed to describe EC2 snapshot attributes: {e}')
 
     async def get_network_acls(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
