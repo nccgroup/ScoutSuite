@@ -37,6 +37,21 @@ PowerShell script for running ScoutSuite security scans in an existing Docker co
         yyyy-MM-dd_HH-mm-ss/
             scoutsuite-report.html
 ```
+## Updating Container Files
+
+If you make local changes to the script, update the container:
+```powershell
+# Update script with local changes
+docker cp <local-path-to-script>\AutomateScoutSuite.ps1 <container-name>:<path-to-automation-script>
+```
+
+## Output Location
+```
+/scout/results/
+    profile1/
+        yyyy-MM-dd_HH-mm-ss/
+            scoutsuite-report.html
+```
 
 ## Troubleshooting
 
