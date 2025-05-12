@@ -29,7 +29,7 @@ COOKIE_EXPIRATION = 12  # Hours
 def load_private_key():
     """Load the private key file."""
     try:
-        with open(PRIVATE_KEY_PATH, 'rb') as key_file:
+        with open(PRIVATE_KEY_PATH, 'rb') as key_file:  # Changed to 'rb' for binary read
             private_key = load_pem_private_key(
                 key_file.read(),
                 password=None,
@@ -42,7 +42,7 @@ def load_private_key():
     except Exception as e:
         print(f"{Colors.RED}ERROR: Failed to load private key: {str(e)}{Colors.ENDC}")
         exit(1)
-
+        
 def generate_signed_cookies():
     """Generate CloudFront signed cookies."""
     # Check if configuration is set

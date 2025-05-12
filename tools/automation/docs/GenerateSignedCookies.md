@@ -95,6 +95,18 @@ COOKIE_EXPIRATION = 12 # Cookie expiration time in hours
 4. Copy and paste each provided command
 5. Verify cookies in Application → Cookies → Your Domain
 
+## Important Deployment Considerations
+
+### Key Rotation Process
+When updating or rotating keys:
+1. Generate and upload the new public key to CloudFront
+2. Update the key groups to include the new public key
+3. **Important**: Wait for the CloudFront distribution to fully deploy
+   - Distribution status will show "In Progress"
+   - Deployment typically takes 1-2 minutes
+   - Access using old keys remains valid until deployment completes
+   - New signed cookies will only work after deployment finishes
+
 ## Troubleshooting
 
 Common issues and solutions:
@@ -107,6 +119,16 @@ Common issues and solutions:
    - Verify cookie domain matches CloudFront domain
    - Check cookie expiration time
    - Ensure CloudFront distribution is properly configured
+
+3. **Invalid Signature Errors**: May occur immediately after key updates
+  - Wait for distribution deployment to complete
+  - Verify key group contains the correct public key
+  - Ensure distribution behavior uses the updated key group
+
+4. **Access Denied After Key Update**:
+  - Check distribution deployment status
+  - Clear old cookies and set new ones
+  - Verify the new KEY_PAIR_ID matches the uploaded public key
 
 ## Security Considerations
 
