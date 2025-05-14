@@ -76,6 +76,8 @@ report-*
 
 !docker/bin
 
+# CloudFront configuration
+tools/automation/config/cloudfront_config.json
 
 ScoutSuite/Scripts/
 temp.txt

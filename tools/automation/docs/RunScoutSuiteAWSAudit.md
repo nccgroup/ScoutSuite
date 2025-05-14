@@ -1,16 +1,15 @@
-# AutomateAWSAudit.ps1
+# RunScoutSuiteAWSAudit.ps1
 
-A PowerShell script that runs ScoutSuite security audits against multiple AWS accounts using AWS profiles.
+A PowerShell script that automates ScoutSuite security audits against multiple AWS accounts. This script runs ScoutSuite scans locally and saves results to your local filesystem.
 
 ## Prerequisites
 
 - PowerShell 5.1 or higher
-- AWS CLI with configured profiles
-- Python 3.7+ with ScoutSuite installed
-- AWS PowerShell modules:
-  ```powershell
-  Install-Module -Name AWS.Tools.Common
-  ```
+- Python installed and in PATH
+- ScoutSuite installed
+- AWS CLI configured with profiles
+- AWS credentials file (.aws folder)
+- Network access to AWS services
 
 ## Required AWS Permissions
 
@@ -53,7 +52,7 @@ $scoutExecutable = "ScoutSuite\scout.py"    # Path to ScoutSuite executable
 
 3. Run the script:
    ```powershell
-   .\AutomateAWSAudit.ps1
+   .\RunScoutSuiteAWSAudit.ps1
    ```
 
 ## Output
@@ -63,35 +62,43 @@ The script creates timestamped directories for each profile:
 LocalResultsDirectory/
 ├── profile1/
 │   └── yyyy-MM-dd_HH-mm-ss/
-│       └── scoutsuite-results
+│       └── scoutsuite-results/
 ├── profile2/
 │   └── yyyy-MM-dd_HH-mm-ss/
-│       └── scoutsuite-results
+│       └── scoutsuite-results/
 ```
 
 ## Process Flow
 
 1. Iterates through configured AWS profiles
-2. Creates temporary directory for each profile
+2. Creates timestamped directory for each profile
 3. Runs ScoutSuite against each profile
 4. Saves results locally with timestamp
-5. Cleans up temporary files
 
 ## Error Handling
 
 The script includes basic error handling for:
 - Directory creation
 - ScoutSuite execution
-- File cleanup
 
-## Helper Functions
+## Helper Commands
 
-The script includes these useful commands:
+Test your setup with these commands:
 
 ```powershell
 # Test AWS credentials
 aws sts get-caller-identity --profile your-profile-name
 
+# Test directory permissions
+Test-Path -Path $localResultsDirectory -IsValid
+
 # Test ScoutSuite installation
 python -m scout --help
 ```
+
+## Tips
+
+1. Use full paths for reliability
+2. Ensure write permissions on results directory
+3. Test AWS profiles before running bulk scan
+4. Monitor disk space for large multi-account scans

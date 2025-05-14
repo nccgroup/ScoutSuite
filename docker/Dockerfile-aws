@@ -1,6 +1,6 @@
-FROM rossja/ncc-scoutsuite:aws-latest
+FROM python:3.9-slim
 
-LABEL maintainer="Jason Ross <algorythm@gmail.com>"
+LABEL maintainer="Security Team"
 
 ARG BUILD_DATE
 ARG NAME
@@ -25,6 +25,29 @@ LABEL \
     org.label-schema.vendor="${VENDOR}" \
     org.label-schema.version="${VERSION}" \
     org.label.image-name="${IMAGE_NAME}"
+
+# Install git and required packages
+RUN apt-get update && apt-get install -y \
+    git \
+    python3-pip \
+    curl \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install AWS CLI v2
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -f awscliv2.zip && \
+    rm -rf aws/ && \
+    aws --version
+
+# Clone custom ScoutSuite repository
+RUN git clone https://github.com/TiiSysDev/ScoutSuite.git /root/ScoutSuite
+
+# Install ScoutSuite dependencies
+WORKDIR /root/ScoutSuite
+RUN pip3 install -r requirements.txt
 
 # Copy helper scripts to container
 ADD bin /root/bin

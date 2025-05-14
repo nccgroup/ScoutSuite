@@ -49,21 +49,37 @@ case $1 in
     source ./config/base.env
     source ./config/aws.env
 
+    NAME="scoutsuite-aws"
+    DESCRIPTION="ScoutSuite AWS Security Auditing Container"
+    VENDOR="Security Team"
+    VERSION="1.0.0"
+    IMAGE_NAME="scoutsuite-aws"
+
     BUILD_CMD="docker build \
-    -f Dockerfile-aws \
-    -t ${IMAGE_NAME} \
-    --build-arg BUILD_DATE=${BUILD_DATE} \
-    --build-arg NAME=${NAME} \
-    --build-arg VCS_REF=${VCS_REF} \
-    --build-arg VCS_URL=${VCS_URL} \
-    --build-arg VENDOR=${VENDOR} \
-    --build-arg VERSION=${VERSION} \
-    --build-arg IMAGE_NAME=${IMAGE_NAME} \
-    ."
+    --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+    --build-arg NAME=\"$NAME\" \
+    --build-arg DESCRIPTION=\"$DESCRIPTION\" \
+    --build-arg VCS_REF=$(git rev-parse --short HEAD) \
+    --build-arg VCS_URL=$(git config --get remote.origin.url) \
+    --build-arg VENDOR=\"$VENDOR\" \
+    --build-arg VERSION=\"$VERSION\" \
+    --build-arg IMAGE_NAME=\"$IMAGE_NAME\" \
+    -t $IMAGE_NAME:latest \
+    -f Dockerfile-aws ."
 
     echo -e "\n\nbuilding image using:\n${BUILD_CMD}"
-    exec ${BUILD_CMD}
-    echo -e "\naws image build complete!\n${SEP2}\n"
+    eval ${BUILD_CMD} || {
+        echo "Error: Docker build failed"
+        exit 1
+    }
+    
+    if [ $? -eq 0 ]; then
+        echo -e "\nAWS image build successful!\n${SEP2}\n"
+        docker images | grep scoutsuite-aws
+    else
+        echo -e "\nAWS image build failed!\n${SEP2}\n"
+        exit 1
+    fi
   ;;
 
   "gcp")

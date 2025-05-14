@@ -7,6 +7,8 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from datetime import datetime, timedelta
 import os
+import sys
+from pathlib import Path
 
 # ANSI color codes for colored terminal output
 class Colors:
@@ -19,12 +21,32 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     
-# CloudFront configuration
-CLOUDFRONT_DOMAIN = ""  # Replace with your CloudFront domain, e.g. "https://d123456abcdef8.cloudfront.net"
-KEY_PAIR_ID = ""  # Replace with your CloudFront key pair ID, e.g. "K2ABCDEFGHIJKL"
-PRIVATE_KEY_PATH = r""  # Path to your private key file, e.g. r"C:\path\to\your\private_key.pem"
-COOKIE_EXPIRATION = 12  # Hours
+# Load configuration from external file
+def load_config():
+    """Load CloudFront configuration from external file."""
+    config_path = Path(__file__).parent.parent / "config" / "cloudfront_config.json"
+    try:
+        with open(config_path) as f:
+            config = json.load(f)
+            return (
+                config["cloudfront_domain"],
+                config["key_pair_id"],
+                config["private_key_path"],
+                config["cookie_expiration"]
+            )
+    except FileNotFoundError:
+        print(f"{Colors.RED}ERROR: Configuration file not found at '{config_path}'{Colors.ENDC}")
+        print(f"{Colors.YELLOW}Please create the config file using the template from the documentation.{Colors.ENDC}")
+        sys.exit(1)
+    except KeyError as e:
+        print(f"{Colors.RED}ERROR: Missing required configuration key: {e}{Colors.ENDC}")
+        sys.exit(1)
+    except json.JSONDecodeError:
+        print(f"{Colors.RED}ERROR: Invalid JSON in configuration file{Colors.ENDC}")
+        sys.exit(1)
 
+# Load configuration
+CLOUDFRONT_DOMAIN, KEY_PAIR_ID, PRIVATE_KEY_PATH, COOKIE_EXPIRATION = load_config()
 
 def load_private_key():
     """Load the private key file."""
