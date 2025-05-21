@@ -47,9 +47,10 @@ docker images | grep scoutsuite-aws
    docker cp ~/.aws/credentials scoutsuite:/root/.aws/
    ```
 
-3. Run ScoutSuite:
+3. Copy DockerScoutSuiteRunner latest and run the script
    ```bash
-   python /root/ScoutSuite/scout.py aws
+   docker cp tools\automation\scripts\DockerScoutSuiteRunner.py /root/ScoutSuite
+   python DockerScoutSuiteRunner.py
    ```
 
 ## Build Arguments

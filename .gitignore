@@ -48,7 +48,7 @@ nosetests.xml
 
 # Data folder and files
 scoutsuite-report*
-scoutsuite-reports*
+scoutsuite_reports*
 inc-scoutsuite-run*
 report-*
 *.db

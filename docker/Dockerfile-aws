@@ -26,12 +26,18 @@ LABEL \
     org.label-schema.version="${VERSION}" \
     org.label.image-name="${IMAGE_NAME}"
 
+# Set environment variables properly
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TERM=xterm
+ENV PYTHONWARNINGS="ignore:Unverified HTTPS request"
+
 # Install git and required packages
 RUN apt-get update && apt-get install -y \
     git \
     python3-pip \
     curl \
     unzip \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Install AWS CLI v2
@@ -39,15 +45,16 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     unzip awscliv2.zip && \
     ./aws/install && \
     rm -f awscliv2.zip && \
-    rm -rf aws/ && \
-    aws --version
+    rm -rf aws/
 
 # Clone custom ScoutSuite repository
 RUN git clone https://github.com/TiiSysDev/ScoutSuite.git /root/ScoutSuite
 
-# Install ScoutSuite dependencies
+# Install ScoutSuite dependencies with SSL verification fixes
 WORKDIR /root/ScoutSuite
-RUN pip3 install -r requirements.txt
+RUN pip3 install --trusted-host pypi.org \
+    --trusted-host files.pythonhosted.org \
+    -r requirements.txt
 
 # Copy helper scripts to container
 ADD bin /root/bin
