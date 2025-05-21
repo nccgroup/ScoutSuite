@@ -48,9 +48,12 @@ nosetests.xml
 
 # Data folder and files
 scoutsuite-report*
+scoutsuite-reports*
 inc-scoutsuite-run*
 report-*
 *.db
+cloufront_config.json
+cloudfront_config.template.json
 
 # IntelliJ files
 .idea/
@@ -58,7 +61,7 @@ report-*
 
 # Vs Code
 .vscode/
-
+.vs
 # Mac cruft
 .DS_Store
 
@@ -76,8 +79,6 @@ report-*
 
 !docker/bin
 
-# CloudFront configuration
-tools/automation/config/cloudfront_config.json
 
 ScoutSuite/Scripts/
 temp.txt
