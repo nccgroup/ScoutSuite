@@ -9,7 +9,7 @@
 
 2. Build AWS image:
    ```bash
-   ./build.sh aws
+   docker build -t scoutsuitedockerimage -t latest -f Dockerfile-aws . 
    ```
 
 ## Build Options

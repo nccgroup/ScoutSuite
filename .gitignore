@@ -54,6 +54,7 @@ report-*
 *.db
 cloufront_config.json
 cloudfront_config.template.json
+tools/automation/config*
 
 # IntelliJ files
 .idea/

@@ -1,5 +1,5 @@
 # Define AWS account profiles
-[string[]]$awsProfiles = @('management-account', 'public-sites', 'corporate-applications', 'public-sites') # Replace with the accounts you want to audit.
+[string[]]$awsProfiles = @('management', 'publicsites', 'corporateapplications', 'publicsites') # Replace with the accounts you want to audit.
 
 # Define directories
 $tempResultsDirectory = "C:\Users\ashika.sreerambushan\source\repos\ScoutSuite\scoutsuite_reports"
