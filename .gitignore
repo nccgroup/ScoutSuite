@@ -51,7 +51,7 @@ scoutsuite-report*
 scoutsuite_reports*
 inc-scoutsuite-run*
 report-*
-*.db
+*.db   
 cloufront_config.json
 cloudfront_config.template.json
 tools/automation/config*

@@ -1,13 +1,19 @@
 # Define AWS account profiles
-[string[]]$awsProfiles = @('management', 'publicsites', 'corporateapplications', 'publicsites') # Replace with the accounts you want to audit.
+[string[]]$awsProfiles = @('management')
+#, 'publicsites', 'corporateapplications', 'tiidatalake') # Replace with the accounts you want to audit.
 
 # Define directories
 $tempResultsDirectory = "C:\Users\ashika.sreerambushan\source\repos\ScoutSuite\scoutsuite_reports"
 $scoutExecutable = "C:\Users\ashika.sreerambushan\source\repos\ScoutSuite\scout.py"
-$s3BucketName = "awsconfigauditscoutreport" # Replace with your S3 bucket name
+$s3BucketName = "" # Replace with your S3 bucket name
 
 # Get current date
 $currentDatetime = Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'
+
+# Set your CloudFront Distribution ID here
+$distributionId = ""   # <-- Replace with your actual Distribution ID
+# Define a list to hold CloudFront invalidation paths
+$cloudfrontInvalidationPaths = @("/index.html")
 
 function Create-IndexHtml {
     # Create the HTML index file content
@@ -37,7 +43,6 @@ function Create-IndexHtml {
     </tr>
 "@
 
-    # List all profiles and their latest report
     foreach ($profile in $awsProfiles) {
         $indexHtml += @"
         <tr>
@@ -58,8 +63,10 @@ function Create-IndexHtml {
     New-Item -Path (Split-Path $indexPath) -ItemType Directory -Force | Out-Null
     Set-Content -Path $indexPath -Value $indexHtml
 
-    Write-Host "Uploading index.html to S3"
-    aws s3 cp $indexPath "s3://$s3BucketName/index.html" --profile "sandbox1-admin"
+    Write-Host "Uploading index.html to S3 with cache-control headers"
+    aws s3 cp $indexPath "s3://$s3BucketName/index.html" `
+        --cache-control "no-cache, no-store, must-revalidate" `
+        --profile "sandbox1-admin"
     Write-Host "Index.html uploaded successfully"
 }
 
@@ -70,24 +77,28 @@ foreach ($profile in $awsProfiles) {
     New-Item -Path $tempDirectory -ItemType Directory -Force | Out-Null
 
     Write-Host "Running ScoutSuite for profile: $profile"
-    
-    # Run ScoutSuite
     python $scoutExecutable aws --profile $profile --report-dir $tempDirectory --no-browser
-    
     Write-Host "Results saved in: $tempDirectory"
 
-    # Upload to dated directory
+    # Upload to dated directory with cache-control
     $datedDir = "accounts/$profile/$currentDatetime"
     Write-Host "Uploading report for profile $profile to $datedDir"
-    
-    # Upload everything in the directory
-    aws s3 cp $tempDirectory "s3://$s3BucketName/$datedDir/" --recursive --profile "sandbox1-admin"
+    aws s3 cp $tempDirectory "s3://$s3BucketName/$datedDir/" --recursive `
+        --cache-control "no-cache, no-store, must-revalidate" `
+        --profile "sandbox1-admin"
     Write-Host "Uploaded: $tempDirectory to s3://$s3BucketName/$datedDir/"
-    
-    # Update latest directory
+
+    # Update latest directory with cache-control
     Write-Host "Updating 'latest' directory for profile $profile"
-    aws s3 sync "s3://$s3BucketName/$datedDir/" "s3://$s3BucketName/accounts/$profile/latest/" --profile "sandbox1-admin"
+    aws s3 sync $tempDirectory "s3://$s3BucketName/accounts/$profile/latest/" `
+        --delete `
+        --cache-control "no-cache, no-store, must-revalidate" `
+        --profile "sandbox1-admin"
     Write-Host "Updated 'latest' directory for profile $profile"
+
+    # Add the path of the main HTML report to the invalidation list
+    $mainReportPath = "/accounts/$profile/latest/aws-$profile.html"
+    $cloudfrontInvalidationPaths += $mainReportPath
 
     # Remove the temporary directory
     Remove-Item -Path $tempDirectory -Recurse -Force
@@ -95,5 +106,18 @@ foreach ($profile in $awsProfiles) {
 
 # Create and upload the index.html after all profiles are processed
 Create-IndexHtml
+
+# Invalidate CloudFront cache for all changed files
+if ($distributionId -ne "<YOUR_CLOUDFRONT_DISTRIBUTION_ID>") {
+    $pathsString = $cloudfrontInvalidationPaths | ForEach-Object { "`"$_`"" } | Join-String " "
+    Write-Host "Invalidating CloudFront cache for: $($cloudfrontInvalidationPaths -join ', ')"
+    aws cloudfront create-invalidation `
+        --distribution-id $distributionId `
+        --paths $cloudfrontInvalidationPaths `
+        --profile "sandbox1-admin"
+    Write-Host "CloudFront invalidation requested for updated files."
+} else {
+    Write-Host "CloudFront Distribution ID not set! Skipping invalidation."
+}
 
 Write-Host "ScoutSuite audit completed and results saved for all profiles."
