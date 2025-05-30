@@ -41,6 +41,9 @@ RUN ["/bin/bash", "-c", "/root/bin/container-install-scoutsuite.sh"]
 # Set a nice message
 RUN ["/bin/bash", "-c", "/root/bin/container-set-init.sh"]
 
+# Install AWS CLI
+RUN ["/bin/bash", "-c", "/root/bin/container-install-aws2.sh"]
+
 # Remove scripts
 RUN ["rm", "-rf", "/root/bin"]
 
