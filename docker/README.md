@@ -10,6 +10,11 @@
 2. Build AWS image:
    ```bash
    docker build -t scoutsuitedockerimage -t latest -f Dockerfile-aws . 
+
+   or 
+
+   # Build with detailed logs to see the exact error
+   docker build --no-cache --progress=plain -t scoutsuite .
    ```
 
 ## Build Options

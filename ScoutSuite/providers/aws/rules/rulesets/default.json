@@ -66,7 +66,7 @@
         ],
         "cloudtrail-no-global-services-logging.json": [
             {
-                "enabled": true,
+                "enabled": false,
                 "level": "danger"
             }
         ],
@@ -588,19 +588,19 @@
         "iam-managed-policy-allows-NotActions.json": [
             {
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "iam-managed-policy-allows-full-privileges.json": [
             {
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "iam-managed-policy-allows-non-sts-action.json": [
             {
                 "enabled": false,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "iam-managed-policy-for-role.json": [
@@ -610,7 +610,7 @@
                     "PassRole"
                 ],
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             },
             {
                 "args": [
@@ -618,7 +618,7 @@
                     "AssumeRole"
                 ],
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "iam-managed-policy-no-attachments.json": [
