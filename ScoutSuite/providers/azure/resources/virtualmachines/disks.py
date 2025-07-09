@@ -28,7 +28,7 @@ class Disks(AzureResources):
         disk_dict['zones'] = raw_disk.zones
         disk_dict['time_created'] = raw_disk.time_created
         disk_dict['os_type'] = raw_disk.os_type
-        disk_dict['hyper_vgeneration'] = raw_disk.hyper_v_generation
+        disk_dict['hyper_v_generation'] = raw_disk.hyper_v_generation
         disk_dict['creation_data'] = raw_disk.creation_data
         disk_dict['disk_size_gb'] = raw_disk.disk_size_gb
         disk_dict['disk_size_bytes'] = getattr(raw_disk, 'disk_size_bytes', None)

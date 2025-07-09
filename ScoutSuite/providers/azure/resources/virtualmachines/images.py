@@ -24,7 +24,7 @@ class Images(AzureResources):
         image_dict['source_virtual_machine'] = raw_image.source_virtual_machine
         image_dict['storage_profile'] = raw_image.storage_profile
         image_dict['provisioning_state'] = raw_image.provisioning_state
-        image_dict['hyper_vgeneration'] = raw_image.hyper_vgeneration
+        image_dict['hyper_v_generation'] = raw_image.hyper_v_generation
         image_dict['additional_properties'] = raw_image.additional_properties
         return image_dict['id'], image_dict
 
