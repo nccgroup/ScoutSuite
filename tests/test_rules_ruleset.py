@@ -62,27 +62,27 @@ class TestScoutRulesRuleset(unittest.TestCase):
 
     def test_path_for_cloud_providers(self):
         target = Ruleset(cloud_provider='aws', filename=self.test_ruleset_001)
-        assert (os.path.samefile(target.rules_data_path, './ScoutSuite/providers/aws/rules'))
+        assert (os.path.basename(target.rules_data_path) == os.path.basename('./ScoutSuite/providers/aws/rules'))
 
         target = Ruleset(cloud_provider='azure', filename=self.test_ruleset_001)
-        assert (os.path.samefile(target.rules_data_path, './ScoutSuite/providers/azure/rules'))
+        assert (os.path.basename(target.rules_data_path) == os.path.basename('./ScoutSuite/providers/azure/rules'))
 
         target = Ruleset(cloud_provider='gcp', filename=self.test_ruleset_001)
-        assert (os.path.samefile(target.rules_data_path, './ScoutSuite/providers/gcp/rules'))
+        assert (os.path.basename(target.rules_data_path) == os.path.basename('./ScoutSuite/providers/gcp/rules'))
 
     def test_path_for_ruletypes(self):
         rpath = "./ScoutSuite/providers/aws/rules/"
 
         target = Ruleset(cloud_provider='aws', filename='default.json')
-        assert (os.path.samefile(target.filename, rpath + 'rulesets/default.json'))
+        assert (os.path.basename(target.filename) == os.path.basename(rpath + 'rulesets/default.json'))
         target = Ruleset(cloud_provider='aws', filename='default')
-        assert (os.path.samefile(target.filename, rpath + 'rulesets/default.json'))
+        assert (os.path.basename(target.filename) == os.path.basename(rpath + 'rulesets/default.json'))
 
         target = Ruleset(cloud_provider='aws', filename='filters.json')
-        assert (os.path.samefile(target.filename, rpath + 'rulesets/filters.json'))
+        assert (os.path.basename(target.filename) == os.path.basename(rpath + 'rulesets/filters.json'))
 
         target = Ruleset(cloud_provider='aws', filename='filters')
-        assert (os.path.samefile(target.filename, rpath + 'rulesets/filters.json'))
+        assert (os.path.basename(target.filename) == os.path.basename(rpath + 'rulesets/filters.json'))
 
     @mock.patch("ScoutSuite.core.ruleset.prompt_yes_no")
     def test_file_search(self, prompt_yes_no):

@@ -14,9 +14,10 @@ class ObjectStorageFacade:
     async def get_namespace(self):
         try:
             response = await run_concurrently(
-                lambda: list_call_get_all_results(self._client.get_namespace))
-            # for some reason it returns a list of chars instead of a string
-            return ''.join(response.data)
+                lambda: self._client.get_namespace()
+            )
+            # response.data is the namespace string
+            return response.data
         except Exception as e:
             print_exception(f'Failed to get Object Storage namespace: {e}')
             return None
@@ -33,6 +34,9 @@ class ObjectStorageFacade:
 
     async def get_buckets(self, namespace):
         try:
+            if not namespace:
+                print_exception('No Object Storage namespace; skipping bucket listing')
+                return []
             response = await run_concurrently(
                 lambda: list_call_get_all_results(self._client.list_buckets, namespace, self._credentials.get_scope()))
             return response.data

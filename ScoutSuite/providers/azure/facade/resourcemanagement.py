@@ -2,6 +2,7 @@ from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.utils import get_user_agent
 from azure.mgmt.resource import ResourceManagementClient
+import asyncio
 
 
 class ResourceManagementFacade:
@@ -21,9 +22,18 @@ class ResourceManagementFacade:
                 f'resourceType eq \'{resource_type_filter}\''
             ])
             client = self.get_client(subscription_id)
-            resource = await run_concurrently(
-                lambda: list(client.resources.list(filter=type_filter))
-            )
+            try:
+                resource = await run_concurrently(
+                    lambda: list(client.resources.list(filter=type_filter))
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    resource = await loop.run_in_executor(
+                        None, lambda: list(client.resources.list(filter=type_filter))
+                    )
+                else:
+                    raise
             return resource
         except Exception as e:
             print_exception(f'Failed to retrieve key vault resources: {e}')
@@ -32,9 +42,18 @@ class ResourceManagementFacade:
     async def get_all_resources(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            resource = await run_concurrently(
-                lambda: list(client.resources.list())
-            )
+            try:
+                resource = await run_concurrently(
+                    lambda: list(client.resources.list())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    resource = await loop.run_in_executor(
+                        None, lambda: list(client.resources.list())
+                    )
+                else:
+                    raise
             return resource
         except Exception as e:
             print_exception(f'Failed to retrieve resources: {e}')

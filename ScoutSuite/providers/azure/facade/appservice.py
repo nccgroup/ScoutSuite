@@ -1,4 +1,5 @@
 from azure.mgmt.web import WebSiteManagementClient
+import asyncio
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.azure.utils import get_resource_group_name
@@ -19,9 +20,18 @@ class AppServiceFacade:
     async def get_web_apps(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            web_apps = await run_concurrently(
-                lambda: list(client.web_apps.list())
-            )
+            try:
+                web_apps = await run_concurrently(
+                    lambda: list(client.web_apps.list())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    web_apps = await loop.run_in_executor(
+                        None, lambda: list(client.web_apps.list())
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve web apps: {e}')
             return []

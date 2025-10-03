@@ -1,5 +1,6 @@
 
 from azure.mgmt.sql import SqlManagementClient
+import asyncio
 from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.utils import get_user_agent
@@ -21,10 +22,20 @@ class SQLDatabaseFacade:
                                                   subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: client.database_blob_auditing_policies.get(
-                    resource_group_name, server_name, database_name)
-            )
+            try:
+                return await run_concurrently(
+                    lambda: client.database_blob_auditing_policies.get(
+                        resource_group_name, server_name, database_name)
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: client.database_blob_auditing_policies.get(
+                            resource_group_name, server_name, database_name)
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve database blob auditing policies: {e}')
             return []
@@ -33,10 +44,20 @@ class SQLDatabaseFacade:
                                                      subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: client.database_threat_detection_policies.get(resource_group_name, server_name, database_name,
-                                                                      'default')
-            )
+            try:
+                return await run_concurrently(
+                    lambda: client.database_threat_detection_policies.get(resource_group_name, server_name, database_name,
+                                                                          'default')
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: client.database_threat_detection_policies.get(resource_group_name, server_name, database_name,
+                                                                                    'default')
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve database threat detection policies: {e}')
             return []
@@ -44,9 +65,18 @@ class SQLDatabaseFacade:
     async def get_databases(self, resource_group_name, server_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.databases.list_by_server(resource_group_name, server_name))
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.databases.list_by_server(resource_group_name, server_name))
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.databases.list_by_server(resource_group_name, server_name))
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve databases: {e}')
             return []
@@ -55,10 +85,20 @@ class SQLDatabaseFacade:
                                              subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.replication_links.list_by_database(
-                    resource_group_name, server_name, database_name))
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.replication_links.list_by_database(
+                        resource_group_name, server_name, database_name))
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.replication_links.list_by_database(
+                            resource_group_name, server_name, database_name))
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve database replication links: {e}')
             return []
@@ -66,9 +106,18 @@ class SQLDatabaseFacade:
     async def get_server_azure_ad_administrators(self, resource_group_name, server_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.server_azure_ad_administrators.list_by_server(resource_group_name, server_name))
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.server_azure_ad_administrators.list_by_server(resource_group_name, server_name))
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.server_azure_ad_administrators.list_by_server(resource_group_name, server_name))
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve server azure ad administrators: {e}')
             return None
@@ -76,9 +125,18 @@ class SQLDatabaseFacade:
     async def get_server_blob_auditing_policies(self, resource_group_name, server_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: client.server_blob_auditing_policies.get(resource_group_name, server_name)
-            )
+            try:
+                return await run_concurrently(
+                    lambda: client.server_blob_auditing_policies.get(resource_group_name, server_name)
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: client.server_blob_auditing_policies.get(resource_group_name, server_name)
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve server blob auditing policies: {e}')
             return []
@@ -86,9 +144,18 @@ class SQLDatabaseFacade:
     async def get_server_security_alert_policies(self, resource_group_name, server_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: client.server_security_alert_policies.get(resource_group_name, server_name, 'default')
-            )
+            try:
+                return await run_concurrently(
+                    lambda: client.server_security_alert_policies.get(resource_group_name, server_name, 'default')
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: client.server_security_alert_policies.get(resource_group_name, server_name, 'default')
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve server security alert policies: {e}')
             return []
@@ -96,9 +163,18 @@ class SQLDatabaseFacade:
     async def get_servers(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.servers.list())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.servers.list())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.servers.list())
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve servers: {e}')
             return []
@@ -107,10 +183,20 @@ class SQLDatabaseFacade:
                                                         subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: client.transparent_data_encryptions.get(
-                    resource_group_name, server_name, database_name, 'current')
-            )
+            try:
+                return await run_concurrently(
+                    lambda: client.transparent_data_encryptions.get(
+                        resource_group_name, server_name, database_name, 'current')
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: client.transparent_data_encryptions.get(
+                            resource_group_name, server_name, database_name, 'current')
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve database transparent data encryptions: {e}')
             return []
@@ -119,18 +205,36 @@ class SQLDatabaseFacade:
                                                    subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: client.server_vulnerability_assessments.get(resource_group_name, server_name, 'default')
-            )
+            try:
+                return await run_concurrently(
+                    lambda: client.server_vulnerability_assessments.get(resource_group_name, server_name, 'default')
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: client.server_vulnerability_assessments.get(resource_group_name, server_name, 'default')
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve server vulnerability assessments: {e}')
 
     async def get_server_encryption_protectors(self, resource_group_name, server_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: client.encryption_protectors.get(resource_group_name, server_name, 'current')
-            )
+            try:
+                return await run_concurrently(
+                    lambda: client.encryption_protectors.get(resource_group_name, server_name, 'current')
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: client.encryption_protectors.get(resource_group_name, server_name, 'current')
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve database transparent data encryptions: {e}')
             return []
@@ -138,9 +242,18 @@ class SQLDatabaseFacade:
     async def get_firewall_rules(self, resource_group_name, server_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.firewall_rules.list_by_server(resource_group_name, server_name))
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.firewall_rules.list_by_server(resource_group_name, server_name))
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.firewall_rules.list_by_server(resource_group_name, server_name))
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve firewalls rules: {e}')
             return []

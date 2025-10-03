@@ -144,15 +144,7 @@ def run(provider,
     Run a scout job in an async event loop.
     """
 
-    loop = asyncio.get_event_loop()
-    if loop.is_closed():
-        loop = asyncio.new_event_loop()
-    # Set the throttler within the loop so it's accessible later on
-    loop.throttler = Throttler(rate_limit=max_rate if max_rate else 999999, period=1)
-    loop.set_default_executor(ThreadPoolExecutor(max_workers=max_workers))
-    result = loop.run_until_complete(_run(**locals()))  # pass through all the parameters
-    loop.close()
-    return result
+    return asyncio.run(_run(**locals()))  # pass through all the parameters
 
 
 async def _run(provider,
@@ -209,6 +201,22 @@ async def _run(provider,
     set_logger_configuration(debug, quiet, log_file)
 
     print_info('Launching Scout')
+
+    # Configure optional global throttler from --max-rate if provided
+    try:
+        max_rate_config = kwargs.get('max_rate')
+    except Exception:
+        max_rate_config = None
+    if max_rate_config:
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = asyncio.get_event_loop()
+        if not hasattr(loop, 'throttler'):
+            try:
+                loop.throttler = Throttler(rate_limit=int(max_rate_config), period=1)
+            except Exception:
+                pass
 
     print_info('Authenticating to cloud provider')
     auth_strategy = get_authentication_strategy(provider)
@@ -424,3 +432,6 @@ async def _run(provider,
         return 200
     else:
         return 0
+
+if __name__ == '__main__':
+    run_from_cli()

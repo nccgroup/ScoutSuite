@@ -1,4 +1,5 @@
 from azure.mgmt.network import NetworkManagementClient
+import asyncio
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
@@ -19,9 +20,17 @@ class NetworkFacade:
     async def get_network_watchers(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.network_watchers.list_all())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.network_watchers.list_all())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.network_watchers.list_all())
+                    )
+                raise
         except Exception as e:
             print_exception(f'Failed to retrieve network watchers: {e}')
             return []
@@ -29,9 +38,17 @@ class NetworkFacade:
     async def get_network_security_groups(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.network_security_groups.list_all())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.network_security_groups.list_all())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.network_security_groups.list_all())
+                    )
+                raise
         except Exception as e:
             print_exception(f'Failed to retrieve network security groups: {e}')
             return []
@@ -39,9 +56,17 @@ class NetworkFacade:
     async def get_application_security_groups(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.application_security_groups.list_all())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.application_security_groups.list_all())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.application_security_groups.list_all())
+                    )
+                raise
         except Exception as e:
             print_exception(f'Failed to retrieve application security groups: {e}')
             return []
@@ -49,9 +74,17 @@ class NetworkFacade:
     async def get_virtual_networks(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.virtual_networks.list_all())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.virtual_networks.list_all())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.virtual_networks.list_all())
+                    )
+                raise
         except Exception as e:
             print_exception(f'Failed to retrieve virtual networks: {e}')
             return []
@@ -59,9 +92,17 @@ class NetworkFacade:
     async def get_network_interfaces(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.network_interfaces.list_all())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.network_interfaces.list_all())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.network_interfaces.list_all())
+                    )
+                raise
         except Exception as e:
             print_exception(f'Failed to retrieve network interfaces: {e}')
             return []

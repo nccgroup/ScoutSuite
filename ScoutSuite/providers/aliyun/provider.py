@@ -1,4 +1,17 @@
 import os
+import asyncio
+import warnings
+from asyncio_throttle import Throttler
+
+try:
+    from urllib3.exceptions import SNIMissingWarning
+except Exception:
+    SNIMissingWarning = None
+
+# Suppress vendored urllib3 SNI false-positive warnings
+warnings.filterwarnings('ignore', message='An HTTPS request has been made, but the SNI (Server Name Indication) extension to TLS is not available on this platform.*')
+if SNIMissingWarning:
+    warnings.filterwarnings('ignore', category=SNIMissingWarning)
 
 from ScoutSuite.providers.aliyun.services import AliyunServicesConfig
 from ScoutSuite.providers.base.provider import BaseProvider
@@ -26,6 +39,15 @@ class AliyunProvider(BaseProvider):
         self.credentials = kwargs['credentials']
         self.account_id = self.credentials.caller_details['AccountId']
 
+        # Ensure throttler is available on the event loop as early as possible
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        if not hasattr(loop, 'throttler'):
+            loop.throttler = Throttler(rate_limit=10, period=1)
+
         super().__init__(report_dir, timestamp, services, skipped_services)
 
     def get_report_name(self):
@@ -38,6 +60,15 @@ class AliyunProvider(BaseProvider):
             return 'aliyun'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
+        # Ensure a global throttler is attached to the event loop for concurrency control
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop = asyncio.get_event_loop()
+        if not hasattr(loop, 'throttler'):
+            loop.throttler = Throttler(rate_limit=10, period=1)
 
         super().preprocessing()
 

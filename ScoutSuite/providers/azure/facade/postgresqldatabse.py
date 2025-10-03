@@ -1,4 +1,5 @@
 from azure.mgmt.rdbms.postgresql import PostgreSQLManagementClient
+import asyncio
 from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.utils import get_user_agent
@@ -18,9 +19,18 @@ class PostgreSQLDatabaseFacade:
     async def get_servers(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.servers.list())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.servers.list())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.servers.list())
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve postgresSQL servers: {e}')
             return []

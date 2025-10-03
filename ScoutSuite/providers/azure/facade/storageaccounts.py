@@ -1,4 +1,5 @@
 import datetime
+import asyncio
 from azure.mgmt.monitor import MonitorManagementClient
 from azure.mgmt.storage import StorageManagementClient
 
@@ -21,9 +22,18 @@ class StorageAccountsFacade:
     async def get_storage_accounts(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            storage_accounts = await run_concurrently(
-                lambda: list(client.storage_accounts.list())
-            )
+            try:
+                storage_accounts = await run_concurrently(
+                    lambda: list(client.storage_accounts.list())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    storage_accounts = await loop.run_in_executor(
+                        None, lambda: list(client.storage_accounts.list())
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve storage accounts: {e}')
             return []
@@ -35,9 +45,18 @@ class StorageAccountsFacade:
     async def get_blob_containers(self, resource_group_name, storage_account_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            containers = await run_concurrently(
-                lambda: list(client.blob_containers.list(resource_group_name, storage_account_name))
-            )
+            try:
+                containers = await run_concurrently(
+                    lambda: list(client.blob_containers.list(resource_group_name, storage_account_name))
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    containers = await loop.run_in_executor(
+                        None, lambda: list(client.blob_containers.list(resource_group_name, storage_account_name))
+                    )
+                else:
+                    raise
 
         except Exception as e:
             print_exception(f'Failed to retrieve blob containers: {e}')
@@ -48,9 +67,18 @@ class StorageAccountsFacade:
     async def get_blob_services(self, resource_group_name, storage_account_name, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            blob_services = await run_concurrently(
-                lambda: list(client.blob_services.list(resource_group_name, storage_account_name))
-            )
+            try:
+                blob_services = await run_concurrently(
+                    lambda: list(client.blob_services.list(resource_group_name, storage_account_name))
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    blob_services = await loop.run_in_executor(
+                        None, lambda: list(client.blob_services.list(resource_group_name, storage_account_name))
+                    )
+                else:
+                    raise
 
         except Exception as e:
             print_exception(f'Failed to retrieve blob services: {e}')
@@ -76,9 +104,18 @@ class StorageAccountsFacade:
             f"resourceId eq {storage_account.id}",
         ])
         try:
-            activity_logs = await run_concurrently(
-                lambda: list(client.activity_logs.list(filter=logs_filter, select="eventTimestamp, operationName"))
-            )
+            try:
+                activity_logs = await run_concurrently(
+                    lambda: list(client.activity_logs.list(filter=logs_filter, select="eventTimestamp, operationName"))
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    activity_logs = await loop.run_in_executor(
+                        None, lambda: list(client.activity_logs.list(filter=logs_filter, select="eventTimestamp, operationName"))
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve activity logs: {e}')
             setattr(storage_account, 'activity_logs', [])

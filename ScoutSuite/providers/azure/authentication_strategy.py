@@ -29,7 +29,7 @@ class AzureCredentials:
         if self.tenant_id:
             return self.tenant_id
         elif hasattr(self.identity_credentials, 'tenant_id'):
-            return self.identity_credentials['tenant_id']
+            return getattr(self.identity_credentials, 'tenant_id')
 
         else:
             # Additional request for CLI & MSI authentication

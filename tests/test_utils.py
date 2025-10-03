@@ -130,4 +130,4 @@ class TestScoutUtilsClass(unittest.TestCase):
         }
         d = snake_keys(src)
         self.maxDiff = None
-        self.assertEquals(d, dest)
+        self.assertEqual(d, dest)

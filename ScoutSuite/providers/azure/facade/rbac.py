@@ -1,4 +1,5 @@
 from azure.mgmt.authorization import AuthorizationManagementClient
+import asyncio
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
@@ -20,7 +21,15 @@ class RBACFacade:
         try:
             client = self.get_client(subscription_id)
             scope = f'/subscriptions/{subscription_id}'
-            return await run_concurrently(lambda: list(client.role_definitions.list(scope=scope)))
+            try:
+                return await run_concurrently(lambda: list(client.role_definitions.list(scope=scope)))
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.role_definitions.list(scope=scope))
+                    )
+                raise
         except Exception as e:
             print_exception(f'Failed to retrieve roles: {e}')
             return []
@@ -29,7 +38,15 @@ class RBACFacade:
         try:
             client = self.get_client(subscription_id)
             scope = f'/subscriptions/{subscription_id}'
-            return await run_concurrently(lambda: list(client.role_assignments.list_for_scope(scope=scope)))
+            try:
+                return await run_concurrently(lambda: list(client.role_assignments.list_for_scope(scope=scope)))
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.role_assignments.list_for_scope(scope=scope))
+                    )
+                raise
         except Exception as e:
             print_exception(f'Failed to retrieve role assignments: {e}')
             return []

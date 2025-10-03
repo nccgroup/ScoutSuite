@@ -196,7 +196,7 @@ class KubernetesProvider(BaseProvider):
                 for version in versions:
                     items = finding['items']
                     for i in range(len(items)):
-                        expression = f'^{service_name}\.{version}\.resources'
+                        expression = f'^{service_name}.{version}.resources'
                         items[i] = re.sub(expression, f'{service_name}.{version}', items[i])
 
     def _postprocess_composite_resource(self, composite_resource_name):

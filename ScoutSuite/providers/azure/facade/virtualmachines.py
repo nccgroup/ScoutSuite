@@ -1,4 +1,5 @@
 from azure.mgmt.compute import ComputeManagementClient
+import asyncio
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
@@ -20,9 +21,18 @@ class VirtualMachineFacade:
     async def get_instances(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.virtual_machines.list_all())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.virtual_machines.list_all())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.virtual_machines.list_all())
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve virtual machines: {e}')
             return []
@@ -32,10 +42,19 @@ class VirtualMachineFacade:
                                       resource_group: str):
         try:
             client = self.get_client(subscription_id)
-            extensions = await run_concurrently(
-                lambda: client.virtual_machine_extensions.list(resource_group,
-                                                               instance_name)
-            )
+            try:
+                extensions = await run_concurrently(
+                    lambda: client.virtual_machine_extensions.list(resource_group,
+                                                                   instance_name)
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    extensions = await loop.run_in_executor(
+                        None, lambda: client.virtual_machine_extensions.list(resource_group, instance_name)
+                    )
+                else:
+                    raise
             return list(extensions.value)
         except Exception as e:
             print_exception(f'Failed to retrieve virtual machine extensions: {e}')
@@ -44,9 +63,18 @@ class VirtualMachineFacade:
     async def get_disks(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.disks.list())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.disks.list())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.disks.list())
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve disks: {e}')
             return []
@@ -54,9 +82,18 @@ class VirtualMachineFacade:
     async def get_snapshots(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.snapshots.list())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.snapshots.list())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.snapshots.list())
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve snapshots: {e}')
             return []
@@ -64,9 +101,18 @@ class VirtualMachineFacade:
     async def get_images(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: list(client.images.list())
-            )
+            try:
+                return await run_concurrently(
+                    lambda: list(client.images.list())
+                )
+            except AttributeError as ae:
+                if 'throttler' in str(ae):
+                    loop = asyncio.get_event_loop()
+                    return await loop.run_in_executor(
+                        None, lambda: list(client.images.list())
+                    )
+                else:
+                    raise
         except Exception as e:
             print_exception(f'Failed to retrieve images: {e}')
             return []

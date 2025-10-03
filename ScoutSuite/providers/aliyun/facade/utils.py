@@ -1,5 +1,5 @@
 import json
-from ScoutSuite.providers.utils import run_concurrently
+import asyncio
 from aliyunsdkcore.acs_exception.exceptions import ClientException
 from aliyunsdkcore.acs_exception.exceptions import ServerException
 from ScoutSuite.core.console import print_exception
@@ -7,15 +7,45 @@ from ScoutSuite.core.console import print_exception
 
 async def get_response(client, request):
     try:
-        response = await run_concurrently(lambda: client.do_action_with_exception(request))
+        # Force HTTPS on requests when supported to avoid HTTP fallback (port 80)
+        try:
+            if hasattr(request, 'set_Scheme'):
+                request.set_Scheme('https')
+            elif hasattr(request, 'set_protocol_type'):
+                request.set_protocol_type('https')
+        except Exception:
+            pass
+
+        loop = asyncio.get_running_loop()
+        throttler = getattr(loop, 'throttler', None)
+        if throttler:
+            async with throttler:
+                response = await loop.run_in_executor(
+                    None, lambda: client.do_action_with_exception(request)
+                )
+        else:
+            response = await loop.run_in_executor(
+                None, lambda: client.do_action_with_exception(request)
+            )
         response_decoded = json.loads(response)
+
 
         truncated = response_decoded.get('IsTruncated', False)
 
-        # handle truncated responses
+        # handle truncated responses (legacy pagination)
         while truncated:
             request.set_Marker(response_decoded['Marker'])
-            response_latest = await run_concurrently(lambda: client.do_action_with_exception(request))
+            loop = asyncio.get_running_loop()
+            throttler = getattr(loop, 'throttler', None)
+            if throttler:
+                async with throttler:
+                    response_latest = await loop.run_in_executor(
+                        None, lambda: client.do_action_with_exception(request)
+                    )
+            else:
+                response_latest = await loop.run_in_executor(
+                    None, lambda: client.do_action_with_exception(request)
+                )
             response_latest_decoded = json.loads(response_latest)
             truncated = response_latest_decoded.get('IsTruncated', False)
             response_decoded = await merge_responses(response_decoded, response_latest_decoded)

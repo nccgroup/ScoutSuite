@@ -1,4 +1,5 @@
-from msgraph.core import GraphClient
+from azure.identity import DefaultAzureCredential
+import requests
 
 from ScoutSuite.core.console import print_exception
 
@@ -6,16 +7,15 @@ from ScoutSuite.core.console import print_exception
 class AADFacade:
 
     def __init__(self, credentials):
-        self.credentials = credentials
+        self.credentials = DefaultAzureCredential()
 
 
     async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
-        scopes = ['https://graph.microsoft.com/.default']
-
-        client = GraphClient(credential=self.credentials.get_credentials(), scopes=scopes)
         endpoint = 'https://graph.microsoft.com/{}/{}'.format(api_version, api_resource)
         try:
-            response = client.get(endpoint)
+            token = self.credentials.get_token('https://graph.microsoft.com/.default').token
+            headers = {'Authorization': f'Bearer {token}'}
+            response = requests.get(endpoint, headers=headers, timeout=30)
             if response.status_code == 200:
                 return response.json()
             # If response is 404 then it means there is no resource associated with the provided id

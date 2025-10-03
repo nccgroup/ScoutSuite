@@ -74,3 +74,4 @@ report-*
 *.prof
 
 !docker/bin
+.aider*

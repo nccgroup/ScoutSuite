@@ -12,8 +12,11 @@ VERSION = __import__(NAME).__version__
 # Requirements
 requirements = []
 with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'requirements.txt')) as f:
-    for r in f.readlines():
-        requirements.append(r.strip())
+    for r in f:
+        r = r.strip()
+        if not r or r.startswith('#'):
+            continue
+        requirements.append(r)
 
 # Setup
 setup(
