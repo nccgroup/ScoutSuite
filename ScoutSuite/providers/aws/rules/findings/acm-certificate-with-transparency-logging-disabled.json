@@ -12,6 +12,11 @@
             "acm.regions.id.certificates.id.Options.CertificateTransparencyLoggingPreference",
             "equal",
             "DISABLED"
+        ],
+        [
+            "acm.regions.id.certificates.id.Type",
+            "notEqual",
+            "IMPORTED"
         ]
     ],
     "id_suffix": "CertificateTransparencyLoggingPreference"
