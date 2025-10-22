@@ -23,7 +23,8 @@ def get_non_provider_id(name):
 
 async def run_concurrently(function, backoff_seconds=15):
     try:
-        async with asyncio.get_event_loop().throttler:
+        loop = asyncio.get_running_loop()
+        async with loop.throttler:
             return await run_function_concurrently(function)
     except Exception as e:
         raise
@@ -50,7 +51,8 @@ def run_function_concurrently(function):
     :return: an asyncio.Future to be awaited.
     """
 
-    return asyncio.get_event_loop().run_in_executor(executor=None, func=function)
+    loop = asyncio.get_running_loop()
+    return loop.run_in_executor(executor=None, func=function)
 
 
 async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs):

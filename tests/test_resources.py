@@ -42,9 +42,8 @@ class TestResources(unittest.TestCase):
     test_dir = os.path.dirname(os.path.realpath(__file__))
 
     def test_composite_resource(self):
-        loop = asyncio.new_event_loop()
         composite = DummyComposite()
-        loop.run_until_complete(composite.fetch_all())
+        asyncio.run(composite.fetch_all())
 
         with open(os.path.join(self.test_dir, 'data/resources/dummy_resources.json')) as f:
             expected_object = json.load(f)
