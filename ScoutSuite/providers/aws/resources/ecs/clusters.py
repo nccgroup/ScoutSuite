@@ -23,11 +23,18 @@ class Clusters(AWSResources):
             cluster['running_tasks_count'] = raw_cluster['runningTasksCount']
             cluster['pending_tasks_count'] = raw_cluster['pendingTasksCount']
             cluster['region'] = self.region
-            for setting in raw_cluster['settings']:
-                 if setting['name'] == 'containerInsights':
-                    if setting['value'] == 'enabled':   
-                        cluster['containerInsights'] = 'True'
-                    elif setting['value'] == 'disabled':
-                        cluster['containerInsights'] = 'False'
-                    
+
+            # Default to False if containerInsights not found
+            cluster['containerInsights'] = 'False'
+
+            # Check for containerInsights setting
+            if 'settings' in raw_cluster:
+                for setting in raw_cluster['settings']:
+                    if setting.get('name') == 'containerInsights':
+                        if setting.get('value') == 'enabled':
+                            cluster['containerInsights'] = 'True'
+                        elif setting.get('value') == 'disabled':
+                            cluster['containerInsights'] = 'False'
+                        break  # Found it, no need to continue
+
             return get_non_provider_id(cluster['name']), cluster

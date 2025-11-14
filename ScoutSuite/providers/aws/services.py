@@ -123,25 +123,14 @@ class AWSServicesConfig(BaseServicesConfig):
         self.vpc = VPC(facade)
         self.secretsmanager = SecretsManager(facade)
 
-        # Instantiate proprietary services
+        # Instantiate proprietary services (only if not already initialized)
+        # Note: ECR, ECS, EKS are now part of open-source, so no need to override
         try:
             self.cognito = Cognito(facade)
         except NameError as _:
             pass
         try:
             self.docdb = DocDB(facade)
-        except NameError as _:
-            pass
-        try:
-            self.ecr = ECR(facade)
-        except NameError as _:
-            pass
-        try:
-            self.ecs = ECS(facade)
-        except NameError as _:
-            pass
-        try:
-            self.eks = EKS(facade)
         except NameError as _:
             pass
         try:

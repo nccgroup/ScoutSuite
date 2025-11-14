@@ -39,34 +39,32 @@ class ECRFacade(AWSBaseFacade):
     async def get_images(self, region: str, repository_name: str):
         ecr_client = AWSFacadeUtils.get_client('ecr', self.session, region)
         try:
-            raw_images = ecr_client.list_images(repositoryName=repository_name)
+            # Missing await here - this is an async operation
+            raw_images = await run_concurrently(
+                lambda: ecr_client.list_images(repositoryName=repository_name))
         except Exception as e:
             print(f'Failed to list images in ECR repository {repository_name}: {e}')
             return []
 
-        image_digests = [image.get('imageDigest') for image in raw_images.get('imageIds', [])]
-        if not image_digests:
+        image_ids = raw_images.get('imageIds', [])
+        if not image_ids:
             return []
 
-        
-        return await self._get_image(image_digests, region=region)
+        # Get detailed image information for this specific repository
+        return await self._get_images_for_repository(repository_name, image_ids, region)
 
-    async def _get_image(self, image_digest: str, region: str) -> Dict:
-        ecr_client = AWSFacadeUtils.get_client('ecr', self.session, region)        
+    async def _get_images_for_repository(self, repository_name: str, image_ids: list, region: str) -> list:
+        """Get detailed image information for a specific repository"""
+        ecr_client = AWSFacadeUtils.get_client('ecr', self.session, region)
         try:
-            raw_repository = ecr_client.describe_repositories()
-            repository_names = [repo.get('repositoryName') for repo in raw_repository.get('repositories',[])]
+            raw_images = await run_concurrently(
+                lambda: ecr_client.describe_images(repositoryName=repository_name))
 
-            rawImages = []
-
-            for repository_name in repository_names:
-                raw_image = ecr_client.describe_images(repositoryName=repository_name)
-                rawImages.append(raw_image.get('imageDetails', [])[0])
-
-            return rawImages
+            image_details = raw_images.get('imageDetails', [])
+            return image_details
 
         except Exception as e:
-            print(f'Failed to describe ECR image {image_digest} in repository {repository_name}: {e}')
-            return {}
+            print(f'Failed to describe ECR images in repository {repository_name}: {e}')
+            return []
 
 

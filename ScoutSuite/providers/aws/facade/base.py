@@ -275,6 +275,10 @@ class AWSFacade(AWSBaseFacade):
         self.sqs = SQSFacade(self.session)
         self.secretsmanager = SecretsManagerFacade(self.session)
         self.emr = EMRFacade(self.session)
+        # Container services (now part of open-source)
+        self.ecr = ECRFacade(self.session)
+        self.ecs = ECSFacade(self.session)
+        self.eks = EKSFacade(self.session)
 
         # Instantiate facades for proprietary services
         try:
@@ -283,18 +287,6 @@ class AWSFacade(AWSBaseFacade):
             pass
         try:
             self.docdb = DocDBFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.ecs = ECSFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.ecr = ECRFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.eks = EKSFacade(self.session)
         except NameError:
             pass
         try:
