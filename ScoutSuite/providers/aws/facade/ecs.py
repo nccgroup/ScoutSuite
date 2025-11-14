@@ -24,8 +24,9 @@ class ECSFacade(AWSBaseFacade):
 
     async def get_services(self, region: str, cluster_arn: str):
         ecs_client = AWSFacadeUtils.get_client('ecs', self.session, region)
-        try: 
-            services = ecs_client.list_services(cluster=cluster_arn)
+        try:
+            services = await run_concurrently(
+                lambda: ecs_client.list_services(cluster=cluster_arn))
         except Exception as e:
             print(f'Failed to list ECS services: {e}')
             return []
@@ -52,10 +53,13 @@ class ECSFacade(AWSBaseFacade):
     async def _get_service(self, service_arn: str,region: str) -> Dict:
         ecs_client = AWSFacadeUtils.get_client('ecs', self.session, region)
         try:
-            raw_clusters = ecs_client.list_clusters()
-            clusterarn = [arn for arn in raw_clusters.get('clusterArns',[]) if arn.startswith('arn:aws:ecs:')]
-            cluster_arn = "".join(clusterarn)
-            raw_service = ecs_client.describe_services(services = [service_arn],cluster = cluster_arn)['services'][0]
+            # Extract cluster name from service ARN
+            # Format: arn:aws:ecs:region:account:service/cluster-name/service-name
+            cluster_name = service_arn.split('/')[1] if '/' in service_arn else service_arn.split(':')[-1]
+
+            raw_service = await run_concurrently(
+                lambda: ecs_client.describe_services(services=[service_arn], cluster=cluster_name)['services'][0]
+            )
         except Exception as e:
             print(f'Failed to describe ECS service {service_arn}: {e}')
             return {}
@@ -64,8 +68,9 @@ class ECSFacade(AWSBaseFacade):
     
     async def get_tasks(self, region: str, cluster_arn: str):
         ecs_client = AWSFacadeUtils.get_client('ecs', self.session, region)
-        try: 
-            tasks = ecs_client.list_tasks(cluster=cluster_arn)
+        try:
+            tasks = await run_concurrently(
+                lambda: ecs_client.list_tasks(cluster=cluster_arn))
         except Exception as e:
             print(f'Failed to list ECS Tasks: {e}')
             return []
@@ -80,13 +85,15 @@ class ECSFacade(AWSBaseFacade):
     async def _get_tasks(self, tasks_arn: str,region: str) -> Dict:
         ecs_client = AWSFacadeUtils.get_client('ecs', self.session, region)
         try:
-            raw_clusters = ecs_client.list_clusters()
-            clusterarn = [arn for arn in raw_clusters.get('clusterArns',[]) if arn.startswith('arn:aws:ecs:')]
-            cluster_arn = "".join(clusterarn)
+            # Extract cluster name from task ARN
+            # Format: arn:aws:ecs:region:account:task/cluster-name/task-id
+            cluster_name = tasks_arn.split('/')[1] if '/' in tasks_arn else tasks_arn.split(':')[-1]
 
-            raw_tasks = ecs_client.describe_tasks(tasks = [tasks_arn],cluster = cluster_arn)['tasks'][0]
+            raw_tasks = await run_concurrently(
+                lambda: ecs_client.describe_tasks(tasks=[tasks_arn], cluster=cluster_name)['tasks'][0]
+            )
         except Exception as e:
-            print(f'Failed to describe ECS service {tasks_arn}: {e}')
+            print(f'Failed to describe ECS task {tasks_arn}: {e}')
             return {}
 
         return raw_tasks
