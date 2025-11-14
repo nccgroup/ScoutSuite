@@ -26,21 +26,32 @@ class Tasks(AWSResources):
 
     def _parse_tasks(self, raw_task):
         task = {}
-        task['arn'] = raw_task['taskArn']
-        task['taskDefinitionArn'] = raw_task['taskDefinitionArn']
-        task['last_status'] = raw_task['lastStatus']
-        task['healthStatus'] = raw_task['healthStatus']
-        task['desiredStatus'] = raw_task['desiredStatus']
-        task['task_cpu'] = raw_task['cpu']
-        task['cluster_arn'] = raw_task['clusterArn']
-        task['task_launchType'] = raw_task['launchType']
+        task['arn'] = raw_task.get('taskArn', '')
+        task['taskDefinitionArn'] = raw_task.get('taskDefinitionArn', '')
+        task['last_status'] = raw_task.get('lastStatus', 'UNKNOWN')
+        task['healthStatus'] = raw_task.get('healthStatus', 'UNKNOWN')
+        task['desiredStatus'] = raw_task.get('desiredStatus', 'UNKNOWN')
+        task['task_cpu'] = raw_task.get('cpu', 'N/A')
+        task['cluster_arn'] = raw_task.get('clusterArn', '')
+        task['task_launchType'] = raw_task.get('launchType', 'UNKNOWN')
         task['region'] = self.region
-        task['availabilityZone'] = raw_task['availabilityZone']
-        task['containerInstanceArn'] = raw_task['containerInstanceArn']
-        task['containerArn'] = raw_task['containers'][0]['containerArn']
-        task['container_name'] = raw_task['containers'][0]['name']
-        task['container_image_name'] = raw_task['containers'][0]['image']
-        task['container_lastStatus'] = raw_task['containers'][0]['lastStatus']
-        task['container_healthStatus'] = raw_task['containers'][0]['healthStatus']
+        task['availabilityZone'] = raw_task.get('availabilityZone', 'N/A')
+        # containerInstanceArn only exists for EC2 launch type, not Fargate
+        task['containerInstanceArn'] = raw_task.get('containerInstanceArn', 'N/A')
+
+        # Parse container information if containers exist
+        if raw_task.get('containers') and len(raw_task['containers']) > 0:
+            container = raw_task['containers'][0]
+            task['containerArn'] = container.get('containerArn', 'N/A')
+            task['container_name'] = container.get('name', 'N/A')
+            task['container_image_name'] = container.get('image', 'N/A')
+            task['container_lastStatus'] = container.get('lastStatus', 'UNKNOWN')
+            task['container_healthStatus'] = container.get('healthStatus', 'UNKNOWN')
+        else:
+            task['containerArn'] = 'N/A'
+            task['container_name'] = 'N/A'
+            task['container_image_name'] = 'N/A'
+            task['container_lastStatus'] = 'UNKNOWN'
+            task['container_healthStatus'] = 'UNKNOWN'
 
         return get_non_provider_id(task['arn']), task

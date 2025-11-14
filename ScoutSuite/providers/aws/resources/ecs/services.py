@@ -27,15 +27,23 @@ class Services(AWSResources):
 
     def _parse_service(self, raw_service):
         service = {}
-        service['name'] = raw_service['serviceName']
-        service['desired_count'] = raw_service['desiredCount']
-        service['running_count'] = raw_service['runningCount']
-        service['pending_count'] = raw_service['pendingCount']
-        service['launch_type'] = raw_service['launchType']
-        service['scheduling_strategy'] = raw_service['schedulingStrategy']
-        service['cluster_name'] = raw_service['clusterArn'].split("/")[-1]
+        service['name'] = raw_service.get('serviceName', 'N/A')
+        service['desired_count'] = raw_service.get('desiredCount', 0)
+        service['running_count'] = raw_service.get('runningCount', 0)
+        service['pending_count'] = raw_service.get('pendingCount', 0)
+        # launchType is optional when using capacity provider strategies
+        service['launch_type'] = raw_service.get('launchType', 'N/A')
+        service['scheduling_strategy'] = raw_service.get('schedulingStrategy', 'REPLICA')
+        service['cluster_name'] = raw_service.get('clusterArn', '').split("/")[-1] if raw_service.get('clusterArn') else 'N/A'
         service['region'] = self.region
-        service['task_defination_used'] = raw_service['deployments'][0]['taskDefinition']
-        service['roll_out_state'] = raw_service['deployments'][0]['rolloutState']
+
+        # Parse deployment information if deployments exist
+        if raw_service.get('deployments') and len(raw_service['deployments']) > 0:
+            deployment = raw_service['deployments'][0]
+            service['task_defination_used'] = deployment.get('taskDefinition', 'N/A')
+            service['roll_out_state'] = deployment.get('rolloutState', 'UNKNOWN')
+        else:
+            service['task_defination_used'] = 'N/A'
+            service['roll_out_state'] = 'UNKNOWN'
 
         return get_non_provider_id(service['name']), service
