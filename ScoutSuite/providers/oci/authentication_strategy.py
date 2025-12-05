@@ -39,7 +39,7 @@ class OracleAuthenticationStrategy(AuthenticationStrategy):
             # Set logging level to error for libraries as otherwise generates a lot of warnings
             logging.getLogger('oci').setLevel(logging.ERROR)
             
-            config = None
+            config = {}
             signer = None
             if kwargs["oci_use_inspr"]:
                 signer = InstancePrincipalsSecurityTokenSigner()
