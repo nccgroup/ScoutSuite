@@ -6,7 +6,7 @@ from ScoutSuite.providers.base.provider import BaseProvider
 
 class OracleProvider(BaseProvider):
     """
-    Implements provider for Azure
+    Implements provider for Oracle
     """
 
     def __init__(self,

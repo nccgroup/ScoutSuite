@@ -10,7 +10,7 @@ from ScoutSuite.providers.utils import run_concurrently
 class IdentityFacade:
     def __init__(self, credentials: OracleCredentials):
         self._credentials = credentials
-        self._client = IdentityClient(self._credentials.config)
+        self._client = IdentityClient(config=self._credentials.config, signer=self._credentials.signer)
 
     async def get_users(self):
         try:
@@ -62,7 +62,7 @@ class IdentityFacade:
     async def get_authentication_policy(self):
         try:
             response = await run_concurrently(
-                lambda: self._client.get_authentication_policy(self._credentials.config['tenancy']))
+                lambda: self._client.get_authentication_policy(self._credentials.config['tenancy'] if self._credentials.signer is None else self._credentials.get_scope()))
             return response.data
         except Exception as e:
             print_exception(f'Failed to retrieve authentication policy: {e}')

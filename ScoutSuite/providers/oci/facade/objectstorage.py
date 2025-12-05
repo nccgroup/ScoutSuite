@@ -9,7 +9,7 @@ from ScoutSuite.core.console import print_exception
 class ObjectStorageFacade:
     def __init__(self, credentials: OracleCredentials):
         self._credentials = credentials
-        self._client = ObjectStorageClient(self._credentials.config)
+        self._client = ObjectStorageClient(config=self._credentials.config, signer=self._credentials.signer)
 
     async def get_namespace(self):
         try:

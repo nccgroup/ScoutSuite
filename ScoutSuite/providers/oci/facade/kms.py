@@ -9,7 +9,7 @@ from ScoutSuite.providers.utils import run_concurrently
 class KMSFacade:
     def __init__(self, credentials: OracleCredentials):
         self._credentials = credentials
-        self._vault_client = KmsVaultClient(self._credentials.config)
+        self._vault_client = KmsVaultClient(config=self._credentials.config, signer=self._credentials.signer)
 
     async def get_vaults(self):
         try:
