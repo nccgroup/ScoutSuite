@@ -7,6 +7,7 @@ from ScoutSuite.providers.oci.authentication_strategy import OracleCredentials
 class OracleFacade:
     def __init__(self, credentials: OracleCredentials):
         self._credentials = credentials
+        print("instantiating")
         self._instantiate_facades()
 
     def _instantiate_facades(self):

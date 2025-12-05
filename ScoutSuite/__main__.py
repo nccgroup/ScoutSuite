@@ -216,9 +216,9 @@ async def _run(provider,
 
     print_info('Launching Scout')
 
-    print_info('Authenticating to cloud provider')
+    print_info('Grabbing credentials')
     auth_strategy = get_authentication_strategy(provider)
-
+    print_info('Authenticating to cloud provider')
     try:
         credentials = auth_strategy.authenticate(profile=profile,
                                                  aws_access_key_id=aws_access_key_id,
