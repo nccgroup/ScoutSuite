@@ -22,7 +22,7 @@ class KMSFacade:
 
     async def get_keys(self, keyvault):
         try:
-            key_client = KmsManagementClient(self._credentials.config, keyvault['management_endpoint'])
+            key_client = KmsManagementClient(config=self._credentials.config, signer=self._credentials.signer, service_endpoint=keyvault['management_endpoint'])
             response = await run_concurrently(
                 lambda: list_call_get_all_results(key_client.list_keys, self._credentials.get_scope()))
             return response.data
