@@ -9,14 +9,12 @@ from ScoutSuite.core.console import print_exception
 class ObjectStorageFacade:
     def __init__(self, credentials: OracleCredentials):
         self._credentials = credentials
-        self._client = ObjectStorageClient(self._credentials.config)
+        self._client = ObjectStorageClient(config=self._credentials.config, signer=self._credentials.signer)
 
     async def get_namespace(self):
         try:
-            response = await run_concurrently(
-                lambda: list_call_get_all_results(self._client.get_namespace))
-            # for some reason it returns a list of chars instead of a string
-            return ''.join(response.data)
+            response = self._client.get_namespace()
+            return response.data
         except Exception as e:
             print_exception(f'Failed to get Object Storage namespace: {e}')
             return None

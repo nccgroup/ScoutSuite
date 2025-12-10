@@ -9,7 +9,7 @@ from ScoutSuite.providers.utils import run_concurrently
 class KMSFacade:
     def __init__(self, credentials: OracleCredentials):
         self._credentials = credentials
-        self._vault_client = KmsVaultClient(self._credentials.config)
+        self._vault_client = KmsVaultClient(config=self._credentials.config, signer=self._credentials.signer)
 
     async def get_vaults(self):
         try:
@@ -22,7 +22,7 @@ class KMSFacade:
 
     async def get_keys(self, keyvault):
         try:
-            key_client = KmsManagementClient(self._credentials.config, keyvault['management_endpoint'])
+            key_client = KmsManagementClient(config=self._credentials.config, signer=self._credentials.signer, service_endpoint=keyvault['management_endpoint'])
             response = await run_concurrently(
                 lambda: list_call_get_all_results(key_client.list_keys, self._credentials.get_scope()))
             return response.data

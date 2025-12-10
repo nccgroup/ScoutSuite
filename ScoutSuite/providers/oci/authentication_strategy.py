@@ -1,17 +1,24 @@
 import logging
+import json
 
 from oci.config import from_file
 from oci.identity import IdentityClient
+from oci.auth.signers import InstancePrincipalsSecurityTokenSigner
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
 class OracleCredentials:
 
-    def __init__(self, config):
+    def __init__(self, config : dict, signer : InstancePrincipalsSecurityTokenSigner):
         self.config = config
+        self.signer = signer
 
     def get_scope(self):
+        
+        if self.signer is not None:
+            return self.signer.tenancy_id
+
         if 'compartment-id' in self.config:
             return self.config['compartment-id']
         else:
@@ -29,14 +36,18 @@ class OracleAuthenticationStrategy(AuthenticationStrategy):
 
             # Set logging level to error for libraries as otherwise generates a lot of warnings
             logging.getLogger('oci').setLevel(logging.ERROR)
-
-            config = from_file(profile_name=profile)
-
+            
+            # Load OCI config or use instance principals
+            config = {}
+            signer = None
+            if kwargs["oci_use_inspr"]:
+                signer = InstancePrincipalsSecurityTokenSigner()
+            else: 
+                config = from_file(profile_name=profile)
+            
             # Get the current user
-            identity = IdentityClient(config)
-            identity.get_user(config["user"]).data
-
-            return OracleCredentials(config)
+            identity = IdentityClient(config=config, signer=signer)
+            return OracleCredentials(config, signer)
 
         except Exception as e:
             raise AuthenticationException(e)

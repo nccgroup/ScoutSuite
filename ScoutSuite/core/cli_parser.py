@@ -256,6 +256,13 @@ class ScoutSuiteArgumentParser:
                             default=None,
                             help='Name of the profile')
         
+        parser.add_argument('-i',
+                            '--instance-principal',
+                            action="store_true",
+                            dest="oci_use_inspr",
+                            default=None,
+                            help='Use instance principal for authentication')
+        
     def _init_do_parser(self):
         do_parser = self.subparsers.add_parser("do",
                                                 parents=[self.common_providers_args_parser],
