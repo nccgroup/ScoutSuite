@@ -65,7 +65,7 @@ def run_from_cli():
                    token=args.get('token'),
                    access_key=args.get('access_key'),
                    access_secret=args.get('access_secret'),
-                   #OCI
+                   # OCI
                    oci_use_inspr=args.get('oci_use_inspr'),
                    # General
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
@@ -123,7 +123,7 @@ def run(provider,
         token=None,
         access_key=None,
         access_secret=None,
-        #OCI
+        # OCI
         oci_use_inspr=None,
         # General
         report_name=None, report_dir=None,
@@ -187,7 +187,7 @@ async def _run(provider,
                token,
                access_key,
                access_secret,
-               #OCI
+               # OCI
                oci_use_inspr,
                # General
                report_name, report_dir,
@@ -216,9 +216,9 @@ async def _run(provider,
 
     print_info('Launching Scout')
 
-    print_info('Grabbing credentials')
-    auth_strategy = get_authentication_strategy(provider)
     print_info('Authenticating to cloud provider')
+    
+    auth_strategy = get_authentication_strategy(provider)
     try:
         credentials = auth_strategy.authenticate(profile=profile,
                                                  aws_access_key_id=aws_access_key_id,
@@ -244,7 +244,7 @@ async def _run(provider,
                                                 access_key=access_key,
                                                 access_secret=access_secret,
                                                 
-                                                #OCI
+                                                # OCI
                                                 oci_use_inspr=oci_use_inspr,
 
                                                  # Kubernetes
@@ -279,7 +279,7 @@ async def _run(provider,
                                       kubernetes_context=kubernetes_context,
                                       kubernetes_cluster_provider=kubernetes_cluster_provider,
 
-                                      #OCI
+                                      # OCI
                                       oci_use_inspr=oci_use_inspr,
 
                                       # Other

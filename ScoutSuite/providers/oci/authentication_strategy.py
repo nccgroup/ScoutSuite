@@ -17,9 +17,7 @@ class OracleCredentials:
     def get_scope(self):
         
         if self.signer is not None:
-            print("get scope called")
             return self.signer.tenancy_id
-            print("get scope finished")
 
         if 'compartment-id' in self.config:
             return self.config['compartment-id']
@@ -39,17 +37,16 @@ class OracleAuthenticationStrategy(AuthenticationStrategy):
             # Set logging level to error for libraries as otherwise generates a lot of warnings
             logging.getLogger('oci').setLevel(logging.ERROR)
             
+            # Load OCI config or use instance principals
             config = {}
             signer = None
             if kwargs["oci_use_inspr"]:
                 signer = InstancePrincipalsSecurityTokenSigner()
             else: 
-                print(kwargs["oci_use_inspr"])
                 config = from_file(profile_name=profile)
             
             # Get the current user
             identity = IdentityClient(config=config, signer=signer)
-            print(identity)
             return OracleCredentials(config, signer)
 
         except Exception as e:
