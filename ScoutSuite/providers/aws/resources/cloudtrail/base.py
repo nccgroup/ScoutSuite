@@ -17,11 +17,14 @@ class CloudTrail(Regions):
 
         for region in self['regions']:
             for trail_id, trail in self['regions'][region]['trails'].items():
-                if 'HomeRegion' in trail and trail['HomeRegion'] != region:
-                    # Part of a multi-region trail, skip until we find the whole object
+                if not trail:  # Skip invalid trails
                     continue
-                if trail['IncludeGlobalServiceEvents'] and trail['IsLogging']:
-                    global_events_logging.append((region, trail_id,))
+                    
+                if trail.get('HomeRegion') != region:
+                    continue
+                    
+                if trail.get('IncludeGlobalServiceEvents', False) and trail.get('IsLogging', False):
+                    global_events_logging.append((region, trail_id))
 
         self['IncludeGlobalServiceEvents'] = len(global_events_logging) > 0
         self['DuplicatedGlobalServiceEvents'] = len(global_events_logging) > 1

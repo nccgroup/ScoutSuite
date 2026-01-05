@@ -1,5 +1,6 @@
 import time
 
+from ScoutSuite.core.console import print_error
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
@@ -17,41 +18,40 @@ class Trails(AWSResources):
             self[name] = resource
 
     def _parse_trail(self, raw_trail):
-        trail = {'name': raw_trail.pop('Name')}
-        trail_id = get_non_provider_id(trail['name'])
-        
-        trail['arn'] = raw_trail.get('TrailARN')
-        trail['is_organization_trail'] = raw_trail.get('IsOrganizationTrail')
-        trail['home_region'] = raw_trail.get('HomeRegion')
+        try:
+            # Initialize all required attributes with defaults
+            trail = {
+                'name': raw_trail.pop('Name', ''),
+                'arn': raw_trail.get('TrailARN', ''),
+                'is_organization_trail': raw_trail.get('IsOrganizationTrail', False),
+                'home_region': raw_trail.get('HomeRegion', ''),
+                'IsMultiRegionTrail': raw_trail.get('IsMultiRegionTrail', False),
+                'IsLogging': raw_trail.get('IsLogging', False),
+                'IncludeGlobalServiceEvents': raw_trail.get('IncludeGlobalServiceEvents', False),
+                'EventSelectors': raw_trail.get('EventSelectors', []),
+                'LogFileValidationEnabled': raw_trail.get('LogFileValidationEnabled', False)
+            }
+            
+            trail_id = get_non_provider_id(trail['name'])
+            if not trail_id:
+                return None, None
 
-        # Do not duplicate entries for multiregion trails
-        if 'IsMultiRegionTrail' in raw_trail and raw_trail['IsMultiRegionTrail'] and \
-                raw_trail['HomeRegion'] != self.region:
-            for key in ['HomeRegion', 'TrailARN']:
-                trail[key] = raw_trail[key]
-            trail['scout_link'] = 'services.cloudtrail.regions.{}.trails.{}'.format(raw_trail['HomeRegion'], trail_id)
+            # Handle multiregion trails
+            if trail['IsMultiRegionTrail'] and trail['home_region'] != self.region:
+                trail['scout_link'] = f'services.cloudtrail.regions.{trail["home_region"]}.trails.{trail_id}'
+                return trail_id, trail
+
+            # Process remaining attributes
+            if 'S3BucketName' in raw_trail:
+                trail['bucket_id'] = get_non_provider_id(raw_trail['S3BucketName'])
+
+            trail['wildcard_data_logging'] = self.data_logging_status(trail)
+
             return trail_id, trail
 
-        for key in raw_trail:
-            trail[key] = raw_trail[key]
-        trail['bucket_id'] = get_non_provider_id(trail.pop('S3BucketName'))
-        for key in ['IsMultiRegionTrail', 'LogFileValidationEnabled']:
-            if key not in trail:
-                trail[key] = False
-
-        for key in ['KmsKeyId', 'IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime',
-                    'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError',
-                    'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
-            trail[key] = trail[key] if key in trail else None
-
-        # using trail ARN instead of name as with Organizations the trail would be located in another account
-        trail['wildcard_data_logging'] = self.data_logging_status(trail)
-
-        for event_selector in trail.get('EventSelectors', []):
-            trail['DataEventsEnabled'] = len(event_selector['DataResources']) > 0
-            trail['ManagementEventsEnabled'] = event_selector['IncludeManagementEvents']
-
-        return trail_id, trail
+        except Exception as e:
+            print_error(f'Failed to parse trail: {str(e)}')
+            return None, None
 
     def data_logging_status(self, trail):
         for event_selector in trail.get('EventSelectors', []):
@@ -65,9 +65,16 @@ class Trails(AWSResources):
 
     @staticmethod
     def is_fresh(trail_details):
-        if trail_details.get('LatestCloudWatchLogsDeliveryTime'):
-            delivery_time = trail_details.get('LatestCloudWatchLogsDeliveryTime').strftime("%s")
+        if not trail_details:
+            return False
+            
+        delivery_time = trail_details.get('LatestCloudWatchLogsDeliveryTime')
+        if not delivery_time:
+            return False
+            
+        try:
+            delivery_time = delivery_time.strftime("%s")
             delivery_age = ((int(time.time()) - int(delivery_time)) / 1440)
             return delivery_age <= 24
-        else:
+        except Exception:
             return False

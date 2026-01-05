@@ -14,27 +14,61 @@
 
 ## Description
 
-Scout Suite is an open source multi-cloud security-auditing tool, which enables security posture assessment of cloud environments. Using the APIs exposed by cloud providers, Scout Suite gathers configuration data for manual inspection and highlights risk areas. Rather than going through dozens of pages on the web consoles, Scout Suite presents a clear view of the attack surface automatically.
+Scout Suite is an open source multi-cloud security-auditing tool, which enables security posture assessment of cloud environments. Using the APIs exposed by cloud providers, Scout Suite gathers configuration data for manual inspection and highlights risk areas.
 
-Scout Suite was designed by security consultants/auditors. It is meant to provide a point-in-time security-oriented view of the cloud account it was run in. Once the data has been gathered, all usage may be performed offline.
+> **Note**: This fork has the following modifications to AWS security checks:
+>
+> Parameter Changes:
+> - IAM password expiration: 120 days (from no expiry)
+> - IAM credentials inactivity limit: 365 days (from 90)
+> - IAM access key rotation period: 365 days (from 90)
+>
+> Disabled Checks:
+> - CloudTrail KMS encryption
+> - IAM group inline policies
+> - IAM empty groups
+> - IAM STS action policies
 
-The project team can be contacted at <scoutsuite@nccgroup.com>.
+## Automation Scripts
 
-### Cloud Provider Support
+This fork includes additional automation capabilities:
 
-The following cloud providers are currently supported:
+### PowerShell Automation
+The `tools\automation\AutomationScripts\AutomateAWSAudit.ps1` script:
+- Runs ScoutSuite against multiple AWS accounts
+- Stores results in `scoutsuite-results` directory
+- Supports batch processing of accounts
+For detailed instructions, see [AutomateAWSAudit.md](tools/automation/AutomationScripts/docs/AutomateAWSAudit.md)
+
+### Docker & S3 Integration
+The `tools\automation\AutomationScripts\AutomateScoutSuite.py` script:
+- Executes ScoutSuite in a Docker container
+- Uploads results to configured S3 bucket
+- Generates signed cookies for CloudFront access
+- Enables secure web access to reports via CloudFront distribution
+For detailed instructions, see [AutomateScoutSuite.md](tools/automation/AutomationScripts/docs/AutomateScoutSuite.md)
+
+### Report Access Control
+The `tools\automation\AutomationScripts\GenerateSignedCookies.py` script:
+- Creates CloudFront signed cookies for secure report access
+- Configures cookie expiration time
+- Supports custom domain policies
+- Manages access control to S3-hosted reports
+For detailed instructions, see [GenerateSignedCookies.md](tools/automation/AutomationScripts/docs/GenerateSignedCookies.md)
+
+For setup and configuration details, see the respective script documentation.
+
+## Supported Cloud Providers
 
 - Amazon Web Services
 - Microsoft Azure
 - Google Cloud Platform
-- Alibaba Cloud (alpha)
-- Oracle Cloud Infrastructure (alpha)
-- Kubernetes clusters on a cloud provider (alpha)
-- DigitalOcean Cloud (alpha)
+- Other providers (alpha): Alibaba, Oracle, Kubernetes, DigitalOcean
 
-## Installation
+## Quick Start
 
-Refer to the [wiki](https://github.com/nccgroup/ScoutSuite/wiki/Setup).
+- Standard setup: Visit our [wiki](https://github.com/nccgroup/ScoutSuite/wiki/Setup)
+- Docker setup: See [Docker installation guide](https://github.com/nccgroup/ScoutSuite/wiki/Docker-Installation)
 
 ## Usage
 

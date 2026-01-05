@@ -343,19 +343,36 @@ def fix_path_string(all_info, current_path, path_to_value):
 
 
 def __prepare_age_test(a, b):
+    # Handle special cases first
+    if b is None or b == 'None' or b == 'N/A' or b == 'no_information' or b == 'No date available':
+        return float('inf'), 0  # Return values that make age test fail
+
     if type(a) != list:
         print_error('Error: olderThan requires a list such as [ N , \'days\' ] or [ M, \'hours\'].')
         raise Exception
-    number = int(a[0])
-    unit = a[1]
-    if unit not in ['days', 'hours', 'minutes', 'seconds']:
-        print_error('Error: only days, hours, minutes, and seconds are supported.')
-        raise Exception
-    if unit == 'hours':
-        number *= 3600
-        unit = 'seconds'
-    elif unit == 'minutes':
-        number *= 60
-        unit = 'seconds'
-    age = getattr((datetime.datetime.today() - dateutil.parser.parse(str(b)).replace(tzinfo=None)), unit)
-    return age, number
+
+    try:
+        number = int(a[0])
+        unit = a[1]
+        if unit not in ['days', 'hours', 'minutes', 'seconds']:
+            print_error('Error: only days, hours, minutes, and seconds are supported.')
+            raise Exception
+
+        if unit == 'hours':
+            number *= 3600
+            unit = 'seconds'
+        elif unit == 'minutes':
+            number *= 60
+            unit = 'seconds'
+
+        # Try to parse the date, handle any format issues
+        try:
+            parsed_date = dateutil.parser.parse(str(b)).replace(tzinfo=None)
+            age = getattr((datetime.datetime.today() - parsed_date), unit)
+            return age, number
+        except (ValueError, TypeError) as e:
+            print_error(f'Error parsing date: {str(e)}')
+            return float('inf'), 0
+    except Exception as e:
+        print_error(f'Error in age test: {str(e)}')
+        return float('inf'), 0

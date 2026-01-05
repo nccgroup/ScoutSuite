@@ -1,6 +1,7 @@
 # virtualenv 
 env/
-venv/
+.venv/
+ScoutSuite/pyvenv.cfg
 
 # Compiled files
 *.py[cod]
@@ -47,9 +48,13 @@ nosetests.xml
 
 # Data folder and files
 scoutsuite-report*
+scoutsuite_reports*
 inc-scoutsuite-run*
 report-*
-*.db
+*.db   
+cloufront_config.json
+cloudfront_config.template.json
+tools/automation/config*
 
 # IntelliJ files
 .idea/
@@ -57,7 +62,7 @@ report-*
 
 # Vs Code
 .vscode/
-
+.vs
 # Mac cruft
 .DS_Store
 
@@ -74,3 +79,7 @@ report-*
 *.prof
 
 !docker/bin
+
+
+ScoutSuite/Scripts/
+temp.txt
