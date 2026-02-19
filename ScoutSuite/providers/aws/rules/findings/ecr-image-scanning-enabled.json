@@ -22,22 +22,21 @@
     "references": [
         "https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-scanning.html"
     ],
-    "dashboard_name": "Images",
-    "display_path": "ecr.regions.id.images.id",
-    "path": "ecr.regions.id.images.id",
+    "dashboard_name": "Repositories",
+    "display_path": "ecr.regions.id.repositories.id",
+    "path": "ecr.regions.id.repositories.id",
     "conditions": [
         "and",
         [
-            "ecr.regions.id.images.id.",
+            "ecr.regions.id.repositories.id.",
             "withKey",
-            "imageScanEnabled"
+            "Scan_on_Push"
         ],
         [
-            "ecr.regions.id.images.id.imageScanEnabled",
+            "ecr.regions.id.repositories.id.Scan_on_Push",
             "equal",
-            "False"
-            
+            false
         ]
     ],
-    "id_suffix": "imageScanEnabled"
+    "id_suffix": "scanOnPush"
 }
