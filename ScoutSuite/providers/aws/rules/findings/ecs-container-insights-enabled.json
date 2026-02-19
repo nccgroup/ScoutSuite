@@ -1,0 +1,44 @@
+{
+    "description": "ECS container insights should be enabled",
+    "rationale": "Enabling ECS container insights provides valuable insights into the performance and behavior of containerized applications running on Amazon ECS.",
+    "remediation": "Enable ECS container insights for all ECS clusters by setting the `ECS_ENABLE_CONTAINER_INSIGHTS` environment variable to `enabled`.",
+    "compliance": [
+        {
+        "name": "CIS Amazon Web Services Foundations",
+        "version": "1.0.0",
+        "reference": "5.23"
+        },
+        {
+        "name": "CIS Amazon Web Services Foundations",
+        "version": "1.1.0",
+        "reference": "5.23"
+        },
+        {
+        "name": "CIS Amazon Web Services Foundations",
+        "version": "1.2.0",
+        "reference": "5.23"
+        }
+    ],
+    "references": [
+        "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cloudwatch-container-insights.html"
+    ],
+      "dashboard_name": "Clusters",
+      "display_path": "ecs.regions.id.clusters.id",
+      "path": "ecs.regions.id.clusters.id",
+      "conditions":[
+        "and",
+        [
+            "ecs.regions.id.clusters.id.",
+            "withKey",
+            "containerInsights"
+        ],
+        [
+            "ecs.regions.id.clusters.id.containerInsights",
+            "equal",
+            "False"
+            
+        ]
+    ],
+      "id_suffix": "containerInsights"
+  }
+  

@@ -12,7 +12,10 @@ from ScoutSuite.providers.aws.facade.config import ConfigFacade
 from ScoutSuite.providers.aws.facade.directconnect import DirectConnectFacade
 from ScoutSuite.providers.aws.facade.dynamodb import DynamoDBFacade
 from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
+from ScoutSuite.providers.aws.facade.ecs import ECSFacade
+from ScoutSuite.providers.aws.facade.ecr import ECRFacade
 from ScoutSuite.providers.aws.facade.efs import EFSFacade
+from ScoutSuite.providers.aws.facade.eks import EKSFacade
 from ScoutSuite.providers.aws.facade.elasticache import ElastiCacheFacade
 from ScoutSuite.providers.aws.facade.elb import ELBFacade
 from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
@@ -272,6 +275,10 @@ class AWSFacade(AWSBaseFacade):
         self.sqs = SQSFacade(self.session)
         self.secretsmanager = SecretsManagerFacade(self.session)
         self.emr = EMRFacade(self.session)
+        # Container services (now part of open-source)
+        self.ecr = ECRFacade(self.session)
+        self.ecs = ECSFacade(self.session)
+        self.eks = EKSFacade(self.session)
 
         # Instantiate facades for proprietary services
         try:
@@ -280,18 +287,6 @@ class AWSFacade(AWSBaseFacade):
             pass
         try:
             self.docdb = DocDBFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.ecs = ECSFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.ecr = ECRFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.eks = EKSFacade(self.session)
         except NameError:
             pass
         try:

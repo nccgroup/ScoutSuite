@@ -116,8 +116,13 @@ class RDSFacade(AWSBaseFacade):
             snapshot['Attributes'] =\
                 attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
         except Exception as e:
-            if 'DBSnapshotNotFound' in e:
+            error_message = str(e)
+            # Check if it's a DBSnapshotNotFound error (not critical)
+            if 'DBSnapshotNotFound' in error_message:
                 print_warning(f'Failed to describe RDS snapshot attributes: {e}')
+            # Check if it's a throttling error (expected under high load)
+            elif 'Throttling' in error_message or 'Rate exceeded' in error_message:
+                print_warning(f'Rate limited while fetching snapshot attributes, skipping: {snapshot.get("DBSnapshotIdentifier", "unknown")}')
             else:
                 print_exception(f'Failed to describe RDS snapshot attributes: {e}')
             snapshot['Attributes'] = {}
@@ -131,7 +136,12 @@ class RDSFacade(AWSBaseFacade):
             snapshot['Attributes'] =\
                 attributes['DBClusterSnapshotAttributes'] if 'DBClusterSnapshotAttributes' in attributes else {}
         except Exception as e:
-            print_exception(f'Failed to describe RDS cluster snapshot attributes: {e}')
+            error_message = str(e)
+            # Check if it's a throttling error (expected under high load)
+            if 'Throttling' in error_message or 'Rate exceeded' in error_message:
+                print_warning(f'Rate limited while fetching cluster snapshot attributes, skipping: {snapshot.get("DBClusterSnapshotIdentifier", "unknown")}')
+            else:
+                print_exception(f'Failed to describe RDS cluster snapshot attributes: {e}')
             snapshot['Attributes'] = {}
 
     async def get_subnet_groups(self, region: str, vpc: str):
