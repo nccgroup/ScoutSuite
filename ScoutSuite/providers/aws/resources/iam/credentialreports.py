@@ -6,6 +6,14 @@ from ScoutSuite.core.console import print_exception
 class CredentialReports(AWSResources):
     async def fetch_all(self):
         raw_credential_reports = await self.facade.iam.get_credential_reports()
+
+        # Check if centralized root access management is enabled for this org.
+        # When enabled, root credentials can be removed from member accounts,
+        # making MFA checks irrelevant for those accounts.
+        self._root_credentials_managed_centrally = (
+            await self.facade.iam.get_organizations_root_credentials_managed()
+        )
+
         for raw_credential_report in raw_credential_reports:
             name, resource = await self._parse_credential_reports(raw_credential_report)
             self[name] = resource
@@ -30,6 +38,14 @@ class CredentialReports(AWSResources):
         raw_credential_report['last_used'] = self._compute_last_used(raw_credential_report)
         raw_credential_report['cert_1_active'] = raw_credential_report['cert_1_active']
         raw_credential_report['cert_2_active'] = raw_credential_report['cert_2_active']
+
+        # Flag root accounts where credentials are centrally managed via
+        # AWS Organizations. When root credentials have been removed, MFA
+        # cannot and need not be configured, so MFA findings should be skipped.
+        raw_credential_report['root_credentials_managed_centrally'] = (
+            raw_credential_report['name'] == '<root_account>'
+            and self._root_credentials_managed_centrally
+        )
 
         if raw_credential_report['mfa_active'] == 'true':
             raw_credential_report['mfa_active_hardware'] = await \

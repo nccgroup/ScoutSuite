@@ -36,6 +36,11 @@
             "iam.credential_reports.id.partition",
             "notEqual",
             "aws-us-gov"
+        ],
+        [
+            "iam.credential_reports.id.root_credentials_managed_centrally",
+            "notTrue",
+            ""
         ]
     ],
     "keys": [
