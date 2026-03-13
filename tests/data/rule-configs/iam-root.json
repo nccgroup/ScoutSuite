@@ -28,7 +28,8 @@
                     "password_last_used": null,
                     "password_next_rotation": "N/A",
                     "user": "api3",
-                    "user_creation_time": "2018-09-18T14:58:26+00:00"
+                    "user_creation_time": "2018-09-18T14:58:26+00:00",
+                    "root_credentials_managed_centrally": false
                 },
                 "68dcc047c3da5bbbc3f3e9d54000b7357f0e507e": {
                     "access_key_1_active": "false",
@@ -55,7 +56,36 @@
                     "password_last_used": "2019-11-26T01:13:39+00:00",
                     "password_next_rotation": "not_supported",
                     "user": "<root_account>",
-                    "user_creation_time": "2018-04-03T21:50:27+00:00"
+                    "user_creation_time": "2018-04-03T21:50:27+00:00",
+                    "root_credentials_managed_centrally": false
+                },
+                "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2": {
+                    "access_key_1_active": "false",
+                    "access_key_1_last_rotated": "N/A",
+                    "access_key_1_last_used_date": null,
+                    "access_key_1_last_used_region": "N/A",
+                    "access_key_1_last_used_service": "N/A",
+                    "access_key_2_active": "false",
+                    "access_key_2_last_rotated": "N/A",
+                    "access_key_2_last_used_date": null,
+                    "access_key_2_last_used_region": "N/A",
+                    "access_key_2_last_used_service": "N/A",
+                    "arn": "arn:aws:iam::999888777666:root",
+                    "cert_1_active": "false",
+                    "cert_1_last_rotated": "N/A",
+                    "cert_2_active": "false",
+                    "cert_2_last_rotated": "N/A",
+                    "id": "<root_account>_centralized",
+                    "last_used": null,
+                    "mfa_active": "false",
+                    "name": "<root_account>",
+                    "password_enabled": "not_supported",
+                    "password_last_changed": "not_supported",
+                    "password_last_used": null,
+                    "password_next_rotation": "not_supported",
+                    "user": "<root_account>",
+                    "user_creation_time": "2020-01-01T00:00:00+00:00",
+                    "root_credentials_managed_centrally": true
                 }
             }
         }
