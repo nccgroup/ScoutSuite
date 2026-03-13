@@ -77,7 +77,7 @@
                     "cert_2_last_rotated": "N/A",
                     "id": "<root_account>_centralized",
                     "last_used": null,
-                    "mfa_active": "not_supported",
+                    "mfa_active": "false",
                     "name": "<root_account>",
                     "password_enabled": "not_supported",
                     "password_last_changed": "not_supported",

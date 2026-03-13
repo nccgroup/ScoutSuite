@@ -67,8 +67,9 @@ class IAMFacade(AWSBaseFacade):
             response = await run_concurrently(client.list_organizations_features)
             enabled_features = response.get('EnabledFeatures', [])
             return 'RootCredentialsManagement' in enabled_features
-        except Exception:
+        except Exception as e:
             # Expected to fail when not in an org or lacking iam:ListOrganizationsFeatures permission
+            print_warning(f'Could not check Organizations root credentials management: {e}')
             return False
 
     async def get_groups(self):
