@@ -144,9 +144,15 @@ def run(provider,
     Run a scout job in an async event loop.
     """
 
-    loop = asyncio.get_event_loop()
-    if loop.is_closed():
+    # Ensure there's a running event loop (Python 3.10+ / Windows compatibility)
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_closed():
+            raise RuntimeError("Event loop is closed")
+    except RuntimeError:
         loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
     # Set the throttler within the loop so it's accessible later on
     loop.throttler = Throttler(rate_limit=max_rate if max_rate else 999999, period=1)
     loop.set_default_executor(ThreadPoolExecutor(max_workers=max_workers))
