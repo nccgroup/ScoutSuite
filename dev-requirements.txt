@@ -5,4 +5,5 @@ coveralls
 autopep8
 pytest>=5.*
 pytest-cov
+hypothesis>=6.*
 mypy
