@@ -113,6 +113,12 @@ class ScoutSuiteArgumentParser:
                                     help='Run Scout with a Google Service Account with the specified '
                                          'Google Service Account Application Credentials file')
 
+        gcp_auth_modes.add_argument('--adc',
+                                    action='store_true',
+                                    help='Run Scout using Application Default Credentials from the environment '
+                                        '(e.g. attached service account on GCE, Cloud Run, or GKE). '
+                                        'No key file required.')
+
         gcp_scope = parser.add_argument_group('Additional arguments')
 
         gcp_scope.add_argument('--project-id',
