@@ -1,0 +1,35 @@
+<!-- networking firewalls -->
+<script id="services.networking.firewalls.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Id: <span id="networking.firewalls.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>  
+        <div class="list-group-item-text item-margin">Name: <span id="networking.firewalls.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="networking.firewalls.{{@key}}.status"><samp>{{value_or_none status}}</samp></span></div>
+        <!-- <div class="list-group-item-text item-margin">Inbound Rules: <span id="networking.firewalls.{{@key}}.inbound_rules"><samp>{{value_or_none inbound_rules}}</samp></span></div> -->
+        <!-- <div class="list-group-item-text item-margin">Outbound Rules: <span id="networking.firewalls.{{@key}}.outbound_rules"><samp>{{value_or_none outbound_rules}}</samp></span></div> -->
+        <div class="list-group-item-text item-margin">Created At: <span id="networking.firewalls.{{@key}}.created_at"><samp>{{value_or_none created_at}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Droplet Ids: <span id="networking.firewalls.{{@key}}.droplet_ids"><samp>{{value_or_none droplet_ids}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Tags: <span id="networking.firewalls.{{@key}}.tags"><samp>{{value_or_none tags}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Pending Changes: <span id="networking.firewalls.{{@key}}.pending_changes">
+            <samp>{{value_or_none pending_changes}}</samp></span></div>
+
+        <div class="list-group-item-text item-margin">All Ports Publically Exposed: <span id="networking.firewalls.{{@key}}.all_ports_exposed"><samp>{{value_or_none all_ports_exposed}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Public Ports Enabled: <span id="networking.firewalls.{{@key}}.public_ports_enabled"><samp>{{value_or_none public_ports_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Public Port Detail: <span id="networking.firewalls.{{@key}}.public_port_detail"><samp>{{value_or_none public_port_detail}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.networking.firewalls", $("#services\\.networking\\.firewalls\\.partial").html());
+</script>
+
+<!-- Single networking firewall template -->
+<script id="single_networking_firewall-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.networking.firewalls'}}
+</script>
+<script>
+    var single_networking_firewall_template = Handlebars.compile($("#single_networking_firewall-template").html());
+</script>

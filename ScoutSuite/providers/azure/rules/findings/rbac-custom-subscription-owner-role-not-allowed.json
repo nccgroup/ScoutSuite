@@ -10,9 +10,9 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/add-change-subscription-administrator",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access"
+        "https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/add-change-subscription-administrator",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access"
     ],
     "dashboard_name": "Roles",
     "path": "rbac.subscriptions.id.roles.id",

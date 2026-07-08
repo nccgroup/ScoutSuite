@@ -1,0 +1,33 @@
+{
+    "description": "Cluster Logging Disabled",
+    "rationale": "You should enable cluster logging and use a logging service so your cluster can export logs about its activities.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.1"
+        },
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.7.1"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://kubernetes.io/docs/tasks/debug-application-cluster/audit/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#stackdriver_logging",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.logging_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "logging_disabled"
+}

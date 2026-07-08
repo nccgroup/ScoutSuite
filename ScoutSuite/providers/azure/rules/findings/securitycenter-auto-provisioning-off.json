@@ -15,13 +15,13 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/security-center/security-center-data-security",
-        "https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection",
-        "https://docs.microsoft.com/en-us/previous-versions/azure/reference/mt704062(v=azure.100)?redirectedfrom=MSDN",
-        "https://docs.microsoft.com/en-us/previous-versions/azure/reference/mt704063(v=azure.100)?redirectedfrom=MSDN",
-        "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/list",
-        "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/create",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-posture-vulnerability-management#pv-6-perform-software-vulnerability-assessments"
+        "https://learn.microsoft.com/en-us/azure/security-center/security-center-data-security",
+        "https://learn.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection",
+        "https://learn.microsoft.com/en-us/previous-versions/azure/reference/mt704062(v=azure.100)?redirectedfrom=MSDN",
+        "https://learn.microsoft.com/en-us/previous-versions/azure/reference/mt704063(v=azure.100)?redirectedfrom=MSDN",
+        "https://learn.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/list",
+        "https://learn.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/create",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-posture-vulnerability-management#pv-6-perform-software-vulnerability-assessments"
     ],
     "dashboard_name": "Security Center",
     "path": "securitycenter.subscriptions.id.auto_provisioning_settings.id",

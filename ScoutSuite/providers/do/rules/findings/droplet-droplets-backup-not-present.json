@@ -1,0 +1,17 @@
+{
+    "description": "Droplets having no backups present",
+    "rationale": "Droplets should have atleast 1 backup present for disaster recovery.",
+    "dashboard_name": "Droplets",
+    "path": "droplet.droplets.id",
+    "conditions": [
+        "and",
+        [
+            "droplet.droplets.id.backup_ids",
+            "equal",
+            "[]"
+        ]
+    ],
+    "id_suffix": "backup_ids"
+}
+
+

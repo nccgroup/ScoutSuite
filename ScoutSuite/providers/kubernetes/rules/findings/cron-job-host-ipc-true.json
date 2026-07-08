@@ -1,0 +1,24 @@
+{
+    "description": "CronJobs Using Host IPC",
+    "rationale": "A compromised pod with hostIPC set to true in PodSpec can be used as a pivot to the host IPC.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "CronJobs",
+    "display_path": "cron_job.v1-batch.id",
+    "path": "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec",
+    "conditions": [
+        "and",
+        [
+            "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec",
+            "withKey",
+            "host_ipc"
+        ],
+        [
+            "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.host_ipc",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "host_ipc"
+}

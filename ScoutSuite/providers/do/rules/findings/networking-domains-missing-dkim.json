@@ -1,0 +1,15 @@
+{
+    "description": "Domain is missing DKIM record",
+    "rationale": "DKIM helps prevent email spoofing by adding cryptographic signatures to your outgoing emails",
+    "dashboard_name": "Networking",
+    "path": "networking.domains.id",
+    "conditions": [
+        "and",
+        [
+            "networking.domains.id.dkim_record",
+            "equal",
+            "False"
+        ]
+    ],
+    "id_suffix": "dkim_record"
+}

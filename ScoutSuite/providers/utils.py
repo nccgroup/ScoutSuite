@@ -136,9 +136,9 @@ secret_patterns = {
     "Adobe Client ID (Oauth Web)":
         re.compile("(adobe[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{32})['\"]"),
     "Adobe Client Secret":
-        re.compile("(p8e-)(?i)[a-z0-9]{32}"),
+        re.compile("(?i)(p8e-)[a-z0-9]{32}"),
     "Alibaba AccessKey ID":
-        re.compile("(LTAI)(?i)[a-z0-9]{20}"),
+        re.compile("(?i)(LTAI)[a-z0-9]{20}"),
     "Alibaba Secret Key":
         re.compile("(alibaba[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{30})['\"]"),
     "Asana Client ID":
@@ -154,7 +154,7 @@ secret_patterns = {
     "Bitbucket client secret":
         re.compile("(bitbucket[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9_\-]{64})['\"]"),
     "Clojars API token":
-        re.compile("(CLOJARS_)(?i)[a-z0-9]{60}"),
+        re.compile("(?i)(CLOJARS_)[a-z0-9]{60}"),
     "Contentful delivery API token":
         re.compile("(contentful[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9\-=_]{43})['\"]"),
     "Databricks API token":
@@ -166,7 +166,7 @@ secret_patterns = {
     "Discord client secret":
         re.compile("(discord[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9=_\-]{32})['\"]"),
     "Doppler API token":
-        re.compile("['\"](dp\.pt\.)(?i)[a-z0-9]{43}['\"]"),
+        re.compile("(?i)['\"](dp\.pt\.)[a-z0-9]{43}['\"]"),
     "Dropbox API secret/key":
         re.compile("(dropbox[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9]{15})['\"]"),
     "Dropbox long lived API token":
@@ -176,13 +176,13 @@ secret_patterns = {
         re.compile(
             "(dropbox[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](sl\.[a-z0-9\-=_]{135})['\"]"),
     "Duffel API token":
-        re.compile("['\"]duffel_(test|live)_(?i)[a-z0-9_-]{43}['\"]"),
+        re.compile("(?i)['\"]duffel_(test|live)_[a-z0-9_-]{43}['\"]"),
     "Dynatrace API token":
-        re.compile("['\"]dt0c01\.(?i)[a-z0-9]{24}\.[a-z0-9]{64}['\"]"),
+        re.compile("(?i)['\"]dt0c01\.[a-z0-9]{24}\.[a-z0-9]{64}['\"]"),
     "EasyPost API token":
-        re.compile("['\"]EZAK(?i)[a-z0-9]{54}['\"]"),
+        re.compile("(?i)['\"]EZAK[a-z0-9]{54}['\"]"),
     "EasyPost test API token":
-        re.compile("['\"]EZTK(?i)[a-z0-9]{54}['\"]"),
+        re.compile("(?i)['\"]EZTK[a-z0-9]{54}['\"]"),
     "Fastly API token":
         re.compile("(fastly[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-z0-9\-=_]{32})['\"]"),
     "Finicity API token":
@@ -192,11 +192,11 @@ secret_patterns = {
     "Flutterwave encrypted key":
         re.compile("FLWSECK_TEST[a-h0-9]{12}"),
     "Flutterwave public key":
-        re.compile("FLWPUBK_TEST-(?i)[a-h0-9]{32}-X"),
+        re.compile("(?i)FLWPUBK_TEST-[a-h0-9]{32}-X"),
     "Flutterwave secret key":
-        re.compile("FLWSECK_TEST-(?i)[a-h0-9]{32}-X"),
+        re.compile("(?i)FLWSECK_TEST-[a-h0-9]{32}-X"),
     "Frame.io API token":
-        re.compile("fio-u-(?i)[a-z0-9\-_=]{64}"),
+        re.compile("(?i)fio-u-[a-z0-9\-_=]{64}"),
     "Generic API Key":
         re.compile(
             "((key|api[^Version]|token|secret|password)[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([0-9a-zA-Z\-_=]{8,64})['\"]"),
@@ -215,13 +215,13 @@ secret_patterns = {
     "GitLab Personal Access Token":
         re.compile("glpat-[0-9a-zA-Z\-\_]{20}"),
     "GoCardless API token":
-        re.compile("['\"]live_(?i)[a-z0-9\-_=]{40}['\"]"),
+        re.compile("(?i)['\"]live_[a-z0-9\-_=]{40}['\"]"),
     "Google (GCP) Service-account":
         re.compile("\"type\": \"service_account\""),
     "Grafana API token":
-        re.compile("['\"]eyJrIjoi(?i)[a-z0-9\-_=]{72,92}['\"]"),
+        re.compile("(?i)['\"]eyJrIjoi[a-z0-9\-_=]{72,92}['\"]"),
     "HashiCorp Terraform user/org API token":
-        re.compile("['\"](?i)[a-z0-9]{14}\.atlasv1\.[a-z0-9\-_=]{60,70}['\"]"),
+        re.compile("(?i)['\"][a-z0-9]{14}\.atlasv1\.[a-z0-9\-_=]{60,70}['\"]"),
     "Heroku API Key":
         re.compile(
             "(heroku[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12})['\"]"),
@@ -233,7 +233,7 @@ secret_patterns = {
     "Ionic API token":
         re.compile("(ionic[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"](ion_[a-z0-9]{42})['\"]"),
     "Linear API token":
-        re.compile("lin_api_(?i)[a-z0-9]{40}"),
+        re.compile("(?i)lin_api_[a-z0-9]{40}"),
     "Linear client secret/ID":
         re.compile("(linear[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}['\"]([a-f0-9]{32})['\"]"),
     "LinkedIn Client ID":
@@ -267,11 +267,11 @@ secret_patterns = {
     "PKCS8 private key":
         re.compile("-----BEGIN PRIVATE KEY-----"),
     "PlanetScale API token":
-        re.compile("pscale_tkn_(?i)[a-z0-9\-_\.]{43}"),
+        re.compile("(?i)pscale_tkn_[a-z0-9\-_\.]{43}"),
     "PlanetScale password":
-        re.compile("pscale_pw_(?i)[a-z0-9\-_\.]{43}"),
+        re.compile("(?i)pscale_pw_[a-z0-9\-_\.]{43}"),
     "Postman API token":
-        re.compile("PMAK-(?i)[a-f0-9]{24}\-[a-f0-9]{34}"),
+        re.compile("(?i)PMAK-[a-f0-9]{24}\-[a-f0-9]{34}"),
     "Pulumi API token":
         re.compile("pul-[a-f0-9]{40}"),
     "PyPI upload token":
@@ -287,9 +287,9 @@ secret_patterns = {
     "SSH private key":
         re.compile("-----BEGIN OPENSSH PRIVATE KEY-----"),
     "SendGrid API token":
-        re.compile("SG\.(?i)[a-z0-9_\-\.]{66}"),
+        re.compile("(?i)SG\.[a-z0-9_\-\.]{66}"),
     "Sendinblue API token":
-        re.compile("xkeysib-[a-f0-9]{64}\-(?i)[a-z0-9]{16}"),
+        re.compile("(?i)xkeysib-[a-f0-9]{64}\-[a-z0-9]{16}"),
     "Shippo API token":
         re.compile("shippo_(live|test)_[a-f0-9]{40}"),
     "Shopify access token":
@@ -311,7 +311,7 @@ secret_patterns = {
     "Typeform API token":
         re.compile("(typeform[a-z0-9_ .\-,]{0,25})(=|>|:=|\|\|:|<=|=>|:).{0,5}(tfp_[a-z0-9\-_\.=]{59})"),
     "npm access token":
-        re.compile("['\"](npm_(?i)[a-z0-9]{36})['\"]")
+        re.compile("(?i)['\"](npm_[a-z0-9]{36})['\"]")
 }
 
 

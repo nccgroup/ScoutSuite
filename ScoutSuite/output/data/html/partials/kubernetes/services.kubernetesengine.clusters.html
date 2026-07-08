@@ -1,0 +1,109 @@
+<!-- Kubernetes Engine clusters partial -->
+<script id="services.kubernetesengine.projects.id.clusters.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Project ID: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.project_id"><samp>{{project}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.location"><samp>{{location}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.type"><samp>{{type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.status"><samp>{{status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Image Type: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.container_optimized_os_not_used">{{image_type}}</span></div>
+        <div class="list-group-item-text item-margin">Release Channel: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.release_channel"><samp>{{value_or_none release_channel}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Basic Authentication: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.basic_authentication_enabled">{{convert_bool_to_enabled basic_authentication_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Client Certificate Authentication: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.client_certificate_enabled">{{convert_bool_to_enabled client_certificate_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Dashboard: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.dashboard_status">{{dashboard_status}}</span></div>
+        <div class="list-group-item-text item-margin">Legacy Authorization (ABAC): <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.legacy_abac_enabled">{{convert_bool_to_enabled legacy_abac_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Pod Security Policy: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.pod_security_policy_enabled">{{convert_bool_to_enabled pod_security_policy_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Network Policy: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.network_policy_disabled">{{convert_bool_to_enabled network_policy_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Service Account: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.default_service_account_used">{{service_account}}</span></div>
+        <div class="list-group-item-text item-margin">Workload Identity: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.workload_identity_enabled">{{convert_bool_to_enabled workload_identity_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Private Google Access: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.private_ip_google_access_disabled">{{convert_bool_to_enabled private_ip_google_access_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Alias IP: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.alias_ip_disabled">{{convert_bool_to_enabled alias_ip_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Endpoint: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.endpoint"><samp>{{endpoint}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Private Endpoint: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.private_endpoint_enabled"><samp>{{convert_bool_to_enabled private_endpoint_enabled}}</samp></span></div>
+        {{#if private_endpoint}}
+        <div class="list-group-item-text item-margin">Private Endpoint IP: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.private_endpoint"><samp>{{private_endpoint}}</samp></span></div>
+        {{/if}}
+        {{#if public_endpoint}}
+        <div class="list-group-item-text item-margin">Public Endpoint IP: <span id="kubernetesengine.projects.{{project}}.clusters.{{@key}}.public_endpoint"><samp>{{public_endpoint}}</samp></span></div>
+        {{/if}}
+        <div class="list-group-item-text item-margin">Binary Authorization: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.binary_authorization_enabled">{{convert_bool_to_enabled binary_authorization_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Shielded Nodes: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.shielded_nodes_enabled">{{convert_bool_to_enabled shielded_nodes_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Application-Layer Secrets Encryption: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.application_layer_encryption_enabled">{{convert_bool_to_enabled application_layer_encryption_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Stackdriver Logging: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.logging_disabled">{{convert_bool_to_enabled logging_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Stackdriver Monitoring: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.monitoring_disabled">{{convert_bool_to_enabled monitoring_enabled}}</span></div>
+        {{#if labels}}
+        <div class="list-group-item-text item-margin">Labels: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.has_no_labels">{{labels}}</span></div>
+        {{/if}}
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading"><span class="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.scopes">Scopes</span></h4>
+            {{#if scopes}}
+            <ul>
+                {{#each scopes}}
+                <li><samp>{{this}}</samp></li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <span>None</span>
+            {{/if}}
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading"><span class="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.accessible_cluster">Master Authorized Networks</span></h4>
+        <div class="list-group-item-text item-margin">Status: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.master_authorized_networks_disabled">{{convert_bool_to_enabled master_authorized_networks_enabled}}</span></div>
+        <div class="list-group-item-text item-margin"><span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.authorized_networks_cidr_blocks">CIDR Blocks</span>:
+            {{#if master_authorized_networks_config.cidrBlocks}}
+            <ul>
+                {{#each master_authorized_networks_config.cidrBlocks}}
+                <li><samp>{{this.displayName}}</samp>: <samp>{{this.cidrBlock}}</samp></li>
+                {{/each}}
+            </ul>
+            {{else}}
+                <span>None</span>
+            {{/if}}
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Node pools</h4>
+        <div class="list-group-item-text item-margin">Private Nodes: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.private_nodes_enabled" class="kubernetesengine.projects.{{@../key}}.nodes.{{@key}}.accessible_cluster">{{convert_bool_to_enabled private_nodes_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Metadata Server: <span id="kubernetesengine.projects.{{@../key}}.clusters.{{@key}}.metadata_server_enabled" class="kubernetesengine.projects.{{@../key}}.nodes.{{@key}}.accessible_cluster">{{convert_bool_to_enabled metadata_server_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">
+            {{#each node_pools}}
+            <samp>{{@key}}</samp>
+            <div class="list-group-item-text item-margin">
+                Integrity Monitoring: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.integrity_monitoring_enabled">{{convert_bool_to_enabled integrity_monitoring_enabled}}</span>
+            </div>
+            <div class="list-group-item-text item-margin">
+                Secure Boot: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.secure_boot_enabled">{{convert_bool_to_enabled secure_boot_enabled}}</span>
+            </div>
+            <div class="list-group-item-text item-margin">
+                Legacy Metadata Endpoints: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.legacy_metadata_endpoints_enabled">{{convert_bool_to_enabled legacy_metadata_endpoints_enabled}}</span>
+            </div>
+            <div class="list-group-item-text item-margin">
+                Automatic Node Upgrades: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.auto_upgrade_disabled">{{convert_bool_to_enabled auto_upgrade_enabled}}</span>
+            </div>
+            <div class="list-group-item-text item-margin">
+                Automatic Node Repair: <span id="kubernetesengine.projects.{{@../../key}}.clusters.{{@../key}}.node_pools.{{@key}}.auto_repair_disabled">{{convert_bool_to_enabled auto_repair_enabled}}</span>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+
+</script>
+
+<script>
+    Handlebars.registerPartial("services.kubernetesengine.projects.id.clusters", $("#services\\.kubernetesengine\\.projects\\.id\\.clusters\\.partial").html());
+</script>
+
+<!-- Single kubernetesengine cluster template -->
+<script id="single_kubernetesengine_cluster-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.kubernetesengine.projects.id.clusters}}
+</script>
+<script>
+    var single_kubernetesengine_cluster_template = Handlebars.compile($("#single_kubernetesengine_cluster-template").html());
+</script>

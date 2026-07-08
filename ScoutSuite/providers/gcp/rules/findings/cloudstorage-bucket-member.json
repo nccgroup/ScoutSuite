@@ -23,16 +23,28 @@
     "display_path": "cloudstorage.projects.id.buckets.id",
     "path": "cloudstorage.projects.id.buckets.id",
     "conditions": [
-        "or",
-        [
-            "cloudstorage.projects.id.buckets.id.member_bindings",
-            "withKey",
-            "_ARG_0_"
+        "and",
+        ["or",
+            [
+                "cloudstorage.projects.id.buckets.id.member_bindings",
+                "withKey",
+                "_ARG_0_"
+            ],
+            [
+                "cloudstorage.projects.id.buckets.id.acls",
+                "containString",
+                "_ARG_0_"
+            ]
         ],
         [
-            "cloudstorage.projects.id.buckets.id.acls",
-            "containString",
-            "_ARG_0_"
+            "cloudstorage.projects.id.buckets.id.public_access_prevention",
+            "notEqual",
+            "enforced"
+        ],
+        [
+            "cloudstorage.projects.id.buckets.id.public_access_prevention",
+            "notEqual",
+            "inherited"
         ]
     ],
     "key": "cloudstorage-bucket-_ARG_0_",

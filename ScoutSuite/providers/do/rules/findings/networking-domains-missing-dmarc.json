@@ -1,0 +1,15 @@
+{
+    "description": "Domain is missing DMARC record",
+    "rationale": "A DMARC policy tells a receiving email server what to do after checking a domain's Sender Policy Framework (SPF) and DomainKeys Identified Mail (DKIM) records, which are additional email authentication methods. Addtionally without DMARC, you won't be able receive reports about legitimate and unauthorized emails sent on behalf of your domain",
+    "dashboard_name": "Networking",
+    "path": "networking.domains.id",
+    "conditions": [
+        "and",
+        [
+            "networking.domains.id.dmarc_record",
+            "equal",
+            "False"
+        ]
+    ],
+    "id_suffix": "dmarc_record"
+}

@@ -1,0 +1,29 @@
+{
+    "description": "Resources without Defined CPU Limit",
+    "rationale": "Unset resource limits could result in service denial through resource exhaustion.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+    ],
+    "dashboard_name": "CronJobs",
+    "display_path": "cron_job.v1-batch.id",
+    "path": "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id.resources.limits",
+            "null",
+            ""
+        ],
+        [
+            "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id.resources.limits",
+            "withoutKey",
+            "cpu"
+        ],
+        [
+            "cron_job.v1-batch.resources.id.data.spec.jobTemplate.spec.template.spec.containers.id.resources.limits.cpu",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "cpu"
+}

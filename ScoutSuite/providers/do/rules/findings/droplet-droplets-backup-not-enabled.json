@@ -1,0 +1,17 @@
+{
+    "description": "Droplets with auto backups disabled",
+    "rationale": "Droplet backups feature should be enabled for disaster recovery.",
+    "dashboard_name": "Droplets",
+    "path": "droplet.droplets.id",
+    "conditions": [
+        "and",
+        [
+            "droplet.droplets.id.next_backup_window",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "next_backup_window"
+}
+
+

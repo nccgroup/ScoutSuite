@@ -1,0 +1,17 @@
+{
+    "description": "Dangerous Grants in Role-based Access Control (RBAC) Definition",
+    "rationale": "Insufficient RBAC restrictions could enable unauthorized privilege escalation. The administrator should review the dangerous grants under RBAC.",
+    "references": [
+        "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
+    ],
+    "dashboard_name": "RBAC grants",
+    "path": "rbac.dangerous_grants",
+    "conditions": [
+        "not",
+        [
+            "rbac.dangerous_grants_count",
+            "equal",
+            "0"
+        ]
+    ]
+}

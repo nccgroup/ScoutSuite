@@ -1,6 +1,6 @@
 {
-    "description": "Instance Not Requiring SSL for Incoming Connections",
-    "rationale": "SQL database connections if successfully trapped (MITM); can reveal sensitive data like credentials, database queries, query outputs etc. For security, it is recommended to always use SSL encryption when connecting to your instance.",
+    "description": "Instance Not Requiring Mutual TLS Authentication for Incoming Connections",
+    "rationale": "SQL database connections if successfully trapped (MITM) can reveal sensitive data such as credentials, database queries, query outputs etc. For improved security, it is recommended to require mutual authentication, which involves using certificates to authenticate both the client and server.",
     "remediation": "From console:<ol><li>Go to  https://console.cloud.google.com/sql/instances.</li><li>Click on an instance name to see its configuration overview.</li><li>In the left-side panel, select <samp>Connections</samp></li><li>In the <samp>SSL connections</samp> section, click <samp>Allow only SSL connections.</samp></li><li>Under <samp>Configure SSL server certificates</samp> click <samp>Create new certificate.</samp></li><li>Under <samp>Configure SSL server certificates</samp> click <samp>Create a client certificate.</samp></li><li>Follow the instructions shown to learn how to connect to your instance.</li></ol>",
     "compliance": [
         {
@@ -25,12 +25,12 @@
             "or",
             [
                 "cloudsql.projects.id.instances.id.ssl_required",
-                "false",
+                "null",
                 ""
             ],
             [
                 "cloudsql.projects.id.instances.id.ssl_required",
-                "null",
+                "false",
                 ""
             ]
         ],

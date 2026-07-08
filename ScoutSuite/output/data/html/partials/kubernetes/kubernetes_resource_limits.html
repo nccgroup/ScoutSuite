@@ -1,0 +1,22 @@
+<script id="kubernetes_resource_limits_partial" type="text/x-handlebars-template">
+    <ul>
+        <samp>
+            <li class="list-group-item-text no-margin">
+                cpu:
+                <span id="{{id_prefix}}.resources.limits.cpu">
+                    {{limits.cpu}}
+                </span>
+            </li>
+            <li class="list-group-item-text no-margin">
+                memory:
+                <span id="{{id_prefix}}.resources.limits.memory">
+                    {{limits.memory}}
+                </span>
+            </li>
+        </samp>
+    </ul>
+</script>
+
+<script>
+    Handlebars.registerPartial('kubernetes_resource_limits', $('#kubernetes_resource_limits_partial').html())
+</script>

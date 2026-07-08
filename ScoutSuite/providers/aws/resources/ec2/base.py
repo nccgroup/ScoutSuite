@@ -3,6 +3,7 @@ from ScoutSuite.providers.aws.resources.ec2.snapshots import Snapshots
 from ScoutSuite.providers.aws.resources.ec2.volumes import Volumes
 from ScoutSuite.providers.aws.resources.ec2.vpcs import Ec2Vpcs
 from ScoutSuite.providers.aws.resources.regions import Regions
+from ScoutSuite.providers.aws.resources.ec2.regional_settings import RegionalSettings
 
 
 class EC2(Regions):
@@ -10,7 +11,8 @@ class EC2(Regions):
         (Ec2Vpcs, 'vpcs'),
         (AmazonMachineImages, 'images'),
         (Snapshots, 'snapshots'),
-        (Volumes, 'volumes')
+        (Volumes, 'volumes'),
+        (RegionalSettings, 'regional_settings')
     ]
 
     def __init__(self, facade):
@@ -26,7 +28,7 @@ class EC2(Regions):
                 sum([len(vpc['security_groups']) for vpc in self['regions'][region]['vpcs'].values()])
             self['regions'][region]['network_interfaces_count'] =\
                 sum([len(vpc['network_interfaces']) for vpc in self['regions'][region]['vpcs'].values()])
-        
+
         self['instances_count'] =\
             sum([region['instances_count'] for region in self['regions'].values()])
         self['security_groups_count'] =\

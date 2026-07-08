@@ -1,5 +1,5 @@
 {
-    "description": "Cloud KMS Cryptokeys Anonymously Or Publicly Accessible",
+    "description": "Cloud KMS Cryptokeys Anonymously or Publicly Accessible",
     "rationale": "Granting permissions to allUsers or allAuthenticatedUsers allows anyone to access the data set. Such access might not be desirable if sensitive data is stored at the location. In this case, ensure that anonymous and/or public access to a Cloud KMS cryptokey is not allowed.",
     "remediation": "From command line:<ol><li>List all Cloud KMS <samp>Cryptokeys</samp>: <br> gcloud kms keys list --keyring=[key_ring_name] --location=global --format=json | jq '.[].name'</li><li>Remove IAM policy binding for a KMS key to remove access to <samp>allUsers</samp> and <samp>allAuthenticatedUsers</samp> using the below command.<br> gcloud kms keys remove-iam-policy-binding [key_name] --keyring=[key_ring_name] --location=global --member='allAuthenticatedUsers' --role='[role]' <br> gcloud kms keys remove-iam-policy-binding [key_name] --keyring=[key_ring_name] --location=global --member='allUsers' --role='[role]'</li></ol>",
     "compliance": [

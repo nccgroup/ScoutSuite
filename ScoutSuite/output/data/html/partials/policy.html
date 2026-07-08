@@ -1,23 +1,6 @@
     <!-- Policy partial -->
     <script id="policy.partial" type="text/x-handlebars-template">
-      {{#each document}}
-          {{#ifEqual @key "Statement"}}
-            &nbsp;&nbsp;"{{@key}}":&nbsp; [<br/>
-            {{#each this}}
-              <div class="item-margin">
-                <span id="{{../../../policy_path}}.Statement.{{@key}}">
-                    <div class="item-margin code">{{jsonToString this}}</div>
-                </span>
-                {{#unless @last}},{{/unless}}
-              </div>
-            {{/each}}
-            &nbsp;&nbsp;]
-          {{else}}
-            &nbsp;&nbsp;"{{@key}}":&nbsp; {{jsonToString this}}
-          {{/ifEqual}}
-          {{#unless @last}},{{/unless}}
-          <br/>
-      {{/each}}
+        <pre class="code">{{jsonToString document}}</pre>
     </script>
     <script>
       Handlebars.registerPartial("policy", $("#policy\\.partial").html());

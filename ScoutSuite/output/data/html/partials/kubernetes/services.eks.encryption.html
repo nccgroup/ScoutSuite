@@ -1,0 +1,21 @@
+<script id="services.eks.encryption.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        {{> generic_object this }}
+    </div>
+
+</script>
+
+<script>
+    Handlebars.registerPartial("services.eks.encryption", $("#services\\.eks\\.encryption\\.partial").html());
+</script>
+
+<script id="single_eks_encryption-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.eks.encryption'}}
+</script>
+<script>
+    var single_eks_encryption_template = Handlebars.compile($("#single_eks_encryption-template").html());
+</script>

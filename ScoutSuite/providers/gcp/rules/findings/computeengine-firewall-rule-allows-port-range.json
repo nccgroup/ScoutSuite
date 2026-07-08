@@ -30,6 +30,11 @@
             "computeengine.projects.id.firewalls.id.allowed_traffic.id.",
             "notEqual",
             "0-65535"
+        ],
+        [
+            "computeengine.projects.id.firewalls.id.allowed_traffic.id.",
+            "notEqual",
+            "1-65535"
         ]
     ],
     "id_suffix": "permissive_ports"

@@ -1,0 +1,32 @@
+{
+    "description": "Kubernetes Dashboard Enabled",
+    "rationale": "You should disable the Kubernetes Web UI (Dashboard) when running on Kubernetes Engine. The Kubernetes Web UI (Dashboard) is backed by a highly privileged Kubernetes Service Account. The Cloud Console provides much of the same functionality, so you don't need this functionality.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.6"
+        },
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.10.1"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#disable_kubernetes_dashboard",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.dashboard_status",
+            "equal",
+            "Enabled"
+        ]
+    ],
+    "id_suffix": "dashboard_status"
+}

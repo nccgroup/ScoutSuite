@@ -1,0 +1,50 @@
+{
+    "description": "Unrestricted Cluster Network Ingress",
+    "rationale": "Unrestricted cluster ingress controls allow any compromised pod to interact with any other pods.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/cluster-administration/networking/",
+        "https://kubernetes.io/docs/concepts/services-networking/network-policies/"
+    ],
+    "dashboard_name": "Network Policies",
+    "display_path": "network_policy.v1-networking-k8s-io.id",
+    "path": "network_policy.v1-networking-k8s-io.resources.id.data.spec",
+    "conditions": [
+        "or",
+        [
+            "and",
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec",
+                "withKey",
+                "policy_types"
+            ],
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec.policy_types",
+                "notNull",
+                ""
+            ],
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec.policy_types",
+                "notContainString",
+                "Ingress"
+            ]
+        ],
+        [
+            "and",
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec.ingress",
+                "notNull",
+                ""
+            ],
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec.ingress.id.ports",
+                "null",
+                ""
+            ],
+            [
+                "network_policy.v1-networking-k8s-io.resources.id.data.spec.ingress.id.from",
+                "null",
+                ""
+            ]
+        ]
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "description": "Nodes with Auto-Repair Disabled",
+    "rationale": "Auto-repair helps maintain the cluster nodes in a healthy, running state.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.7"
+        },
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.5.2"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
+    ],
+    "dashboard_name": "Clusters",
+    "display_path": "kubernetesengine.projects.id.clusters.id",
+    "path": "kubernetesengine.projects.id.clusters.id.node_pools.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.node_pools.id.auto_repair_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "auto_repair_disabled"
+}

@@ -1,0 +1,15 @@
+{
+    "description": "Load Balancer with backend Keepalive disabled",
+    "rationale": "Consider enabling Keep-Alive to improve performance, reduce latency and load",
+    "dashboard_name": "Networking",
+    "path": "networking.load_balancers.id",
+    "conditions": [
+        "and",
+        [
+            "networking.load_balancers.id.enable_backend_keepalive",
+            "equal",
+            "False"
+        ]
+    ],
+    "id_suffix": "enable_backend_keepalive"
+}

@@ -27,16 +27,16 @@ class FunctionsV1(Resources):
         function_dict['runtime'] = raw_function['runtime']
         function_dict['memory'] = raw_function['availableMemoryMb']
         function_dict['timeout'] = raw_function['timeout']
-        function_dict['max_instances'] = raw_function['maxInstances']
+        if raw_function.get('maxInstances', False):
+            function_dict['max_instances'] = raw_function['maxInstances']
         function_dict['docker_registry'] = raw_function['dockerRegistry']
-
         function_dict['url'] = raw_function.get('httpsTrigger', {}).get('url')
-        function_dict['security_level'] = raw_function.get('httpsTrigger', {}).get('securityLevel')
+        function_dict['security_level'] = 'SECURE_ALWAYS' if function_dict['url'] is None else raw_function.get('httpsTrigger', {}).get('securityLevel')
         function_dict['ingress_settings'] = raw_function['ingressSettings']
 
         function_dict['bindings'] = raw_function['bindings']
 
-        function_dict['environment_variables'] = raw_function['environmentVariables']
+        function_dict['environment_variables'] = raw_function.get('environmentVariables', {})
         function_dict['environment_variables_secrets'] = get_environment_secrets(function_dict['environment_variables'])
 
         function_dict['labels'] = raw_function['labels']

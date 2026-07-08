@@ -1,0 +1,26 @@
+<!-- kubernetes.kubernetes -->
+<script id="services.kubernetes.kubernetes.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Id: <span id="kubernetes.kubernetes.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div> 
+        <div class="list-group-item-text item-margin">Name: <span id="kubernetes.kubernetes.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div> 
+        <div class="list-group-item-text item-margin">High Availability: <span id="kubernetes.kubernetes.{{@key}}.ha"><samp>{{value_or_none ha}}</samp></span></div> 
+        <div class="list-group-item-text item-margin">Auto-upgrade Minor Version: <span id="kubernetes.kubernetes.{{@key}}.auto_upgrade"><samp>{{value_or_none auto_upgrade}}</samp></span></div> 
+        <div class="list-group-item-text item-margin">Surge Upgrade: <span id="kubernetes.kubernetes.{{@key}}.surge_upgrade"><samp>{{value_or_none surge_upgrade}}</samp></span></div> 
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.kubernetes.kubernetes", $("#services\\.kubernetes\\.kubernetes\\.partial").html());
+</script>
+
+<!-- Single kubernetes kubernetes template -->
+<script id="single_kubernetes_kubernetes-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.kubernetes.kubernetes'}}
+</script>
+<script>
+    var single_kubernetes_kubernetes_template = Handlebars.compile($("#single_kubernetes_kubernetes-template").html());
+</script>

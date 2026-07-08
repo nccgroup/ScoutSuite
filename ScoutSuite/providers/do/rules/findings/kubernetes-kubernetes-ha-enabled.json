@@ -1,0 +1,17 @@
+{
+    "description": "High Availability for Control Plane",
+    "rationale": "Enabling the High Availability Control Plane feature in Kubernetes on Digital Ocean ensures that the cluster remains operational even if one or more control nodes fail, enhancing the reliability and resilience of your applications. Please note that this feature cannot be disabled once it has been enabled.",
+    "dashboard_name": "Kubernetes",
+    "path": "kubernetes.kubernetes.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetes.kubernetes.id.ha",
+            "equal",
+            "False"
+        ]
+    ],
+    "id_suffix": "ha"
+}
+
+

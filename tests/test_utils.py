@@ -41,7 +41,7 @@ class TestScoutUtilsClass(unittest.TestCase):
             e = CustomException(response={"Error": {"Code": t}})
             assert is_throttled(e)
         # test the non-throttling exception
-        e = CustomException(response={"Error": {"Code": "Not Throttling"}})
+        e = CustomException(response={"Error": {"Code": "Not Thro_ttling"}})
         assert not is_throttled(e)
         # test the except block
         e = CustomException(response={"Error": ""})

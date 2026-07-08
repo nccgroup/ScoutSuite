@@ -48,7 +48,7 @@
         [
             "iam.credential_reports.id.partition",
             "notEqual",
-            "aws-us-gov" 
+            "aws-us-gov"
         ]
     ],
     "keys": [

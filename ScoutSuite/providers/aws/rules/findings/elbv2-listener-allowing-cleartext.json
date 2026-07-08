@@ -8,13 +8,25 @@
     ],
     "dashboard_name": "Load Balancer Listeners",
     "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
-    "path": "elbv2.regions.id.vpcs.id.lbs.id.listeners.id.Protocol",
+    "path": "elbv2.regions.id.vpcs.id.lbs.id.listeners.id",
     "conditions": [
         "and",
         [
             "elbv2.regions.id.vpcs.id.lbs.id.listeners.id.Protocol",
             "equal",
             "HTTP"
+        ],
+        ["or",
+            [
+                "elbv2.regions.id.vpcs.id.lbs.id.listeners.id.DefaultActions",
+                "notContainString",
+                "'Type': 'redirect'"
+            ],
+            [
+                "elbv2.regions.id.vpcs.id.lbs.id.listeners.id.DefaultActions",
+                "notContainString",
+                "'Protocol': 'HTTPS'"
+            ]
         ]
     ]
 }

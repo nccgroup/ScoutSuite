@@ -1,0 +1,41 @@
+{
+    "description": "Container/InitContainer/EphemeralContainer Running As Root User",
+    "rationale": "Where possible, runAsUser should be set to a value greater than 0.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "StatefulSets",
+    "display_path": "stateful_set.v1-apps.id",
+    "path": "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "and",
+            [
+                "stateful_set.v1-apps.resources.id.data.spec.template.spec.securityContext",
+                "notNull",
+                ""
+            ],
+            [
+                "stateful_set.v1-apps.resources.id.data.spec.template.spec.securityContext.runAsUser",
+                "equal",
+                "0"
+            ]
+        ],
+        [
+            "and",
+            [
+                "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext",
+                "notNull",
+                ""
+            ],
+            [
+                "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.runAsUser",
+                "equal",
+                "0"
+            ]
+        ]
+    ],
+    "id_suffix": "runAsUser"
+}

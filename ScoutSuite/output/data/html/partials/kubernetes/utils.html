@@ -1,0 +1,83 @@
+<script>
+    Handlebars.registerHelper('remove_whitespace', data => {
+        // TODO: find a better way to address Handlebars-specific indentation weirdness in <pre>
+        return `${data}`.replace(/\r\n/g, `\r`).replace(/\n/g, `\r`)
+    })
+
+    Handlebars.registerHelper('location_hash', () => {
+        return location.hash
+    })
+
+    Handlebars.registerHelper('resource_is_in_namespace', (resource_id, formatted_ns) => {
+        return resource_id.startsWith(`--${formatted_ns}--`)
+    })
+
+    const showNamespacedResources = (base, ns) => {
+        hideItems(base)
+        showItems(`${base}.--${ns}--`)
+    }
+
+    const onHashChange = () => {
+        const hash = location.hash
+
+        if (!hash) {
+            updateDOM('')
+            return
+        }
+
+        if (hash.endsWith('.view')) {
+            updateDOM(hash.split('.').slice(0, 3).join('.'))
+        }
+
+        updateDOM(hash)
+    }
+
+    showItems = path => {
+        $(`[id^="${path}"][id$=".link"]`).show()
+        $(`[id^="${path}"][id$=".view"]`).show()
+    }
+
+    showRow = path => {
+        showList(path)
+        showDetails(path)
+    }
+
+    showDetails = path => {
+        $(`[id^="${path}"][id$=".details"]`).show()
+    }
+
+    showList = path => {
+        $(`[id^="${path}"][id$=".list"]`).show()
+    }
+
+    hideItems = path => {
+        $(`[id^="${path}"][id$=".view"]`).hide()
+    }
+
+    hideLinks = path => {
+        $(`[id^="${path}"][id$=".link"]`).hide()
+    }
+
+    hideList = path => {
+        // this function assumes a namespaced resource kind
+        $(`[id="${path}"]`).hide()
+        hideItems(path.replace(/\.list$/, ''))
+    }
+
+    window.onhashchange = onHashChange
+
+    $(document).ready(() => {
+        onPageLoad()
+        onHashChange()
+    })
+</script>
+
+<style>
+    .k8s-item-heading {
+        font-weight: bold;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        color: black;
+    }
+</style>

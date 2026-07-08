@@ -15,24 +15,32 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access"
+        "https://learn.microsoft.com/en-us/azure/storage/common/storage-create-storage-account",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access"
     ],
     "dashboard_name": "Storage Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",
     "conditions": [
-        "or",
+        "and",
         [
-            "storageaccounts.subscriptions.id.storage_accounts.id.access_keys_last_rotation_date",
-            "equal",
-            "None"
+            "storageaccounts.subscriptions.id.storage_accounts.id.shared_key_access_allowed",
+            "true",
+            ""
         ],
         [
-            "storageaccounts.subscriptions.id.storage_accounts.id.access_keys_last_rotation_date",
-            "olderThan",
+            "or",
             [
-                "_ARG_0_",
-                "days"
+                "storageaccounts.subscriptions.id.storage_accounts.id.access_keys_last_rotation_date",
+                "equal",
+                "None"
+            ],
+            [
+                "storageaccounts.subscriptions.id.storage_accounts.id.access_keys_last_rotation_date",
+                "olderThan",
+                [
+                    "_ARG_0_",
+                    "days"
+                ]
             ]
         ]
     ],

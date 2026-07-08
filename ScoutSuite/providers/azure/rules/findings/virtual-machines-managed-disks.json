@@ -10,8 +10,8 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/virtual-machines/windows/convert-unmanaged-to-managed-disks",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-1-define-asset-management-and-data-protection-strategy"
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/convert-unmanaged-to-managed-disks",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-1-define-asset-management-and-data-protection-strategy"
     ],
     "dashboard_name": "Instances",
     "path": "virtualmachines.subscriptions.id.instances.id",

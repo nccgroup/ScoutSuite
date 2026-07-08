@@ -1,31 +1,31 @@
 {
-  "description": "Insecure TLS Version Supported",
-  "rationale": "The TLS (Transport Layer Security) protocol secures transmission of data over the internet using standard encryption technology. Encryption should be set with the latest version of TLS. App Service allows TLS 1.2 by default, which is the recommended TLS level by industry standards, such as PCI DSS.",
-  "remediation": "In the Azure console:\n<ol>\n    <li>Go to <samp>App Services</samp></li>\n    <li>Click on each App</li>\n    <li>Under <samp>Setting</samp> section, Click on <samp>SSL settings</samp></li>\n    <li>Set  <samp>Minimum TLS Version</samp> to <samp>1.2</samp> under <samp>Protocol Settings</samp> section</li>\n</ol>",
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "1.2.0",
-      "reference": "9.3"
-    },
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "1.1.0",
-      "reference": "9.3"
-    }
-  ],
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl#enforce-tls-versions"
-  ],
-  "dashboard_name": "Web Apps",
-  "path": "appservice.subscriptions.id.web_apps.id",
-  "conditions": [
-    "and",
-    [
-      "appservice.subscriptions.id.web_apps.id.minimum_tls_version_supported",
-      "notEqual",
-      "1.2"
-    ]
-  ],
-  "id_suffix": "minimum_tls_supported"
+    "description": "Insecure TLS Version Supported",
+    "rationale": "The TLS (Transport Layer Security) protocol secures transmission of data over the internet using standard encryption technology. Encryption should be set with the latest version of TLS. App Service allows TLS 1.2 by default, which is the recommended TLS level by industry standards, such as PCI DSS.",
+    "remediation": "In the Azure console:\n<ol>\n    <li>Go to <samp>App Services</samp></li>\n    <li>Click on each App</li>\n    <li>Under <samp>Setting</samp> section, Click on <samp>SSL settings</samp></li>\n    <li>Set  <samp>Minimum TLS Version</samp> to <samp>1.2</samp> under <samp>Protocol Settings</samp> section</li>\n</ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "9.3"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "9.3"
+        }
+    ],
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl#enforce-tls-versions"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [
+        "and",
+        [
+            "appservice.subscriptions.id.web_apps.id.minimum_tls_version_supported",
+            "notEqual",
+            "1.2"
+        ]
+    ],
+    "id_suffix": "minimum_tls_supported"
 }

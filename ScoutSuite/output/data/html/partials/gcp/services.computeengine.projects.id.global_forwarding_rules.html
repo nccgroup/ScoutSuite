@@ -1,0 +1,41 @@
+<!-- computeengine global_forwarding_rules -->
+<script id="services.computeengine.projects.id.global_forwarding_rules.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Name: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Creation Timestamp: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.creation_timestamp"><samp>{{format_date creation_timestamp}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Network: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.network"><samp>{{value_or_none network}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Subnetwork: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.subnetwork"><samp>{{value_or_none subnetwork}}</samp></span></div>
+        <div class="list-group-item-text item-margin">IP Address: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.ip_address"><samp>{{value_or_none ip_address}}</samp></span></div>
+        <div class="list-group-item-text item-margin">IP Protocol: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.ip_protocol"><samp>{{value_or_none ip_protocol}}</samp></span></div>
+        <div class="list-group-item-text item-margin">IP Version: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.ip_version"><samp>{{value_or_none ipVersion}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Allow Global Access: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.allow_global_access"><samp>{{value_or_none allowGlobalAccess}}</samp></span></div>
+        <div class="list-group-item-text item-margin">All Ports: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.all_ports"><samp>{{value_or_none allPorts}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Port Range: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.port_range"><samp>{{value_or_none port_range}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Ports: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.ports"><samp>{{value_or_none ports}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Target: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.target"><samp>{{value_or_none target}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Load Balancing Scheme: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.load_balancing_scheme"><samp>{{value_or_none load_balancing_scheme}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Network Tier: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.network_tier"><samp>{{value_or_none network_tier}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Backend Service: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.backend_service"><samp>{{value_or_none backendService}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Service Name: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.service_name"><samp>{{value_or_none serviceName}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Service Label: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.service_label"><samp>{{value_or_none serviceLabel}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Labels: <span id="computeengine.projects.{{project}}.global_forwarding_rules.{{@key}}.labels"><samp>{{value_or_none labels}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.computeengine.projects.id.global_forwarding_rules", $("#services\\.computeengine\\.projects\\.id\\.global_forwarding_rules\\.partial").html());
+</script>
+
+<!-- Single computeengine global_forwarding_rule template -->
+<script id="single_computeengine_global_forwarding_rule-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.computeengine.projects.id.global_forwarding_rules'}}
+</script>
+<script>
+    var single_computeengine_global_forwarding_rule_template = Handlebars.compile($("#single_computeengine_global_forwarding_rule-template").html());
+</script>

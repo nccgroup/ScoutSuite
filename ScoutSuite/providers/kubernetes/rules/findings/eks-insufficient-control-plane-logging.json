@@ -1,0 +1,18 @@
+{
+    "description": "Insufficient Control Plane Logging",
+    "rationale": "Certain logging options are disabled in the EKS control plane, creating difficulties in asserting accountability.",
+    "references": [
+        "https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html"
+    ],
+    "dashboard_name": "Configurations",
+    "path": "eks.logging.id",
+    "conditions": [
+        "or",
+        [
+            "enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "enabled"
+}

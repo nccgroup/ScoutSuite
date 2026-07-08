@@ -1,0 +1,59 @@
+{
+    "description": "Kubernetes Container/InitContainer/EphemeralContainer Manifest Hardening",
+    "rationale": "Several security options in the affected resources could be enabled to harden assocated containers.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://www.cisecurity.org/benchmark/docker/"
+    ],
+    "dashboard_name": "Jobs",
+    "display_path": "job.v1-batch.id",
+    "path": "job.v1-batch.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id",
+            "withoutKey",
+            "securityContext"
+        ],
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "null",
+            ""
+        ],
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "allowPrivilegeEscalation"
+        ],
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "readOnlyRootFilesystem"
+        ],
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.securityContext",
+            "withoutKey",
+            "capabilities"
+        ],
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.securityContext.allowPrivilegeEscalation",
+            "null",
+            ""
+        ],
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.securityContext.readOnlyRootFilesystem",
+            "null",
+            ""
+        ],
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities",
+            "null",
+            ""
+        ],
+        [
+            "job.v1-batch.resources.id.data.spec.template.spec.containers.id.securityContext.capabilities.drop",
+            "null",
+            ""
+        ]
+    ]
+}

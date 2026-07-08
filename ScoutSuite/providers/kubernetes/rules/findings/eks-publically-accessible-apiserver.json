@@ -1,0 +1,23 @@
+{
+    "description": "Publically Accessible API Server",
+    "rationale": " A publically accessible Kubernetes API server may enable arbitrary view or modification of cluster data.",
+    "references": [
+        "https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/",
+        "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html"
+    ],
+    "dashboard_name": "VPC Configs",
+    "path": "eks.vpc.config",
+    "conditions": [
+        "and",
+        [
+            "eks.vpc.config.endpointPublicAccess",
+            "true",
+            ""
+        ],
+        [
+            "eks.vpc.config.publicAccessCidrs",
+            "containAtLeastOneOf",
+            "0.0.0.0/0"
+        ]
+    ]
+}

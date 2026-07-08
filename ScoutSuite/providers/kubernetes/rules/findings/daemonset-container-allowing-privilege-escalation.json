@@ -1,0 +1,30 @@
+{
+    "description": "Container/InitContainer/EphemeralContainer Allowing Privilege Escalation",
+    "rationale": "A container should disallow privilege escalation where possible. allowPrivilegeEscalation should be explicitly set to false.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "DaemonSets",
+    "display_path": "daemon_set.v1-apps.id",
+    "path": "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "daemon_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+            "null",
+            ""
+        ],
+        [
+            "daemonset.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.allowPrivilegeEscalation",
+            "null",
+            ""
+        ],
+        [
+            "daemonset.v1-apps.resources.id.data.spec.template.spec.containers.id.securityContext.allowPrivilegeEscalation",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "allowPrivilegeEscalation"
+}

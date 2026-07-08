@@ -1,0 +1,60 @@
+{
+    "description": "Kubernetes Container/InitContainer/EphemeralContainer Manifest Hardening",
+    "rationale": "Several security options in the affected resources could be enabled to harden assocated containers.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://www.cisecurity.org/benchmark/docker/"
+    ],
+    "dashboard_name": "Pods",
+    "display_path": "pod.v1.id",
+    "path": "pod.v1.resources.id.data.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "pod.v1.resources.id.data.spec.containers.id",
+            "withoutKey",
+            "securityContext"
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.securityContext",
+            "null",
+            ""
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.securityContext",
+            "withoutKey",
+            "allowPrivilegeEscalation"
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.securityContext",
+            "withoutKey",
+            "readOnlyRootFilesystem"
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.securityContext",
+            "withoutKey",
+            "capabilities"
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.securityContext.allowPrivilegeEscalation",
+            "null",
+            ""
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.securityContext.readOnlyRootFilesystem",
+            "null",
+            ""
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.securityContext.capabilities",
+            "null",
+            ""
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.securityContext.capabilities.drop",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "hardening_required"
+}

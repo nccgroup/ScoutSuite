@@ -6,7 +6,8 @@ formatted_provider_name = {
     'aws': 'AWS',
     'azure': 'Azure',
     'gcp': 'GCP',
-    'oci': 'OCI'
+    'oci': 'OCI',
+    'kubernetes': 'Kubernetes'
 }
 
 formatted_service_name = {
@@ -37,7 +38,6 @@ formatted_service_name = {
     'ssm': 'Systems Manager',
     # Azure
     'aad': 'Azure Active Directory',
-    'rbac': 'Azure RBAC',
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',
     'securitycenter': 'Security Center',

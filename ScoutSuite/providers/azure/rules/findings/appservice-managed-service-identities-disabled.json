@@ -1,37 +1,37 @@
 {
-  "description": "Managed Service Identities Disabled",
-  "rationale": "App Service provides a highly scalable, self-patching web hosting service in Azure. It also provides a managed identity for apps, which is a turn-key solution for securing access to Azure SQL Database and other Azure services.",
-  "remediation": "Using Console:<ol><li>Login to Azure Portal using https://portal.azure.com</li><li>Go to \"App Services\"</li><li>Click on each App</li><li>Under the \"Setting\" section, Click on \"Identity\"</li><li>Ensure that \"Status\" set to On\"</li></ol>",
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "1.2.0",
-      "reference": "9.5"
-    },
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "1.1.0",
-      "reference": "9.5"
-    }
-  ],
-  "references": [
-    "https://docs.microsoft.com/en-gb/azure/app-service/app-service-web-tutorial-connect-msi",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-1-standardize-azure-active-directory-as-the-central-identity-and-authentication-system"
-  ],
-  "dashboard_name": "Web Apps",
-  "path": "appservice.subscriptions.id.web_apps.id",
-  "conditions": [
-    "and",
-    [
-      "appservice.subscriptions.id.web_apps.id.identity",
-      "notNull",
-      ""
+    "description": "Managed Service Identities Disabled",
+    "rationale": "App Service provides a highly scalable, self-patching web hosting service in Azure. It also provides a managed identity for apps, which is a turn-key solution for securing access to Azure SQL Database and other Azure services.",
+    "remediation": "Using Console:<ol><li>Login to Azure Portal using https://portal.azure.com</li><li>Go to \"App Services\"</li><li>Click on each App</li><li>Under the \"Setting\" section, Click on \"Identity\"</li><li>Ensure that \"Status\" set to On\"</li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.2.0",
+            "reference": "9.5"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "9.5"
+        }
     ],
-    [
-      "appservice.subscriptions.id.web_apps.id.identity.principal_id",
-      "null",
-      ""
-    ]
-  ],
-  "id_suffix": "identity.managed_principal_id"
+    "references": [
+        "https://learn.microsoft.com/en-gb/azure/app-service/app-service-web-tutorial-connect-msi",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-1-standardize-azure-active-directory-as-the-central-identity-and-authentication-system"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [
+        "and",
+        [
+            "appservice.subscriptions.id.web_apps.id.identity",
+            "notNull",
+            ""
+        ],
+        [
+            "appservice.subscriptions.id.web_apps.id.identity.principal_id",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "identity.managed_principal_id"
 }

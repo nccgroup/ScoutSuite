@@ -1,0 +1,29 @@
+{
+    "description": "Resources without Defined CPU Limit",
+    "rationale": "Unset resource limits could result in service denial through resource exhaustion.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+    ],
+    "dashboard_name": "StatefulSets",
+    "display_path": "stateful_set.v1-apps.id",
+    "path": "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources.limits",
+            "null",
+            ""
+        ],
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources.limits",
+            "withoutKey",
+            "cpu"
+        ],
+        [
+            "stateful_set.v1-apps.resources.id.data.spec.template.spec.containers.id.resources.limits.cpu",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "cpu"
+}

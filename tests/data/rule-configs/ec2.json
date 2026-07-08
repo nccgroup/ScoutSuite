@@ -7,6 +7,12 @@
                 "ap-northeast-2": {
                     "instances_count": 0,
                     "region": "ap-northeast-2",
+                    "regional_settings": {
+                        "0": {
+                            "ebs_default_encryption_key_id": "alias/aws/ebs",
+                            "ebs_encryption_default": false
+                        }
+                    },
                     "security_groups_count": 1,
                     "snapshots": {},
                     "snapshots_count": 0,
@@ -59,6 +65,12 @@
                 "ap-south-1": {
                     "instances_count": 0,
                     "region": "ap-south-1",
+                    "regional_settings": {
+                        "0": {
+                            "ebs_default_encryption_key_id": "alias/aws/ebs",
+                            "ebs_encryption_default": false
+                        }
+                    },
                     "security_groups_count": 1,
                     "snapshots": {},
                     "snapshots_count": 0,
@@ -108,6 +120,12 @@
                 "eu-central-1": {
                     "instances_count": 0,
                     "region": "eu-central-1",
+                    "regional_settings": {
+                        "0": {
+                            "ebs_default_encryption_key_id": "alias/aws/ebs",
+                            "ebs_encryption_default": false
+                        }
+                    },
                     "security_groups_count": 1,
                     "snapshots": {},
                     "snapshots_count": 0,
@@ -146,6 +164,12 @@
                 "eu-west-1": {
                     "instances_count": 35,
                     "region": "eu-west-1",
+                    "regional_settings": {
+                        "0": {
+                            "ebs_default_encryption_key_id": "arn:aws:kms:us-east-1:123456789012:key/12345678-90ab-cdef-1234-567890abcdef",
+                            "ebs_encryption_default": true
+                        }
+                    },
                     "security_groups_count": 30,
                     "vpcs": {
                         "vpc-eu111111": {
@@ -248,6 +272,12 @@
                 "sa-east-1": {
                     "instances_count": 0,
                     "region": "sa-east-1",
+                    "regional_settings": {
+                        "0": {
+                            "ebs_default_encryption_key_id": "arn:aws:kms:us-east-1:123456789012:key/12345678-90ab-cdef-1234-567890abcdef",
+                            "ebs_encryption_default": true
+                        }
+                    },
                     "security_groups_count": 1,
                     "snapshots": {},
                     "snapshots_count": 0,

@@ -1,0 +1,27 @@
+<!-- spaces buckets -->
+<script id="services.spaces.buckets.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="spaces.buckets.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>  
+        <div class="list-group-item-text item-margin">Public Read: <span id="spaces.buckets.{{@key}}.public_read"><samp>{{value_or_none public_read}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Public Write: <span id="spaces.buckets.{{@key}}.public_write"><samp>{{value_or_none public_write}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Read Acp: <span id="spaces.buckets.{{@key}}.read_acp"><samp>{{value_or_none read_acp}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Write Acp: <span id="spaces.buckets.{{@key}}.write_acp"><samp>{{value_or_none write_acp}}</samp></span></div>
+        <div class="list-group-item-text item-margin">CORS: <span id="spaces.buckets.{{@key}}.CORS"><samp>{{value_or_none CORS}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.spaces.buckets", $("#services\\.spaces\\.buckets\\.partial").html());
+</script>
+
+<!-- Single spaces bucket template -->
+<script id="single_spaces_bucket-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.spaces.buckets'}}
+</script>
+<script>
+    var single_spaces_bucket_template = Handlebars.compile($("#single_spaces_bucket-template").html());
+</script>

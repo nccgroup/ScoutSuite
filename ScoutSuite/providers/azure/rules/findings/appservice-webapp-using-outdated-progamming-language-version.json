@@ -25,7 +25,7 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings"
+        "https://learn.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings"
     ],
     "dashboard_name": "Web Apps",
     "path": "appservice.subscriptions.id.web_apps.id",

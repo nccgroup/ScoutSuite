@@ -1,0 +1,41 @@
+{
+    "description": "Container/InitContainer/EphemeralContainer Running As Root Group",
+    "rationale": "Where possible, runAsGroup should be set to a value greater than 0.",
+    "references": [
+        "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "Pods",
+    "display_path": "pod.v1.id",
+    "path": "pod.v1.resources.id.data.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "and",
+            [
+                "pod.v1.resources.id.data.spec.securityContext",
+                "notNull",
+                ""
+            ],
+            [
+                "pod.v1.resources.id.data.spec.securityContext.runAsGroup",
+                "equal",
+                "0"
+            ]
+        ],
+        [
+            "and",
+            [
+                "pod.v1.resources.id.data.spec.containers.id.securityContext",
+                "notNull",
+                ""
+            ],
+            [
+                "pod.v1.resources.id.data.spec.containers.id.securityContext.runAsGroup",
+                "equal",
+                "0"
+            ]
+        ]
+    ],
+    "id_suffix": "runAsGroup"
+}

@@ -1,0 +1,21 @@
+{
+    "description": "Nodes with Integrity Monitoring Disabled",
+    "rationale": "The Integrity Monitoring feature should be enabled for GKE cluster nodes in order to monitor and automatically check the runtime boot integrity of shielded cluster nodes using Cloud Monitoring service.",
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes"
+    ],
+    "dashboard_name": "Clusters",
+    "display_path": "kubernetesengine.projects.id.clusters.id",
+    "path": "kubernetesengine.projects.id.clusters.id.node_pools.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.node_pools.id.integrity_monitoring_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "integrity_monitoring_enabled"
+}

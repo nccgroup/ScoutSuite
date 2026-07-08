@@ -1,0 +1,17 @@
+{
+    "description": "Permissive Bindings in Role-based Access Control (RBAC) Definition",
+    "rationale": "Insufficient RBAC restrictions could enable unauthorized privilege escalation. The administrator should review the permissive bindings under RBAC.",
+    "references": [
+        "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
+    ],
+    "dashboard_name": "RBAC bindings",
+    "path": "rbac.permissive_bindings",
+    "conditions": [
+        "not",
+        [
+            "rbac.permissive_bindings_count",
+            "equal",
+            "0"
+        ]
+    ]
+}

@@ -1,0 +1,22 @@
+<script id="services.rbac.dodgy_subjects.details.template" type="text/x-handlebars-template">
+    <div class="list-group" id="services.rbac.dodgy_subjects.details">
+        <div class="list-group" id="services.rbac.dodgy_subjects.view">
+            <div class="list-group">
+                {{#each items}}
+                    <div class="row list-group-item active">
+                        <h4>{{ @key }}</h4>
+                    </div>
+                    <div class="row list-group-item">
+                        <ul>
+                            {{#each this}}
+                                <li>
+                                    Bound to <b>{{ version }}/{{ data.roleRef.kind }}/{{ data.roleRef.name }}</b>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</script>

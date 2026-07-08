@@ -1,0 +1,15 @@
+{
+    "description": "Load Balancer without attached Droplets",
+    "rationale": "Load Balancer without attached Droplets",
+    "dashboard_name": "Networking",
+    "path": "networking.load_balancers.id",
+    "conditions": [
+        "and",
+        [
+            "networking.load_balancers.id.droplet_ids",
+            "equal",
+            "[]"
+        ]
+    ],
+    "id_suffix": "droplet_ids"
+}

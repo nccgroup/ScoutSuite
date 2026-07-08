@@ -10,9 +10,9 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver",
-        "https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal",
-        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+        "https://learn.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver",
+        "https://learn.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal",
+        "https://learn.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
     ],
     "dashboard_name": "PostgreSQL Servers",
     "path": "postgresqldatabase.subscriptions.id.servers.id",

@@ -1,0 +1,27 @@
+<!-- Logging and Monitoring Log Profiles-->
+<script id="services.loggingmonitoring.subscriptions.id.log_profiles.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_profiles.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Storage account id: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_profiles.{{@key}}.storage_account_id"><samp>{{storage_account_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Captures all activities: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_profiles.{{@key}}.captures_all_activities"><samp>{{captures_all_activities}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Retention policy enabled: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_profiles.{{@key}}.retention_policy_enabled"><samp>{{retention_policy_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Retention policy days: <span id="loggingmonitoring.subscriptions.{{@../key}}.log_profiles.{{@key}}.retention_policy_days"><samp>{{retention_policy_days}}</samp></span></div>
+
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.loggingmonitoring.subscriptions.id.log_profiles", $("#services\\.loggingmonitoring\\.subscriptions\\.id\\.log_profiles\\.partial").html());
+</script>
+
+<!-- Single loggingmonitoring log profiles template -->
+<script id="single_loggingmonitoring_log_profiles-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.loggingmonitoring.subscriptions.id.log_profiles'}}
+</script>
+<script>
+    var single_loggingmonitoring_log_profiles_template = Handlebars.compile($("#single_loggingmonitoring_log_profiles-template").html());
+</script>

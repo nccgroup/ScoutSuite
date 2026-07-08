@@ -1,0 +1,24 @@
+{
+    "description": "Pods Using Host PID",
+    "rationale": "A compromised pod with hostPID set to true in PodSpec can be used as a pivot to the host PID.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "Pods",
+    "display_path": "pod.v1.id",
+    "path": "pod.v1.resources.id.data.spec",
+    "conditions": [
+        "and",
+        [
+            "pod.v1.resources.id.data.spec",
+            "withKey",
+            "host_pid"
+        ],
+        [
+            "pod.v1.resources.id.data.spec.host_pid",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "host_pid"
+}

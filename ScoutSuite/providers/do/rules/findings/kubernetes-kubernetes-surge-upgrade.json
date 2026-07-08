@@ -1,0 +1,17 @@
+{
+    "description": "Surge Upgrade Disabled",
+    "rationale": "Enabling surge updates in Digital Ocean allows for the creation of additional nodes during updates before pods draining, ensuring that new versions are fully operational before old ones are terminated, thus avoiding downtime.",
+    "dashboard_name": "Kubernetes",
+    "path": "kubernetes.kubernetes.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetes.kubernetes.id.surge_upgrade",
+            "equal",
+            "False"
+        ]
+    ],
+    "id_suffix": "surge_upgrade"
+}
+
+

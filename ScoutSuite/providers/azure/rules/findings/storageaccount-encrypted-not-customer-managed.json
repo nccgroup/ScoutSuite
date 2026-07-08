@@ -1,5 +1,5 @@
 {
-    "description": "Storage not encrypted with Customer Managed Key",
+    "description": "Storage Not Encrypted with Customer Managed Key",
     "rationale": "By default, data in the storage account is encrypted using Microsoft Managed Keys at rest.<br><br>If sensitive information is stored, it should be encrypted using either Server-side Customer-Managed keys or Client-side Encryption. In the case of Client-side Encryption, it is difficult to decipher if the customer loses the key.<br><br>",
     "remediation": "In the Azure console:<ol><li>Go to <samp>Storage Accounts</samp></li> <li>For each storage account, go to <samp>Encryption</samp></li> <li>Set <samp>Customer Managed Keys</samp> </li><li>Select the <samp>Encryption key</samp> and enter the appropriate setting value</li></ol>",
     "compliance": [
@@ -10,8 +10,8 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption",
-        "https://docs.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest"
+        "https://learn.microsoft.com/en-us/azure/storage/common/storage-service-encryption",
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest"
     ],
     "dashboard_name": "Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",

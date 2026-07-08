@@ -1,0 +1,25 @@
+{
+    "description": "Lack of Access Scope Limitation",
+    "rationale": "If you are not creating a separate service account for your nodes, you should limit the scopes of the node service account to reduce the oportunity for privilege escalation. This ensures that the default service account does not have permissions beyond those necessary to run your cluster. While the default scopes are limited, they may include scopes beyond the minimally required ones needed to run your cluster. If you are accessing private images in Google Container Registry, the minimally required scopes are only logging.write, monitoring, and devstorage.read_only.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.18"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/access-scopes"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.has_limited_scopes",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "scopes_not_limited"
+}

@@ -1,5 +1,5 @@
 {
-    "description": "Separation Of Duties Not Enforced For KMS",
+    "description": "Separation of Duties Not Enforced for KMS",
     "rationale": "Separation of duties is the concept of ensuring that one individual does not have all necessary permissions to be able to complete a malicious action. In Cloud KMS, this could be an action such as using a key to access and decrypt data a user should not normally have access to. Separation of duties is a business control typically used in larger organizations, meant to help avoid security or privacy incidents and errors. It is considered best practice. No user(s) should have Cloud KMS Admin and any of the Cloud KMS CryptoKey Encrypter/Decrypter, Cloud KMS CryptoKey Encrypter, Cloud KMS CryptoKey Decrypter roles assigned at the same time.",
     "remediation": "From console:<ol><li>Go to <samp>IAM & Admin/IAM</samp> using <samp>https://console.cloud.google.com/iam-admin/iam</samp>.</li><li>For any member having <samp>Cloud KMS Admin</samp> and any of the <samp>Cloud KMS CryptoKey Encrypter/Decrypter, Cloud KMS CryptoKey Encrypter, Cloud KMS CryptoKey Decrypter</samp> roles granted/assigned, click the <samp>Delete Bin</samp> icon to remove either role from the member.<br> Removal of a role should be done based on the business requirements.</li></ol>",
     "compliance": [

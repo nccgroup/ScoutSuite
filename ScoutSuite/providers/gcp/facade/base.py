@@ -134,16 +134,20 @@ class GCPFacade(GCPBaseFacade):
                                 'you may have specified a non-existing Organization, Folder or Project')
 
         except Exception as e:
-            if 'The service is currently unavailable' in e or 'Internal error encountered' in e:
-                print_level = print_warning
-            else:
-                print_level = print_exception
+            print_level = print_exception
+            exception_str = str(e)
             try:
-                content = e.content.decode("utf-8")
-                content_dict = json.loads(content)
-                print_level(f'Unable to list accessible Projects: {content_dict.get("error").get("message")}')
-            except Exception as e:
-                print_level(f'Unable to list accessible Projects: {e}')
+                if 'The service is currently unavailable' in exception_str or 'Internal error encountered' in exception_str:
+                    print_level = print_warning
+                if hasattr(e, 'content'):
+                    content = e.content.decode("utf-8")
+                    content_dict = json.loads(content)
+                    exception_str = content_dict.get("error").get("message")
+            except Exception:
+                # The default output level and message have been set. Use those in the event of any error processing the exception.
+                pass
+
+            print_level(f'Unable to list accessible Projects: {exception_str}')
 
         finally:
             return projects
@@ -172,7 +176,7 @@ class GCPFacade(GCPBaseFacade):
                     else:
                         print_warning(f"Could not fetch the state of services for project \"{project_id}\": {e}")
                         self.projects_services_lock = False
-                        return {}
+                        return None
             # locked, wait and retry
             else:
                 if attempt <= 10:  # need to set a limit to ensure we don't hit recursion limits
@@ -186,7 +190,7 @@ class GCPFacade(GCPBaseFacade):
                 else:
                     print_warning(f"Could not fetch the state of services for project \"{project_id}\", "
                                   f"exiting before hitting maximum recursion")
-                    return {}
+                    return None
         else:
             return self.projects_services[project_id]
 
@@ -206,7 +210,7 @@ class GCPFacade(GCPBaseFacade):
         elif service == 'CloudStorage':
             endpoint = 'storage-component'
         elif service == 'CloudSQL':
-            endpoint = 'sql-component'
+            endpoint = 'sqladmin'
         elif service == 'ComputeEngine':
             endpoint = 'compute'
         elif service == 'Functions':
@@ -231,6 +235,9 @@ class GCPFacade(GCPBaseFacade):
 
         try:
             enabled_services = await self.get_enabled_services(project_id)
+            if enabled_services == None:
+                print_warning(f"Could not identify enabled services, including {service}")
+                return True
             for s in enabled_services:
                 if endpoint in s.get('name') and s.get('config').get('name') not in incorrect_endpoints:
                     print_debug(f'{format_service_name(service.lower())} API enabled for '

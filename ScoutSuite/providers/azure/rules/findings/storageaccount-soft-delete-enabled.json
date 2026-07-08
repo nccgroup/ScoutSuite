@@ -10,7 +10,7 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-soft-delete"
+        "https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-soft-delete"
     ],
     "dashboard_name": "Accounts",
     "display_path": "storageaccounts.subscriptions.id.storage_accounts.id",

@@ -1,0 +1,25 @@
+<script id="services.rbac.permissive_bindings.details.template" type="text/x-handlebars-template">
+    <div class="list-group" id="services.rbac.permissive_bindings.details">
+        <div class="list-group" id="services.rbac.permissive_bindings.view">
+            <div class="list-group">
+                {{#each items}}
+                    <div class="row list-group-item active">
+                        <h4>{{ @key }}</h4>
+                    </div>
+                    <div class="row list-group-item">
+                        <h5>Bound to <b>{{ data.roleRef.kind }}/{{ data.roleRef.name }}</b></h5>
+                        <ul>
+                            {{#each data.subjects}}
+                                {{#if apiGroup}}
+                                <li>Subject <b>{{ kind }}/{{ name }}</b> from API group <b>{{ apiGroup }}</b></li>
+                                {{else}}
+                                <li>Subject <b>{{ kind }}/{{ name }}</b> from namespace <b>{{ namespace }}</b></li>
+                                {{/if}}
+                            {{/each}}
+                        </ul>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</script>

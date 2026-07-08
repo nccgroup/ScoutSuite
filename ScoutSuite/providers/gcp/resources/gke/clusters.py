@@ -43,7 +43,7 @@ class Clusters(Resources):
         cluster_dict['service_account'] = raw_cluster.get('nodeConfig', {}).get('serviceAccount', None)
         cluster_dict['master_authorized_networks_config'] = self._get_master_authorized_networks_config(raw_cluster)
         cluster_dict['application_layer_encryption_enabled'] = raw_cluster.get('databaseEncryption', {}).get('state', None) == 'ENCRYPTED'
-        cluster_dict['workload_identity_enabled'] = raw_cluster.get('workloadIdentityConfig', {}).get('identityNamespace', None) != None
+        cluster_dict['workload_identity_enabled'] = raw_cluster.get('workloadIdentityConfig', {}).get('workloadPool', '').endswith('.svc.id.goog')
         cluster_dict['metadata_server_enabled'] = self._metadata_server_enabled(raw_cluster.get('nodePools', []))
         cluster_dict['release_channel'] = raw_cluster.get('releaseChannel', {}).get('channel', None)
         cluster_dict['shielded_nodes_enabled'] = raw_cluster.get('shieldedNodes', {}).get('enabled', False)

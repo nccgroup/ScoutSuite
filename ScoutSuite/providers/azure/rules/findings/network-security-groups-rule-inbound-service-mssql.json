@@ -8,7 +8,6 @@
             "reference": "6.3"
         }
     ],
-
     "dashboard_name": "NSGs",
     "display_path": "network.subscriptions.id.security_groups.id",
     "path": "network.subscriptions.id.security_groups.id.security_rules.id",

@@ -1,0 +1,16 @@
+{
+    "description": "Droplets with custom image",
+    "rationale": "Using custom images instead of those provided by Digital Ocean may result in reduced security control, as user-created images may not include the latest security patches and configurations that are routinely maintained and updated in provider-supplied images.",
+    "dashboard_name": "Droplets",
+    "path": "droplet.droplets.id",
+    "conditions": [
+        "and",
+        [
+            "droplet.droplets.id.image_type",
+            "equal",
+            "custom"
+        ]
+    ],
+    "id_suffix": "image_type"
+}
+

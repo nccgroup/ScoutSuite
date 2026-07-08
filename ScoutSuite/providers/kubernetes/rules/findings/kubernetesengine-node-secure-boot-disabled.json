@@ -1,0 +1,21 @@
+{
+    "description": "Nodes with Secure Boot Disabled",
+    "rationale": "The Secure Boot feature should be enabled for GKE cluster nodes in order to protect them against malware and rootkits. Secure Boot helps ensure that the system runs only authentic software by verifying the digital signature of all boot components, and halting the boot process if the signature verification fails.",
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes"
+    ],
+    "dashboard_name": "Clusters",
+    "display_path": "kubernetesengine.projects.id.clusters.id",
+    "path": "kubernetesengine.projects.id.clusters.id.node_pools.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.node_pools.id.secure_boot_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "secure_boot_enabled"
+}

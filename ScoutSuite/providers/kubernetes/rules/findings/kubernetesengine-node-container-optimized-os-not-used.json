@@ -1,0 +1,36 @@
+{
+    "description": "Lack of Container-Optimized OS Node Images",
+    "rationale": "It is recommended to use container-optimized OS images, as they provide improved support, security and stability.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "7.9"
+        },
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.5.1"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/container-optimized-os/docs/concepts/features-and-benefits",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/node-images"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.image_type",
+            "containNoneOf",
+            [
+                "COS",
+                "COS_CONTAINERD"
+            ]
+        ]
+    ],
+    "id_suffix": "container_optimized_os_not_used"
+}

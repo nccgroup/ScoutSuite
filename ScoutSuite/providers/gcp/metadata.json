@@ -59,6 +59,14 @@
         "subnetworks": {
           "cols": 2,
           "path": "services.computeengine.projects.id.regions.id.subnetworks"
+        },
+        "forwarding_rules": {
+          "cols": 2,
+          "path": "services.computeengine.projects.id.regions.id.forwarding_rules"
+        },
+        "global_forwarding_rules": {
+          "cols": 2,
+          "path": "services.computeengine.projects.id.global_forwarding_rules"
         }
       }
     },

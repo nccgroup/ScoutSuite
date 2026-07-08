@@ -1,0 +1,66 @@
+<script id="kubernetes_code_partial" type="text/x-handlebars-template">
+    {{! exclusively for json and yaml }}
+
+    {{#if code}}
+    <div class="list-group-item">
+        <h5>
+            {{title}}
+
+            {{#if hide}}
+            <a href="#{{escape_dots id_prefix}}" data-toggle="collapse" class="k8s-item-heading">
+                <span class="badge float-right btn-info">Details</span>
+            </a>
+            {{/if}}
+
+        </h5>
+
+        <div id="{{id_prefix}}"{{#if hide}} class="collapse"{{/if}}>
+            <div class="k8s-code-copy">
+                <a href="{{location_hash id_prefix}}" class="k8s-code-copy-text"
+                    id="{{id_prefix}}.copy"
+                    onclick="copyCode('{{id_prefix}}')"
+                >
+                    copy
+                </a>
+            </div>
+            <code>
+                <samp>
+                    <pre class="k8s-code-text" id="{{id_prefix}}.code">{{remove_whitespace code}}</pre>
+                </samp>
+            </code>
+        </div>
+    </div>
+    {{/if}}
+</script>
+
+<style>
+    .k8s-code-copy {
+        padding-bottom: 0.5rem;
+        width: 100%;
+        text-align: right;
+    }
+
+    .k8s-code-text {
+        padding: 0.5rem 1.5rem 1rem 1.5rem;
+        background-color: lightgray;
+        max-height: 32rem;
+        font-size: larger;
+    }
+</style>
+
+<script>
+    const copyCode = id => {
+        const element = document.getElementById(`${id}.code`)
+        navigator.clipboard.writeText(element.textContent)
+
+        for (const copy of document.querySelectorAll('.k8s-code-copy-text')) {
+            copy.textContent = 'copy'
+        }
+
+        const copy = document.getElementById(`${id}.copy`)
+        copy.textContent = 'copied'
+
+    }
+
+    Handlebars.registerPartial('kubernetes_code', $('#kubernetes_code_partial').html())
+</script>

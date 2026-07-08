@@ -1,0 +1,37 @@
+<script id="services.rbac.dangerous_grants.details.template" type="text/x-handlebars-template">
+    <div class="list-group" id="services.rbac.dangerous_grants.details">
+        <div class="list-group" id="services.rbac.dangerous_grants.view">
+            <div class="list-group">
+                {{#each items}}
+                    <div class="row list-group-item active">
+                        <h4>Who can {{ @key }}</h4>
+                    </div>
+                    <div class="row list-group-item">
+                        <table style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Verb</th>
+                                    <th>Resource</th>
+                                    <th>Namespace</th>
+                                    <th>Binding</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each this}}
+                                <tr>
+                                    <td>{{ kind }}/{{ name }}</td>
+                                    <td>{{ verb }}</td>
+                                    <td>{{ resource }}</td>
+                                    <td>{{ namespace }}</td>
+                                    <td>{{ binding_kind }}Binding/{{ binding_name }}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</script>

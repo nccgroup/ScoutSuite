@@ -147,6 +147,12 @@
                 "level": "danger"
             }
         ],
+        "cloudstorage-bucket-no-public-access-prevention.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudstorage-bucket-no-logging.json": [
             {
                 "enabled": true,
@@ -271,6 +277,18 @@
             }
         ],
         "computeengine-instance-with-deletion-protection-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-loadbalancer-forwarding-rule-forwards-sensitive-port.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-loadbalancer-global-forwarding-rule-forwards-sensitive-port.json": [
             {
                 "enabled": true,
                 "level": "warning"

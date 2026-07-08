@@ -1,0 +1,29 @@
+{
+    "description": "Resources without Defined Memory Limit",
+    "rationale": "Unset resource limits could result in service denial through resource exhaustion.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+    ],
+    "dashboard_name": "PodTemplates",
+    "display_path": "pod_template.v1.id",
+    "path": "pod_template.v1.resources.id.data.spec.template.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "pod_template.v1.resources.id.data.spec.template.spec.containers.id.resources.limits",
+            "null",
+            ""
+        ],
+        [
+            "pod_template.v1.resources.id.data.spec.template.spec.containers.id.resources.limits",
+            "withoutKey",
+            "memory"
+        ],
+        [
+            "pod_template.v1.resources.id.data.spec.template.spec.containers.id.resources.limits.memory",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "memory"
+}

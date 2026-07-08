@@ -1,0 +1,45 @@
+<script id="kubernetes_object_partial" type="text/x-handlebars-template">
+    {{! good for debugging }}
+
+    {{#if this}}
+
+    {{#ifType this 'object'}}
+    <ul>
+        {{#each this}}
+        <li class="list-group-item-text no-margin">
+            {{#if this}}
+            <b>{{@key}}:</b>
+                {{#ifType this 'object'}}
+                {{>kubernetes_object this}}
+                {{else}}
+                <pre class="k8s-section">{{remove_whitespace this}}</pre>
+                {{/ifType}}
+            {{else}}
+            <samp>null</samp>
+            {{/if}}
+        </li>
+        {{/each}}
+    </ul>
+    {{else}}
+        <pre class="k8s-section">{{remove_whitespace this}}</pre>
+    {{/ifType}}
+
+    {{else}}
+    <div>
+        <samp>null</samp>
+    </div>
+
+    {{/if}}
+
+    <style>
+        .k8s-section {
+            margin: 0;
+            padding: 1rem;
+            background-color: #f1f1f1;
+        }
+    </style>
+</script>
+
+<script>
+    Handlebars.registerPartial('kubernetes_object', $('#kubernetes_object_partial').html())
+</script>

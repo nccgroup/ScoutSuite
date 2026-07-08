@@ -10,6 +10,7 @@
         <div class="list-group-item-text item-margin">Public Traffic: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.public_traffic_allowed">{{convert_bool_to_enabled public_traffic_allowed }}</span></div>
         <div class="list-group-item-text item-margin">HTTPS Required: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.https_traffic_enabled">{{convert_bool_to_enabled https_traffic_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Microsoft Trusted Services: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.trusted_microsoft_services_enabled">{{convert_bool_to_enabled trusted_microsoft_services_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Access Key Usage: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.shared_key_access_allowed">{{convert_bool_to_enabled shared_key_access_allowed}}</span></div>
         <div class="list-group-item-text item-margin">Last Access Key Rotation:
             <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.access_keys_rotated">
                 {{#if access_keys_last_rotation_date }}

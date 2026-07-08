@@ -15,8 +15,8 @@
         }
     ],
     "references": [
-        "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
-        "https://docs.microsoft.com/en-us/azure/security-center/security-center-alerts-overview"
+        "https://learn.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
+        "https://learn.microsoft.com/en-us/azure/security-center/security-center-alerts-overview"
     ],
     "dashboard_name": "Pricings",
     "display_path": "securitycenter.subscriptions.id.pricings.id",

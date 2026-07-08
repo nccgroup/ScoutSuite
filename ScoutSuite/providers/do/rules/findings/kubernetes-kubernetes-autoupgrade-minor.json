@@ -1,0 +1,17 @@
+{
+    "description": "Auto-Upgrade Minor Version Patches Disabled",
+    "rationale": "Enabling auto-upgrade for minor version patches in Kubernetes on Digital Ocean enhances security by automatically applying the latest security patches and bug fixes, ensuring that the system is protected against vulnerabilities without upgrading to a new minor version.",
+    "dashboard_name": "Kubernetes",
+    "path": "kubernetes.kubernetes.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetes.kubernetes.id.auto_upgrade",
+            "equal",
+            "False"
+        ]
+    ],
+    "id_suffix": "auto_upgrade"
+}
+
+

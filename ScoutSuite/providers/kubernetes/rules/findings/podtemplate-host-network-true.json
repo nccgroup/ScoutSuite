@@ -1,0 +1,24 @@
+{
+    "description": "PodTemplates Using Host Networking",
+    "rationale": "A compromised pod with hostNetwork set to true in PodSpec can be used as a pivot to the host network.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/policy/pod-security-policy/"
+    ],
+    "dashboard_name": "PodTemplates",
+    "display_path": "pod_template.v1.id",
+    "path": "pod_template.v1.resources.id.data.spec.template.spec",
+    "conditions": [
+        "and",
+        [
+            "pod_template.v1.resources.id.data.spec.template.spec",
+            "withKey",
+            "host_network"
+        ],
+        [
+            "pod_template.v1.resources.id.data.spec.template.spec.host_network",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "host_network"
+}

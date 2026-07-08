@@ -1,0 +1,20 @@
+{
+    "description": "Mysql Database cluster publically exposed",
+    "rationale": "Typically, only the application servers should be allowed to connect to the database cluster.",
+    "dashboard_name": "Databases",
+    "path": "database.databases.id",
+    "conditions": [
+        "and",
+        [
+            "database.databases.id.trusted_sources",
+            "equal",
+            "False"
+        ],
+        [
+            "database.databases.id.engine",
+            "equal",
+            "mysql"
+        ]
+    ],
+    "id_suffix": "trusted_sources"
+}

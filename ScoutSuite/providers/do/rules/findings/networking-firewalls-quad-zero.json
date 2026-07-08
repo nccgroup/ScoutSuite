@@ -1,0 +1,15 @@
+{
+    "description": "Firewalls with quad zero configuration",
+    "rationale": "Firewalls with quad zero configuration expose all ports to public internet",
+    "dashboard_name": "Networking",
+    "path": "networking.firewalls.id",
+    "conditions": [
+        "and",
+        [
+            "networking.firewalls.id.all_ports_exposed",
+            "equal",
+            "True"
+        ]
+    ],
+    "id_suffix": "all_ports_exposed"
+}

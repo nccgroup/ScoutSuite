@@ -1,0 +1,29 @@
+{
+    "description": "Resources without Defined CPU Limit",
+    "rationale": "Unset resource limits could result in service denial through resource exhaustion.",
+    "references": [
+        "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+    ],
+    "dashboard_name": "Pods",
+    "display_path": "pod.v1.id",
+    "path": "pod.v1.resources.id.data.spec.containers.id",
+    "conditions": [
+        "or",
+        [
+            "pod.v1.resources.id.data.spec.containers.id.resources.limits",
+            "null",
+            ""
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.resources.limits",
+            "withoutKey",
+            "cpu"
+        ],
+        [
+            "pod.v1.resources.id.data.spec.containers.id.resources.limits.cpu",
+            "null",
+            ""
+        ]
+    ],
+    "id_suffix": "cpu"
+}

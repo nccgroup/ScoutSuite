@@ -22,7 +22,7 @@
         ],
         [
             "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal",
-            "withKey",
+            "withKeyCaseInsensitive",
             "AWS"
         ],
         [

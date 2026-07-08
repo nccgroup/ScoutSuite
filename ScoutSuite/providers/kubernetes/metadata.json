@@ -1,0 +1,81 @@
+{
+  "_scout_suite_aggregation": {
+    "rbac": {
+      "resources": {},
+      "summaries": {
+        "dangerous_grants": {
+          "path": "services.rbac.dangerous_grants"
+        },
+        "dodgy_subjects": {
+          "path": "services.rbac.dodgy_subjects"
+        },
+        "permissive_bindings": {
+          "path": "services.rbac.permissive_bindings"
+        }
+      }
+    },
+    "workload": {
+      "resources": {},
+      "summaries": {
+        "images": {
+          "path": "services.workload.images"
+        }
+      }
+    }
+  },
+  "a": {
+    "loggingmonitoring": {
+      "resources": {
+        "diagnostic_settings": {
+          "path": "services.loggingmonitoring.subscriptions.id.diagnostic_settings"
+        },
+        "log_alerts": {
+          "path": "services.loggingmonitoring.subscriptions.id.log_alerts"
+        },
+        "log_profiles": {
+          "path": "services.loggingmonitoring.subscriptions.id.log_profiles"
+        },
+        "resources_logging": {
+          "path": "services.loggingmonitoring.subscriptions.id.resources_logging"
+        }
+      }
+    }
+  },
+  "e": {
+    "eks": {
+      "resources": {
+        "encryption": {
+          "path": "services.eks.encryption"
+        },
+        "logging": {
+          "path": "services.eks.logging"
+        },
+        "v_p_c": {
+          "path": "services.eks.v_p_c"
+        }
+      }
+    }
+  },
+  "g": {
+    "kubernetesengine": {
+      "resources": {
+        "clusters": {
+          "path": "services.kubernetesengine.projects.id.clusters"
+        },
+        "node_pools": {
+          "path": "services.kubernetesengine.projects.id.node_pools"
+        }
+      }
+    }
+  },
+  "v": {
+    "version": {
+      "resources": {
+        "details": {
+          "cols": 1,
+          "path": "services.version.details"
+        }
+      }
+    }
+  }
+}

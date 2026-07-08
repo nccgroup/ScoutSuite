@@ -29,13 +29,13 @@ apt-get install -qy \
   less \
   lsb-release \
   nano \
-  python3 \
-  python3-pip \
+  # python3 \
+  # python3-pip \
   tzdata \
   unzip \
   vim \
-  virtualenv \
-  virtualenvwrapper \
+  # virtualenv \
+  # virtualenvwrapper \
   wget
 
 echo -e "\n\nSoftware Pre-reqs Installation Complete!\n\n"

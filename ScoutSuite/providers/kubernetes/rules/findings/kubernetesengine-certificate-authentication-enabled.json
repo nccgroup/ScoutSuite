@@ -1,0 +1,27 @@
+{
+    "description": "Certificate Authentication Enabled",
+    "rationale": "Unless applications use the client certificate authentication method, it should be disabled.",
+    "compliance": [
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.8.2"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#restrict_authn_methods",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#evaluation_on"
+    ],
+    "dashboard_name": "Clusters",
+    "path": "kubernetesengine.projects.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.clusters.id.client_certificate_enabled",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "client_certificate_enabled"
+}
