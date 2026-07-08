@@ -1,6 +1,9 @@
+import time
+
 import boto3
 from botocore.exceptions import ClientError
 
+from ScoutSuite.core.console import print_debug
 from ScoutSuite.core.conditions import print_exception
 from ScoutSuite.providers.utils import run_concurrently
 
@@ -71,7 +74,6 @@ class AWSFacadeUtils:
         resources = {entity: [] for entity in entities}
 
         throttle_counter = 0
-        #ec2_throttle = (service == 'ec2')
 
         # There's an API call hidden behind each iteration:
         for page in paginator:
@@ -81,7 +83,9 @@ class AWSFacadeUtils:
 
                 # AWS token refills at 20 per second, allow to recover. 12 based off of 20 and magic ratio
                 if throttle_counter % 12 == 0:
-                    print_debug(f'Hit {service} count threshold for proactive API limiting. Throttle counter:              {throttle_counter}')
+                    print_debug(
+                        f'Hit {service} count threshold for proactive API limiting. '
+                        f'Throttle counter: {throttle_counter}')
                     time.sleep(10)
 
         return resources
