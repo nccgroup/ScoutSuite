@@ -6,6 +6,11 @@ cherrypy>=18.1.0
 cherrypy-cors>=1.6
 coloredlogs<=10.0
 asyncio-throttle==0.1.1
+# Needed at runtime on modern Python: several pinned Google client
+# packages still import pkg_resources (provided by setuptools<82).
+# Python 3.12+ venvs no longer ship setuptools by default; setuptools
+# 82+ removed pkg_resources entirely (see issue #1728).
+setuptools>=65.0.0,<82
 
 # AWS Provider
 botocore>=1.20.21
