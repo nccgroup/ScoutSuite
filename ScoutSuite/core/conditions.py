@@ -227,7 +227,7 @@ def pass_condition(b, test, a):
                     if bottom_limit_port <= port <= upper_limit_port:
                         result = True
                         break
-            else: #A single port
+            else:  # A single port
                 for port in a:
                     if port == port_range:
                         result = True

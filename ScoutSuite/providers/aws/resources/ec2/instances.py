@@ -37,7 +37,7 @@ class EC2Instances(AWSResources):
         if "IamInstanceProfile" in raw_instance:
             instance['iam_instance_profile_id'] = raw_instance['IamInstanceProfile']['Id']
             instance['iam_instance_profile_arn'] = raw_instance['IamInstanceProfile']['Arn']
-        
+
         instance['network_interfaces'] = {}
         for eni in raw_instance['NetworkInterfaces']:
             nic = {}

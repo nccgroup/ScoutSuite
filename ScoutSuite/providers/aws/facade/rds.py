@@ -7,7 +7,6 @@ from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
-from ScoutSuite.core.console import print_exception
 
 
 class RDSFacade(AWSBaseFacade):
@@ -43,13 +42,12 @@ class RDSFacade(AWSBaseFacade):
             await get_and_set_concurrently(
                 [self._get_and_set_instance_clusters, self._get_and_set_instance_tags], self._instances_cache[region], region=region)
 
-
     async def _get_and_set_instance_tags(self, instance: {}, region: str):
         client = AWSFacadeUtils.get_client('rds', self.session, region)
         account_id = get_aws_account_id(self.session)
         try:
             instance_tagset = await run_concurrently(lambda: client.list_tags_for_resource(
-                ResourceName="arn:aws:rds:"+region+":"+account_id+":db:"+instance['DBInstanceIdentifier']))
+                ResourceName="arn:aws:rds:" + region + ":" + account_id + ":db:" + instance['DBInstanceIdentifier']))
             instance['Tags'] = {x['Key']: x['Value'] for x in instance_tagset['TagList']}
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchTagSet':
@@ -144,7 +142,7 @@ class RDSFacade(AWSBaseFacade):
 
             self._subnet_groups_cache[region] = await AWSFacadeUtils.get_all_pages(
                 'rds', region, self.session, 'describe_db_subnet_groups', 'DBSubnetGroups')
-                
+
     async def get_parameter_groups(self, region: str):
         try:
             parameter_groups = await AWSFacadeUtils.get_all_pages(
@@ -172,7 +170,7 @@ class RDSFacade(AWSBaseFacade):
         except Exception as e:
             print_exception(f'Failed fetching DB parameters for {name}: {e}')
 
-    async def get_security_groups(self, region: str) :
+    async def get_security_groups(self, region: str):
         try:
             return await AWSFacadeUtils.get_all_pages(
                 'rds', region, self.session, 'describe_db_security_groups', 'DBSecurityGroups')

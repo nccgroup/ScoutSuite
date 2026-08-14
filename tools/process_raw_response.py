@@ -2,7 +2,6 @@
 
 import argparse
 import json
-import datetime
 import re
 from ast import literal_eval
 
@@ -11,7 +10,7 @@ first_cap_re = re.compile('(.)([A-Z][a-z]+)')
 all_cap_re = re.compile('([a-z0-9])([A-Z])')
 
 html_boilerplate = \
-"""<!-- {} {}s -->
+    """<!-- {} {}s -->
 <script id="services.{}{}.{}s.partial" type="text/x-handlebars-template">
     <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{{{name}}}}</h4>
@@ -48,7 +47,8 @@ if __name__ == "__main__":
     parser.add_argument('-p', '--provider', required=True, help="The cloud provider (e.g. \"aws\")")
     parser.add_argument('-s', '--service', required=True, help="The response's service (e.g. \"iam\")")
     parser.add_argument('-n', '--name', required=True, help="The response object's name (e.g. \"user\")")
-    parser.add_argument('-a', '--additional-path', required=False, help="Additional path values(e.g. \"vpc\", \"subscriptions\')")
+    parser.add_argument('-a', '--additional-path', required=False,
+                        help="Additional path values(e.g. \"vpc\", \"subscriptions\')")
     parser.add_argument('-v', '--value', required=True, help="The raw response")
     args = parser.parse_args()
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     if args.provider == 'aws':
         object_format = 'raw_{}.get(\'{}\')'
         cleaned_value = args.value.replace('<class \'dict\'>: ', '')
-        cleaned_value = args.value.replace('\}', '}')
+        cleaned_value = args.value.replace(r'\}', '}')
         cleaned_value = cleaned_value.replace(", tzinfo=tzlocal()", "")
         cleaned_value = cleaned_value.replace(", tzinfo=tzutc()", "")
         object_value_dict = eval(cleaned_value)

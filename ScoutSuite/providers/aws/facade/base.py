@@ -70,7 +70,7 @@ class AWSFacade(AWSBaseFacade):
         try:
             available_services = await run_concurrently(
                 lambda: Session(region_name='us-east-1').get_available_services())
-        except Exception as e:
+        except Exception:
             # see https://github.com/nccgroup/ScoutSuite/issues/548
             # If failed with the us-east-1 region, we'll try to use the region from the profile
             try:
@@ -117,7 +117,7 @@ class AWSFacade(AWSBaseFacade):
                     lambda: Session(region_name='us-east-1').get_available_regions("cognito-identity",
                                                                                    partition_name))
                 regions = [value for value in idp_regions if value in identity_regions]
-        except Exception as e:
+        except Exception:
             # see https://github.com/nccgroup/ScoutSuite/issues/548
             # If failed with the us-east-1 region, we'll try to use the region from the profile
             try:
@@ -193,15 +193,15 @@ class AWSFacade(AWSBaseFacade):
         try:
             ec2_not_opted_in_regions = self.session.client('ec2', 'us-east-1') \
                 .describe_regions(AllRegions=True, Filters=[{'Name': 'opt-in-status', 'Values': ['not-opted-in']}])
-        except Exception as e:
+        except Exception:
             # see https://github.com/nccgroup/ScoutSuite/issues/548
             # If failed with the us-east-1 region, we'll try to use the region from the profile
             try:
                 ec2_not_opted_in_regions = \
                     self.session.client('ec2', self.session.region_name). \
-                        describe_regions(AllRegions=True,
-                                         Filters=[{'Name': 'opt-in-status',
-                                                   'Values': ['not-opted-in']}])
+                    describe_regions(AllRegions=True,
+                                     Filters=[{'Name': 'opt-in-status',
+                                               'Values': ['not-opted-in']}])
             except Exception as e:
                 # see https://github.com/nccgroup/ScoutSuite/issues/685
                 # If above failed, and regions were explicitly specified, will try with those until

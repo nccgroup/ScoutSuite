@@ -24,4 +24,3 @@ class Groups(AzureResources):
         group_dict['roles'] = []  # this will be filled in `finalize()`
 
         return group_dict['id'], group_dict
-

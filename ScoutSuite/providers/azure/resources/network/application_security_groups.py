@@ -22,7 +22,8 @@ class ApplicationSecurityGroups(AzureResources):
         application_security_group_dict['type'] = raw_application_security_group.type
         application_security_group_dict['location'] = raw_application_security_group.location
         if raw_application_security_group.tags is not None:
-            application_security_group_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_application_security_group.tags.items()]
+            application_security_group_dict['tags'] = ["{}:{}".format(
+                key, value) for key, value in raw_application_security_group.tags.items()]
         else:
             application_security_group_dict['tags'] = []
         application_security_group_dict['resource_group_name'] = get_resource_group_name(raw_application_security_group.id)

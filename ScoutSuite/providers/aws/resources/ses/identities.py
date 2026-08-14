@@ -33,7 +33,7 @@ class Identities(AWSCompositeResources):
         identity['DkimEnabled'] = dkim_attributes['DkimEnabled']
         identity['DkimVerificationStatus'] = dkim_attributes['DkimVerificationStatus']
         identity['arn'] = 'arn:aws:ses:{}:{}:identity/{}'.format(self.region,
-                                                                             self.facade.owner_id,
-                                                                             identity_name)
+                                                                 self.facade.owner_id,
+                                                                 identity_name)
 
         return get_non_provider_id(identity_name), identity

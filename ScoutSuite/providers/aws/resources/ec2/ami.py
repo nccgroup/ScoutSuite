@@ -17,6 +17,6 @@ class AmazonMachineImages(AWSResources):
         raw_image['id'] = raw_image.get('ImageId')
         raw_image['name'] = raw_image.get('Name')
         raw_image['arn'] = 'arn:aws:ec2:{}:{}:ami/{}'.format(self.region,
-                                                            raw_image.get('OwnerId'),
-                                                            raw_image.get('ImageId'))
+                                                             raw_image.get('OwnerId'),
+                                                             raw_image.get('ImageId'))
         return raw_image['id'], raw_image

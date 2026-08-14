@@ -7,4 +7,3 @@ class StorageAccounts(Subscriptions):
     _children = [
         (StorageAccounts, 'storage_accounts')
     ]
-

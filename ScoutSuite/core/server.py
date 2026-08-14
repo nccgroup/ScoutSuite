@@ -12,6 +12,7 @@ class Server:
     Boots a server that serves the result of the report for the user. This is still a proof of concept,
     but will eventually be used to serve data when it exceeds 400mb.
     """
+
     def __init__(self, filename):
         """
         Constructor of the server object. Should not be called directly outside the class.
@@ -130,8 +131,8 @@ class Server:
             },
         }
         cherrypy.config.update({
-                'server.socket_host': host,
-                'server.socket_port': port,
+            'server.socket_host': host,
+            'server.socket_port': port,
         })
         cherrypy.quickstart(Server(database_filename), "/api", config=config)
 
@@ -173,4 +174,3 @@ class Server:
             elif isinstance(v, list):
                 result[k] = {'type': 'list', 'length': len(v)}
         return result
-

@@ -25,8 +25,8 @@ class RDSInstances(AWSResources):
 
         instance['is_read_replica'] = self._is_read_replica(raw_instance)
         instance['arn'] = 'arn:aws:rds:{}:{}:instance/{}'.format(self.region,
-                                                                           self.facade.owner_id,
-                                                                           raw_instance.get('DbiResourceId'))
+                                                                 self.facade.owner_id,
+                                                                 raw_instance.get('DbiResourceId'))
         return instance['name'], instance
 
     @staticmethod

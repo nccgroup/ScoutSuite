@@ -6,7 +6,7 @@ class Users(AWSResources):
         raw_users = await self.facade.iam.get_users()
         for raw_user in raw_users:
             name, resource = self._parse_user(raw_user)
-              
+
             if name in self:
                 continue
 

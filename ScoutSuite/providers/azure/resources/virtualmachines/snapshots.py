@@ -41,4 +41,3 @@ class Snapshots(AzureResources):
             snapshot_dict['encryption_type'] = None
 
         return snapshot_dict['id'], snapshot_dict
-

@@ -1,6 +1,5 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.aws.utils import get_name
 
 
 class FlowLogs(AWSResources):
@@ -31,4 +30,3 @@ class FlowLogs(AWSResources):
         flow_log_dict['tags'] = raw_flow_log.get('Tags')
         flow_log_dict['max_aggregation_interval'] = raw_flow_log.get('MaxAggregationInterval')
         return flow_log_dict['id'], flow_log_dict
-

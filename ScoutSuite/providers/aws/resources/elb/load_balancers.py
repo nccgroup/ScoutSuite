@@ -29,9 +29,9 @@ class LoadBalancers(AWSResources):
             load_balancer['security_groups'].append({'GroupId': sg})
 
         load_balancer['listeners'] = {}
-        for l in raw_load_balancer['ListenerDescriptions']:
-            listener = l['Listener']
-            load_balancer['listeners'][l['Listener']
+        for listener_description in raw_load_balancer['ListenerDescriptions']:
+            listener = listener_description['Listener']
+            load_balancer['listeners'][listener_description['Listener']
                                        ['LoadBalancerPort']] = listener
 
         load_balancer['instances'] = []

@@ -12,7 +12,7 @@ class AADFacade:
 
     def get_client(self):
         client = GraphRbacManagementClient(self.credentials.get_credentials('aad_graph'),
-                                         tenant_id=self.credentials.get_tenant_id())
+                                           tenant_id=self.credentials.get_tenant_id())
         client._client.config.add_user_agent(get_user_agent())
         return client
 
@@ -48,7 +48,7 @@ class AADFacade:
             return await run_concurrently(lambda: list(
                 self.get_client().users.get_member_groups(object_id=user_id,
                                                           security_enabled_only=False))
-                                          )
+            )
         except Exception as e:
             print_exception(f'Failed to retrieve user\'s groups: {e}')
             return []

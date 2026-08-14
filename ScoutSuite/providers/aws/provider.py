@@ -41,7 +41,7 @@ class AWSProvider(BaseProvider):
         self.account_id = get_aws_account_id(self.credentials.session)
 
         super().__init__(report_dir, timestamp,
-                                          services, skipped_services, result_format)
+                         services, skipped_services, result_format)
 
     def get_report_name(self):
         """
@@ -79,7 +79,7 @@ class AWSProvider(BaseProvider):
 
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
-        
+
         if 'awslambda' in self.service_list and 'iam' in self.service_list:
             self._match_lambdas_and_roles()
 
@@ -143,7 +143,7 @@ class AWSProvider(BaseProvider):
                             group_id = elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
                                 'GroupId']
                             if 'GroupId' in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][
-                                i] and group_id == sg:
+                                    i] and group_id == sg:
                                 elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] = \
                                     ec2_config['regions'][region]['vpcs'][vpc]['security_groups'][sg]
                                 elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
@@ -189,7 +189,7 @@ class AWSProvider(BaseProvider):
                 target.append(sg_id)
             else:
                 target = current_path[:(
-                        current_path.index('security_groups') + 1)]
+                    current_path.index('security_groups') + 1)]
                 target.append(sg_id)
             ec2_grant['GroupName'] = get_value_at(self.services['ec2'], target, 'name')
         elif 'PeeringStatus' in ec2_grant:
@@ -314,7 +314,7 @@ class AWSProvider(BaseProvider):
                             # For notresource statements, we must fetch the policy document to determine which
                             # buckets are not protected
                             if 'NotResource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                allowed_iam_entity]:
+                                    allowed_iam_entity]:
                                 for full_path in (x for x in
                                                   iam_info['permissions']['Action'][action][iam_entity]['Allow'][
                                                       allowed_iam_entity]['NotResource'] if
@@ -396,7 +396,7 @@ class AWSProvider(BaseProvider):
     def match_network_acls_and_subnets_callback(self, current_config, path, current_path, acl_id, callback_args):
         for association in current_config['Associations']:
             subnet_path = current_path[:-1] + \
-                          ['subnets', association['SubnetId']]
+                ['subnets', association['SubnetId']]
             subnet = get_object_at(self, subnet_path)
             subnet['network_acl'] = acl_id
 
@@ -451,13 +451,14 @@ class AWSProvider(BaseProvider):
                 iam_config['roles'][role_id]['awslambdas_count'] = 0
                 if iam_config['roles'][role_id]['arn'] in awslambda_funtions:
                     iam_config['roles'][role_id]['awslambdas'] = awslambda_funtions[iam_config['roles'][role_id]['arn']]
-                    iam_config['roles'][role_id]['awslambdas_count'] = len(awslambda_funtions[iam_config['roles'][role_id]['arn']])
+                    iam_config['roles'][role_id]['awslambdas_count'] = len(
+                        awslambda_funtions[iam_config['roles'][role_id]['arn']])
 
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
         # Create a list of peering connection IDs in each VPC
         info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo'][
-                                        'OwnerId'] == self.account_id else 'RequesterVpcInfo'
+            'OwnerId'] == self.account_id else 'RequesterVpcInfo'
         region = current_path[current_path.index('regions') + 1]
         vpc_id = current_config[info]['VpcId']
         if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
@@ -532,7 +533,7 @@ class AWSProvider(BaseProvider):
                 try:
                     sg_attribute = get_object_at(
                         resource, callback_args['sg_list_attribute_name'])
-                except Exception as e:
+                except Exception:
                     return
                 if type(sg_attribute) != list:
                     sg_attribute = [sg_attribute]
@@ -546,7 +547,7 @@ class AWSProvider(BaseProvider):
                         sg_base_path = copy.deepcopy(current_path[0:4])
                         sg_base_path[1] = 'ec2'
                         sg_base_path = sg_base_path + \
-                                       ['vpcs', vpc_id, 'security_groups']
+                            ['vpcs', vpc_id, 'security_groups']
                     else:
                         sg_base_path = copy.deepcopy(current_path[0:6])
                         sg_base_path[1] = 'ec2'
@@ -664,7 +665,7 @@ class AWSProvider(BaseProvider):
         service_config = self.services[service]
         manage_dictionary(service_config, 'external_attack_surface', {})
         if (service == 'redshift' or service == 'rds') and 'PubliclyAccessible' in current_config and current_config[
-            'PubliclyAccessible']:
+                'PubliclyAccessible']:
             public_dns = current_config['Endpoint']['Address']
             listeners = [current_config['Endpoint']['Port']]
             security_groups = current_config['VpcSecurityGroups']
@@ -725,7 +726,6 @@ class AWSProvider(BaseProvider):
                                           security_groups, listeners=None):
         listeners = [] if listeners is None else listeners
         manage_dictionary(attack_surface_config, public_ip, {'protocols': {}})
-        instance_path = current_path[:-3]
         if 'ec2' in self.service_list:  # validate that the service was included in run
             for sg_id in security_groups:
                 sg_path = copy.deepcopy(current_path[0:6])

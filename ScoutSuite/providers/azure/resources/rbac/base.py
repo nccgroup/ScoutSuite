@@ -20,4 +20,3 @@ class RBAC(Subscriptions):
                 if role_assignment['principal_type'] == 'User':
                     user_set.add(role_assignment['principal_id'])
         return list(user_set)
-

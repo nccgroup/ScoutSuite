@@ -23,7 +23,7 @@ class Vaults(AzureResources):
         vault['location'] = raw_vault.location
         vault['additional_properties'] = raw_vault.additional_properties
         if raw_vault.tags is not None:
-            vault['tags'] = ["{}:{}".format(key, value) for key, value in  raw_vault.tags.items()]
+            vault['tags'] = ["{}:{}".format(key, value) for key, value in raw_vault.tags.items()]
         else:
             vault['tags'] = []
         vault['resource_group_name'] = get_resource_group_name(raw_vault.id)

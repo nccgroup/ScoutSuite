@@ -111,27 +111,27 @@ class AWSServicesConfig(BaseServicesConfig):
         # Instantiate proprietary services
         try:
             self.cognito = Cognito(facade)
-        except NameError as _:
+        except NameError:
             pass
         try:
             self.docdb = DocDB(facade)
-        except NameError as _:
+        except NameError:
             pass
         try:
             self.ecr = ECR(facade)
-        except NameError as _:
+        except NameError:
             pass
         try:
             self.ecs = ECS(facade)
-        except NameError as _:
+        except NameError:
             pass
         try:
             self.eks = EKS(facade)
-        except NameError as _:
+        except NameError:
             pass
         try:
             self.guardduty = GuardDuty(facade)
-        except NameError as _:
+        except NameError:
             pass
 
     def _is_provider(self, provider_name):

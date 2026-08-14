@@ -26,7 +26,7 @@ class EC2(Regions):
                 sum([len(vpc['security_groups']) for vpc in self['regions'][region]['vpcs'].values()])
             self['regions'][region]['network_interfaces_count'] =\
                 sum([len(vpc['network_interfaces']) for vpc in self['regions'][region]['vpcs'].values()])
-        
+
         self['instances_count'] =\
             sum([region['instances_count'] for region in self['regions'].values()])
         self['security_groups_count'] =\

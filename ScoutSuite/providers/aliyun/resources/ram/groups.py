@@ -27,4 +27,3 @@ class Groups(AliyunResources):
             })
 
         return group_dict['id'], group_dict
-

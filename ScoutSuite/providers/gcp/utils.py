@@ -1,5 +1,6 @@
 from ScoutSuite.core.console import print_exception
 
+
 def is_throttled(e):
     """
     Determines whether the exception is due to API throttling.

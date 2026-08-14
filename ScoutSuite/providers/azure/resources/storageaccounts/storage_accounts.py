@@ -44,7 +44,7 @@ class StorageAccounts(AzureCompositeResources):
         storage_account['access_keys_last_rotation_date'] = \
             self._parse_access_keys_last_rotation_date(raw_storage_account.activity_logs)
         if raw_storage_account.tags is not None:
-            storage_account['tags'] = ["{}:{}".format(key, value) for key, value in  raw_storage_account.tags.items()]
+            storage_account['tags'] = ["{}:{}".format(key, value) for key, value in raw_storage_account.tags.items()]
         else:
             storage_account['tags'] = []
 

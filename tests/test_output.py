@@ -5,6 +5,8 @@ from ScoutSuite.output.utils import *
 #
 # Test methods for ScoutSuite/output
 #
+
+
 class TestScoutOutput(unittest.TestCase):
 
     ########################################

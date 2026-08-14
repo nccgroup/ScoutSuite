@@ -33,7 +33,7 @@ class GKEFacade(GCPBaseFacade):
             print_exception('Failed to retrieve cluster private IP Google access config: {}'.format(e))
             cluster['privateIpGoogleAccess'] = None
 
-    # The cluster location is given as <region>-<zone>. See the the following link for more info: 
+    # The cluster location is given as <region>-<zone>. See the the following link for more info:
     # https://cloud.google.com/compute/docs/regions-zones/#identifying_a_region_or_zone
     def _get_cluster_region(self, cluster):
         region_regex = re.compile("(.+)-[^-]+")

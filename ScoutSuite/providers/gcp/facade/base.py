@@ -38,7 +38,7 @@ class GCPFacade(GCPBaseFacade):
         # Instantiate facades for proprietary services
         try:
             self.gke = GKEFacade(self.gce)
-        except NameError as _:
+        except NameError:
             pass
 
     async def get_projects(self):

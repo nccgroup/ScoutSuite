@@ -19,7 +19,7 @@ class Stacks(AWSResources):
         raw_stack['id'] = raw_stack.pop('StackId')
         raw_stack['name'] = raw_stack.pop('StackName')
         raw_stack['drifted'] = raw_stack.pop('DriftInformation')[
-                                   'StackDriftStatus'] == 'DRIFTED'
+            'StackDriftStatus'] == 'DRIFTED'
         raw_stack['termination_protection'] = raw_stack['EnableTerminationProtection']
         raw_stack['arn'] = raw_stack['id']
         raw_stack['notificationARNs'] = raw_stack['NotificationARNs']

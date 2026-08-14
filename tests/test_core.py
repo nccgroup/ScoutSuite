@@ -1,12 +1,13 @@
 
 import unittest
-from ScoutSuite.core.conditions import pass_condition
 from ScoutSuite.core.cli_parser import *
 from ScoutSuite.core.console import prompt, prompt_overwrite, prompt_value
 
 #
 # Test methods for ScoutSuite/core
 #
+
+
 class TestScoutCore(unittest.TestCase):
 
     ########################################
@@ -20,7 +21,8 @@ class TestScoutCore(unittest.TestCase):
         assert (test_arguments.subparsers._choices_actions[1].help == 'Run Scout against a Google Cloud Platform account')
         assert (test_arguments.subparsers._choices_actions[2].help == 'Run Scout against a Microsoft Azure account')
         assert (test_arguments.subparsers._choices_actions[3].help == 'Run Scout against an Alibaba Cloud account')
-        assert (test_arguments.subparsers._choices_actions[4].help == 'Run Scout against an Oracle Cloud Infrastructure account')
+        assert (test_arguments.subparsers._choices_actions[4].help ==
+                'Run Scout against an Oracle Cloud Infrastructure account')
 
     ########################################
     # console.py
@@ -35,4 +37,5 @@ class TestScoutCore(unittest.TestCase):
 
     def test_prompt_value(self):
         assert (prompt_value(question='', max_laps=1, test_input='test', is_question=True, choices=['test']) is None)
-        assert (prompt_value(question='', max_laps=1, test_input='test', is_question=True, choices=['test'], no_confirm=True) == 'test')
+        assert (prompt_value(question='', max_laps=1, test_input='test',
+                is_question=True, choices=['test'], no_confirm=True) == 'test')

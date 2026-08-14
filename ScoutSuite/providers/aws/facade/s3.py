@@ -187,7 +187,7 @@ class S3Facade(AWSBaseFacade):
         try:
             bucket_public_access_block_conf = await run_concurrently(lambda: client.get_public_access_block(Bucket=bucket['Name']))
             bucket['public_access_block_configuration'] = bucket_public_access_block_conf['PublicAccessBlockConfiguration']
-        except ClientError as e:
+        except ClientError:
             # No such configuration found for the bucket, nothing to be done
             pass
         except Exception as e:

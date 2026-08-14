@@ -39,7 +39,6 @@ class TestScoutRulesProcessingEngine(unittest.TestCase):
         print('Processed rules: %d' % self.rule_counters['tested'])
         print('Verified  rules: %d' % self.rule_counters['verified'])
 
-
     def _test_rule(self, ruleset_file_name, rule_file_name, rule):
         test_config_file_name = os.path.join(self.test_dir, 'data/rule-configs/%s' % rule_file_name)
         if not os.path.isfile(test_config_file_name):

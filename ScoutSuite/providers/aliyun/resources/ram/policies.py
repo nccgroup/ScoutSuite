@@ -37,7 +37,7 @@ class Policies(AliyunResources):
             policy_dict['policy_document'] = policy_version
 
             policy_entities = await self.facade.ram.get_policy_entities(policy_dict['name'],
-                                                                      policy_dict['type'])
+                                                                        policy_dict['type'])
             policy_dict['entities'] = {}
             if policy_entities['Users']['User']:
                 policy_dict['entities']['users'] = []

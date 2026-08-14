@@ -19,5 +19,3 @@ class Roles(AliyunResources):
         role_dict['description'] = raw_role.get('Description')
         role_dict['arn'] = raw_role.get('Arn')
         return role_dict['id'], role_dict
-
-

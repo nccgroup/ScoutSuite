@@ -30,7 +30,7 @@ class ScoutJsonEncoder(json.JSONEncoder):
                 if hasattr(o, 'services_config'):
                     del o.services_config
                 return vars(o)
-        except Exception as e:
+        except Exception:
             return str(o)
 
 
@@ -113,7 +113,7 @@ class JavaScriptEncoder(ScoutResultEncoder):
                     print('%s' % first_line, file=f)
                 print('%s' % json.dumps(content, indent=4 if debug else None, separators=(',', ': '), sort_keys=True,
                                         cls=ScoutJsonEncoder), file=f)
-        except AttributeError as e:
+        except AttributeError:
             # __open_file returned None
             pass
         except Exception as e:

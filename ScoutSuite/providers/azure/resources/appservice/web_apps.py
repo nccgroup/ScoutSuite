@@ -24,7 +24,7 @@ class WebApplication(AzureResources):
         web_app_dict['location'] = raw_web_app.location
         web_app_dict['type'] = raw_web_app.type
         if raw_web_app.tags is not None:
-            web_app_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_web_app.tags.items()]
+            web_app_dict['tags'] = ["{}:{}".format(key, value) for key, value in raw_web_app.tags.items()]
         else:
             web_app_dict['tags'] = []
         web_app_dict['resource_group_name'] = get_resource_group_name(raw_web_app.id)

@@ -11,7 +11,7 @@ class NodePools(Resources):
         for raw_node_pool in raw_node_pools:
             node_pool_id, node_pool = self._parse_node_pool(raw_node_pool)
             self[node_pool_id] = node_pool
-        # We need self.cluster to get the node pools, but we do 
+        # We need self.cluster to get the node pools, but we do
         # not want to have it in the generated JSON.
         del self.cluster
 

@@ -60,4 +60,3 @@ class DynamoDBFacade(AWSBaseFacade):
             table['tags'] = tags.get('Tags')
         except Exception as e:
             print_exception('Failed to describe DynamoDB table tags: {}'.format(e))
-

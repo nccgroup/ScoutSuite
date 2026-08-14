@@ -3,7 +3,6 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 
-from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 class Instances(AzureResources):
 
@@ -31,7 +30,7 @@ class Instances(AzureResources):
         instance_dict['type'] = raw_instance.type
         instance_dict['resources'] = raw_instance.resources
         if raw_instance.tags is not None:
-            instance_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_instance.tags.items()]
+            instance_dict['tags'] = ["{}:{}".format(key, value) for key, value in raw_instance.tags.items()]
         else:
             instance_dict['tags'] = []
         instance_dict['resource_group_name'] = get_resource_group_name(raw_instance.id)

@@ -12,7 +12,7 @@ class SecurityCenterFacade:
 
     def get_client(self, subscription_id: str):
         client = SecurityCenter(self.credentials.get_credentials('arm'),
-                              subscription_id, '')
+                                subscription_id, '')
         client._client.config.add_user_agent(get_user_agent())
         return client
 

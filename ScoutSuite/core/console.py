@@ -83,7 +83,7 @@ def print_exception(exception, additional_details=None):
             traceback_exc = None
             str = f'{exception}'
             exc = False  # if there isn't an actual exception then it's pointless
-    except Exception as e:
+    except Exception:
         file_name = None
         line_number = None
         traceback_exc = None

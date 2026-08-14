@@ -21,10 +21,10 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['enable_accelerated_networking'] = raw_network_interface.enable_accelerated_networking
         network_interface_dict['virtual_machine'] = \
             get_non_provider_id(raw_network_interface.virtual_machine.id.lower()) if \
-                raw_network_interface.virtual_machine else None
+            raw_network_interface.virtual_machine else None
         network_interface_dict['name'] = raw_network_interface.name
         if raw_network_interface.tags is not None:
-            network_interface_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_network_interface.tags.items()]
+            network_interface_dict['tags'] = ["{}:{}".format(key, value) for key, value in raw_network_interface.tags.items()]
         else:
             network_interface_dict['tags'] = []
         network_interface_dict['resource_group_name'] = get_resource_group_name(raw_network_interface.id)
@@ -41,7 +41,7 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['type'] = raw_network_interface.type
         network_interface_dict['network_security_group'] = \
             get_non_provider_id(raw_network_interface.network_security_group.id) if \
-                raw_network_interface.network_security_group else None
+            raw_network_interface.network_security_group else None
 
         # TODO process and display the below
         network_interface_dict['hosted_workloads'] = raw_network_interface.hosted_workloads

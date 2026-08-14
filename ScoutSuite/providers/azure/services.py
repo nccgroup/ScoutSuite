@@ -53,15 +53,15 @@ class AzureServicesConfig(BaseServicesConfig):
         # Instantiate proprietary services
         try:
             self.appgateway = ApplicationGateways(facade)
-        except NameError as _:
+        except NameError:
             pass
         try:
             self.loadbalancer = LoadBalancers(facade)
-        except NameError as _:
+        except NameError:
             pass
         try:
             self.rediscache = RedisCaches(facade)
-        except NameError as _:
+        except NameError:
             pass
 
     def _is_provider(self, provider_name):

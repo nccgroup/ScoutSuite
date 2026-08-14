@@ -10,4 +10,3 @@ class RDS(Regions):
 
     def __init__(self, facade: AliyunFacade):
         super().__init__('rds', facade)
-

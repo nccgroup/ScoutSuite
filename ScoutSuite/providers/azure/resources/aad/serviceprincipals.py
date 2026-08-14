@@ -41,4 +41,3 @@ class ServicePrincipals(AzureResources):
         service_principal_dict['roles'] = []  # this will be filled in `finalize()`
 
         return service_principal_dict['id'], service_principal_dict
-

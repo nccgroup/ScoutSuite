@@ -36,9 +36,9 @@ class KMSFacade(GCPBaseFacade):
         try:
             locations = await self.get_locations(project_id)
             key_rings = {}
-            for l in locations:
-                parent = self.cloud_client.location_path(project_id, l['locationId'])
-                key_rings[l['locationId']] = await run_concurrently(
+            for location in locations:
+                parent = self.cloud_client.location_path(project_id, location['locationId'])
+                key_rings[location['locationId']] = await run_concurrently(
                     lambda: list(self.cloud_client.list_key_rings(parent)))
             return key_rings
         except Exception as e:

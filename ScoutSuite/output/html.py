@@ -5,7 +5,6 @@ import zipfile
 
 import dateutil.tz
 
-from ScoutSuite import DEFAULT_INCLUDES_DIRECTORY
 from ScoutSuite import DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY, DEFAULT_INCLUDES_DIRECTORY
 from ScoutSuite import ERRORS_LIST
 from ScoutSuite.core.console import print_info, print_exception

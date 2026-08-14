@@ -24,5 +24,3 @@ class AlertPolicies(Resources):
         alert_policy_dict['conditions'] = raw_alert_policy.conditions
         alert_policy_dict['enabled'] = raw_alert_policy.enabled
         return alert_policy_dict['id'], alert_policy_dict
-
-

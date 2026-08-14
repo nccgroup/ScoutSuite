@@ -23,4 +23,3 @@ class Trails(AliyunResources):
         trail_dict['sls_write_role_arn'] = raw_trail.get('SlsWriteRoleArn')
         trail_dict['sls_project_arn'] = raw_trail.get('SlsProjectArn')
         return trail_dict['id'], trail_dict
-

@@ -22,4 +22,3 @@ class AcmFacade(AWSBaseFacade):
         except Exception as e:
             print_exception(f'Failed to describe acm certificate: {e}')
             raise
-

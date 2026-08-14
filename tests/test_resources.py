@@ -7,7 +7,7 @@ import os
 
 
 class DummyResources(Resources):
-    def __init__(self, facade, region: str, some_other_scope: str,  **kwargs):
+    def __init__(self, facade, region: str, some_other_scope: str, **kwargs):
         self.region = region
         self.some_other_scope = some_other_scope
 

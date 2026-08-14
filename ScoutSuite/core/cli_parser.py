@@ -254,7 +254,6 @@ class ScoutSuiteArgumentParser:
                             default=None,
                             help='Name of the profile')
 
-
     def _init_common_args_parser(self):
         parser = self.common_providers_args_parser.add_argument_group('Scout Arguments')
 
@@ -393,7 +392,8 @@ class ScoutSuiteArgumentParser:
         # Azure
         elif v.get('provider') == 'azure':
             if v.get('tenant_id') and not (v.get('service_principal') or v.get('user_account_browser')):
-                self.parser.error('--tenant can only be set when using --user-account-browser or --service-principal authentication')
+                self.parser.error(
+                    '--tenant can only be set when using --user-account-browser or --service-principal authentication')
             if v.get('service_principal') and not v.get('tenant_id'):
                 self.parser.error('You must provide --tenant when using --service-principal authentication')
             if v.get('user_account_browser') and not v.get('tenant_id'):
@@ -402,4 +402,3 @@ class ScoutSuiteArgumentParser:
                 self.parser.error('--subscription-ids and --all-subscriptions are mutually exclusive options')
 
         return args
-

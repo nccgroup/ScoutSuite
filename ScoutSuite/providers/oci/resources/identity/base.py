@@ -49,7 +49,3 @@ class Identity(OracleCompositeResources):
         for group in self['groups']:
             for user in self['groups'][group]['users']:
                 user['user_name'] = self['users'][user['user_id']]['name']
-
-
-
-

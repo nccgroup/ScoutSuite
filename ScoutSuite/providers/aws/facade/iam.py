@@ -87,7 +87,7 @@ class IAMFacade(AWSBaseFacade):
 
                 for entity in attached_entities[entity_type]:
                     name_field = entity_type.replace('Policy', '')[
-                                 :-1] + 'Name'
+                        :-1] + 'Name'
                     resource_name = entity[name_field]
                     id_field = entity_type.replace('Policy', '')[:-1] + 'Id'
                     resource_id = entity[id_field]
@@ -266,4 +266,3 @@ class IAMFacade(AWSBaseFacade):
             statement[resource_string] = [statement[resource_string]]
         # Result
         return statement
-

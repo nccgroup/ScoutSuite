@@ -40,7 +40,7 @@ class EC2Facade(AWSBaseFacade):
     async def _decode_user_data(self, user_data):
         try:
             value = base64.b64decode(user_data)
-        except base64.binascii.Error as e:
+        except base64.binascii.Error:
             value = base64.b64decode(f'{user_data}===')
         if value[0:2] == b'\x1f\x8b':  # GZIP magic number
             return zlib.decompress(value, zlib.MAX_WBITS | 32).decode('utf-8')

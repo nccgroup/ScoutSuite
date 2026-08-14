@@ -31,7 +31,7 @@ class Tables(AWSResources):
 
         table_dict['automatic_backups_enabled'] = \
             raw_table['ContinuousBackups']['PointInTimeRecoveryDescription']['PointInTimeRecoveryStatus'] == 'ENABLED' \
-                if 'ContinuousBackups' in raw_table else None
+            if 'ContinuousBackups' in raw_table else None
 
         if "SSEDescription" in raw_table:
             table_dict["sse_enabled"] = True

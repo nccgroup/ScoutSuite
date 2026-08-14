@@ -29,7 +29,8 @@ class Networks(Subscriptions):
             for sg in self['subscriptions'][subscription]['security_groups']:
                 for subnet in self['subscriptions'][subscription]['security_groups'][sg]['subnets']:
                     for network in self['subscriptions'][subscription]['virtual_networks']:
-                        for network_subnet in self['subscriptions'][subscription]['virtual_networks'][network].get('subnets', []):
+                        for network_subnet in self['subscriptions'][subscription]['virtual_networks'][network].get('subnets', [
+                        ]):
                             if subnet == network_subnet:
                                 self['subscriptions'][subscription]['security_groups'][sg]['subnets'][subnet]['virtual_network_id'] = network
 
@@ -42,7 +43,7 @@ class Networks(Subscriptions):
                 subnet_id = self['subscriptions'][subscription]['network_interfaces'][interface]['ip_configuration']['subnet']['id']
                 for network in self['subscriptions'][subscription]['virtual_networks']:
                     for network_subnet in self['subscriptions'][subscription]['virtual_networks'][network].get('subnets', []):
-                        if not 'instances' in self['subscriptions'][subscription]['virtual_networks'][network]['subnets'][network_subnet]:
+                        if 'instances' not in self['subscriptions'][subscription]['virtual_networks'][network]['subnets'][network_subnet]:
                             self['subscriptions'][subscription]['virtual_networks'][network]['subnets'][network_subnet]['instances'] = []
                         if subnet_id == network_subnet:
                             self['subscriptions'][subscription]['network_interfaces'][interface]['ip_configuration']['subnet'][
@@ -57,4 +58,5 @@ class Networks(Subscriptions):
         for subscription in self['subscriptions']:
             for interface in self['subscriptions'][subscription]['network_interfaces']:
                 for asg in self['subscriptions'][subscription]['network_interfaces'][interface]['ip_configuration']['application_security_groups']:
-                    self['subscriptions'][subscription]['application_security_groups'][asg]['network_interfaces'].append(interface)
+                    self['subscriptions'][subscription]['application_security_groups'][asg]['network_interfaces'].append(
+                        interface)

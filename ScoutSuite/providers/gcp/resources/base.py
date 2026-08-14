@@ -10,5 +10,5 @@ class GCPCompositeResources(CompositeResources):
     respect the following format: (<child_class>, <child_name>). The child_name is used by indicates the name under
     which the child will be stored in the parent object.
     """
-    
+
     pass

@@ -23,5 +23,3 @@ class MetricFilters(AWSResources):
         metric_filter_dict['metric_transformations'] = raw_metric_filter.get('metricTransformations')
         metric_filter_dict['log_group_name'] = raw_metric_filter.get('logGroupName')
         return metric_filter_dict['id'], metric_filter_dict
-
-

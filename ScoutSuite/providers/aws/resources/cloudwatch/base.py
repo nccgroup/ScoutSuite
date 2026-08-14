@@ -64,4 +64,3 @@ class CloudWatch(Regions):
                     self['regions'][region]['metric_filters_pattern_checks']['route_table_changes'] = True
                 if metric_filter['pattern'] == "{ ($.eventName = CreateVpc) || ($.eventName = DeleteVpc) || ($.eventName = ModifyVpcAttribute) || ($.eventName = AcceptVpcPeeringConnection) || ($.eventName = CreateVpcPeeringConnection) || ($.eventName = DeleteVpcPeeringConnection) || ($.eventName = RejectVpcPeeringConnection) || ($.eventName = AttachClassicLinkVpc) || ($.eventName = DetachClassicLinkVpc) || ($.eventName = DisableVpcClassicLink) || ($.eventName = EnableVpcClassicLink) }":
                     self['regions'][region]['metric_filters_pattern_checks']['vpc_changes'] = True
-                   

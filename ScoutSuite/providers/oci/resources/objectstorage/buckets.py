@@ -42,4 +42,3 @@ class Buckets(OracleResources):
         #                                                              bucket_dict['name'])
 
         return bucket_dict['id'], bucket_dict
-

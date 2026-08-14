@@ -52,4 +52,3 @@ class LambdaFacade(AWSBaseFacade):
         except Exception as e:
             print_exception('Failed to get Lambda function configuration: {}'.format(e))
         return []
-

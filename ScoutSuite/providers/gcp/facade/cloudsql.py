@@ -3,6 +3,7 @@ from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
 
+
 class CloudSQLFacade(GCPBaseFacade):
     def __init__(self):
         super().__init__('sqladmin', 'v1beta4')
@@ -31,7 +32,7 @@ class CloudSQLFacade(GCPBaseFacade):
         try:
             cloudsql_client = self._get_client()
             response = await run_concurrently(
-                    lambda: cloudsql_client.users().list(project=project_id, instance=instance_name).execute()
+                lambda: cloudsql_client.users().list(project=project_id, instance=instance_name).execute()
             )
             return response.get('items', [])
         except Exception as e:

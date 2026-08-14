@@ -25,7 +25,6 @@ class KeyVaults(OracleCompositeResources):
                     for keyvault_id, keyvault in self.items()}
         )
 
-
     def _parse_keyvault(self, raw_keyvault):
         keyvault_dict = {}
         keyvault_dict['id'] = get_non_provider_id(raw_keyvault.id)
