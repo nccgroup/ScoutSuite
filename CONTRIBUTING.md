@@ -17,6 +17,23 @@ Following these guidelines helps to communicate that you respect the time of the
 
 So you want to contribute some code, that's great! This project follows the [GitHub Workflow](https://guides.github.com/introduction/flow/). 
 
+### Setting up a local environment
+
+Python 3.11 is the verified/recommended local dev version (matches the CI target's language level; CI itself runs on `ubuntu-latest`).
+
+```
+py -3.11 -m venv venv
+venv\Scripts\activate
+pip install -r dev-requirements.txt
+```
+
+**Windows only:** `dev-requirements.txt` pulls in `pyreadline 2.1` transitively (via `humanfriendly`, required by `azure-cli-core==2.12.0`, which pins `humanfriendly<9.0`). `pyreadline 2.1` is incompatible with Python 3.10+ (`collections.Callable` was removed) and will crash `pytest` on startup with `AttributeError: module 'collections' has no attribute 'Callable'`. This only affects local Windows dev — `humanfriendly` already restricts `pyreadline` to `sys_platform == "win32"` upstream, so it is never installed on CI. If you hit this, swap it for the maintained fork:
+
+```
+pip uninstall -y pyreadline
+pip install pyreadline3
+```
+
 1. If it's a complex issue, please describe how you plan on going about addressing it on the issue thread.
 2. Assign yourself to the issue
 3. Create a branch using the following naming convention:
