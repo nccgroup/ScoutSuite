@@ -41,10 +41,18 @@ class TestScoutRulesRuleset(unittest.TestCase):
         test002 = Ruleset(cloud_provider='aws', filename=self.test_ruleset_002)
         for rule in test002.rules:
             print_debug(test002.rules[rule][0].to_string())
-        assert (printError.call_count == 1) # is this expected ??
+        assert (printError.call_count == 1)  # is this expected ??
         assert ("test-ruleset-absolute-path.json does not exist." in printError.call_args_list[0][0][0])
 
+        # ruleset_generator=True should auto-discover every built-in findings
+        # rule, not just the ones explicitly listed in the ruleset file (see
+        # Ruleset.load_rule_definitions's `if ruleset_generator:` branch).
         test005 = Ruleset(cloud_provider='aws', filename=self.test_ruleset_001, ruleset_generator=True)
+        findings_dir = os.path.join(test005.rules_data_path, 'findings')
+        findings_count = len([f for f in os.listdir(findings_dir) if os.path.isfile(os.path.join(findings_dir, f))])
+        assert (len(test005.rule_definitions) == findings_count)
+        assert ('acm-certificate-with-close-expiration-date.json' in test005.rule_definitions)
+        assert (hasattr(test005.rules[test_file_key][0], 'description'))
 
     @mock.patch("ScoutSuite.core.ruleset.print_error")
     def test_ruleset_file_not_exist(self, printError):
@@ -100,8 +108,22 @@ class TestScoutRulesRuleset(unittest.TestCase):
         prompt_yes_no.return_value = True
 
     def test_find_file(self):
+        # An existing absolute/relative path is returned unchanged (the
+        # `if filename and not os.path.isfile(filename):` guard short-circuits).
         test101 = Ruleset(cloud_provider='aws').find_file(self.test_ruleset_001)
+        assert (test101 == self.test_ruleset_001)
+
+        # A bare ruleset name with no path/extension resolves to
+        # <rules_data_path>/rulesets/<name>.json, same as the filename=
+        # constructor argument tested in test_path_for_ruletypes.
         test102 = Ruleset(cloud_provider='aws').find_file('default')
+        rpath = "./ScoutSuite/providers/aws/rules/"
+        assert (os.path.samefile(test102, rpath + 'rulesets/default.json'))
 
     def test_search_ruleset(self):
-        test201 = Ruleset(cloud_provider='aws').search_ruleset('test', no_prompt=True)
+        target = Ruleset(cloud_provider='aws')
+        # search_ruleset mutates target.filename in place and has no return value.
+        test201 = target.search_ruleset('test', no_prompt=True)
+        assert (test201 is None)
+        # No ruleset-test.json exists under rulesets/, so it must fall back to default.json.
+        assert (os.path.samefile(target.filename, os.path.join(target.rules_data_path, 'rulesets/default.json')))
