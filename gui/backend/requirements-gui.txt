@@ -1,0 +1,8 @@
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+python-multipart>=0.0.6
+websockets>=11.0.3
+pydantic>=2.0.0
+bcrypt>=4.0.1
+PyJWT>=2.8.0
+aiofiles>=23.1.0
