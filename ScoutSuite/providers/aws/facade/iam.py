@@ -56,6 +56,22 @@ class IAMFacade(AWSBaseFacade):
                 print_exception(f'Failed to download credential report: {e}')
             return []
 
+    async def get_organizations_root_credentials_managed(self):
+        """
+        Check if centralized root access management is enabled for the organization.
+        Returns True if RootCredentialsManagement is among the enabled features.
+        Returns False if the API call fails (e.g. not in an org, insufficient permissions).
+        """
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        try:
+            response = await run_concurrently(client.list_organizations_features)
+            enabled_features = response.get('EnabledFeatures', [])
+            return 'RootCredentialsManagement' in enabled_features
+        except Exception as e:
+            # Expected to fail when not in an org or lacking iam:ListOrganizationsFeatures permission
+            print_warning(f'Could not check Organizations root credentials management: {e}')
+            return False
+
     async def get_groups(self):
         groups = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_groups', 'Groups')
         await get_and_set_concurrently(
@@ -270,4 +286,3 @@ class IAMFacade(AWSBaseFacade):
             statement[resource_string] = [statement[resource_string]]
         # Result
         return statement
-
