@@ -1,6 +1,8 @@
 import datetime
 import json
 import os
+import stat
+import tempfile
 
 import dateutil
 from sqlitedict import SqliteDict
@@ -107,34 +109,67 @@ class JavaScriptEncoder(ScoutResultEncoder):
     def save_to_file(self, content, file_type, force_write, debug):
         config_path, first_line = get_filename(file_type, self.report_name, self.report_dir)
         print_info('Saving data to %s' % config_path)
+        temp_path = None
         try:
-            with self.__open_file(config_path, force_write) as f:
+            if not prompt_for_overwrite(config_path, force_write):
+                return
+            # Serialize before touching the filesystem: a serialization error must
+            # leave the report that is already on disk usable.
+            serialized = json.dumps(content, indent=4 if debug else None, separators=(',', ': '),
+                                    sort_keys=True, cls=ScoutJsonEncoder)
+            # Follow an existing symlink so that the link keeps pointing at the
+            # file that is actually updated, as opening the path for writing did.
+            target_path = os.path.realpath(config_path)
+            temp_path = self.__create_temporary_file(target_path)
+            with open(temp_path, 'wt') as f:
                 if first_line:
                     print('%s' % first_line, file=f)
-                print('%s' % json.dumps(content, indent=4 if debug else None, separators=(',', ': '), sort_keys=True,
-                                        cls=ScoutJsonEncoder), file=f)
-        except AttributeError as e:
-            # __open_file returned None
-            pass
+                print('%s' % serialized, file=f)
+            self.__copy_file_mode(target_path, temp_path)
+            os.replace(temp_path, target_path)
+            temp_path = None
         except Exception as e:
             print_exception(e)
+        finally:
+            if temp_path is not None:
+                try:
+                    os.remove(temp_path)
+                except OSError:
+                    pass
 
     @staticmethod
-    def __open_file(config_filename, force_write):
+    def __create_temporary_file(target_path):
         """
+        Reserve an empty temporary file next to the report it will replace.
 
-        :param config_filename:
-        :param force_write:
-        :param quiet:
-        :return:
+        :param target_path:                 Path of the file to be written
+        :return:                            Path of the temporary file
         """
-        if prompt_for_overwrite(config_filename, force_write):
-            try:
-                config_dirname = os.path.dirname(config_filename)
-                if not os.path.isdir(config_dirname):
-                    os.makedirs(config_dirname)
-                return open(config_filename, 'wt')
-            except Exception as e:
-                print_exception(e)
-        else:
-            return None
+        target_dirname = os.path.dirname(target_path)
+        if not os.path.isdir(target_dirname):
+            os.makedirs(target_dirname)
+        descriptor, temp_path = tempfile.mkstemp(prefix='.%s.' % os.path.basename(target_path),
+                                                 suffix='.tmp', dir=target_dirname)
+        os.close(descriptor)
+        return temp_path
+
+    @staticmethod
+    def __copy_file_mode(target_path, temp_path):
+        """
+        Give the temporary file the permissions the report file would have had.
+
+        Best effort: a report must never be lost because its mode cannot be copied.
+
+        :param target_path:                 Path of the file to be replaced
+        :param temp_path:                   Path of the temporary file
+        """
+        try:
+            if os.path.exists(target_path):
+                mode = stat.S_IMODE(os.stat(target_path).st_mode)
+            else:
+                umask = os.umask(0)
+                os.umask(umask)
+                mode = 0o666 & ~umask
+            os.chmod(temp_path, mode)
+        except OSError:
+            pass
